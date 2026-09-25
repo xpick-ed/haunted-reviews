@@ -184,6 +184,7 @@ export function objectives(s: GameState): { main: string | null; extra: string |
     if (!s.flags.han_talk && n === 1) return { main: '去埕裡看看小翰', extra }
     return { main: '坐在埕裡的竹椅上，等客人入住', extra }
   }
+  if (s.scene === 'market') return { main: '逛鬼夜市', extra: '紅姨的法器（用功德買）、金魚伯撈金魚、射氣球。客人沒人顧，別待太久' }
   if (s.phase === 'night') {
     // 教學月：每晚提示一個新玩法
     const tips: Record<number, string> = {

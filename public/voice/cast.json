@@ -321,5 +321,93 @@
    "wave": "sine",
    "jitter": 0.08
   }
+ },
+ {
+  "id": "ajiao",
+  "name": "阿嬌",
+  "desc": "70 幾歲的柑仔店老闆娘，阿春的老朋友，看得到鬼。嗓門大、愛碎念、心很軟。",
+  "ghost": false,
+  "color": "#e8a4c8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-12%",
+   "pitch": "-24Hz",
+   "fx": [
+    "elder",
+    "warm"
+   ]
+  },
+  "blip": {
+   "freq": 330,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "jinyubo",
+  "name": "金魚伯",
+  "desc": "鬼夜市撈金魚攤的好兄弟，笑嘻嘻、很會吹牛。",
+  "ghost": true,
+  "color": "#ffb35c",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-8%",
+   "pitch": "-18Hz",
+   "fx": [
+    "hearty",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 200,
+   "wave": "triangle",
+   "jitter": 0.14
+  }
+ },
+ {
+  "id": "hongyi",
+  "name": "紅姨",
+  "desc": "鬼夜市賣法器的女鬼，說話慢、神秘，其實很照顧新來的。",
+  "ghost": true,
+  "color": "#d9534f",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-XiaoxiaoNeural",
+   "rate": "-14%",
+   "pitch": "-12Hz",
+   "fx": [
+    "mystic",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 380,
+   "wave": "sine",
+   "jitter": 0.06
+  }
+ },
+ {
+  "id": "dreamboss",
+  "name": "夢裡的老闆",
+  "desc": "張經理惡夢裡的老闆，只是一個會講話的影子。",
+  "ghost": true,
+  "color": "#5b5f7a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-18%",
+   "pitch": "-30Hz",
+   "fx": [
+    "gruff",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 150,
+   "wave": "sawtooth",
+   "jitter": 0.05
+  }
  }
 ]

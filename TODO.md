@@ -2,17 +2,16 @@
 
 ## Current
 
-**Doing:** 深夜大改版完成（客人會走會看、一二三木頭人、需求＋動作清單、兩間客房、七種客人、月循環、技能樹、升級、廟公、狗、停電、入住卡片、天亮結算、月結）。`npm run test:night` 全過，瀏覽器看過入住卡、技能樹、深夜 HUD、客房、結算、月結（電腦＋手機直式）。
+**Doing:** 更多場景與玩法完成（DESIGN §25）：村路＋柑仔店阿嬌、後院菜園＋雞舍、鬼夜市（紅姨法器、撈金魚、射氣球）、八位客人的夢境（托夢）；長按動作、附身阿咪（貓）、躲藏、煮宵夜／打蚊子／擲筊小遊戲；食材、功德、法器、擲筊運勢、靈術技能線。三個自動測試全過（night / dream / motion），瀏覽器串過煮→端→打蚊子→托夢→鬼夜市，沒有錯誤。
 
 **Next:**
-1. 真機玩一整個月：難度（一晚 300 秒夠不夠做事？視線會不會太嚴？）、手機左欄會不會太擠
-2. 孫子的心／錢歸零的後果（目前只有月底小翰的台詞）；快飄聲音與「快飄省力」沒接到模擬的 noise
-3. 小宇跟阿嬤玩時林太太看到的「worry」要有畫面；YouTuber 拍到時畫面加錄影框
-4. 階段 A 收尾：設定選單（音量、畫質、減少閃爍）、存檔槽
+1. 真機玩：小遊戲的手感（無頭瀏覽器只有 2fps，時機沒辦法測）、長按在手機上好不好按、夢境 40 秒夠不夠
+2. 鬼夜市、夢境用各自的霧／天空（目前是每幀覆寫霧，Daylight 應該開一個每個場景的外觀設定）
+3. 村子的房子進不去；雞沒有碰撞；阿嬌晚上也開店（可以改成晚上要敲窗）
+4. 孫子的心／錢歸零的後果；快飄聲音沒接到模擬
+5. Cloudflare Pages：等使用者接上 repo 後量速度
 
 **Blockers:** 無
-
-**另外（2026-09-25）：** 載入加速——貼圖 3.8→1.7 MB（法線 512）、傍晚先載今晚語音、service worker 離線快取、three.js 拆檔；加了 Cloudflare Pages 的 `_headers`，等使用者在 Cloudflare 接上 repo。
 
 ## Backlog
 
@@ -29,6 +28,8 @@
 - `?zoom=0.4`（dev 模式）：鏡頭拉近看角色
 - `window.__player`（dev 模式）：阿嬤的位置，測試時可以直接 `__player.x = 7.5` 瞬移
 - `window.__store`（dev 模式）可以直接操作遊戲狀態，例如 `__store.getState().sit()`、`__store.setState({ time: 23 })`；`window.__night.sim` 是深夜模擬（客人在 `.guests`）
+- 夢境：`npm run test:dream`（尋路機器人玩每一場夢）
+- 截圖（不佔用共用瀏覽器）：scratchpad 的 `pw/shot.mjs <port> <out.png> <setup.js>`；5173 常被別的專案佔用，dev server 用別的 port
 - 深夜平衡：`npm run test:night`（`ONLY=M1-N2 TRACE=zhang TRACE_SEED=102` 印出某位客人整晚的狀態）
 - `window.__three`（dev 模式）：`gl.info.render.calls` 量 draw call
 - 網址參數：`?q=low|high` 畫質；dev 限定 `?fx=0` 關後製、`?nofx=ao,bloom,tilt` 關單一效果、`?shadow=0` 關陰影

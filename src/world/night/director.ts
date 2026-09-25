@@ -3,6 +3,7 @@ import { audio } from '../../audio'
 import { sfx } from '../../audio/sfx'
 import { BARKS, DIALOGUE_LINES, EVENT_BARKS, EXTRA_BARKS, GM_BARKS, HAN_BARKS, MIAOGONG_BARKS } from '../../data/barks'
 import { voice } from '../../audio/voice'
+import { LINES } from '../lines'
 import { GUEST_ROOMS } from '../../scene/layout'
 import { player } from '../player'
 import { ACTION_DEFS, nightSpots, type NightCtx, type Option } from './actions'
@@ -203,7 +204,7 @@ export const START_META = (): Meta => ({
 })
 
 /** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
-export function preloadNightVoices(plan: NightPlan) {
+export function preloadNightVoices(plan: NightPlan, meta?: Meta) {
   const ids: string[] = []
   const add = (xs?: string[]) => xs && ids.push(...xs)
   const members = plan.parties.flatMap((p) => p.members)
@@ -215,6 +216,11 @@ export function preloadNightVoices(plan: NightPlan) {
   if (members.includes('xiaoyu')) add(DIALOGUE_LINES.xiaoyu_play)
   if (members.includes('agui')) add(DIALOGUE_LINES.agui_chat)
   if (plan.story === 'room2') add(HAN_BARKS.room2)
+  // 學了托夢：今晚客人的夢裡會講的話
+  if (meta?.skills.includes('dream')) {
+    const who = [...members, 'gm', ...(members.includes('zhang') ? ['boss'] : [])]
+    for (const id of Object.keys(LINES)) if (who.some((m) => id.startsWith(`dream.${m}.`))) ids.push(id)
+  }
   void voice.preload(ids)
 }
 

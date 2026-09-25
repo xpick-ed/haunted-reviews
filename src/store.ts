@@ -208,7 +208,7 @@ export const useStore = create<GameState>()((set, get) => ({
     })
     // 第一晚傍晚會講的話
     void voice.preload(['core.open', 'core.night', 'gm.incense', 'gm.wait', ...DIALOGUES.han_dusk.steps.map((x) => x.line)])
-    preloadNightVoices(get().plan)
+    preloadNightVoices(get().plan, get().meta)
     get().save()
   },
 
@@ -238,7 +238,7 @@ export const useStore = create<GameState>()((set, get) => ({
       intro: true,
       view: [],
     })
-    preloadNightVoices(get().plan)
+    preloadNightVoices(get().plan, get().meta)
   },
 
   save: () => {
@@ -509,7 +509,7 @@ export const useStore = create<GameState>()((set, get) => ({
       dish: null,
       roomLit: { r1: 0, r2: 0 },
     }))
-    preloadNightVoices(get().plan)
+    preloadNightVoices(get().plan, get().meta)
     get().save()
   },
 

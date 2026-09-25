@@ -35,12 +35,17 @@ import {
   WING_WALL_TOP,
   type Area,
 } from '../scene/layout'
-import { box, rect, wallRects, type Colliders, type Rect } from './collision'
+import { box, rect, wallRects, type Circle, type Colliders, type Rect } from './collision'
+
+import { VILLAGE_SCENE } from './sceneVillage'
+import { GARDEN_SCENE } from './sceneGarden'
+import { MARKET_CLOSE, MARKET_OPEN, MARKET_SCENE } from './sceneMarket'
+import { DREAM_SCENE } from './sceneDream'
 
 // 場景定義：碰撞、出生點、出口、建築（淡出與室內鏡頭用）、地板高度。
 // 視覺在 scene/ 底下，這裡只有「規則」需要的資料。
 
-export type SceneId = 'home' | 'temple'
+export type SceneId = 'home' | 'temple' | 'village' | 'garden' | 'market' | 'dream'
 
 export interface Building {
   id: string
@@ -58,6 +63,8 @@ export interface Exit {
   /** 出口路牌上寫的字 */
   label: string
   sign: [number, number]
+  /** 什麼時候開（沒寫＝一直開）。例如鬼夜市只在深夜 00:00–04:30 */
+  when?: (s: { phase: string; time: number }) => boolean
 }
 
 export interface SceneDef {
@@ -69,6 +76,8 @@ export interface SceneDef {
   buildings: Building[]
   rooms: { id: string; name: string; area: Area }[]
   floorAt: (x: number, z: number) => number
+  /** 站在這個場景的 NPC 的碰撞圓（依時段） */
+  npcs?: (phase: string) => Circle[]
 }
 
 const inside = (a: Area | Rect, x: number, z: number) => x >= a.x0 && x <= a.x1 && z >= a.z0 && z <= a.z1
@@ -187,8 +196,12 @@ export const HOME: SceneDef = {
     yard: [0, 2.5],
     gate: [0, FENCE.z + 1.2],
     road_east: [22.5, ROAD.z],
+    back: [-11.5, -14.2],
   },
-  exits: [{ area: rect(25.2, ROAD.z - 3, 28, ROAD.z + 3), to: 'temple', spawn: 'road_west', label: '土地公廟 →', sign: [23.6, ROAD.z - 2.1] }],
+  exits: [
+    { area: rect(25.2, ROAD.z - 3, 28, ROAD.z + 3), to: 'village', spawn: 'west', label: '村子 →', sign: [23.6, ROAD.z - 2.1] },
+    { area: rect(-14, -17, -9, -15.8), to: 'garden', spawn: 'path', label: '後院菜園 ↑', sign: [-8.4, -14.6] },
+  ],
   buildings: [
     {
       id: 'main',
@@ -263,8 +276,19 @@ export const TEMPLE_SCENE: SceneDef = {
   spawns: {
     road_west: [-12, TEMPLE.roadZ],
     front: [0, 4.2],
+    market_gate: [12.8, -5.2],
   },
-  exits: [{ area: rect(-17, TEMPLE.roadZ - 3.2, -14.4, TEMPLE.roadZ + 3.2), to: 'home', spawn: 'road_east', label: '← 阿春民宿', sign: [-12.6, TEMPLE.roadZ - 2.1] }],
+  exits: [
+    { area: rect(-17, TEMPLE.roadZ - 3.2, -14.4, TEMPLE.roadZ + 3.2), to: 'village', spawn: 'east', label: '← 村子', sign: [-12.6, TEMPLE.roadZ - 2.1] },
+    {
+      area: rect(12.5, -9, 17, -6.5),
+      to: 'market',
+      spawn: 'gate',
+      label: '鬼夜市 →',
+      sign: [12.2, -5.6],
+      when: (s) => s.phase === 'night' && s.time >= MARKET_OPEN && s.time < MARKET_CLOSE,
+    },
+  ],
   buildings: [
     {
       id: 'temple',
@@ -277,7 +301,14 @@ export const TEMPLE_SCENE: SceneDef = {
   floorAt: (x, z) => (inside(TEMPLE.base, x, z) ? TEMPLE.baseY : 0.02),
 }
 
-export const SCENES: Record<SceneId, SceneDef> = { home: HOME, temple: TEMPLE_SCENE }
+export const SCENES: Record<SceneId, SceneDef> = {
+  home: HOME,
+  temple: TEMPLE_SCENE,
+  village: VILLAGE_SCENE,
+  garden: GARDEN_SCENE,
+  market: MARKET_SCENE,
+  dream: DREAM_SCENE,
+}
 
 /** NPC 站的位置（畫面與碰撞共用） */
 export const NPC_SPOTS = {
@@ -289,7 +320,7 @@ export const NPC_SPOTS = {
 export function npcColliders(scene: SceneId, phase: string) {
   if (scene === 'home' && phase === 'dusk') return [{ ...NPC_SPOTS.xiaohan, r: 0.34 }]
   if (scene === 'temple') return [{ ...NPC_SPOTS.ayi, r: 0.34 }]
-  return []
+  return SCENES[scene].npcs?.(phase) ?? []
 }
 
 /** 客房床邊（蓋被子的熱點）等常用點 */

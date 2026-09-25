@@ -16,6 +16,10 @@ import { Effects } from './Effects'
 import { CameraRig } from './CameraRig'
 import { WorldController } from './World'
 import { TempleScene } from './Temple'
+import { VillageScene } from './Village'
+import { GardenScene } from './Garden'
+import { MarketScene } from './Market'
+import { DreamScene } from './Dream'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { ChibiNpc } from '../chars/Chibi'
 import { HAN_SWEEP } from './layout'
@@ -95,6 +99,10 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
   const scene = useStore((s) => s.scene)
   const phase = useStore((s) => s.phase)
   if (scene === 'temple') return <TempleScene />
+  if (scene === 'village') return <VillageScene />
+  if (scene === 'garden') return <GardenScene />
+  if (scene === 'market') return <MarketScene />
+  if (scene === 'dream') return <DreamScene />
   return (
     <group>
       <Landscape quality={quality} />

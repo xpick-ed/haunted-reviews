@@ -120,9 +120,12 @@ export function NightMarkers() {
 
 export function ExitSigns() {
   const scene = useStore((s) => s.scene)
+  // 有時段限制的出口（鬼夜市）每 15 分鐘檢查一次
+  const quarter = useStore((s) => Math.floor(s.time * 4))
+  const phase = useStore((s) => s.phase)
   return (
     <group>
-      {SCENES[scene].exits.map((e) => (
+      {SCENES[scene].exits.filter((e) => !e.when || e.when({ phase, time: quarter / 4 })).map((e) => (
         <Signpost key={e.label} x={e.sign[0]} z={e.sign[1]} text={e.label} />
       ))}
     </group>

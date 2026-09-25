@@ -1517,14 +1517,19 @@ body,
   padding: 3px 10px;
 }
 .sheet.skills {
-  width: min(100%, 720px);
+  width: min(100%, 900px);
 }
 .skill-lines {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
-@media (max-width: 600px) {
+@media (max-width: 900px) {
+  .skill-lines {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 480px) {
   .skill-lines {
     grid-template-columns: 1fr;
   }
@@ -1547,6 +1552,9 @@ body,
 }
 .skill-line.ghost .skill-line-name {
   color: var(--ghost);
+}
+.skill-line.spirit .skill-line-name {
+  color: #c9a8ff;
 }
 .skill {
   font: inherit;
@@ -1726,4 +1734,32 @@ body,
   .guest-row .guest-name .muted {
     display: none;
   }
+}
+
+/* ---------- 小遊戲 ---------- */
+.mg-backdrop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 8, 18, 0.55);
+  animation: fade 0.25s ease-out;
+  z-index: 7;
+  touch-action: none;
+}
+.mg-stub {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+.dream-hud {
+  position: absolute;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
 }

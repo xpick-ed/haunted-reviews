@@ -57,7 +57,7 @@ export function planNight(night: number, warm: number, spooky: number, pressure:
 // 技能樹（DESIGN §7）：三條線。一開始每條線的第一格已經會了。
 // ---------------------------------------------------------------------------
 
-export type SkillLine = 'kind' | 'scare' | 'ghost'
+export type SkillLine = 'kind' | 'scare' | 'ghost' | 'spirit'
 
 export interface SkillDef {
   id: string
@@ -84,6 +84,10 @@ export const SKILLS: SkillDef[] = [
   { id: 'ghoststep', line: 'ghost', name: '鬼步', desc: '走路時被發現的速度慢 35%', cost: 2, requires: 'freeze' },
   { id: 'swift', line: 'ghost', name: '快飄省力', desc: '快飄的陰氣減半，而且沒有聲音', cost: 2, requires: 'ghoststep' },
   { id: 'yinmax', line: 'ghost', name: '陰氣上限 +30', desc: '最多可以存 130 陰氣', cost: 3, requires: 'swift' },
+  { id: 'possess', line: 'spirit', name: '附身', desc: '附身在貓（阿咪）身上：客人看到貓不會起疑，還會摸牠', cost: 1, action: 'possess' },
+  { id: 'dream', line: 'spirit', name: '托夢', desc: '進入睡著客人的夢，幫他解決心事，他會睡得很沉', cost: 2, action: 'dream', requires: 'possess' },
+  { id: 'radio', line: 'spirit', name: '收音機', desc: '附身神明廳的收音機，遠遠放老歌哄睡（膽小的人會怕）', cost: 2, action: 'radio', requires: 'dream' },
+  { id: 'deepdream', line: 'spirit', name: '好夢', desc: '夢境的時間 +15 秒，夢裡的東西也比較好找', cost: 3, requires: 'radio' },
 ]
 
 export const START_SKILLS = ['pat', 'flicker', 'freeze']

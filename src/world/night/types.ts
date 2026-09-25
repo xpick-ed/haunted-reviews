@@ -50,6 +50,12 @@ export type ActionId =
   | 'chat' // 跟老朋友聊天
   // 其他
   | 'calm' // 安撫狗
+  // 更多玩法（DESIGN §25）
+  | 'swat' // 打蚊子（小遊戲，不花陰氣）
+  | 'dream' // 托夢：進入睡著客人的夢
+  | 'radio' // 附身收音機放老歌
+  | 'possess' // 附身貓
+  | 'hide' // 躲起來
 
 /** 客人會講的話的種類（src/data/barks.ts 依這些 key 列出台詞 id） */
 export type BarkKind =

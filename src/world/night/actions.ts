@@ -39,6 +39,11 @@ export const ACTION_DEFS: Record<ActionId, ActionDef> = {
   play: { id: 'play', name: '陪小宇玩', yin: 0, noise: 0.1, type: 'social', busy: 0.5, satisfies: 'play', comfort: 25 },
   chat: { id: 'chat', name: '跟老朋友聊天', yin: 0, noise: 0.05, type: 'social', busy: 0.5, satisfies: 'chat', comfort: 25 },
   calm: { id: 'calm', name: '摸摸小黑', yin: 0, noise: 0, type: 'misc', busy: 1.0 },
+  swat: { id: 'swat', name: '打蚊子', yin: 0, noise: 0.15, type: 'kind', busy: 0.3, satisfies: 'mosquito', comfort: 12 },
+  dream: { id: 'dream', name: '托夢', yin: 15, noise: 0, type: 'misc', busy: 0.8, skill: 'dream' },
+  radio: { id: 'radio', name: '附身收音機', yin: 12, noise: 0.2, type: 'misc', busy: 1.0, satisfies: 'insomnia', comfort: 8, skill: 'radio' },
+  possess: { id: 'possess', name: '附身阿咪', yin: 5, noise: 0, type: 'misc', busy: 0.6, skill: 'possess' },
+  hide: { id: 'hide', name: '躲起來', yin: 0, noise: 0.02, type: 'misc', busy: 0.4 },
 }
 
 export interface Option {

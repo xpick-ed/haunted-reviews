@@ -11,6 +11,10 @@ import { portraitDataUrl, type PortraitId } from '../art/portraits'
 import { DialogueBox } from './DialogueBox'
 import { Joystick } from './Joystick'
 import { MonthSummary, NightIntro, NightSummaryCard, SkillTree, monthNight } from './NightScreens'
+import { MinigameHost } from './minigames'
+import { ShopPanel } from './Shop'
+import { RelicPanel } from './Relics'
+import { DreamHud } from './DreamHud'
 
 const PHASE_NAME = { dusk: '傍晚', night: '深夜', dawn: '清晨' } as const
 
@@ -26,7 +30,8 @@ export function Hud() {
   const month = useStore((s) => s.month)
   const intro = useStore((s) => s.intro)
   const panel = useStore((s) => s.panel)
-  const modal = !!summary || !!month || intro || !!panel
+  const minigame = useStore((s) => !!s.minigame)
+  const modal = !!summary || !!month || intro || !!panel || minigame
   return (
     <div className="hud">
       <Watched />
@@ -45,8 +50,12 @@ export function Hud() {
       {dialogue && <DialogueBox />}
       {intro && !dialogue && <NightIntro />}
       {panel === 'skills' && <SkillTree />}
+      {panel === 'shop' && <ShopPanel />}
+      {panel === 'relics' && <RelicPanel />}
+      <DreamHud />
       {summary && <NightSummaryCard />}
       {month && <MonthSummary />}
+      <MinigameHost />
     </div>
   )
 }

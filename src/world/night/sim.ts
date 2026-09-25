@@ -74,6 +74,10 @@ export interface GuestRT {
   snackDone: boolean
   spot: 'sink' | 'toilet' | 'stove' | null
   wokenCount: number
+  /** 托夢成功：到這個時間之前睡得很沉，吵不醒 */
+  deepUntil: number
+  /** 夢到阿嬤（評論會提到） */
+  dreamt: boolean
   /** 已經講過入睡台詞 */
   sleptOnce: boolean
 }
@@ -249,6 +253,8 @@ export class NightSim {
           spot: null,
           wokenCount: 0,
           sleptOnce: false,
+          deepUntil: 0,
+          dreamt: false,
         }
         this.guests.push(g)
         for (const n of def.needs) {
@@ -604,7 +610,7 @@ export class NightSim {
         if (p > 0.12) this.bark(g, 'hear', 6)
       } else {
         const threshold = (1 - g.def.lightSleeper) * (0.25 + g.sleep * 0.6)
-        if (p > threshold) {
+        if (p > threshold && this.hour >= g.deepUntil) {
           if (g.def.type === 'business') g.comfort -= 10
           this.wake(g, 'woken')
         }
@@ -638,6 +644,22 @@ export class NightSim {
       g.comfort += comfort * 0.6
     }
     return any
+  }
+
+  /** 托夢的結果（DESIGN §25.1）：成功 → 睡得很沉 1.5 小時、舒適 +20、心事（睡不著）解決 */
+  dreamResult(id: GuestId, ok: boolean) {
+    const g = this.guests.find((x) => x.id === id)
+    if (!g) return
+    if (!ok) {
+      g.comfort -= 4
+      return
+    }
+    g.sleep = 1
+    g.deepUntil = this.hour + 1.5
+    g.comfort += 20
+    g.dreamt = true
+    g.needs = g.needs.filter((n) => n.kind !== 'insomnia')
+    if (!g.met.includes('insomnia')) g.met.push('insomnia')
   }
 
   tuck(room: RoomId) {

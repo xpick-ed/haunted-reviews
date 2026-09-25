@@ -9,7 +9,8 @@ import { placePlayer, player } from './world/player'
 import { readSave, writeSave } from './world/save'
 import { SCENES, type SceneId } from './world/scenes'
 import { TEA_SEAT } from './scene/layout'
-import type { ObjectState, RoomId } from './world/night/types'
+import type { GuestId, ObjectState, RoomId } from './world/night/types'
+import type { MinigameId } from './ui/minigames/types'
 import { START_META, createNightSlice, night, planFor, preloadNightVoices, yinMax, type NightSlice, type PromptOpt } from './world/night/director'
 import { HAN_BARKS } from './data/barks'
 
@@ -70,6 +71,11 @@ export interface GameState extends NightSlice {
   /** 每間客房天花板燈的亮度 0..1。畫面每幀用 getState() 讀 */
   roomLit: Record<RoomId, number>
 
+  // 小遊戲（覆蓋層）與夢境
+  minigame: { id: MinigameId; params: unknown; key: number } | null
+  /** 托夢中：哪位客人的夢、醒來要回到哪裡 */
+  dream: { guest: GuestId; from: [number, number]; startedAt: number } | null
+
   // 其他
   /** 場景貼圖載完、shader 預先編譯完，才能按開始 */
   ready: boolean
@@ -96,11 +102,20 @@ export interface GameState extends NightSlice {
   setQuality: (q: Quality) => void
   resetNight: () => void
   closeIntro: () => void
-  openPanel: (p: 'skills' | null) => void
+  openPanel: (p: 'skills' | 'shop' | 'relics' | null) => void
+  /** 開始小遊戲；玩完（或取消）會呼叫 onDone(result) */
+  startMinigame: (id: MinigameId, params: unknown, onDone: (result: unknown) => void) => void
+  finishMinigame: (result: unknown) => void
+  /** 托夢：進入客人的夢（場景換成 dream） */
+  enterDream: (guest: GuestId) => void
+  /** 夢結束（成功或失敗），回到客人床邊 */
+  endDream: (ok: boolean) => void
   save: () => void
 }
 
 let subId = 0
+let minigameDone: ((result: unknown) => void) | null = null
+let minigameKey = 0
 const later = (ms: number, fn: () => void) => window.setTimeout(fn, ms)
 let dialogueEnd: (() => void) | null = null
 
@@ -155,6 +170,8 @@ export const useStore = create<GameState>()((set, get) => ({
 
   objects: {},
   roomLit: { r1: 0, r2: 0 },
+  minigame: null,
+  dream: null,
   ready: false,
   voice: true,
   quality: new URLSearchParams(location.search).get('q') === 'low' ? 'low' : 'high',
@@ -502,6 +519,47 @@ export const useStore = create<GameState>()((set, get) => ({
       set({ flags: { ...get().flags, story_room2: true } })
       HAN_BARKS.room2.forEach((id, i) => later(900 + i * 3600, () => get().bark(id)))
     }
+  },
+
+  startMinigame: (id, params, onDone) => {
+    minigameDone = onDone
+    sfx.play('ui_confirm', { volume: 0.5 })
+    set({ minigame: { id, params, key: ++minigameKey }, prompt: null })
+  },
+
+  finishMinigame: (result) => {
+    const done = minigameDone
+    minigameDone = null
+    set({ minigame: null })
+    done?.(result)
+  },
+
+  enterDream: (guest) => {
+    const s = get()
+    if (s.transitioning || s.dream) return
+    const from: [number, number] = [player.x, player.z]
+    set({ transitioning: true, blackout: true, prompt: null })
+    audio.whoosh()
+    later(600, () => {
+      const [x, z] = SCENES.dream.spawns.start
+      placePlayer(x, z)
+      set({ scene: 'dream', room: null, building: null, faded: '', dream: { guest, from, startedAt: performance.now() } })
+    })
+    later(1300, () => set({ blackout: false, transitioning: false }))
+  },
+
+  endDream: (ok) => {
+    const s = get()
+    const d = s.dream
+    if (!d || s.transitioning) return
+    night.sim?.dreamResult(d.guest, ok)
+    set({ transitioning: true, blackout: true })
+    if (ok) audio.chime()
+    later(600, () => {
+      placePlayer(d.from[0], d.from[1])
+      set({ scene: 'home', room: null, building: null, faded: '', dream: null })
+    })
+    later(1300, () => set({ blackout: false, transitioning: false }))
   },
 
   openPanel: (p) => {

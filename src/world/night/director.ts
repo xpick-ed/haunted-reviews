@@ -10,6 +10,7 @@ import { GUESTS } from './guests'
 import { MONTHLY_COST, NIGHTS_PER_MONTH, SKILLS, UPGRADES, planNight, type NightPlan, type UpgradeDef } from './plan'
 import { NightSim, type SimEvent } from './sim'
 import { rateGuest } from './rating'
+import { START_PANTRY, type Fortune, type Ingredient, type RelicId } from './items'
 import type { ActionId, GuestId, NeedKind, ObjectState, RoomId } from './types'
 
 // 深夜導演：把 NightSim 接到遊戲狀態上（DESIGN §2–§13）。
@@ -33,6 +34,16 @@ export interface Meta {
   monthIncome: number
   /** 被收驚過：下一晚陰氣上限 -30 */
   sealed: boolean
+  /** 功德（鬼夜市的錢）：滿足需求、五星評論、夜市小遊戲 */
+  merit: number
+  /** 買到的法器（永久） */
+  items: RelicId[]
+  /** 食材與雜貨的數量 */
+  pantry: Partial<Record<Ingredient, number>>
+  /** 今天擲筊得到的運勢（天亮清掉） */
+  fortune: Fortune | null
+  /** 今天擲了幾次筊（一天三次） */
+  jiaobei: number
 }
 
 export interface GuestView {
@@ -125,7 +136,8 @@ export interface NightSlice {
   month: MonthReport | null
   /** 傍晚顯示「今晚入住」卡片 */
   intro: boolean
-  panel: 'skills' | null
+  /** 開著的面板：技能樹、柑仔店、鬼夜市法器攤 */
+  panel: 'skills' | 'shop' | 'relics' | null
   /** 慢動作（被看到的瞬間） */
   timeScale: number
   flickerUntil: Record<RoomId, number>
@@ -154,6 +166,11 @@ export const START_META = (): Meta => ({
   upgrades: [],
   monthIncome: 0,
   sealed: false,
+  merit: 0,
+  items: [],
+  pantry: { ...START_PANTRY },
+  fortune: null,
+  jiaobei: 0,
 })
 
 /** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
@@ -255,7 +272,7 @@ interface HostState {
 let lastBark = 0
 
 export function yinMax(meta: Meta) {
-  return 100 + (meta.skills.includes('yinmax') ? 30 : 0) - (meta.sealed ? 30 : 0)
+  return 100 + (meta.skills.includes('yinmax') ? 30 : 0) + (meta.items?.includes('gourd') ? 20 : 0) - (meta.sealed ? 30 : 0)
 }
 
 export function createNightSlice(set: Api['setState'], get: Api['getState']): NightSlice {

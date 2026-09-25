@@ -63,7 +63,7 @@ export function WorldController() {
     const s = useStore.getState()
     const dt = Math.min(rawDt, 0.1) * s.timeScale
     const scene = SCENES[s.scene]
-    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy
+    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy || !!s.minigame
     const move = input.read()
     const colliders = s.scene === 'home' && s.phase === 'night' ? withGuests(collidersFor(s.scene, s.phase)) : collidersFor(s.scene, s.phase)
     stepPlayer(dt, move, colliders, frozen)
@@ -107,6 +107,7 @@ export function WorldController() {
     // 出口
     if (!frozen) {
       for (const e of scene.exits) {
+        if (e.when && !e.when(s)) continue
         if (inRect(e.area, player.x, player.z)) {
           s.goto(e.to, e.spawn)
           break

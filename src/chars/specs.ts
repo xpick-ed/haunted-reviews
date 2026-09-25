@@ -266,3 +266,8 @@ export const SPECS: Record<string, ChibiSpec> = {
     },
   },
 }
+
+// 新 NPC 的暫時長相（DESIGN §25）：先借現有角色換顏色，之後由美術工作換成正式的。
+SPECS.ajiao ??= { ...SPECS.agui, id: 'ajiao', top: { ...SPECS.agui.top, color: '#c8506e' } }
+SPECS.jinyubo ??= { ...SPECS.atu, id: 'jinyubo', ghost: true, top: { ...SPECS.atu.top, color: '#e8923a' } }
+SPECS.hongyi ??= { ...SPECS.linmom, id: 'hongyi', ghost: true, top: { ...SPECS.linmom.top, color: '#a02a2a' } }

@@ -1,6 +1,9 @@
 import type { GameState } from '../store'
 import { DRESSER, HAN_SWEEP, SEWING, SINK, STOVE, TEA_SEAT } from '../scene/layout'
 import { SPOTS, TEMPLE, type SceneId } from './scenes'
+import { VILLAGE_HOTSPOTS } from './sceneVillage'
+import { GARDEN_HOTSPOTS } from './sceneGarden'
+import { MARKET_HOTSPOTS } from './sceneMarket'
 
 // 可以互動的地點（DESIGN §6：動作是空間的，走到床邊才能蓋被子）。
 // 靠近時動作鍵顯示 label；label 回傳 null 表示現在不能用。
@@ -20,7 +23,7 @@ export interface Hotspot {
   run: (s: GameState) => void
 }
 
-export const HOTSPOTS: Hotspot[] = [
+const BASE_HOTSPOTS: Hotspot[] = [
   // ---------- 阿春民宿 ----------
   {
     id: 'altar',
@@ -113,6 +116,9 @@ export const HOTSPOTS: Hotspot[] = [
     run: (s) => s.startDialogue(s.flags.ayi_met ? 'ayi_again' : 'ayi_1'),
   },
 ]
+
+/** 所有場景的熱點：新場景的熱點寫在各自的 scene<Name>.ts */
+export const HOTSPOTS: Hotspot[] = [...BASE_HOTSPOTS, ...VILLAGE_HOTSPOTS, ...GARDEN_HOTSPOTS, ...MARKET_HOTSPOTS]
 
 /** 目前最近、可以用的熱點 */
 export function nearestHotspot(s: GameState, x: number, z: number): { h: Hotspot; label: string; cost: number } | null {

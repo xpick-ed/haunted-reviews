@@ -117,6 +117,7 @@ const LINES: { id: SkillDef['line']; name: string; cls: string }[] = [
   { id: 'kind', name: '慈祥', cls: 'kind' },
   { id: 'scare', name: '嚇人', cls: 'scare' },
   { id: 'ghost', name: '鬼術', cls: 'ghost' },
+  { id: 'spirit', name: '靈術', cls: 'spirit' },
 ]
 
 export function SkillTree() {

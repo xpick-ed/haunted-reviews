@@ -332,7 +332,7 @@ function KeyHint() {
   if (!show) return null
   return (
     <div className="key-hint">
-      <b>WASD</b> 移動　<b>Shift</b> 快飄　<b>E</b> 互動　<b>Q</b> 換動作
+      <b>WASD</b> 移動　<b>連點方向</b>／<b>Shift</b> 快飄　<b>E</b> 互動　<b>Q</b> 換動作
     </div>
   )
 }

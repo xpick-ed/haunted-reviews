@@ -404,10 +404,13 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
       headX -= 0.08 * k
     }
     if (spec.ghost) {
-      // 飄：手往後拖、身體前傾
-      L[0] += 0.4 * a
-      Rr[0] += 0.4 * a
-      lean += 0.22 * a
+      // 飄：手往後拖、身體前傾；快飄（比走路快）時更往前衝、手拖得更後面
+      const run = THREE.MathUtils.clamp((d.speed - 2.7) / 1.4, 0, 1)
+      L[0] += 0.4 * a + 0.45 * run
+      Rr[0] += 0.4 * a + 0.45 * run
+      L[1] -= 0.15 * run
+      Rr[1] -= 0.15 * run
+      lean += 0.22 * a + 0.2 * run
     } else {
       L[0] += Math.sin(c.phase) * 0.6 * a * (p.swingL ?? 1)
       Rr[0] -= Math.sin(c.phase) * 0.6 * a * (p.swingR ?? 1)

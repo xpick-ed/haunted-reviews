@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useStore, type Prompt } from '../store'
 import { input } from '../world/input'
+import { sfx } from '../audio/sfx'
 import { player, stepPlayer } from '../world/player'
 import { SCENES, npcColliders, type SceneId } from '../world/scenes'
 import type { Circle, Colliders } from '../world/collision'
@@ -26,6 +27,8 @@ function collidersFor(scene: SceneId, phase: string): Colliders {
   }
   return c
 }
+
+let wasDashing = false
 
 /** 深夜：走動中的客人、廟公也不能重疊（每幀位置會變，不快取） */
 const moving: Colliders = { rects: [], circles: [], bounds: { x0: -1e3, z0: -1e3, x1: 1e3, z1: 1e3 } }
@@ -72,6 +75,9 @@ export function WorldController() {
     const colliders = s.scene === 'home' && s.phase === 'night' ? withGuests(collidersFor(s.scene, s.phase)) : collidersFor(s.scene, s.phase)
     stepPlayer(dt, move, colliders, frozen)
     if (player.dashing) s.spendYin(dt * 1)
+    // 開始快飄：輕輕的一陣風聲
+    if (player.dashing && !wasDashing) sfx.play('whoosh', { volume: 0.22 })
+    wasDashing = player.dashing
     if (!s.dialogue && !s.transitioning) s.nightStep(dt)
 
     // 在哪個房間、哪棟建築

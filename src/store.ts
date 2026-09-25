@@ -290,10 +290,13 @@ export const useStore = create<GameState>()((set, get) => ({
       else get().advance()
       return
     }
-    if (!s.started || s.transitioning || s.summary || s.month || s.intro || s.panel || s.busy || !s.prompt) return
+    if (!s.started || s.transitioning || s.summary || s.month || s.intro || s.panel || s.busy || s.hold || s.minigame || !s.prompt) return
     const o = s.prompt.opts[s.prompt.i] ?? s.prompt.opts[0]
     if (!o) return
-    if (o.hotspot) {
+    if (o.special === 'unhide') s.exitHide()
+    else if (o.special === 'unpossess') s.exitPossess()
+    else if (o.special === 'meow') s.meow()
+    else if (o.hotspot) {
       const h = HOTSPOTS.find((x) => x.id === o.hotspot)
       if (h) h.run(get())
     } else if (o.option) get().runOption(o.option)
@@ -499,6 +502,11 @@ export const useStore = create<GameState>()((set, get) => ({
       view: [],
       intro: true,
       plan: planFor(s.meta),
+      meta: { ...s.meta, jiaobei: 0 },
+      hold: null,
+      possess: null,
+      hidden: null,
+      dish: null,
       roomLit: { r1: 0, r2: 0 },
     }))
     preloadNightVoices(get().plan)

@@ -1,6 +1,6 @@
-import { GUEST_ROOMS, ROCKER, SINK, STOVE } from '../../scene/layout'
+import { GUEST_ROOMS, KITCHEN_JAR, MAIN, ROCKER, SINK, STOVE, WING_R } from '../../scene/layout'
 import type { GuestRT, NightSim } from './sim'
-import type { ActionId, NeedKind, ObjectState, RoomId } from './types'
+import type { ActionId, GuestId, NeedKind, ObjectState, RoomId } from './types'
 
 // 阿嬤能做的動作（DESIGN §6）與深夜的互動點。
 // 互動點靠近時，所有範圍內的動作排成一個清單：客人需要的排前面，動作鍵顯示第一個，可以切換。
@@ -61,7 +61,20 @@ export interface Option {
   z: number
   /** 嚇人的動作發生在哪一區（YouTuber 拍攝區） */
   area?: string
+  /** 對誰做（托夢） */
+  guest?: GuestId
 }
+
+/** 躲藏點（DESIGN §25.2）：躲的時候站在 (x, z)（家具裡面），出來站在 (outX, outZ) */
+export const HIDE_SPOTS: { id: string; name: string; x: number; z: number; outX: number; outZ: number; iconY: number }[] = [
+  { id: 'hide.wardrobe', name: '躲進衣櫃', x: WING_R.x1 - 0.48, z: WING_R.split + 0.62, outX: 8.75, outZ: WING_R.split + 0.62, iconY: 2.2 },
+  { id: 'hide.altar', name: '躲到神桌下', x: 0.9, z: MAIN.z0 + 0.62, outX: 1.9, outZ: MAIN.z0 + 1.3, iconY: 1.0 },
+  { id: 'hide.jar', name: '躲到水缸後面', x: KITCHEN_JAR.x - 0.35, z: KITCHEN_JAR.z - 0.4, outX: KITCHEN_JAR.x + 0.7, outZ: KITCHEN_JAR.z + 0.1, iconY: 1.2 },
+  { id: 'hide.door', name: '躲到門後', x: GUEST_ROOMS.r2.doorIn[0] + 0.15, z: GUEST_ROOMS.r2.doorIn[1] + 0.7, outX: GUEST_ROOMS.r2.doorIn[0] - 0.1, outZ: GUEST_ROOMS.r2.doorIn[1], iconY: 1.9 },
+]
+
+/** 神明廳八仙桌上的收音機 */
+export const RADIO = { x: 0.35, z: MAIN.z0 + 1.87 }
 
 export interface Spot {
   id: string
@@ -115,6 +128,11 @@ export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[
         if (kid) o.push(opt('play', bed, { room, needed: true }))
         const elders = gs.filter((g) => g.def.type === 'elder' && g.awake && g.needs.some((n) => n.kind === 'chat'))
         if (elders.length) o.push(opt('chat', bed, { room, needed: true }))
+        // 打蚊子：不花陰氣，但要玩小遊戲、拍空會有聲音
+        if (needs(gs, 'mosquito')) o.push(opt('swat', bed, { room, needed: true }))
+        // 托夢：對睡著的客人
+        if (has(ctx, 'dream'))
+          for (const g of inBed) if (!g.awake && !g.dreamt) o.push(opt('dream', bed, { room, guest: g.id, label: `托夢給${g.def.name}`, needed: needs([g], 'insomnia') }))
         return o
       },
     })
@@ -157,6 +175,17 @@ export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[
   out.push({ ...rocker, options: () => (has(ctx, 'rocker') ? [opt('rocker', rocker, { area: 'gm', needed: needs(anyGuests, 'scare') })] : []) })
   const mirror: Spot = { id: 'bath.mirror', x: SINK.x - 0.7, z: SINK.z - 0.2, r: 1.0, icon: [SINK.x, 2.2, SINK.z] }
   out.push({ ...mirror, options: () => (has(ctx, 'mirror') ? [opt('mirror', mirror, { area: 'bath', needed: needs(anyGuests, 'scare') })] : []) })
+  const radio: Spot = { id: 'hall.radio', x: RADIO.x + 0.9, z: RADIO.z + 0.5, r: 1.2, icon: [RADIO.x, 1.35, RADIO.z] }
+  out.push({ ...radio, options: () => (has(ctx, 'radio') && !on(ctx, 'hall.radio') ? [opt('radio', radio, { needed: needs(anyGuests, 'insomnia') })] : []) })
+  const cat = ctx.sim.cat
+  if (has(ctx, 'possess')) {
+    const c: Spot = { id: 'cat', x: cat.x, z: cat.z, r: 1.2, icon: [cat.x, 0.9, cat.z] }
+    out.push({ ...c, options: () => [opt('possess', c)] })
+  }
+  for (const h of HIDE_SPOTS) {
+    const sp: Spot = { id: h.id, x: h.outX, z: h.outZ, r: 0.9, icon: [h.x, h.iconY, h.z] }
+    out.push({ ...sp, options: () => [opt('hide', sp, { label: h.name })] })
+  }
   const dog = ctx.sim.dog
   if (dog && dog.barking && !dog.calm) {
     const d: Spot = { id: 'dog', x: dog.x, z: dog.z - 0.6, r: 1.3, icon: [dog.x, 1.0, dog.z] }

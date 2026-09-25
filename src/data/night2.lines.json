@@ -1,0 +1,18 @@
+{
+  "gm.swat.1": { "who": "grandma", "text": "啪！……嘿，一隻都別想跑。" },
+  "gm.swat.2": { "who": "grandma", "text": "蚊仔莫吵人睏。" },
+  "gm.radio.1": { "who": "grandma", "text": "放一條老歌仔，大家好好睏。" },
+  "gm.radio.2": { "who": "grandma", "text": "這條是阮少年時最愛聽的……" },
+  "gm.possess.1": { "who": "grandma", "text": "阿咪，借阿嬤用一下。" },
+  "gm.possess.2": { "who": "grandma", "text": "喵……嘿嘿，當貓仔也袂䆀。" },
+  "gm.hide.1": { "who": "grandma", "text": "噓……" },
+  "gm.hide.2": { "who": "grandma", "text": "阿嬤躲一下就好。" },
+  "gm.dream.1": { "who": "grandma", "text": "來，阿嬤陪你做一個好夢。" },
+  "gm.dream.2": { "who": "grandma", "text": "莫驚，阿嬤在這。" },
+  "gm.jiaobei.ask": { "who": "grandma", "text": "土地公伯仔，今暗阮的人客會平安否？" },
+  "gm.jiaobei.yes": { "who": "grandma", "text": "聖筊！多謝土地公保庇。" },
+  "gm.jiaobei.no": { "who": "grandma", "text": "唉，今天土地公無想欲回答。" },
+  "gm.nocoil": { "who": "grandma", "text": "蚊香用了了……明天去阿嬌那買。" },
+  "gm.cooked.good": { "who": "grandma", "text": "香噴噴，這盤阿嬤最拿手。" },
+  "gm.cooked.bad": { "who": "grandma", "text": "哎喲，有一點仔臭火焦……" }
+}

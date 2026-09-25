@@ -221,6 +221,7 @@ export function NightSummaryCard() {
           <span className="spooky-c">靈異 {delta(sum.spookyDelta)}</span>
           <span>❤️ {delta(sum.heartDelta)}</span>
           <span>技能點 +{sum.points}</span>
+          {sum.merit > 0 && <span className="merit-c">功德 +{sum.merit}</span>}
         </div>
         {sum.pressureDelta > 0 && <p className="warn">差評傳到廟公那裡了……（壓力 {delta(sum.pressureDelta)}）</p>}
         <button className="btn primary big" onClick={close}>

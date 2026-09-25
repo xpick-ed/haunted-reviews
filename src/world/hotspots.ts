@@ -1,4 +1,6 @@
-import type { GameState } from '../store'
+import { useStore, type GameState } from '../store'
+import { FORTUNES } from './night/items'
+import type { JiaobeiResult } from '../ui/minigames/types'
 import { DRESSER, HAN_SWEEP, SEWING, SINK, STOVE, TEA_SEAT } from '../scene/layout'
 import { SPOTS, TEMPLE, type SceneId } from './scenes'
 import { VILLAGE_HOTSPOTS } from './sceneVillage'
@@ -104,6 +106,34 @@ const BASE_HOTSPOTS: Hotspot[] = [
     icon: { x: TEMPLE.burner.x, z: TEMPLE.burner.z }, iconY: 1.9,
     label: (s) => (s.flags.temple_today ? '上香（今天拜過了）' : '上香（陰氣 +25）'),
     run: (s) => s.incense('temple'),
+  },
+  {
+    // 擲筊（DESIGN §25.2）：傍晚才能擲，一天三次，聖筊得到今晚的運勢
+    id: 'temple_jiaobei',
+    scene: 'temple',
+    x: 0.9,
+    z: TEMPLE.hall.z0 + 1.6,
+    r: 1.2,
+    icon: { x: 0, z: TEMPLE.hall.z0 + 0.6 },
+    iconY: 1.7,
+    label: (s) => {
+      if (s.phase !== 'dusk') return null
+      if (s.meta.fortune) return `擲筊（今晚：${FORTUNES[s.meta.fortune].name}）`
+      if (s.meta.jiaobei >= 3) return '擲筊（今天擲完了）'
+      return `擲筊（問今晚運勢，剩 ${3 - s.meta.jiaobei} 次）`
+    },
+    run: (s) => {
+      if (s.meta.fortune || s.meta.jiaobei >= 3) {
+        s.bark(s.meta.fortune ? 'gm.jiaobei.yes' : 'gm.jiaobei.no')
+        return
+      }
+      s.bark('gm.jiaobei.ask')
+      s.startMinigame('jiaobei', { throwsLeft: 3 - s.meta.jiaobei }, (r) => {
+        const res = (r as JiaobeiResult | null) ?? { fortune: null, throws: 0 }
+        useStore.setState((x) => ({ meta: { ...x.meta, jiaobei: x.meta.jiaobei + res.throws, fortune: res.fortune ?? x.meta.fortune } }))
+        if (res.throws > 0) useStore.getState().bark(res.fortune ? 'gm.jiaobei.yes' : 'gm.jiaobei.no')
+      })
+    },
   },
   {
     id: 'ayi',

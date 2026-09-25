@@ -54,6 +54,8 @@ export function Grandma() {
     // 相位累加（舊寫法 sin(總時間×頻率) 在速度一變時相位會跳，角色會上下抖）
     const y = floatBob(bob.current, player.speed, dt)
     group.current?.position.set(player.x, floorY.current + 0.18 + y, player.z)
+    // 附身在貓身上、或躲起來的時候看不到阿嬤
+    if (group.current) group.current.visible = !s.possess && !s.hidden
 
     const d = drive.current
     d.speed = bob.current.speed

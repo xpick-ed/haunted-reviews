@@ -1763,3 +1763,67 @@ body,
   left: 50%;
   transform: translateX(-50%);
 }
+.merit-c {
+  color: #9be8d8;
+}
+
+/* ---------- 長按、躲藏、附身 ---------- */
+.action-btn.holding {
+  border-color: var(--ghost);
+}
+.hold-ring {
+  position: absolute;
+  inset: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  pointer-events: none;
+  overflow: visible;
+}
+.hold-ring rect {
+  fill: none;
+  stroke: var(--ghost);
+  stroke-width: 4;
+  stroke-dasharray: 1;
+  filter: drop-shadow(0 0 6px rgba(143, 244, 255, 0.8));
+}
+.hold-tag {
+  background: var(--ghost) !important;
+}
+.action-hint-hold {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.hide-view {
+  position: fixed;
+  inset: 0;
+  pointer-events: none !important;
+  animation: fade 0.3s ease-out;
+}
+.hide-slit {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 9% 42% at 50% 45%, transparent 70%, rgba(4, 3, 2, 0.94) 100%);
+}
+.hide-text {
+  position: absolute;
+  left: 50%;
+  bottom: calc(130px + var(--safe-b));
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.possess-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -150px);
+  font-size: 13px;
+  color: #ffd89a;
+  background: rgba(40, 24, 8, 0.7);
+  border: 1px solid rgba(255, 200, 120, 0.4);
+  border-radius: 999px;
+  padding: 3px 12px;
+  pointer-events: none !important;
+}

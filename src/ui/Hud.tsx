@@ -34,6 +34,8 @@ export function Hud() {
   const modal = !!summary || !!month || intro || !!panel || minigame
   return (
     <div className="hud">
+      <HideView />
+      <PossessBadge />
       <Watched />
       {!modal && (
         <div className="left-col">
@@ -244,11 +246,14 @@ function ActionButton() {
   const yin = useStore((s) => s.yin)
   const busy = useStore((s) => s.busy)
   const cycle = useStore((s) => s.cycleOption)
+  const hold = useStore((s) => s.hold)
   if (!prompt) return null
   const o = prompt.opts[prompt.i] ?? prompt.opts[0]
   if (!o) return null
   const short = o.cost > yin
-  const many = prompt.opts.length > 1
+  const many = prompt.opts.length > 1 && !hold
+  const holding = !!hold && hold.opt.spot === o.spot && hold.opt.action === o.option?.action
+  const k = holding ? Math.min(1, hold.progress / hold.need) : 0
   return (
     <div className="action-wrap">
       {many && (
@@ -267,20 +272,52 @@ function ActionButton() {
         </button>
       )}
       <button
-        className={`action-btn ${short ? 'short' : ''} ${o.needed ? 'needed' : ''}`}
-        disabled={busy}
+        className={`action-btn ${short ? 'short' : ''} ${o.needed ? 'needed' : ''} ${holding ? 'holding' : ''}`}
+        disabled={busy && !holding}
         onPointerDown={(e) => {
           e.stopPropagation()
-          input.fireAction()
+          e.currentTarget.setPointerCapture(e.pointerId)
+          input.pressAction()
         }}
+        onPointerUp={() => input.releaseAction()}
+        onPointerCancel={() => input.releaseAction()}
+        onLostPointerCapture={() => input.releaseAction()}
       >
-        {o.needed && <span className="needed-tag">有人需要</span>}
+        {holding && (
+          <svg className="hold-ring" viewBox="0 0 100 100" aria-hidden>
+            <rect x="3" y="3" width="94" height="94" rx="22" pathLength={1} style={{ strokeDashoffset: 1 - k }} />
+          </svg>
+        )}
+        {o.needed && !holding && <span className="needed-tag">有人需要</span>}
+        {holding && <span className="needed-tag hold-tag">按住……</span>}
         <span className="action-label">{o.label}</span>
         {o.cost > 0 && <span className="action-cost">陰氣 {o.cost}</span>}
+        {o.option && HOLD_HINT.has(o.option.action) && !holding && <span className="action-hint-hold">長按</span>}
         <span className="action-key">E</span>
       </button>
     </div>
   )
+}
+
+const HOLD_HINT = new Set(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver'])
+
+/** 躲起來的時候：畫面只剩一條縫 */
+function HideView() {
+  const hidden = useStore((s) => s.hidden)
+  if (!hidden) return null
+  return (
+    <div className="hide-view">
+      <div className="hide-slit" />
+      <div className="hide-text">躲著……誰都看不到妳。推搖桿或按 E 出來</div>
+    </div>
+  )
+}
+
+/** 附身在阿咪身上 */
+function PossessBadge() {
+  const possess = useStore((s) => s.possess)
+  if (!possess) return null
+  return <div className="possess-badge">🐈 附身阿咪中（陰氣一直在扣）</div>
 }
 
 function KeyHint() {

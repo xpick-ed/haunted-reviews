@@ -10,7 +10,11 @@ import { GUESTS } from './guests'
 import { MONTHLY_COST, NIGHTS_PER_MONTH, SKILLS, UPGRADES, planNight, type NightPlan, type UpgradeDef } from './plan'
 import { NightSim, type SimEvent } from './sim'
 import { rateGuest } from './rating'
-import { START_PANTRY, type Fortune, type Ingredient, type RelicId } from './items'
+import { RECIPES, START_PANTRY, canCook, type Fortune, type Ingredient, type RecipeId, type RelicId } from './items'
+import { HIDE_SPOTS } from './actions'
+import { input } from '../input'
+import { placePlayer } from '../player'
+import type { MinigameId, CookResult, SwatResult } from '../../ui/minigames/types'
 import type { ActionId, GuestId, NeedKind, ObjectState, RoomId } from './types'
 
 // 深夜導演：把 NightSim 接到遊戲狀態上（DESIGN §2–§13）。
@@ -88,6 +92,8 @@ export interface NightSummary {
   pressureDelta: number
   stats: NightStats
   monthEnd: boolean
+  /** 今晚得到的功德 */
+  merit: number
 }
 
 export interface MonthReport {
@@ -123,6 +129,19 @@ export interface PromptOpt {
   option?: Option
   /** 靜態互動點（傍晚的上香、竹椅等） */
   hotspot?: string
+  /** 附身／躲藏時的特殊選項 */
+  special?: 'meow' | 'unpossess' | 'unhide'
+}
+
+/** 長按動作進行中（DESIGN §25.2）：按住才會前進，放開暫停，3 秒內回來可以接著做 */
+export interface HoldState {
+  opt: Option
+  progress: number
+  need: number
+  /** 開始時站的位置：走開就取消 */
+  at: [number, number]
+  /** 最後一次按著的時間（performance.now） */
+  heldAt: number
 }
 
 export interface NightSlice {
@@ -143,6 +162,13 @@ export interface NightSlice {
   flickerUntil: Record<RoomId, number>
   /** 被看著（懷疑值最高的那個人）0..1，HUD 顯示 */
   watched: number
+  hold: HoldState | null
+  /** 附身在貓身上 */
+  possess: 'cat' | null
+  /** 躲在哪個躲藏點 */
+  hidden: string | null
+  /** 端著的宵夜（煮好的食譜與品質） */
+  dish: { recipe: RecipeId; quality: number } | null
 
   nightBegin: () => void
   nightStep: (dt: number) => void
@@ -152,6 +178,9 @@ export interface NightSlice {
   closeMonth: (upgrade: string | null) => void
   learnSkill: (id: string) => void
   setObject: (id: string, on: boolean) => void
+  exitPossess: () => void
+  exitHide: () => void
+  meow: () => void
 }
 
 export const START_META = (): Meta => ({
@@ -194,6 +223,9 @@ export const planFor = (m: Meta) => planNight(m.night, m.warm, m.spooky, m.press
 
 export const EMPTY_STATS = (): NightStats => ({ seen: 0, captures: 0, nearmiss: 0, woken: 0, mgCatches: 0, dashed: false, dogCalmed: false })
 
+/** 要長按的動作（慈祥、會發出一點聲音的小事） */
+const HOLD_ACTIONS = new Set<ActionId>(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver'])
+
 /** 模擬本體放在模組變數（每幀會改的東西不放進 zustand） */
 export const night: { sim: NightSim | null } = { sim: null }
 
@@ -201,14 +233,14 @@ const pick = <T,>(arr: T[] | undefined): T | undefined => (arr && arr.length ? a
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
 
 /** 依住客組出今晚的挑戰 */
-function makeChallenges(plan: NightPlan): Challenge[] {
+function makeChallenges(plan: NightPlan, meta?: Meta): Challenge[] {
   const ids = plan.parties.flatMap((p) => p.members)
   const c: Challenge[] = []
   const add = (id: string, label: string) => c.push({ id, label, done: false, failed: false })
   if (ids.includes('akai')) add('capture2', '讓阿凱拍到 2 次靈異畫面')
   if (ids.includes('xiaoyu')) add('play', '陪小宇玩')
   if (ids.includes('agui')) add('chat', '跟阿桂、阿土伯聊聊')
-  if (plan.event === 'dog') add('dog', '安撫半夜亂叫的小黑')
+  if (plan.event === 'dog' && !meta?.items.includes('bell')) add('dog', '安撫半夜亂叫的小黑')
   if (plan.event === 'miaogong') add('mg', '廟公巡夜時一次都沒被抓到')
   add('stealth', '整晚沒被（看不到鬼的）客人看到')
   if (c.length < 3) add('allneeds', '滿足每一個出現的需求')
@@ -265,6 +297,10 @@ interface HostState {
   bark: (id: string, quiet?: boolean) => void
   say: (text: string) => void
   startDialogue: (id: string, onEnd?: () => void) => void
+  dialogue: unknown
+  minigame: unknown
+  startMinigame: (id: MinigameId, params: unknown, onDone: (result: unknown) => void) => void
+  enterDream: (guest: GuestId) => void
   save: () => void
   resetNight: () => void
 }
@@ -422,6 +458,155 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     set({ challenges: ch })
   }
 
+  /** 動作真正發生（長按完成、或一般動作的 0.38 秒後） */
+  const performAction = (o: Option) => {
+    const sim = night.sim
+    if (!sim) return
+    const def = ACTION_DEFS[o.action]
+    const st = get()
+    const room = o.room ?? null
+    const soft = st.meta.skills.includes('softhands') && def.type === 'kind'
+    // 做動作時被醒著的人看到（慈祥的動作被看到＝嚇到三倍）
+    if (def.type === 'kind' && o.action !== 'cook') {
+      if (!soft || Math.random() < 0.6) sim.actionSeen(o.x, o.z, room, true)
+    }
+    const pantry = { ...st.meta.pantry }
+    const use = (k: Ingredient) => {
+      if ((pantry[k] ?? 0) <= 0) return false
+      pantry[k] = (pantry[k] ?? 0) - 1
+      set((x) => ({ meta: { ...x.meta, pantry } }))
+      return true
+    }
+    switch (o.action) {
+      case 'tuck':
+        sim.tuck(room!)
+        sim.satisfy(room!, 'cold', def.comfort!)
+        sfx.play('cloth', { volume: 0.8 })
+        set({ warm: 1 })
+        break
+      case 'temp': {
+        const onNow = !st.objects[`${room}.fan`]?.on
+        get().setObject(`${room}.fan`, onNow)
+        if (onNow) sim.satisfy(room!, 'hot', def.comfort!)
+        break
+      }
+      case 'water':
+        get().setObject(`${room}.cup`, true)
+        sim.satisfy(room!, 'thirsty', def.comfort!)
+        break
+      case 'coil':
+        if (!use('coil')) {
+          get().bark('gm.nocoil')
+          return
+        }
+        get().setObject(`${room}.coil`, true)
+        sim.satisfy(room!, 'mosquito', def.comfort!)
+        break
+      case 'nightlight':
+        get().setObject(`${room}.lamp`, true)
+        if (!sim.blackout(st.time)) sim.satisfy(room!, 'dark', def.comfort!)
+        // 停電：有蠟燭就點蠟燭，沒有的話只好點個小火光
+        else sim.satisfy(room!, 'dark', def.comfort! * (use('candle') ? 1 : 0.6))
+        break
+      case 'window':
+        get().setObject(`${room}.window`, true)
+        sim.satisfy(room!, 'cold', def.comfort!)
+        break
+      case 'pat':
+      case 'lullaby':
+        sim.satisfy(room!, 'insomnia', def.comfort!)
+        break
+      case 'deliver': {
+        const dish = st.dish ?? { recipe: 'porridge' as RecipeId, quality: 0.5 }
+        const recipe = RECIPES.find((r) => r.id === dish.recipe)!
+        const comfort = recipe.comfort * (0.6 + 0.6 * dish.quality)
+        set({ carrying: false, dish: null })
+        get().setObject(`${room}.dish`, true)
+        const fed = sim.satisfy(room!, 'hungry', comfort)
+        for (const g of sim.guests) {
+          if (g.room !== room) continue
+          if (recipe.likes.includes(g.def.type)) g.comfort += 15
+          // 沒人餓也會醒來吃一點
+          if (!fed && g.awake) g.comfort += comfort * 0.4
+        }
+        if (recipe.alsoCold) sim.satisfy(room!, 'cold', 8)
+        break
+      }
+      case 'flicker':
+        set((x) => ({ flickerUntil: { ...x.flickerUntil, [room!]: performance.now() + 1300 } }))
+        sim.scare(room!, GUEST_ROOMS[room!].lamp[0], GUEST_ROOMS[room!].lamp[1], def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
+        sfx.play('switch', { volume: 0.6 })
+        break
+      case 'knock':
+        sim.scare(room!, o.x, o.z, def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
+        sfx.play('knock', { volume: 0.9 })
+        break
+      case 'rocker':
+        get().setObject('gm.rocker', true)
+        sim.scare('gm', o.x, o.z, def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
+        sfx.play('creak', { volume: 0.9 })
+        break
+      case 'mirror':
+        get().setObject('bath.mirror', true)
+        sim.scare('bath', o.x, o.z, def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
+        break
+      case 'radio':
+        // 神明廳的收音機放老歌：兩間房的「睡不著」都解決；醒著的膽小客人聽到半夜的老歌會怕
+        get().setObject('hall.radio', true)
+        window.setTimeout(() => get().setObject('hall.radio', false), 20000)
+        for (const r of ['r1', 'r2'] as RoomId[]) sim.satisfy(r, 'insomnia', def.comfort!)
+        for (const g of sim.guests) if (g.awake && !g.def.seesGhost && g.def.type !== 'thrill') g.fear += g.def.type === 'timid' ? 8 : 3
+        break
+      case 'play':
+        get().startDialogue('xiaoyu_play', () => sim.satisfy(room!, 'play', def.comfort!))
+        break
+      case 'chat':
+        get().startDialogue('agui_chat', () => {
+          sim.satisfy(room!, 'chat', def.comfort!)
+          set((x) => ({ flags: { ...x.flags, chat_agui: true } }))
+        })
+        break
+      case 'calm':
+        sim.calmDog()
+        audio.chime()
+        break
+    }
+    if (def.noise > 0 && def.type !== 'scare') sim.noise(o.x, o.z, def.noise * (soft ? 0.5 : 1))
+    if (o.action !== 'play' && o.action !== 'chat' && o.action !== 'cook') gmBark(o.action as keyof typeof GM_BARKS)
+    refreshView()
+  }
+
+  /** 每幀：長按動作的進度 */
+  const stepHold = (dt: number) => {
+    const s = get()
+    const h = s.hold
+    if (!h) return
+    const now = performance.now()
+    // 走開了就取消
+    if (Math.hypot(player.x - h.at[0], player.z - h.at[1]) > 0.6) {
+      set({ hold: null, busy: false })
+      return
+    }
+    if (input.actionHeld && !s.dialogue && !s.minigame) {
+      const progress = h.progress + dt
+      if (progress >= h.need) {
+        const cost = h.opt.cost
+        if (s.yin < cost) {
+          set({ hold: null, busy: false })
+          gmBark('noyin')
+          return
+        }
+        set({ hold: null, busy: false, yin: s.yin - cost })
+        performAction(h.opt)
+        return
+      }
+      set({ hold: { ...h, progress, heldAt: now }, busy: true })
+    } else {
+      if (s.busy) set({ busy: false })
+      if (now - h.heldAt > 3000) set({ hold: null })
+    }
+  }
+
   return {
     meta: START_META(),
     plan: planNight(1, 20, 0, 0),
@@ -436,14 +621,20 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     timeScale: 1,
     flickerUntil: { r1: 0, r2: 0 },
     watched: 0,
+    hold: null,
+    possess: null,
+    hidden: null,
+    dish: null,
 
     setObject: (id, on) => set((s) => ({ objects: { ...s.objects, [id]: { on, at: performance.now() } } })),
 
     nightBegin: () => {
       const s = get()
       const plan = planFor(s.meta)
-      night.sim = new NightSim(plan, { seed: s.meta.night * 131 + 7, upgrades: s.meta.upgrades })
-      set({ plan, objects: {}, carrying: false, stats: EMPTY_STATS(), challenges: makeChallenges(plan), summary: null, flickerUntil: { r1: 0, r2: 0 } })
+      night.sim = new NightSim(plan, { seed: s.meta.night * 131 + 7, upgrades: s.meta.upgrades, items: s.meta.items, fortune: s.meta.fortune })
+      set({ plan, objects: {}, carrying: false, dish: null, hold: null, possess: null, hidden: null, stats: EMPTY_STATS(), challenges: makeChallenges(plan, s.meta), summary: null, flickerUntil: { r1: 0, r2: 0 } })
+      // 擲筊擲到「陰氣充足」
+      if (s.meta.fortune === 'yin') set({ yin: Math.min(yinMax(s.meta), s.yin + 30) })
       // 入住的第一句話
       night.sim.guests.forEach((g, i) => window.setTimeout(() => guestBark(g.id, 'arrive'), 2600 + i * 1900))
       if (plan.event !== 'none' && plan.event !== 'miaogong') {
@@ -461,14 +652,23 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
       // 慢動作回到正常
       if (s.timeScale < 1) set({ timeScale: Math.min(1, s.timeScale + dt * 1.1) })
       if (player.dashing && !s.stats.dashed) set({ stats: { ...s.stats, dashed: true } })
+      stepHold(dt)
+      // 附身：每秒扣陰氣，扣完就被彈出來
+      if (s.possess) {
+        const yin = Math.max(0, get().yin - dt * 1.2)
+        set({ yin })
+        if (yin <= 0) get().exitPossess()
+      }
       const events = sim.update(dt, s.time, {
         x: player.x,
         z: player.z,
         speed: player.speed,
-        busy: s.busy,
+        busy: get().busy,
         carrying: s.carrying,
         home: s.scene === 'home',
-        walkFactor: s.meta.skills.includes('ghoststep') ? 0.65 : 1,
+        walkFactor: (s.meta.skills.includes('ghoststep') ? 0.65 : 1) * (s.meta.items.includes('hat') ? 0.8 : 1),
+        hidden: !!s.hidden,
+        cat: s.possess === 'cat',
       }, s.objects)
       for (const e of events) handle(e)
       // 客房燈：模擬給的亮度 + 燈閃
@@ -488,109 +688,99 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     runOption: (o) => {
       const s = get()
       const sim = night.sim
-      if (!sim || s.busy) return
+      if (!sim || s.busy || s.hold) return
       const def = ACTION_DEFS[o.action]
       if (s.yin < o.cost) {
         gmBark('noyin')
         return
       }
-      if (s.meta.sealed && (get().stats.mgCatches >= 3)) {
+      if (s.meta.sealed && get().stats.mgCatches >= 3) {
         get().say('被廟公收驚了，今晚動不了。')
         return
       }
-      set({ busy: true, yin: s.yin - o.cost })
-      if (o.action !== 'play' && o.action !== 'chat') audio.whoosh()
-      const soft = s.meta.skills.includes('softhands') && def.type === 'kind'
-      const act = () => {
-        const st = get()
-        const room = o.room ?? null
-        // 做動作時被醒著的人看到（慈祥的動作被看到＝嚇到三倍）
-        if (def.type === 'kind' && o.action !== 'cook') {
-          if (!soft || Math.random() < 0.6) sim.actionSeen(o.x, o.z, room, true)
-        }
-        switch (o.action) {
-          case 'tuck':
-            sim.tuck(room!)
-            sim.satisfy(room!, 'cold', def.comfort!)
-            sfx.play('cloth', { volume: 0.8 })
-            set({ warm: 1 })
-            break
-          case 'temp': {
-            const onNow = !st.objects[`${room}.fan`]?.on
-            get().setObject(`${room}.fan`, onNow)
-            if (onNow) sim.satisfy(room!, 'hot', def.comfort!)
-            break
-          }
-          case 'water':
-            get().setObject(`${room}.cup`, true)
-            sim.satisfy(room!, 'thirsty', def.comfort!)
-            break
-          case 'coil':
-            get().setObject(`${room}.coil`, true)
-            sim.satisfy(room!, 'mosquito', def.comfort!)
-            break
-          case 'nightlight':
-            get().setObject(`${room}.lamp`, true)
-            if (!sim.blackout(st.time)) sim.satisfy(room!, 'dark', def.comfort!)
-            else sim.satisfy(room!, 'dark', def.comfort! * 0.6) // 停電：點蠟燭
-            break
-          case 'window':
-            get().setObject(`${room}.window`, true)
-            sim.satisfy(room!, 'cold', def.comfort!)
-            break
-          case 'pat':
-          case 'lullaby':
-            sim.satisfy(room!, 'insomnia', def.comfort!)
-            break
-          case 'cook':
+      // 長按動作：按住才會前進（客人一轉頭就要放開）
+      if (HOLD_ACTIONS.has(o.action)) {
+        const soft = s.meta.skills.includes('softhands')
+        set({ hold: { opt: o, progress: 0, need: def.busy * 1.3 * (soft ? 0.75 : 1), at: [player.x, player.z], heldAt: performance.now() }, busy: true })
+        sfx.play('cloth', { volume: 0.35 })
+        return
+      }
+      switch (o.action) {
+        case 'cook': {
+          const recipes = RECIPES.filter((r) => canCook(r, s.meta.pantry)).map((r) => r.id)
+          get().startMinigame('cook', { recipes }, (r) => {
+            const res = r as CookResult
+            if (!res) return
+            const recipe = RECIPES.find((x) => x.id === res.recipe)!
+            const pantry = { ...get().meta.pantry }
+            for (const [k, n] of Object.entries(recipe.needs)) pantry[k as Ingredient] = Math.max(0, (pantry[k as Ingredient] ?? 0) - (n ?? 0))
+            set((x) => ({ yin: Math.max(0, x.yin - o.cost), carrying: true, dish: { recipe: recipe.id, quality: res.quality }, meta: { ...x.meta, pantry } }))
             get().setObject('kitchen.stove', true)
             window.setTimeout(() => get().setObject('kitchen.stove', false), 6000)
-            set({ carrying: true })
-            gmBark('carry')
-            break
-          case 'deliver':
-            set({ carrying: false })
-            get().setObject(`${room}.dish`, true)
-            sim.satisfy(room!, 'hungry', def.comfort!)
-            break
-          case 'flicker':
-            set((x) => ({ flickerUntil: { ...x.flickerUntil, [room!]: performance.now() + 1300 } }))
-            sim.scare(room!, GUEST_ROOMS[room!].lamp[0], GUEST_ROOMS[room!].lamp[1], def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
-            sfx.play('switch', { volume: 0.6 })
-            break
-          case 'knock':
-            sim.scare(room!, o.x, o.z, def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
-            sfx.play('knock', { volume: 0.9 })
-            break
-          case 'rocker':
-            get().setObject('gm.rocker', true)
-            sim.scare('gm', o.x, o.z, def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
-            sfx.play('creak', { volume: 0.9 })
-            break
-          case 'mirror':
-            get().setObject('bath.mirror', true)
-            sim.scare('bath', o.x, o.z, def.fear!, def.noise, st.meta.upgrades.includes('cctv'))
-            break
-          case 'play':
-            get().startDialogue('xiaoyu_play', () => sim.satisfy(room!, 'play', def.comfort!))
-            break
-          case 'chat':
-            get().startDialogue('agui_chat', () => {
-              sim.satisfy(room!, 'chat', def.comfort!)
-              set((x) => ({ flags: { ...x.flags, chat_agui: true } }))
-            })
-            break
-          case 'calm':
-            sim.calmDog()
-            audio.chime()
-            break
+            sim.noise(o.x, o.z, def.noise)
+            get().bark(res.quality >= 0.5 ? 'gm.cooked.good' : 'gm.cooked.bad')
+          })
+          return
         }
-        if (def.noise > 0 && def.type !== 'scare') sim.noise(o.x, o.z, def.noise * (soft ? 0.5 : 1))
-        if (o.action !== 'play' && o.action !== 'chat' && o.action !== 'cook') gmBark(o.action as keyof typeof GM_BARKS)
-        refreshView()
+        case 'swat': {
+          // 看得到的人會看到蚊子被「空氣」拍死
+          sim.actionSeen(o.x, o.z, o.room ?? null, true)
+          get().startMinigame('swat', { count: 6, seconds: 8 }, (r) => {
+            const res = (r as SwatResult | null) ?? { hits: 0, misses: 0 }
+            if (res.hits >= 4) {
+              sim.satisfy(o.room!, 'mosquito', def.comfort!)
+              gmBark('swat')
+            }
+            if (res.misses > 0) sim.noise(o.x, o.z, Math.min(0.5, res.misses * 0.08))
+            refreshView()
+          })
+          return
+        }
+        case 'dream':
+          if (!o.guest) return
+          set({ yin: s.yin - o.cost })
+          gmBark('dream')
+          get().enterDream(o.guest)
+          return
+        case 'possess':
+          set({ yin: s.yin - o.cost, possess: 'cat', prompt: null } as Partial<NightSlice>)
+          placePlayer(sim.cat.x, sim.cat.z)
+          audio.whoosh()
+          gmBark('possess')
+          return
+        case 'hide': {
+          const spot = HIDE_SPOTS.find((h) => h.id === o.spot)
+          if (!spot) return
+          placePlayer(spot.x, spot.z)
+          set({ hidden: spot.id } as Partial<NightSlice>)
+          sfx.play('door_close', { volume: 0.4 })
+          gmBark('hide')
+          return
+        }
       }
-      window.setTimeout(act, 380)
+      set({ busy: true, yin: s.yin - o.cost })
+      if (o.action !== 'play' && o.action !== 'chat') audio.whoosh()
+      window.setTimeout(() => performAction(o), 380)
       window.setTimeout(() => set({ busy: false }), def.busy * 1000)
+    },
+
+    exitPossess: () => {
+      if (!get().possess) return
+      set({ possess: null } as Partial<NightSlice>)
+      audio.whoosh()
+    },
+
+    exitHide: () => {
+      const h = HIDE_SPOTS.find((x) => x.id === get().hidden)
+      if (!h) return
+      placePlayer(h.outX, h.outZ)
+      set({ hidden: null } as Partial<NightSlice>)
+      sfx.play('door_open', { volume: 0.4 })
+    },
+
+    meow: () => {
+      night.sim?.meow()
+      sfx.play('pickup', { volume: 0.25 })
     },
 
     finishNight: () => {
@@ -613,7 +803,8 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         else warmD += (stars - 3) * 3
         if (stars <= 2 && d.type !== 'thrill' && !d.seesGhost) pressureD++
         if (stars === 5 && d.type !== 'thrill') pressureD--
-        reviews.push({ id: g.id, name: d.name, stars, text: reviewText(g.id, stars, g.seen, g.captures), pay })
+        const text = g.dreamt && stars >= 4 && !d.seesGhost ? '昨晚做了一個好溫暖的夢，夢裡有個阿嬤陪著我。起來精神超好，好久沒睡這麼熟了。' : reviewText(g.id, stars, g.seen, g.captures)
+        reviews.push({ id: g.id, name: d.name, stars, text, pay })
       }
       const challenges = s.challenges.map((c) => {
         if (c.failed) return c
@@ -627,7 +818,10 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
       const points = 1 + fives + (doneCount >= 2 ? 1 : 0)
       const avg = reviews.reduce((a, r) => a + r.stars, 0) / Math.max(1, reviews.length)
       const heartD = avg >= 4 ? 3 : avg <= 2 ? -5 : 0
-      const tip = doneCount * 300
+      // 擲筊擲到「財神到」：小費加倍
+      const tip = doneCount * 300 * (s.meta.fortune === 'luck' ? 2 : 1)
+      // 功德：每滿足一個需求 +1、每則五星 +2
+      const merit = sim.guests.reduce((a, g) => a + g.met.length, 0) + fives * 2
       const monthEnd = s.meta.night % NIGHTS_PER_MONTH === 0
       // 廟公來過（不管有沒有被收驚），壓力歸零
       const pressure = s.plan.event === 'miaogong' ? 0 : Math.max(0, s.meta.pressure + pressureD)
@@ -643,6 +837,7 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
           pressureDelta: pressure - s.meta.pressure,
           stats: s.stats,
           monthEnd,
+          merit,
         },
         challenges,
         meta: {
@@ -655,6 +850,8 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
           pressure,
           skillPts: s.meta.skillPts + points,
           sealed: s.stats.mgCatches >= 3,
+          merit: s.meta.merit + merit,
+          fortune: null,
         },
       })
     },

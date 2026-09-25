@@ -10,6 +10,9 @@ class Input {
   private actionListeners = new Set<Listener>()
   private padAction = false
   private attached = false
+  /** 動作鍵正被按住（長按動作用：鍵盤 E／空白、畫面上的動作鈕、手把 A） */
+  private heldKeys = new Set<string>()
+  private heldTouch = false
 
   attach() {
     if (this.attached) return
@@ -20,11 +23,20 @@ class Input {
       this.keys.add(k)
       if (k === 'e' || k === ' ' || k === 'enter') {
         e.preventDefault()
+        this.heldKeys.add(k)
         this.fireAction()
       }
     })
-    window.addEventListener('keyup', (e) => this.keys.delete(e.key.toLowerCase()))
-    window.addEventListener('blur', () => this.keys.clear())
+    window.addEventListener('keyup', (e) => {
+      const k = e.key.toLowerCase()
+      this.keys.delete(k)
+      this.heldKeys.delete(k)
+    })
+    window.addEventListener('blur', () => {
+      this.keys.clear()
+      this.heldKeys.clear()
+      this.heldTouch = false
+    })
   }
 
   /** 動作鍵（E／空白／Enter／手把 A／畫面上的動作按鈕） */
@@ -37,6 +49,20 @@ class Input {
 
   fireAction() {
     for (const fn of this.actionListeners) fn()
+  }
+
+  /** 畫面上的動作鈕按下／放開（按下同時觸發一次動作） */
+  pressAction() {
+    this.heldTouch = true
+    this.fireAction()
+  }
+  releaseAction() {
+    this.heldTouch = false
+  }
+
+  /** 動作鍵是不是正被按住 */
+  get actionHeld() {
+    return this.heldKeys.size > 0 || this.heldTouch || this.padAction
   }
 
   /** 每幀呼叫：回傳畫面座標的移動向量（長度 ≤ 1）與是否衝刺 */

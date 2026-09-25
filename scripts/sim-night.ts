@@ -21,7 +21,7 @@ const TRACE_STRAT = process.env.TRACE_STRAT ?? 'helper'
 const TRACE_SEED = Number(process.env.TRACE_SEED ?? 0)
 const DT = 0.1
 
-type Strategy = 'idle' | 'helper' | 'clumsy'
+type Strategy = 'idle' | 'helper' | 'clumsy' | 'hidden' | 'cat'
 
 /** 哪個需求用哪個動作滿足、動作做在哪裡、會打開哪個物件 */
 const FIX: Partial<Record<NeedKind, { action: keyof typeof ACTION_DEFS; at: 'bedside' | 'nightstand' | 'fan' | 'coil' | 'doorOut'; object?: string }>> = {
@@ -60,9 +60,9 @@ function run(plan: NightPlan, seed: number, strat: Strategy): Result {
     t += DT
     hour += DT * HOURS_PER_SEC
     let gm = hidden
-    if (strat === 'clumsy') {
+    if (strat === 'clumsy' || strat === 'hidden' || strat === 'cat') {
       const R = GUEST_ROOMS.r1
-      gm = { ...hidden, x: R.bedside[0] + Math.sin(t) * 0.6, z: R.bedside[1] + Math.cos(t * 0.7) * 0.5, speed: 1.5 }
+      gm = { ...hidden, x: R.bedside[0] + Math.sin(t) * 0.6, z: R.bedside[1] + Math.cos(t * 0.7) * 0.5, speed: 1.5, hidden: strat === 'hidden', cat: strat === 'cat' }
     }
     const ev: SimEvent[] = sim.update(DT, hour, gm, objects)
     for (const e of ev) {
@@ -103,7 +103,9 @@ function run(plan: NightPlan, seed: number, strat: Strategy): Result {
         // 阿凱在拍：嚇他（每 40 分鐘一次）
         if (g.def.type === 'thrill' && g.awake && g.filming && hour - lastScare > 0.66) {
           lastScare = hour
-          const d = ACTION_DEFS.knock
+          // 聰明的嚇法：隔壁有淺眠的人就用安靜的（燈閃），沒有就敲門
+          const quiet = sim.guests.some((o) => o !== g && o.def.lightSleeper > 0.5)
+          const d = quiet ? ACTION_DEFS.flicker : ACTION_DEFS.knock
           sim.scare(g.filming, g.x + 1.5, g.z, d.fear!, d.noise, false)
         }
         if (g.def.type === 'thrill' && g.awake && g.mode === 'bed' && hour - lastScare > 0.66 && hour > 23) {
@@ -191,6 +193,17 @@ for (const { name, plan } of nights.filter((n) => !process.env.ONLY || n.name ==
   }
   if (i > h - 0.8) {
     console.log(`   !! idle avg ${i.toFixed(2)} too close to helper ${h.toFixed(2)}`)
+    failed++
+  }
+}
+
+// 躲著、附身在貓身上：整晚在床邊晃也不該被看到（貓還會讓客人舒服一點）
+for (const strat of ['hidden', 'cat'] as Strategy[]) {
+  const r = run(planNight(1, 20, 0, 0), 7, strat)
+  const seen = r.counts.seen ?? 0
+  console.log(`${strat.padEnd(6)} M1-N1 seen=${seen} stars=${JSON.stringify(r.stars)}`)
+  if (seen > 0) {
+    console.log(`   !! ${strat}: grandma was seen ${seen} times`)
     failed++
   }
 }

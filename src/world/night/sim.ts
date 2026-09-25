@@ -127,6 +127,24 @@ export interface GrandmaState {
   home: boolean
   /** 走路時懷疑速度的倍率（技能「鬼步」0.65） */
   walkFactor: number
+  /** 躲在衣櫃、神桌下……：誰都看不到（廟公經過會開來檢查） */
+  hidden?: boolean
+  /** 附身在貓身上：(x, z) 是貓的位置；客人看到的是貓 */
+  cat?: boolean
+}
+
+/** 阿咪：晚上在屋裡亂晃的橘貓。經過醒著的客人床邊會被摸（舒適 +）；阿嬤可以附身 */
+export interface CatRT {
+  x: number
+  z: number
+  heading: number
+  speed: number
+  pose: 'walk' | 'sit' | 'sleep' | 'meow' | 'rub'
+  path: XZ[]
+  wait: number
+  node: string
+  possessed: boolean
+  meowT: number
 }
 
 export type SimEvent =
@@ -201,16 +219,25 @@ export class NightSim {
   event: NightEvent
   miaogong: PatrolRT | null = null
   dog: DogRT | null = null
+  cat: CatRT
   hour = 22
   private rnd: () => number
   private needPlan: { g: GuestRT; kind: NeedKind; at: number }[] = []
   private out: SimEvent[] = []
   private upgrades: Set<string>
+  /** 法器（鬼夜市買的）＋今晚擲筊的運勢 */
+  private items: Set<string>
+  private fortune: string | null
   private grandmaPrevNear = new Set<string>()
+  private inspectT = 0
 
-  constructor(plan: NightPlan, opts: { seed: number; upgrades: string[] }) {
+  constructor(plan: NightPlan, opts: { seed: number; upgrades: string[]; items?: string[]; fortune?: string | null }) {
     this.rnd = seeded(opts.seed)
     this.upgrades = new Set(opts.upgrades)
+    this.items = new Set(opts.items ?? [])
+    this.fortune = opts.fortune ?? null
+    const [cx, cz] = NODES.tea
+    this.cat = { x: cx, z: cz, heading: 0, speed: 0, pose: 'sit', path: [], wait: 6, node: 'tea', possessed: false, meowT: 0 }
     this.event = plan.event
     for (const p of plan.parties) {
       p.members.forEach((id, slot) => {
@@ -261,14 +288,17 @@ export class NightSim {
           let chance = n.chance
           if (n.kind === 'cold' && this.upgrades.has('heater')) chance *= 0.5
           if (n.kind === 'mosquito' && this.upgrades.has('net')) chance = 0
+          if (n.kind === 'mosquito' && this.items.has('charm')) chance *= 0.5
           if (this.rnd() < chance) this.needPlan.push({ g, kind: n.kind, at: n.at + (this.rnd() - 0.5) * 0.6 })
         }
       })
     }
     // 突發事件
-    if (plan.event === 'mosquitoes' && !this.upgrades.has('net')) for (const g of this.guests) this.needPlan.push({ g, kind: 'mosquito', at: 23.4 + this.rnd() * 0.4 })
+    if (plan.event === 'mosquitoes' && !this.upgrades.has('net'))
+      for (const g of this.guests) if (!this.items.has('charm') || this.rnd() < 0.5) this.needPlan.push({ g, kind: 'mosquito', at: 23.4 + this.rnd() * 0.4 })
     if (plan.event === 'coldsnap') for (const g of this.guests) this.needPlan.push({ g, kind: 'cold', at: 25 + this.rnd() * 0.5 })
-    if (plan.event === 'dog') this.dog = { x: 1.2, z: FENCE.z + 1.3, barking: false, calm: false, barkT: 0, startAt: 25.3, stopT: 0 }
+    // 鎮狗鈴：狗今晚不會叫
+    if (plan.event === 'dog' && !this.items.has('bell')) this.dog = { x: 1.2, z: FENCE.z + 1.3, barking: false, calm: false, barkT: 0, startAt: 25.3, stopT: 0 }
     if (plan.event === 'miaogong') {
       const path = MIAOGONG_LOOP.map((n) => NODES[n])
       this.miaogong = { x: path[0][0], z: path[0][1], heading: Math.PI, speed: 0, i: 1, path, suspicion: 0, catches: 0, active: false, left: false, barkT: 0 }
@@ -285,6 +315,7 @@ export class NightSim {
     for (const g of this.guests) this.updateGuest(g, dt, hour, gm, objects)
     this.updateMiaogong(dt, hour, gm)
     this.updateDog(dt, hour, gm)
+    this.updateCat(dt, gm)
     this.doorEvents(gm)
     return this.out
   }
@@ -301,6 +332,86 @@ export class NightSim {
 
   private roomMates(g: GuestRT) {
     return this.guests.filter((o) => o.room === g.room)
+  }
+
+  /** 引魂燈、或擲到「明察秋毫」：需求一出現就看得到 */
+  private get farSight() {
+    return this.items.has('lantern') || this.fortune === 'insight'
+  }
+
+  /** 安眠香、或擲到「一夜好眠」：早睡、睡得沉 */
+  private get calm() {
+    return this.items.has('incense') || this.fortune === 'calm'
+  }
+
+  // -------------------------------------------------------------------------
+  // 阿咪（貓）：沒被附身時在屋裡隨便晃；附身時跟著玩家走
+  // -------------------------------------------------------------------------
+
+  private updateCat(dt: number, gm: GrandmaState) {
+    const c = this.cat
+    c.meowT = Math.max(0, c.meowT - dt)
+    if (gm.cat) {
+      const dx = gm.x - c.x
+      const dz = gm.z - c.z
+      if (dx || dz) c.heading = Math.atan2(dx, dz)
+      c.x = gm.x
+      c.z = gm.z
+      c.speed = gm.speed
+      c.possessed = true
+      c.pose = c.meowT > 0 ? 'meow' : gm.speed > 0.2 ? 'walk' : 'sit'
+    } else {
+      c.possessed = false
+      if (c.path.length) {
+        const [tx, tz] = c.path[0]
+        const dx = tx - c.x
+        const dz = tz - c.z
+        const d = Math.hypot(dx, dz)
+        const step = 0.8 * dt
+        if (d <= step) {
+          c.x = tx
+          c.z = tz
+          c.path.shift()
+          if (!c.path.length) c.wait = 6 + this.rnd() * 14
+        } else {
+          c.x += (dx / d) * step
+          c.z += (dz / d) * step
+          c.heading = Math.atan2(dx, dz)
+        }
+        c.speed = 0.8
+        c.pose = 'walk'
+      } else {
+        c.speed = 0
+        c.wait -= dt
+        c.pose = c.wait > 10 ? 'sleep' : 'sit'
+        if (c.wait <= 0) {
+          const nodes = Object.keys(NODES)
+          const next = nodes[Math.floor(this.rnd() * nodes.length)]
+          c.path = route(c.node, next).slice()
+          c.node = next
+        }
+      }
+    }
+    // 經過醒著的客人床邊：被摸摸（附身時更會撒嬌）
+    for (const g of this.guests) {
+      if (!g.awake || g.mode !== 'bed' || g.scaredT > 0) continue
+      if (Math.hypot(g.x - c.x, g.z - c.z) > 1.2) continue
+      g.comfort += dt * HOURS_PER_SEC * (c.possessed ? 12 : 4)
+      if (c.possessed && c.speed < 0.2) c.pose = 'rub'
+    }
+  }
+
+  /** 附身的貓喵一聲：附近醒著的人會轉頭看貓（把注意力引開） */
+  meow() {
+    const c = this.cat
+    c.meowT = 1.2
+    for (const g of this.guests) {
+      if (!g.awake || g.scaredT > 0) continue
+      if (Math.hypot(g.x - c.x, g.z - c.z) > 7) continue
+      g.lookTarget = Math.atan2(c.x - g.x, c.z - g.z)
+      g.tellT = 0.3
+      g.lookT = 4 + this.rnd() * 2
+    }
   }
 
   private isBlackout(hour: number) {
@@ -323,7 +434,7 @@ export class NightSim {
       if (p.kind === 'thirsty' && on('cup')) continue
       if (p.kind === 'cold' && g.tucked) continue
       if (p.kind === 'hungry' && on('dish')) continue
-      g.needs.push({ kind: p.kind, since: hour, known: false })
+      g.needs.push({ kind: p.kind, since: hour, known: this.farSight })
       this.emit({ t: 'need', who: g.id, kind: p.kind })
       if (g.awake) this.bark(g, `need_${p.kind}` as BarkKind, 4)
     }
@@ -360,7 +471,7 @@ export class NightSim {
       const blocked = g.needs.some((n) => BLOCKS_SLEEP.includes(n.kind))
       if (g.awake) {
         g.resleepT = Math.max(0, g.resleepT - dt)
-        const sleepy = hour >= g.def.bedtime && g.resleepT <= 0 && g.scaredT <= 0 && g.fear < 70
+        const sleepy = hour >= g.def.bedtime - (this.calm ? 0.33 : 0) && g.resleepT <= 0 && g.scaredT <= 0 && g.fear < 70
         if (sleepy && !blocked) {
           g.awake = false
           g.sleep = g.tucked ? 0.4 : 0.1
@@ -509,7 +620,7 @@ export class NightSim {
   }
 
   private sight(g: GuestRT, dt: number, gm: GrandmaState) {
-    if (!gm.home || !g.awake || g.scaredT > 0) {
+    if (!gm.home || !g.awake || g.scaredT > 0 || gm.hidden || gm.cat) {
       g.suspicion = Math.max(0, g.suspicion - dt * 0.5)
       return
     }
@@ -609,7 +720,7 @@ export class NightSim {
         if (g.def.type === 'business') g.comfort -= p * 14
         if (p > 0.12) this.bark(g, 'hear', 6)
       } else {
-        const threshold = (1 - g.def.lightSleeper) * (0.25 + g.sleep * 0.6)
+        const threshold = (1 - g.def.lightSleeper) * (0.25 + g.sleep * 0.6) * (this.calm ? 1.4 : 1)
         if (p > threshold && this.hour >= g.deepUntil) {
           if (g.def.type === 'business') g.comfort -= 10
           this.wake(g, 'woken')
@@ -800,7 +911,20 @@ export class NightSim {
       this.emit({ t: 'mg', kind: 'patrol' })
     }
     // 手電筒：看得遠、比較窄；木頭人對他比較沒用
-    if (!gm.home) return
+    if (!gm.home || gm.cat) return
+    if (gm.hidden) {
+      // 躲著：廟公經過會隨手打開檢查（衣櫃、神桌下……）
+      this.inspectT = Math.max(0, this.inspectT - dt)
+      if (Math.hypot(m.x - gm.x, m.z - gm.z) < 1.8 && this.inspectT <= 0) {
+        this.inspectT = 4
+        if (this.rnd() < 0.35) {
+          m.catches++
+          this.emit({ t: 'mg', kind: 'catch' })
+          this.emit({ t: 'mgCatch', count: m.catches })
+        } else this.emit({ t: 'mg', kind: 'spot' })
+      }
+      return
+    }
     const sees = canSee(m.x, m.z, m.heading, gm.x, gm.z, 7.5, (42 * Math.PI) / 180)
     if (sees) {
       const move = gm.speed > 0.3 ? gm.walkFactor : gm.carrying ? 0.6 : 0.2

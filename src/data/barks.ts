@@ -446,6 +446,12 @@ export const EXTRA_BARKS: Record<string, string[]> = {
 
 /** 阿嬤的短句：每個動作一兩句，加上被看到、差點被看到、端宵夜、陰氣不夠、木頭人、被拍到 */
 export const GM_BARKS: Partial<Record<ActionId | 'seen' | 'nearmiss' | 'carry' | 'noyin' | 'freeze' | 'captured', string[]>> = {
+  // 更多玩法（src/data/night2.lines.json）
+  "swat": ["gm.swat.1", "gm.swat.2"],
+  "radio": ["gm.radio.1", "gm.radio.2"],
+  "possess": ["gm.possess.1", "gm.possess.2"],
+  "hide": ["gm.hide.1", "gm.hide.2"],
+  "dream": ["gm.dream.1", "gm.dream.2"],
   "tuck": [
     "gm.tuck.1",
     "gm.tuck.2"

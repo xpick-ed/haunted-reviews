@@ -65,8 +65,10 @@ export function WorldController() {
     const s = useStore.getState()
     const dt = Math.min(rawDt, 0.1) * s.timeScale
     const scene = SCENES[s.scene]
-    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy || !!s.minigame
+    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy || !!s.minigame || !!s.hidden
     const move = input.read()
+    // 躲著的時候一推搖桿就出來
+    if (s.hidden && !s.dialogue && !s.minigame && Math.hypot(move.x, move.y) > 0.5) s.exitHide()
     const colliders = s.scene === 'home' && s.phase === 'night' ? withGuests(collidersFor(s.scene, s.phase)) : collidersFor(s.scene, s.phase)
     stepPlayer(dt, move, colliders, frozen)
     if (player.dashing) s.spendYin(dt * 1)
@@ -87,7 +89,17 @@ export function WorldController() {
 
     // 附近能做的事：深夜動作（客人需要的排前面）＋ 固定的互動點
     let prompt: Prompt | null = null
-    if (!frozen) {
+    // 長按中：動作鈕要留著（放開才知道）；躲著、附身時只有特別的選項
+    const promptOpen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || !!s.minigame ? false : !s.busy || !!s.hold
+    if (promptOpen && s.hidden) {
+      prompt = { opts: [{ key: 'unhide', label: '出來', cost: 0, needed: false, spot: s.hidden, special: 'unhide' }], i: 0, key: 'unhide' }
+    } else if (promptOpen && s.possess) {
+      const opts: PromptOpt[] = [
+        { key: 'meow', label: '喵一聲（引開注意）', cost: 0, needed: false, spot: 'cat', special: 'meow' },
+        { key: 'unpossess', label: '離開阿咪', cost: 0, needed: false, spot: 'cat', special: 'unpossess' },
+      ]
+      prompt = { opts, i: s.prompt?.key === 'cat' ? s.prompt.i : 0, key: 'cat' }
+    } else if (promptOpen) {
       const opts: PromptOpt[] = []
       if (s.phase === 'night' && s.scene === 'home' && night.sim) {
         for (const o of nightOptions({ sim: night.sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time }, player.x, player.z)) {

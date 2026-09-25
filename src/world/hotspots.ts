@@ -170,7 +170,16 @@ export function nearestHotspot(s: GameState, x: number, z: number): { h: Hotspot
 export function objectives(s: GameState): { main: string | null; extra: string | null } {
   const n = s.meta.night
   if (s.phase === 'dusk') {
-    const extra = !s.flags.ayi_met ? '可選：出大門沿著路往東，去土地公廟看看' : null
+    const p = s.meta.pantry
+    const extra = !s.flags.ayi_met
+      ? '可選：出大門沿著路往東，經過村子到土地公廟看看'
+      : (p.coil ?? 0) === 0
+        ? '蚊香用完了：去村子的柑仔店找阿嬌買'
+        : (p.egg ?? 0) + (p.leaf ?? 0) + (p.sweetpotato ?? 0) < 2
+          ? '可選：去屋後的菜園採菜、撿雞蛋（宵夜的材料）'
+          : !s.meta.fortune && s.meta.jiaobei < 3
+            ? '可選：去土地公廟擲筊，問今晚的運勢'
+            : null
     if (!s.flags.incense_today) return { main: '到神明廳上香（正身中間）', extra }
     if (!s.flags.han_talk && n === 1) return { main: '去埕裡看看小翰', extra }
     return { main: '坐在埕裡的竹椅上，等客人入住', extra }
@@ -183,7 +192,13 @@ export function objectives(s: GameState): { main: string | null; extra: string |
       3: '小宇看得到阿嬤，想找妳玩——但別讓媽媽看到他對空氣講話',
       4: '颱風夜會停電。阿桂和阿土伯是老朋友，不怕妳',
     }
-    return { main: '照顧好今晚的客人，一直到天亮', extra: tips[n] ?? '竹椅可以打盹，快轉時間' }
+    const later = [
+      '慈祥的動作要「按住」：客人一轉頭就放開',
+      '被盯著又沒地方跑？躲進衣櫃、神桌下、水缸後面',
+      s.meta.skills.includes('possess') ? '附身阿咪：客人看到貓不會怕，還會摸牠' : '學了「附身」就能借貓的身體走動',
+      s.time >= 24 && s.time < 28.5 ? '午夜過後，土地公廟後面的鬼夜市開了（功德可以買法器）' : '睡不著的客人，可以托夢給他（靈術）',
+    ]
+    return { main: '照顧好今晚的客人，一直到天亮', extra: tips[n] ?? later[n % later.length] }
   }
   return { main: null, extra: null }
 }

@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../store'
+import { RADIO } from '../world/night/actions'
 import { BRUSH_FONT, WBox, canvasTexture, seeded, svgTexture, useMats } from './kit'
 import {
   BUCKET,
@@ -40,6 +41,7 @@ export function Interior() {
       <GuestRoomFurniture room={GUEST_ROOMS.r2} />
       <Bathroom />
       <AltarHall />
+      <Radio />
       <GrandmaRoom />
       <GrandsonRoom />
       <Kitchen />
@@ -1112,6 +1114,76 @@ function Bathroom() {
           <cylinderGeometry args={[0.07, 0.06, 0.07, 12]} />
         </mesh>
       </group>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// 八仙桌上的老收音機（附身收音機：刻度盤亮起來、飄出音符）
+// ---------------------------------------------------------------------------
+
+const noteTex = canvasTexture(64, 64, (ctx, w, h) => {
+  ctx.fillStyle = 'rgba(255,226,150,0.95)'
+  ctx.font = '48px serif'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('♪', w / 2, h / 2)
+})
+
+function Radio() {
+  const mats = useMats()
+  const dial = useRef<THREE.MeshStandardMaterial>(null)
+  const notes = useRef<(THREE.Sprite | null)[]>([])
+  const y = FLOOR_Y + 0.835
+  useFrame(({ clock }) => {
+    const on = !!obj('hall.radio')?.on
+    const t = clock.elapsedTime
+    if (dial.current) dial.current.emissiveIntensity = on ? 1.6 + Math.sin(t * 8) * 0.2 : 0.05
+    notes.current.forEach((sp, i) => {
+      if (!sp) return
+      sp.visible = on
+      if (!on) return
+      const k = (t * 0.35 + i / 3) % 1
+      sp.position.set(Math.sin(k * 6 + i) * 0.18, 0.25 + k * 0.9, Math.cos(k * 5 + i) * 0.08)
+      ;(sp.material as THREE.SpriteMaterial).opacity = Math.sin(k * Math.PI)
+    })
+  })
+  return (
+    <group position={[RADIO.x, y, RADIO.z]} rotation={[0, 0.25, 0]} userData={{ noMerge: true }}>
+      <mesh position={[0, 0.11, 0]} material={mats.darkWood} castShadow>
+        <boxGeometry args={[0.36, 0.22, 0.15]} />
+      </mesh>
+      {/* 喇叭布 */}
+      <mesh position={[-0.07, 0.12, 0.076]}>
+        <planeGeometry args={[0.17, 0.15]} />
+        <meshStandardMaterial color="#b89a6a" roughness={1} />
+      </mesh>
+      {/* 刻度盤 */}
+      <mesh position={[0.1, 0.14, 0.077]}>
+        <planeGeometry args={[0.12, 0.06]} />
+        <meshStandardMaterial ref={dial} color="#f0d9a0" emissive="#ffb84d" emissiveIntensity={0.05} roughness={0.6} />
+      </mesh>
+      {[0.06, 0.14].map((x) => (
+        <mesh key={x} position={[x, 0.06, 0.08]} rotation={[Math.PI / 2, 0, 0]} material={mats.black}>
+          <cylinderGeometry args={[0.018, 0.018, 0.02, 10]} />
+        </mesh>
+      ))}
+      {/* 天線 */}
+      <mesh position={[0.14, 0.34, -0.04]} rotation={[0, 0, -0.35]} material={mats.black}>
+        <cylinderGeometry args={[0.004, 0.004, 0.3, 4]} />
+      </mesh>
+      {[0, 1, 2].map((i) => (
+        <sprite
+          key={i}
+          ref={(el) => {
+            notes.current[i] = el
+          }}
+          scale={[0.13, 0.13, 1]}
+          visible={false}
+        >
+          <spriteMaterial map={noteTex} transparent depthWrite={false} />
+        </sprite>
+      ))}
     </group>
   )
 }

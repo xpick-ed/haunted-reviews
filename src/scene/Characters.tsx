@@ -10,6 +10,7 @@ import { BURST_SIZE, Z_SIZE, burstSvg, zSvg } from '../art/characters'
 import { floralFabricTexture } from '../art/fabric'
 import { Chibi, R as HEAD_R, SEAT_Y, TOP_Y, newDrive } from '../chars/Chibi'
 import { SPECS } from '../chars/specs'
+import { floatBob, type BobState } from '../world/motion'
 
 // 人物：3D Q 版角色（src/chars/）。阿嬤是鬼：半透明、發光、沒有影子。
 // 小美坐在床上、嚇到會跳起來、睡著時頭躺在枕頭上；花布被子與房間燈光也在這裡。
@@ -53,6 +54,7 @@ export function Grandma() {
   const light = useRef<THREE.PointLight>(null)
   const floorY = useRef(FLOOR_Y)
   const drive = useRef(newDrive({ pose: 'clasp', heading: 0.7 }))
+  const bob = useRef<BobState>({ phase: 0, speed: 0 })
 
   useFrame(({ clock }, rawDt) => {
     const dt = Math.min(rawDt, 0.1)
@@ -61,13 +63,14 @@ export function Grandma() {
     // 地板高度平滑跟上（從埕飄上台基不會跳一下）
     const f = SCENES[s.scene].floorAt(player.x, player.z)
     floorY.current += (f - floorY.current) * (1 - Math.exp(-8 * dt))
-    const moving = Math.min(1, player.speed / 2.5)
-    const bob = Math.sin(time * (2.2 + moving * 3)) * 0.05
-    group.current?.position.set(player.x, floorY.current + 0.18 + bob, player.z)
+    // 相位累加（舊寫法 sin(總時間×頻率) 在速度一變時相位會跳，角色會上下抖）
+    const y = floatBob(bob.current, player.speed, dt)
+    group.current?.position.set(player.x, floorY.current + 0.18 + y, player.z)
 
     const d = drive.current
-    d.speed = player.speed
-    if (Math.hypot(player.vx, player.vz) > 0.25) d.heading = Math.atan2(player.vx, player.vz)
+    d.speed = bob.current.speed
+    // 面向「想走的方向」，不用被牆擋過、會跳動的實際速度
+    if (player.wantX || player.wantZ) d.heading = Math.atan2(player.wantX, player.wantZ)
     d.pose = s.busy ? 'reach' : 'clasp'
     d.expr = s.busy ? 'reach' : 'normal'
     if (light.current) light.current.intensity = 2.6 + Math.sin(time * 3.1) * 0.5 + s.warm * 3

@@ -5,6 +5,7 @@ import { FACE_PATCH, faceTexture } from './faces'
 import { SPECS, type ChibiSpec } from './specs'
 import { floralPrint, outlineMat, toon, toonGradient } from './toon'
 import { player } from '../world/player'
+import { turnToward, type TurnState } from '../world/motion'
 
 // 3D Q 版角色：大頭、三階卡通光影、深棕描邊。身體由幾何零件組成，
 // 手腳掛在關節上用程式擺動（走路、待機呼吸、各種動作），整個人會轉向移動的方向。
@@ -243,7 +244,8 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
   ])
   const legRefs = useRef<(THREE.Group | null)[]>([null, null])
   const props = useRef<Record<string, THREE.Group | null>>({})
-  const cur = useRef({ l: [0, 0, 0] as Arm, r: [0, 0, 0] as Arm, lean: 0, head: 0, heading: drive.current.heading, phase: 0, legs: [0, 0], twist: 0 })
+  const cur = useRef({ l: [0, 0, 0] as Arm, r: [0, 0, 0] as Arm, lean: 0, head: 0, phase: 0, legs: [0, 0], twist: 0 })
+  const turn = useRef<TurnState>({ heading: drive.current.heading, dir: 1 })
 
   useFrame(({ clock }, rawDt) => {
     const dt = Math.min(rawDt, 0.1)
@@ -305,12 +307,10 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
       if (lg) lg.rotation.x = c.legs[i]
     }
 
-    // 轉向（走最短的角度）
-    let dh = d.heading - c.heading
-    dh = Math.atan2(Math.sin(dh), Math.cos(dh))
-    c.heading += dh * (1 - Math.exp(-10 * dt))
+    // 轉向：接近 180° 時維持同一個轉向，而且有速度上限（見 world/motion.ts）
+    turnToward(turn.current, d.heading, dt)
     if (root.current) {
-      root.current.rotation.y = headOnly ? 0 : c.heading
+      root.current.rotation.y = headOnly ? 0 : turn.current.heading
       root.current.position.y = d.hop
     }
     if (body.current) body.current.position.y = spec.ghost ? 0 : Math.abs(Math.sin(c.phase)) * 0.035 * a

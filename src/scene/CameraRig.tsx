@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useStore } from '../store'
 import { player, VIEW } from '../world/player'
+import { followTarget, type FollowState } from '../world/motion'
 import { SCENES } from '../world/scenes'
 
 // 斜俯視跟隨鏡頭（DESIGN §21）：跟著阿嬤，往移動方向前看一點；
@@ -10,17 +11,17 @@ import { SCENES } from '../world/scenes'
 
 const OUTDOOR = 19
 const INDOOR = 12.5
-const LOOK_AHEAD = 0.35
+const LOOK_AHEAD = 0.3
 /** 開發用：?zoom=0.4 把鏡頭拉近看角色 */
 const ZOOM = import.meta.env.DEV ? Number(new URLSearchParams(location.search).get('zoom')) || 1 : 1
 
 export function CameraRig() {
   const { camera, size } = useThree()
-  const target = useRef(new THREE.Vector3(player.x, 1, player.z))
+  const follow = useRef<FollowState>({ x: player.x, y: 1, z: player.z, vx: 0, vz: 0 })
+  const target = useMemo(() => new THREE.Vector3(), [])
   const dist = useRef(OUTDOOR)
   const lastScene = useRef<string | null>(null)
-  const tmp = useMemo(() => ({ want: new THREE.Vector3(), pos: new THREE.Vector3() }), [])
-  const vel = useRef({ x: 0, z: 0 })
+  const tmp = useMemo(() => ({ pos: new THREE.Vector3() }), [])
 
   useEffect(() => {
     const cam = camera as THREE.PerspectiveCamera
@@ -34,10 +35,6 @@ export function CameraRig() {
     const s = useStore.getState()
     const scene = SCENES[s.scene]
     const y = scene.floorAt(player.x, player.z) + 0.9
-    const kv = 1 - Math.exp(-3 * dt)
-    vel.current.x += (player.vx - vel.current.x) * kv
-    vel.current.z += (player.vz - vel.current.z) * kv
-    tmp.want.set(player.x + vel.current.x * LOOK_AHEAD, y, player.z + vel.current.z * LOOK_AHEAD)
 
     const portrait = size.width < size.height
     const base = s.building ? INDOOR : OUTDOOR
@@ -46,19 +43,19 @@ export function CameraRig() {
     // 換場景（或剛開始）直接跳到位，不要從上一個場景滑過來
     const snap = lastScene.current !== s.scene
     lastScene.current = s.scene
-    const k = snap ? 1 : 1 - Math.exp(-4 * dt)
+    followTarget(follow.current, player.x, y, player.z, player.vx, player.vz, dt, LOOK_AHEAD, snap)
+    target.set(follow.current.x, follow.current.y, follow.current.z)
     const kd = snap ? 1 : 1 - Math.exp(-2.2 * dt)
-    target.current.lerp(tmp.want, k)
     dist.current += (wantDist - dist.current) * kd
 
-    tmp.pos.set(VIEW.x, VIEW.y, VIEW.z).multiplyScalar(dist.current).add(target.current)
+    tmp.pos.set(VIEW.x, VIEW.y, VIEW.z).multiplyScalar(dist.current).add(target)
     camera.position.copy(tmp.pos)
     if (s.horror > 0) {
       const a = 0.22 * s.horror
       camera.position.x += (Math.random() - 0.5) * a
       camera.position.y += (Math.random() - 0.5) * a
     }
-    camera.lookAt(target.current)
+    camera.lookAt(target)
   }, -1)
   return null
 }

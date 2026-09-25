@@ -32,6 +32,9 @@ export const player = {
   facing: 1 as 1 | -1,
   speed: 0,
   dashing: false,
+  /** 玩家「想要」走的方向（世界座標，沒按就是 0）。角色面向用這個，不用被牆擋過的實際速度 */
+  wantX: 0,
+  wantZ: 0,
 }
 
 export function placePlayer(x: number, z: number) {
@@ -51,6 +54,14 @@ export function stepPlayer(dt: number, move: { x: number; y: number; dash: boole
   const top = move.dash && want > 0.1 ? DASH : WALK
   const tx = frozen ? 0 : (RIGHT.x * move.x + FWD.x * move.y) * top
   const tz = frozen ? 0 : (RIGHT.z * move.x + FWD.z * move.y) * top
+  if (!frozen && want > 0.15) {
+    const l = Math.hypot(tx, tz) || 1
+    player.wantX = tx / l
+    player.wantZ = tz / l
+  } else {
+    player.wantX = 0
+    player.wantZ = 0
+  }
   const k = 1 - Math.exp(-ACCEL * dt)
   player.vx += (tx - player.vx) * k
   player.vz += (tz - player.vz) * k

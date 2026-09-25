@@ -1,0 +1,202 @@
+{
+ "dream.gm.lose": {
+  "who": "grandma",
+  "text": "唉，夢醒了……沒關係，阿嬤下次再來。"
+ },
+ "dream.gm.shoo": {
+  "who": "grandma",
+  "text": "去去去，不要嚇到人家！"
+ },
+ "dream.gm.escort": {
+  "who": "grandma",
+  "text": "免驚，跟著阿嬤走。"
+ },
+ "dream.gm.collect": {
+  "who": "grandma",
+  "text": "別急，阿嬤幫你撿。"
+ },
+ "dream.gm.find": {
+  "who": "grandma",
+  "text": "躲在哪裡呢……阿嬤來找囉。"
+ },
+ "dream.xiaomei.start": {
+  "who": "xiaomei",
+  "text": "這裡是哪裡……夜市怎麼一個人都沒有？"
+ },
+ "dream.xiaomei.follow": {
+  "who": "xiaomei",
+  "text": "阿嬤，等等我！"
+ },
+ "dream.xiaomei.lost": {
+  "who": "xiaomei",
+  "text": "阿嬤？你在哪裡？"
+ },
+ "dream.xiaomei.scared": {
+  "who": "xiaomei",
+  "text": "有黑黑的東西！"
+ },
+ "dream.xiaomei.win": {
+  "who": "xiaomei",
+  "text": "出口……是出口！謝謝阿嬤。"
+ },
+ "dream.linmom.start": {
+  "who": "linmom",
+  "text": "小宇？小宇你在哪裡？霧好大……"
+ },
+ "dream.linmom.follow": {
+  "who": "linmom",
+  "text": "你知道小宇在哪裡嗎？拜託帶我去。"
+ },
+ "dream.linmom.lost": {
+  "who": "linmom",
+  "text": "等一下，我看不到你了……"
+ },
+ "dream.linmom.scared": {
+  "who": "linmom",
+  "text": "不要過來！"
+ },
+ "dream.linmom.win": {
+  "who": "linmom",
+  "text": "小宇！媽媽在這裡！"
+ },
+ "dream.agui.start": {
+  "who": "agui",
+  "text": "哎呀，這不是我們年輕時候的街仔路嗎？"
+ },
+ "dream.agui.follow": {
+  "who": "agui",
+  "text": "阿春，你走慢一點啦，我腳沒你好。"
+ },
+ "dream.agui.lost": {
+  "who": "agui",
+  "text": "阿春？你又跑去哪裡了？"
+ },
+ "dream.agui.stop.well": {
+  "who": "agui",
+  "text": "這口井，以前我們都在這裡洗衫、講八卦。"
+ },
+ "dream.agui.stop.shop": {
+  "who": "agui",
+  "text": "阿嬌她阿母的柑仔店！你記不記得，一顆糖仔一角銀。"
+ },
+ "dream.agui.stop.tree": {
+  "who": "agui",
+  "text": "榕仔腳，你以前都在這裡講古給囡仔聽。"
+ },
+ "dream.agui.win": {
+  "who": "agui",
+  "text": "到了……阿春的厝，跟以前一模一樣。"
+ },
+ "dream.atu.start": {
+  "who": "atu",
+  "text": "……這條路，走了五十年囉。"
+ },
+ "dream.atu.follow": {
+  "who": "atu",
+  "text": "嗯，我跟你走。"
+ },
+ "dream.atu.lost": {
+  "who": "atu",
+  "text": "阿春？"
+ },
+ "dream.atu.stop.well": {
+  "who": "atu",
+  "text": "這口井，水很甜。"
+ },
+ "dream.atu.stop.shop": {
+  "who": "atu",
+  "text": "以前在這裡買米酒，攏賒帳。"
+ },
+ "dream.atu.stop.tree": {
+  "who": "atu",
+  "text": "阿桂就是在這欉榕仔腳答應嫁我的。"
+ },
+ "dream.atu.win": {
+  "who": "atu",
+  "text": "阿春，多謝你。這個夢，真好。"
+ },
+ "dream.zhang.start": {
+  "who": "zhang",
+  "text": "簡報呢？！十分鐘後就要報告了！"
+ },
+ "dream.zhang.pick": {
+  "who": "zhang",
+  "text": "有了有了，再幾張就好！"
+ },
+ "dream.zhang.win": {
+  "who": "zhang",
+  "text": "齊了……這次一定可以。我可以好好睡了。"
+ },
+ "dream.boss.caught": {
+  "who": "dreamboss",
+  "text": "張經理！你的資料在哪裡？！"
+ },
+ "dream.boss.patrol": {
+  "who": "dreamboss",
+  "text": "數字……我要看數字……"
+ },
+ "dream.ahao.start": {
+  "who": "ahao",
+  "text": "好餓……山上怎麼會有便當在飛？"
+ },
+ "dream.ahao.pick": {
+  "who": "ahao",
+  "text": "哇，還是熱的！"
+ },
+ "dream.ahao.runner": {
+  "who": "ahao",
+  "text": "那顆肉粽在跑！抓住它！"
+ },
+ "dream.ahao.win": {
+  "who": "ahao",
+  "text": "吃飽了……這是我吃過最好吃的一餐。"
+ },
+ "dream.xiaoyu.start": {
+  "who": "xiaoyu",
+  "text": "阿嬤，來抓我呀！我數到十喔！"
+ },
+ "dream.xiaoyu.giggle.1": {
+  "who": "xiaoyu",
+  "text": "嘻嘻，我在這裡～"
+ },
+ "dream.xiaoyu.giggle.2": {
+  "who": "xiaoyu",
+  "text": "猜猜我在哪裡？"
+ },
+ "dream.xiaoyu.giggle.3": {
+  "who": "xiaoyu",
+  "text": "嘿嘿，阿嬤好慢喔！"
+ },
+ "dream.xiaoyu.cold": {
+  "who": "xiaoyu",
+  "text": "不是那裡啦～"
+ },
+ "dream.xiaoyu.found": {
+  "who": "xiaoyu",
+  "text": "被你找到了！再一次！"
+ },
+ "dream.xiaoyu.win": {
+  "who": "xiaoyu",
+  "text": "阿嬤好厲害！明天還要玩喔。"
+ },
+ "dream.akai.start": {
+  "who": "akai",
+  "text": "我的攝影機呢？節目要開錄了！"
+ },
+ "dream.akai.hint.1": {
+  "who": "akai",
+  "text": "我聽到嗶嗶聲……在附近嗎？"
+ },
+ "dream.akai.hint.2": {
+  "who": "akai",
+  "text": "紅燈！那邊有紅燈在閃！"
+ },
+ "dream.akai.wrong": {
+  "who": "akai",
+  "text": "那只是道具啦。"
+ },
+ "dream.akai.win": {
+  "who": "akai",
+  "text": "找到了！這次一定爆紅！"
+ }
+}

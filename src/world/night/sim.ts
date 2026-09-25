@@ -765,6 +765,7 @@ export class NightSim {
       g.comfort -= 4
       return
     }
+    g.awake = false
     g.sleep = 1
     g.deepUntil = this.hour + 1.5
     g.comfort += 20

@@ -31,13 +31,15 @@ export function Hud() {
   const intro = useStore((s) => s.intro)
   const panel = useStore((s) => s.panel)
   const minigame = useStore((s) => !!s.minigame)
+  // 夢裡有自己的 HUD（DreamHud），家裡的目標、住客、動作鈕先收起來
+  const inDream = useStore((s) => s.scene === 'dream')
   const modal = !!summary || !!month || intro || !!panel || minigame
   return (
     <div className="hud">
       <HideView />
       <PossessBadge />
       <Watched />
-      {!modal && (
+      {!modal && !inDream && (
         <div className="left-col">
           <Objective />
           <GuestsPanel />
@@ -46,7 +48,7 @@ export function Hud() {
       <Status />
       <RoomName />
       <Subtitles />
-      {!dialogue && !modal && <ActionButton />}
+      {!dialogue && !modal && !inDream && <ActionButton />}
       {!dialogue && !modal && <Joystick />}
       <KeyHint />
       {dialogue && <DialogueBox />}

@@ -14,6 +14,8 @@ import { SIGHT_HALF, SIGHT_RANGE, clearLine, type GuestRT } from '../world/night
 import { NEED_INFO } from '../world/night/guests'
 import { HOME } from '../world/scenes'
 import { player } from '../world/player'
+import { Cat, newCatDrive, type CatDrive } from '../chars/Cat'
+import { turnToward, type TurnState } from '../world/motion'
 import type { RoomId } from '../world/night/types'
 
 // 深夜的客人（DESIGN §5、§21）：床上坐著／睡著、下床走動；視線扇形、懷疑的「？」、需求泡泡、zzz。
@@ -126,6 +128,7 @@ export function Guests() {
       ))}
       {sim.miaogong && <Miaogong outline={quality === 'high'} />}
       {sim.dog && <Dog />}
+      <CatActor outline={quality === 'high'} />
       {sim.event === 'blackout' && <Storm />}
     </group>
   )
@@ -640,4 +643,37 @@ function Storm() {
     if (light.current) light.current.intensity = k * 5
   })
   return <directionalLight ref={light} position={[-12, 20, 8]} color="#cfe0ff" intensity={0} />
+}
+
+// ---------------------------------------------------------------------------
+// 阿咪：沒被附身時照模擬在屋裡晃；附身時跟著玩家（DESIGN §25.2）
+// ---------------------------------------------------------------------------
+
+function CatActor({ outline }: { outline: boolean }) {
+  const possess = useStore((s) => s.possess)
+  const group = useRef<THREE.Group>(null)
+  const drive = useRef<CatDrive>(newCatDrive({ pose: 'sit' }))
+  const turn = useRef<TurnState>({ heading: 0, dir: 1 })
+  useFrame((_, rawDt) => {
+    const sim = night.sim
+    const g = group.current
+    if (!sim || !g) return
+    const dt = Math.min(rawDt, 0.1)
+    const c = sim.cat
+    const possessed = useStore.getState().possess === 'cat'
+    const x = possessed ? player.x : c.x
+    const z = possessed ? player.z : c.z
+    g.position.set(x, HOME.floorAt(x, z), z)
+    const target = possessed && (player.wantX || player.wantZ) ? Math.atan2(player.wantX, player.wantZ) : c.heading
+    turnToward(turn.current, target, dt)
+    const d = drive.current
+    d.heading = turn.current.heading
+    d.speed = possessed ? player.speed : c.speed
+    d.pose = possessed ? (c.meowT > 0 ? 'meow' : player.speed > 0.2 ? 'walk' : c.pose === 'rub' ? 'rub' : 'sit') : c.pose
+  })
+  return (
+    <group ref={group}>
+      <Cat drive={drive} possessed={possess === 'cat'} outline={outline} />
+    </group>
+  )
 }

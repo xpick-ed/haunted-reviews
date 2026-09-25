@@ -3,7 +3,7 @@ import * as THREE from 'three'
 // 臉：畫在 canvas 上，貼在頭（球）前面的一片球面上。
 // 貼圖座標：水平方向對應經度（正前方在中間），垂直方向對應緯度（上面是額頭）。
 
-export type Eyes = 'happy' | 'open' | 'down' | 'sleepy' | 'wide' | 'closed'
+export type Eyes = 'happy' | 'open' | 'down' | 'sleepy' | 'wide' | 'closed' | 'calm'
 export type Mouth = 'grin' | 'smile' | 'small' | 'o' | 'scream' | 'flat' | 'goldgrin'
 export type Brows = 'soft' | 'stern' | 'worried' | 'none'
 
@@ -25,6 +25,8 @@ export interface FaceSpec {
   bags?: boolean
   /** 眉毛顏色（阿土伯的白眉毛：會加一圈深色描邊） */
   browColor?: string
+  /** 口紅（紅姨）：smile／small 的嘴畫成有顏色的嘴唇 */
+  lipstick?: string
 }
 
 /** 臉這片球面的範圍（SphereGeometry 的 phi／theta 參數） */
@@ -145,7 +147,7 @@ function draw(ctx: CanvasRenderingContext2D, f: FaceSpec) {
       }
     }
   }
-  drawMouth(ctx, W / 2, MOUTH_Y, f.mouth)
+  drawMouth(ctx, W / 2, MOUTH_Y, f.mouth, f.lipstick)
   if (f.stubble) {
     ctx.fillStyle = 'rgba(70,60,60,0.45)'
     for (let i = 0; i < 90; i++) {
@@ -206,6 +208,28 @@ function drawEye(ctx: CanvasRenderingContext2D, x: number, y: number, s: number,
       ctx.moveTo(x - 10, y + 2)
       ctx.lineTo(x + 10, y + 1)
       ctx.stroke()
+      break
+    case 'calm': // 半閉的眼睛（紅姨）：上眼皮蓋一半、眼線往外挑
+      ctx.beginPath()
+      ctx.ellipse(x, y + 1, 7, 8, 0, 0, Math.PI)
+      ctx.fill()
+      ctx.fillStyle = '#ffffff'
+      ctx.beginPath()
+      ctx.arc(x - 2.2, y + 3.4, 1.8, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.lineWidth = 3.4
+      ctx.beginPath()
+      ctx.moveTo(x - s * 10, y + 2)
+      ctx.quadraticCurveTo(x, y - 3.5, x + s * 9, y)
+      ctx.lineTo(x + s * 13.5, y - 3.5)
+      ctx.stroke()
+      if (f.lashes) {
+        ctx.lineWidth = 1.8
+        ctx.beginPath()
+        ctx.moveTo(x + s * 5, y - 1.5)
+        ctx.lineTo(x + s * 8, y - 6)
+        ctx.stroke()
+      }
       break
     case 'wide': // 嚇到：眼白很大、瞳孔很小
       ctx.fillStyle = '#ffffff'
@@ -282,9 +306,33 @@ function drawBrows(ctx: CanvasRenderingContext2D, f: FaceSpec) {
   }
 }
 
-function drawMouth(ctx: CanvasRenderingContext2D, x: number, y: number, m: Mouth) {
+function drawMouth(ctx: CanvasRenderingContext2D, x: number, y: number, m: Mouth, lipstick?: string) {
   ctx.strokeStyle = LINE
   ctx.lineWidth = 2.6
+  if (lipstick && (m === 'smile' || m === 'small')) {
+    // 擦了口紅的嘴唇：上唇兩個小山、下唇圓一點，嘴角微微上揚
+    const w = m === 'smile' ? 9 : 6.5
+    ctx.fillStyle = lipstick
+    ctx.lineWidth = 1.8
+    ctx.beginPath()
+    ctx.moveTo(x - w, y - 4)
+    ctx.quadraticCurveTo(x - w * 0.45, y - 8, x, y - 5.5)
+    ctx.quadraticCurveTo(x + w * 0.45, y - 8, x + w, y - 4)
+    ctx.quadraticCurveTo(x, y + 4.5, x - w, y - 4)
+    ctx.fill()
+    ctx.stroke()
+    ctx.strokeStyle = 'rgba(60,20,25,0.7)'
+    ctx.lineWidth = 1.4
+    ctx.beginPath()
+    ctx.moveTo(x - w + 1.5, y - 3.8)
+    ctx.quadraticCurveTo(x, y - 2, x + w - 1.5, y - 3.8)
+    ctx.stroke()
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'
+    ctx.beginPath()
+    ctx.ellipse(x - 2, y - 0.5, 2.2, 1, 0, 0, Math.PI * 2)
+    ctx.fill()
+    return
+  }
   switch (m) {
     case 'grin':
     case 'goldgrin':

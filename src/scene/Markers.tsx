@@ -76,7 +76,7 @@ export function NightMarkers() {
     const t = clock.elapsedTime
     const sim = night.sim
     let n = 0
-    if (sim && s.phase === 'night' && s.scene === 'home' && !s.dialogue && !s.summary) {
+    if (sim && s.phase === 'night' && s.scene === 'home' && !s.dialogue && !s.summary && !s.possess && !s.hidden) {
       const floorAt = SCENES.home.floorAt
       const active = activeSpot()
       const spots = nightSpots({ sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time, yinCost: (a) => ACTION_DEFS[a].yin })

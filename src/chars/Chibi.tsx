@@ -26,6 +26,7 @@ export type PoseName =
   | 'wave' // 小孩舉手揮揮
   | 'flashlight' // 右手往前拿手電筒（廟公巡夜）
   | 'eat' // 右手捧碗、左手拿筷子往嘴裡送
+  | 'shopkeeper' // 站在櫃台後面，兩手輕輕放在櫃台上（柑仔店阿嬌）
 type PropName = 'broom' | 'bottle' | 'phone' | 'fan' | 'incense' | 'camera' | 'laptop' | 'flashlight' | 'bowl'
 type LeftPropName = 'chopsticks'
 
@@ -99,6 +100,8 @@ const POSES: Record<PoseName, PoseDef> = {
   wave: { l: [0.05, 0.12, -0.18], r: [-0.2, 2.35, -0.25], lean: -0.04, head: -0.12, swingR: 0 },
   flashlight: { l: [0.05, 0.12, -0.18], r: [-1.7, 0.7, 0], lean: 0.05, head: 0.1, prop: 'flashlight', swingR: 0 },
   eat: { l: [-1.75, 0.7, -0.8], r: [-1.05, -0.7, 0], lean: 0.04, head: 0.08, prop: 'bowl', propL: 'chopsticks', swingL: 0, swingR: 0 },
+  // 手在身體前面約 0.33 公尺、腰上面一點（比例 1 的人約 0.64 公尺高），前臂平放
+  shopkeeper: { l: [-0.9, -0.22, -0.62], r: [-0.9, -0.22, -0.62], lean: 0.07, head: 0.06, swingL: 0, swingR: 0 },
 }
 const DRINK_UP: Arm = [-2.25, -0.4, -1.8]
 /** 吃飯：左手在碗邊（低）和嘴邊（POSES.eat.l）之間來回 */
@@ -263,6 +266,14 @@ function buildMats(spec: ChibiSpec) {
     logo: toon(spec.extras?.logo ?? '#e0453a', { glow: 0.3 }),
     hairTie: toon(spec.extras?.hairTie ?? '#e07a8a'),
     glasses: toon(spec.extras?.glassesColor ?? '#1c1a1c'),
+    apron: toon(spec.extras?.apron ?? '#3f6aa6', { ghost }),
+    sleeveCover: toon(spec.extras?.sleeveCovers ?? '#7fa6d8', { ghost }),
+    straw: toon(spec.extras?.strawHat ?? '#e8c872', { ghost, side: THREE.DoubleSide, glow: 0.24 }),
+    strawBand: toon('#b8452a', { ghost, side: THREE.DoubleSide }),
+    towel: toon(spec.extras?.neckTowel ?? '#f4f1ea', { ghost }),
+    towelStripe: toon('#4a82d0', { ghost }),
+    bracelet: toon(spec.extras?.bracelet ?? '#3fae7a', { ghost, glow: 0.35 }),
+    readLens: toon('#cfe6f2', { ghost, glow: 0.45 }),
   }
 }
 
@@ -484,6 +495,7 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
                 <Leg spec={spec} mats={mats} />
               </group>
             ))}
+          {legs && spec.bottom.kind === 'skirt' && <P g={skirtGeo()} m={mats.bottom} o={!spec.ghost} scale={[1, 1, 0.82]} />}
           <group ref={torso} position={[0, HIP_Y, 0]}>
             <group ref={torsoMesh} position={[0, TORSO_Y - HIP_Y, 0]}>
               <P g={torsoGeo(torsoKind)} m={mats.top} o scale={[1, 1, 0.82]} />
@@ -512,7 +524,11 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
                     position={[0, -UPPER, 0]}
                   >
                     <P g={capsule(0.053, FORE - 0.1)} m={sleeveFore} o position={[0, -FORE / 2, 0]} />
+                    {spec.extras?.sleeveCovers && <SleeveCover mats={mats} />}
                     <group position={[0, -FORE - 0.03, 0]}>
+                      {i === 0 && spec.extras?.bracelet && (
+                        <P g={G('bracelet', () => new THREE.TorusGeometry(0.05, 0.012, 8, 22))} m={mats.bracelet} position={[0, 0.045, 0]} rotation={[Math.PI / 2, 0, 0]} />
+                      )}
                       <P g={SPHERE()} m={mats.skin} o scale={[0.046, 0.056, 0.036]} />
                       <P g={SPHERE()} m={mats.skin} o position={[-side * 0.034, 0.014, 0.022]} scale={0.02} />
                       {i === 1 && (
@@ -554,6 +570,8 @@ function Leg({ spec, mats }: { spec: ChibiSpec; mats: Mats }) {
   return (
     <group>
       {kind === 'wide' && <P g={cyl(0.1, 0.118, LEG - 0.02)} m={mats.bottom} o={!spec.ghost} position={[0, -(LEG - 0.02) / 2, 0]} />}
+      {/* 長裙：腿藏在裙子裡，只露小腿（鬼連小腿都沒有） */}
+      {kind === 'skirt' && !spec.ghost && <P g={capsule(0.05, 0.08)} m={mats.legSkin} o position={[0, -LEG + 0.1, 0]} />}
       {kind === 'pants' && <P g={capsule(0.078, LEG - 0.17)} m={mats.bottom} o={!spec.ghost} position={[0, -LEG / 2 + 0.01, 0]} />}
       {kind === 'shorts' && (
         <>
@@ -615,6 +633,9 @@ function TorsoExtras({ spec, mats }: { spec: ChibiSpec; mats: Mats }) {
         </group>
       )}
       {e.logo && <P g={cyl(0.03, 0.03, 0.006, 18)} m={mats.logo} position={[0.08, base + 0.3, 0.166]} rotation={[Math.PI / 2 - 0.12, 0, 0]} />}
+      {e.apron && <Apron mats={mats} />}
+      {e.readingGlasses && <ReadingGlasses mats={mats} />}
+      {e.neckTowel && <NeckTowel mats={mats} />}
       {e.towel && (
         <group position={[SHOULDER_X - 0.04, SHOULDER_Y - HIP_Y, 0]}>
           <P g={box(0.13, 0.02, 0.2)} m={mats.white} position={[0, 0.055, 0]} />
@@ -647,6 +668,7 @@ function Head({ spec, mats, faceRef }: { spec: ChibiSpec; mats: Mats; faceRef: M
       {e.glasses && <Glasses mats={mats} thin={e.glasses === 'thin'} />}
       <Hair spec={spec} mats={mats} />
       {e.cap && <Cap mats={mats} />}
+      {e.strawHat && <StrawHat mats={mats} />}
       {e.bandana && <Bandana mats={mats} />}
     </group>
   )
@@ -818,6 +840,28 @@ function Hair({ spec, mats }: { spec: ChibiSpec; mats: Mats }) {
           </group>
         </group>
       )
+    case 'lowbun':
+      // 中分往後梳、低低的髮髻在後頸，插一支金簪、垂一串紅穗（紅姨）
+      return (
+        <group>
+          <P g={hairCap(1.065, 0.5 * Math.PI)} m={h} o rotation={[-0.32, 0, 0]} />
+          <P g={hairBack(1.05, 0.3 * Math.PI, 0.46 * Math.PI)} m={h} />
+          {[-1, 1].map((sd) => (
+            <P key={sd} g={SPHERE()} m={h} o position={onHead(1.0, 0.36 * Math.PI, sd * 0.62)} scale={[0.075, 0.06, 0.05]} rotation={[0, sd * 0.62, sd * 0.5]} />
+          ))}
+          <group position={[0, -R * 0.3, -R * 0.98]}>
+            <P g={SPHERE()} m={h} o scale={[0.125, 0.1, 0.095]} />
+            <group position={[0, 0.02, -0.04]} rotation={[0.1, 0, 1.15]}>
+              <P g={cyl(0.009, 0.009, 0.3, 8)} m={mats.gold} />
+              <P g={SPHERE()} m={mats.gold} position={[0, 0.16, 0]} scale={0.024} />
+            </group>
+            <group position={[0.13, -0.05, -0.05]}>
+              <P g={SPHERE()} m={mats.red} scale={0.018} />
+              <P g={cone(0.022, 0.1)} m={mats.red} position={[0, -0.06, 0]} rotation={[Math.PI, 0, 0]} />
+            </group>
+          </group>
+        </group>
+      )
     case 'perm': {
       const curls: V3[] = []
       for (let i = 0; i < 26; i++) {
@@ -843,6 +887,150 @@ function Hair({ spec, mats }: { spec: ChibiSpec; mats: Mats }) {
       )
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// 更多配件（DESIGN §25 的 NPC）
+// ---------------------------------------------------------------------------
+
+/** 兩點之間的一段細棍子（鍊子、背帶） */
+function Seg({ a, b, r, m }: { a: V3; b: V3; r: number; m: THREE.Material }) {
+  const va = new THREE.Vector3(...a)
+  const vb = new THREE.Vector3(...b)
+  const dir = vb.clone().sub(va)
+  const len = Math.round(dir.length() * 1000) / 1000
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize())
+  const mid = va.add(vb).multiplyScalar(0.5)
+  return <mesh geometry={cyl(r, r, len, 5)} material={m} position={[mid.x, mid.y, mid.z]} quaternion={q} />
+}
+
+/**
+ * 長裙（旗袍下襬）：從腰到小腿，下面稍微收。
+ * 鬼的裙子用漸淡貼圖（上面 35% 不透明）：v 壓到 0.3–1，下襬才不會整段消失，只淡到一半左右
+ */
+const skirtGeo = () =>
+  G('skirt', () => {
+    const g = new THREE.LatheGeometry(
+      [
+        [0.188, 0.08],
+        [0.2, 0.2],
+        [0.216, 0.32],
+        [0.232, 0.4],
+        [0.238, 0.44],
+      ].map(([x, y]) => new THREE.Vector2(x, y)),
+      28,
+    )
+    const uv = g.attributes.uv as THREE.BufferAttribute
+    for (let i = 0; i < uv.count; i++) uv.setY(i, 0.3 + uv.getY(i) * 0.7)
+    return g
+  })
+
+/** 圍裙：胸前一片、腰下一片（貼著軀幹的弧面）、腰帶、背帶、白口袋。在軀幹座標（原點在髖部） */
+function Apron({ mats }: { mats: Mats }) {
+  const bib = G('apronBib', () =>
+    new THREE.LatheGeometry(
+      [
+        [0.258, -0.02],
+        [0.241, 0.11],
+        [0.225, 0.23],
+        [0.213, 0.31],
+        [0.203, 0.335],
+      ].map(([x, y]) => new THREE.Vector2(x, y)),
+      12,
+      -0.58,
+      1.16,
+    ),
+  )
+  const skirt = G('apronSkirt', () =>
+    new THREE.LatheGeometry(
+      [
+        [0.272, -0.3],
+        [0.264, -0.16],
+        [0.258, -0.02],
+      ].map(([x, y]) => new THREE.Vector2(x, y)),
+      16,
+      -0.95,
+      1.9,
+    ),
+  )
+  const corner = (sd: number): V3 => [sd * 0.203 * Math.sin(0.55), 0.33, 0.203 * Math.cos(0.55) * 0.82]
+  return (
+    <group>
+      <group scale={[1, 1, 0.82]}>
+        <P g={bib} m={mats.apron} o />
+        <P g={skirt} m={mats.apron} o />
+        <P g={G('apronBelt', () => new THREE.TorusGeometry(0.258, 0.013, 6, 36))} m={mats.apron} position={[0, -0.02, 0]} rotation={[Math.PI / 2, 0, 0]} />
+      </group>
+      {/* 背帶：從胸前兩角繞到後頸 */}
+      {[-1, 1].map((sd) => (
+        <Seg key={sd} a={corner(sd)} b={[sd * 0.085, 0.405, -0.01]} r={0.011} m={mats.apron} />
+      ))}
+      <P g={G('apronStrap', () => new THREE.TorusGeometry(0.085, 0.011, 6, 14, Math.PI))} m={mats.apron} position={[0, 0.405, -0.01]} rotation={[-Math.PI / 2, 0, 0]} />
+      {/* 口袋 */}
+      <P g={box(0.15, 0.075, 0.012)} m={mats.white} o position={[0, -0.14, 0.262 * 0.82 + 0.004]} />
+      <P g={box(0.004, 0.07, 0.014)} m={mats.apron} position={[0, -0.14, 0.262 * 0.82 + 0.006]} />
+    </group>
+  )
+}
+
+/** 袖套：套在前臂上，兩端是鬆緊帶（在手肘座標） */
+function SleeveCover({ mats }: { mats: Mats }) {
+  const band = G('coverBand', () => new THREE.TorusGeometry(0.058, 0.012, 6, 18))
+  return (
+    <group>
+      <P g={capsule(0.062, FORE - 0.11)} m={mats.sleeveCover} o position={[0, -FORE / 2 + 0.005, 0]} />
+      <P g={band} m={mats.sleeveCover} position={[0, -0.03, 0]} rotation={[Math.PI / 2, 0, 0]} />
+      <P g={band} m={mats.sleeveCover} position={[0, -FORE + 0.02, 0]} rotation={[Math.PI / 2, 0, 0]} />
+    </group>
+  )
+}
+
+/** 老花眼鏡用鍊子掛在胸前（軀幹座標） */
+function ReadingGlasses({ mats }: { mats: Mats }) {
+  const y = 0.29
+  const z = 0.196
+  return (
+    <group>
+      {[-1, 1].map((sd) => (
+        <Seg key={sd} a={[sd * 0.068, 0.39, 0.055]} b={[sd * 0.066, y + 0.01, z - 0.006]} r={0.0035} m={mats.gold} />
+      ))}
+      <group position={[0, y, z]} rotation={[-0.3, 0, 0]}>
+        {[-1, 1].map((sd) => (
+          <group key={sd} position={[sd * 0.034, 0, 0]}>
+            <P g={G('rgRim', () => new THREE.TorusGeometry(0.029, 0.0055, 6, 18))} m={mats.gold} />
+            <mesh geometry={G('rgLens', () => new THREE.CircleGeometry(0.026, 16))} material={mats.readLens} position={[0, 0, -0.001]} />
+          </group>
+        ))}
+        <P g={cyl(0.004, 0.004, 0.018, 5)} m={mats.gold} position={[0, 0.006, 0]} rotation={[0, 0, Math.PI / 2]} />
+      </group>
+    </group>
+  )
+}
+
+/** 毛巾掛脖子：後頸一圈、兩端垂在胸前貼著肚子，下緣一條藍色條紋（軀幹座標） */
+function NeckTowel({ mats }: { mats: Mats }) {
+  return (
+    <group>
+      <P g={G('towelArc', () => new THREE.TorusGeometry(0.108, 0.03, 8, 18, Math.PI))} m={mats.towel} o position={[0, 0.378, 0.005]} rotation={[-Math.PI / 2 + 0.18, 0, 0]} />
+      {[-1, 1].map((sd) => (
+        <group key={sd} position={[sd * 0.098, 0.285, 0.19]} rotation={[-0.5, sd * 0.12, sd * 0.06]}>
+          <P g={box(0.078, 0.24, 0.022)} m={mats.towel} o />
+          <P g={box(0.08, 0.026, 0.024)} m={mats.towelStripe} position={[0, -0.085, 0]} />
+        </group>
+      ))}
+    </group>
+  )
+}
+
+/** 草帽往後戴（前面的帽簷翹起來，鏡頭從上面看還看得到臉）。原點在頭的中心 */
+function StrawHat({ mats }: { mats: Mats }) {
+  return (
+    <group position={[0, R * 0.56, -R * 0.14]} rotation={[-0.45, 0, 0]}>
+      <P g={cyl(0.2, 0.245, 0.15, 28)} m={mats.straw} o position={[0, 0.075, 0]} />
+      <P g={G('strawBand', () => new THREE.CylinderGeometry(0.248, 0.25, 0.035, 28, 1, true))} m={mats.strawBand} position={[0, 0.02, 0]} />
+      <P g={G('strawBrim', () => new THREE.CylinderGeometry(0.25, 0.42, 0.05, 32, 1, true))} m={mats.straw} o position={[0, -0.02, 0]} />
+    </group>
+  )
 }
 
 /** 右手拿的東西（依姿勢顯示其中一個） */

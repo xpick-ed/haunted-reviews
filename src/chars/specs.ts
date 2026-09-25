@@ -3,9 +3,10 @@ import type { FaceSpec } from './faces'
 // 每個角色的長相：身材、髮型、衣服、配件、表情。
 // 顏色跟 2D 插畫（src/art/）對齊，對話框的頭像跟 3D 角色是同一個人。
 
-export type HairStyle = 'bun' | 'long' | 'short' | 'bald' | 'crew' | 'perm' | 'messy' | 'sidepart' | 'bowl' | 'ponytail'
+export type HairStyle = 'bun' | 'long' | 'short' | 'bald' | 'crew' | 'perm' | 'messy' | 'sidepart' | 'bowl' | 'ponytail' | 'lowbun'
 export type TopKind = 'blouse' | 'hoodie' | 'tee' | 'singlet' | 'jacket' | 'shirt' | 'cardigan'
-export type BottomKind = 'wide' | 'pants' | 'shorts'
+/** skirt：到小腿的長裙（紅姨的旗袍下襬），腿藏在裙子裡 */
+export type BottomKind = 'wide' | 'pants' | 'shorts' | 'skirt'
 export type Sleeve = 'long' | 'short' | 'none'
 
 export interface Print {
@@ -59,6 +60,18 @@ export interface ChibiSpec {
     logo?: string
     /** 綁馬尾的髮圈顏色 */
     hairTie?: string
+    /** 圍裙（顏色）：胸前一片＋腰下一片，口袋是白的（柑仔店阿嬌） */
+    apron?: string
+    /** 袖套（顏色）：套在前臂上，兩端有鬆緊帶 */
+    sleeveCovers?: string
+    /** 老花眼鏡用鍊子掛在胸前 */
+    readingGlasses?: boolean
+    /** 草帽（顏色）：往後戴，露出臉 */
+    strawHat?: string
+    /** 毛巾掛在脖子上、兩端垂在胸前（顏色；會有一條藍色條紋） */
+    neckTowel?: string
+    /** 左手腕的手鐲（顏色；翠玉） */
+    bracelet?: string
   }
   faces: Record<string, FaceSpec>
 }
@@ -265,9 +278,75 @@ export const SPECS: Record<string, ChibiSpec> = {
       happy: { eyes: 'happy', mouth: 'grin', brows: 'soft', blush: true, wrinkles: true, browColor: '#f2f0ea' },
     },
   },
-}
 
-// 新 NPC 的暫時長相（DESIGN §25）：先借現有角色換顏色，之後由美術工作換成正式的。
-SPECS.ajiao ??= { ...SPECS.agui, id: 'ajiao', top: { ...SPECS.agui.top, color: '#c8506e' } }
-SPECS.jinyubo ??= { ...SPECS.atu, id: 'jinyubo', ghost: true, top: { ...SPECS.atu.top, color: '#e8923a' } }
-SPECS.hongyi ??= { ...SPECS.linmom, id: 'hongyi', ghost: true, top: { ...SPECS.linmom.top, color: '#a02a2a' } }
+  // -------------------------------------------------------------------------
+  // 更多場景的 NPC（DESIGN §25）
+  // -------------------------------------------------------------------------
+
+  /** 柑仔店的阿嬌：70 幾歲、看得到鬼、嗓門大心很軟。灰色燙髮、碎花上衣、藍圍裙、袖套、老花眼鏡掛胸前 */
+  ajiao: {
+    id: 'ajiao',
+    scale: 0.95,
+    skin: '#efc29c',
+    hair: { style: 'perm', color: '#c3c0c8' },
+    top: {
+      kind: 'blouse',
+      color: '#ffffff',
+      sleeve: 'long',
+      accent: '#b8456a',
+      print: { base: '#f6e3ea', petals: ['#e0457a', '#f2a24a', '#6a9ad8'], center: '#ffe08a', seed: 41, repeat: 2.6 },
+    },
+    bottom: { kind: 'wide', color: '#3a3f58' },
+    feet: { kind: 'slipper', color: '#e05a8a' },
+    extras: { apron: '#3f6aa6', sleeveCovers: '#7fa6d8', readingGlasses: true, earrings: true },
+    faces: {
+      normal: { eyes: 'open', mouth: 'grin', brows: 'soft', blush: true, wrinkles: true },
+      happy: { eyes: 'happy', mouth: 'grin', brows: 'soft', blush: true, wrinkles: true },
+      scared: { eyes: 'wide', mouth: 'o', brows: 'worried', wrinkles: true, sweat: true },
+      surprised: { eyes: 'wide', mouth: 'o', brows: 'worried', wrinkles: true },
+    },
+  },
+  /** 鬼夜市撈金魚的金魚伯（好兄弟）：曬黑、汗衫、短褲、大肚子、草帽往後戴、毛巾掛脖子，笑嘻嘻 */
+  jinyubo: {
+    id: 'jinyubo',
+    scale: 1.04,
+    skin: '#e2a878',
+    hair: { style: 'crew', color: '#8d8b88' },
+    top: { kind: 'singlet', color: '#ecdcb4', sleeve: 'none' },
+    bottom: { kind: 'shorts', color: '#35507e' },
+    feet: { kind: 'none', color: '#000' },
+    belly: true,
+    ghost: true,
+    extras: { strawHat: '#e8c872', neckTowel: '#fbfaf6' },
+    faces: {
+      normal: { eyes: 'open', mouth: 'grin', brows: 'soft', blush: true, wrinkles: true, stubble: true },
+      happy: { eyes: 'happy', mouth: 'grin', brows: 'soft', blush: true, wrinkles: true, stubble: true },
+      scared: { eyes: 'wide', mouth: 'o', brows: 'worried', wrinkles: true, sweat: true, stubble: true },
+      surprised: { eyes: 'wide', mouth: 'o', brows: 'worried', wrinkles: true, stubble: true },
+    },
+  },
+  /** 鬼夜市賣法器的紅姨（女鬼）：紅色旗袍（盤扣、立領）、低髮髻插金簪、翠玉手鐲、半閉的眼睛、口紅 */
+  hongyi: {
+    id: 'hongyi',
+    scale: 1.0,
+    skin: '#f4d8c8',
+    hair: { style: 'lowbun', color: '#1e1418' },
+    top: {
+      kind: 'blouse',
+      color: '#ffffff',
+      sleeve: 'short',
+      accent: '#6e1420',
+      print: { base: '#b3262e', petals: ['#d8a444', '#c9404a'], center: '#f2d27a', seed: 7, repeat: 3.2 },
+    },
+    bottom: { kind: 'skirt', color: '#a8222c' },
+    feet: { kind: 'none', color: '#000' },
+    ghost: true,
+    extras: { collar: true, knots: '#e8c066', bracelet: '#3fae7a', earrings: true },
+    faces: {
+      normal: { eyes: 'calm', mouth: 'smile', brows: 'soft', lashes: true, lipstick: '#c0243a' },
+      happy: { eyes: 'happy', mouth: 'smile', brows: 'soft', lashes: true, blush: true, lipstick: '#c0243a' },
+      scared: { eyes: 'wide', mouth: 'o', brows: 'worried', lashes: true },
+      surprised: { eyes: 'wide', mouth: 'o', brows: 'worried', lashes: true },
+    },
+  },
+}

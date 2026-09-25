@@ -6,11 +6,11 @@ const SW = 3
 
 export const NPC_SIZE = { w: 240, h: 360 }
 
-export type NpcId = 'xiaohan' | 'ayi' | 'miaogong' | 'agui' | 'akai' | 'zhang' | 'ahao' | 'xiaoyu' | 'linmom' | 'atu'
+export type NpcId = 'xiaohan' | 'ayi' | 'miaogong' | 'agui' | 'akai' | 'zhang' | 'ahao' | 'xiaoyu' | 'linmom' | 'atu' | 'ajiao' | 'jinyubo' | 'hongyi'
 export type NpcPose = 'idle' | 'sweep' | 'phone' | 'drink' | 'bow'
 export type NpcMood = 'normal' | 'happy' | 'surprised'
 
-export const NPC_IDS: readonly NpcId[] = ['xiaohan', 'ayi', 'miaogong', 'agui', 'akai', 'zhang', 'ahao', 'xiaoyu', 'linmom', 'atu']
+export const NPC_IDS: readonly NpcId[] = ['xiaohan', 'ayi', 'miaogong', 'agui', 'akai', 'zhang', 'ahao', 'xiaoyu', 'linmom', 'atu', 'ajiao', 'jinyubo', 'hongyi']
 
 /** 每個角色有哪些姿勢（第一個是預設） */
 export const NPC_POSES: Record<NpcId, readonly NpcPose[]> = {
@@ -24,15 +24,18 @@ export const NPC_POSES: Record<NpcId, readonly NpcPose[]> = {
   xiaoyu: ['idle'],
   linmom: ['idle'],
   atu: ['idle'],
+  ajiao: ['idle'],
+  jinyubo: ['idle'],
+  hongyi: ['idle'],
 }
 
 /** 鬼（不受光、半透明、飄著、沒有影子） */
-export const NPC_GHOST: Record<NpcId, boolean> = { xiaohan: false, ayi: true, miaogong: false, agui: false, akai: false, zhang: false, ahao: false, xiaoyu: false, linmom: false, atu: false }
+export const NPC_GHOST: Record<NpcId, boolean> = { xiaohan: false, ayi: true, miaogong: false, agui: false, akai: false, zhang: false, ahao: false, xiaoyu: false, linmom: false, atu: false, ajiao: false, jinyubo: true, hongyi: true }
 
 /** 預設的世界高度（公尺） */
-export const NPC_HEIGHT: Record<NpcId, number> = { xiaohan: 1.7, ayi: 1.7, miaogong: 1.7, agui: 1.55, akai: 1.72, zhang: 1.75, ahao: 1.72, xiaoyu: 1.2, linmom: 1.6, atu: 1.6 }
+export const NPC_HEIGHT: Record<NpcId, number> = { xiaohan: 1.7, ayi: 1.7, miaogong: 1.7, agui: 1.55, akai: 1.72, zhang: 1.75, ahao: 1.72, xiaoyu: 1.2, linmom: 1.6, atu: 1.6, ajiao: 1.5, jinyubo: 1.7, hongyi: 1.62 }
 
-export const NPC_NAMES: Record<NpcId, string> = { xiaohan: '小翰', ayi: '阿義', miaogong: '王伯', agui: '阿桂', akai: '阿凱', zhang: '張經理', ahao: '阿豪', xiaoyu: '小宇', linmom: '林太太', atu: '阿土伯' }
+export const NPC_NAMES: Record<NpcId, string> = { xiaohan: '小翰', ayi: '阿義', miaogong: '王伯', agui: '阿桂', akai: '阿凱', zhang: '張經理', ahao: '阿豪', xiaoyu: '小宇', linmom: '林太太', atu: '阿土伯', ajiao: '阿嬌', jinyubo: '金魚伯', hongyi: '紅姨' }
 
 const svg = (w: number, h: number, body: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`
@@ -1139,10 +1142,252 @@ function atuSvg(mood: NpcMood): string {
 }
 
 // ===========================================================================
+// 阿嬌（柑仔店老闆娘，70 幾歲，看得到鬼）：灰色燙髮、碎花上衣、藍圍裙、袖套、老花眼鏡掛胸前、粉紅塑膠拖
+// ===========================================================================
+
+const AJ_HEAD = { x: 120, y: 108, r: 57 }
+
+function ajiaoSvg(mood: NpcMood): string {
+  const { x, y, r } = AJ_HEAD
+  const p = 'aj'
+  const defs = `<defs>
+    ${skinDefs(p, '#ffe4cc', '#eeb690', '#f6c9a6', '#e0a27c', [x, y, r])}
+    ${lin('ajHair', '#f3f2f6', '#b2aebb')}
+    ${lin('ajBlouse', '#fdf1f5', '#ead2dc')}
+    ${shadeGrad('ajBlouseShade', '#6a3a4a', 0.26)}
+    ${flowerPattern('ajFloral', 20, '#e8528a', '#ffe08a', 2.3, '<circle cx="15" cy="5" r="1.8" fill="#6a9ad8"/><circle cx="4" cy="16" r="1.6" fill="#f2a24a"/>')}
+    ${lin('ajApron', '#5b8ace', '#2f5a9a')}
+    ${shadeGrad('ajApronShade', '#0e2448', 0.34)}
+    ${lin('ajCover', '#b4d0f2', '#7ca2d6')}
+    ${lin('ajPants', '#4a5070', '#2a2e44')}
+  </defs>`
+  const [arms, fists] = idleArms(p, 'long', 'url(#ajBlouse)', 'url(#ajBlouseShade)', 'url(#ajFloral)')
+  // 袖套：套在前臂，兩端有鬆緊帶的皺褶
+  const coverL = 'M 45 216 L 73 216 L 71 256 L 44 254 Z'
+  const covers = `
+    ${cloth(coverL, 'url(#ajCover)')}${cloth(mirrorPath(coverL, 120), 'url(#ajCover)', 'url(#ajBlouseShade)')}
+    <path d="M 46 221 L 72 221 M 45 250 L 71 251 M 168 221 L 194 221 M 169 251 L 195 250" stroke="#5a80b8" stroke-width="2" stroke-linecap="round" opacity="0.8"/>`
+  const apron = `
+    ${cloth('M 84 248 L 156 248 L 165 320 Q 120 330 75 320 Z', 'url(#ajApron)', 'url(#ajApronShade)')}
+    ${cloth('M 98 182 L 142 182 L 146 252 L 94 252 Z', 'url(#ajApron)', 'url(#ajApronShade)')}
+    <path d="M 98 183 L 106 162 M 142 183 L 134 162" stroke="${OUT}" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 98 183 L 106 162 M 142 183 L 134 162" stroke="#4a78bc" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 58 250 L 182 250" stroke="${OUT}" stroke-width="9" stroke-linecap="round"/>
+    <path d="M 58 250 L 182 250" stroke="#4a78bc" stroke-width="6" stroke-linecap="round"/>
+    <rect x="100" y="274" width="40" height="24" rx="3" fill="#fbfaf4" stroke="${OUT}" stroke-width="2.4"/>
+    <path d="M 120 275 L 120 297" stroke="#4a78bc" stroke-width="2"/>`
+  // 老花眼鏡：金色細鍊子從脖子兩邊垂下來，眼鏡掛在圍裙上
+  const specs = `
+    <path d="M 104 166 Q 100 186 108 204 M 136 166 Q 140 186 132 204" fill="none" stroke="#c9962e" stroke-width="1.8" stroke-dasharray="2 1.6"/>
+    <circle cx="111" cy="206" r="8" fill="#e6f4fb" fill-opacity="0.75" stroke="#c9962e" stroke-width="2.4"/>
+    <circle cx="129" cy="206" r="8" fill="#e6f4fb" fill-opacity="0.75" stroke="#c9962e" stroke-width="2.4"/>
+    <path d="M 119 205 Q 120 203 121 205" fill="none" stroke="#c9962e" stroke-width="2"/>
+    <path d="M 107 203 L 110 201" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>`
+  const body = `
+    ${longPants('url(#ajPants)')}
+    ${skin('M 74 330 L 106 330 L 104 342 L 76 342 Z', p)}${skin('M 134 330 L 166 330 L 164 342 L 136 342 Z', p)}
+    ${flat(90, '#e05a8a')}${flat(150, '#cf4a7a')}
+    ${cloth(ADULT_BODY, 'url(#ajBlouse)', 'url(#ajBlouseShade)', 'url(#ajFloral)')}
+    ${neckPart(p, 156, 170)}
+    <path d="M 100 168 Q 120 182 140 168" fill="none" stroke="#b8456a" stroke-width="3.4" stroke-linecap="round"/>
+    ${apron}
+    ${arms}${covers}
+    ${specs}
+    ${fists}`
+  const curl = (cx: number, cy: number, cr: number) =>
+    `<circle cx="${cx}" cy="${cy}" r="${cr}" fill="url(#ajHair)" stroke="${OUT}" stroke-width="2.6"/>
+     <path d="M ${cx - cr * 0.45} ${cy - cr * 0.1} Q ${cx} ${cy - cr * 0.6} ${cx + cr * 0.4} ${cy - cr * 0.05}" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>`
+  const back = `<path d="M 56 132 C 46 88, 76 50, 120 50 C 164 50, 194 88, 184 132 Z" fill="url(#ajHair)" stroke="${OUT}" stroke-width="${SW}" stroke-linejoin="round"/>`
+  const ring: [number, number, number][] = [
+    [60, 128, 11], [55, 110, 12], [60, 90, 12], [72, 72, 13], [90, 58, 13], [110, 51, 13],
+    [130, 51, 13], [150, 58, 13], [168, 72, 13], [180, 90, 12], [185, 110, 12], [180, 128, 11],
+  ]
+  const top: [number, number, number][] = [
+    [96, 76, 11], [118, 70, 12], [140, 76, 11], [80, 88, 10], [160, 88, 10],
+  ]
+  const curls = [...ring, ...top].map(([a, b, c]) => curl(a, b - 1, c)).join('')
+  const lines = `
+    <path d="M 78 128 L 72 125 M 162 128 L 168 125" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 100 146 Q 95 154 100 162 M 140 146 Q 145 154 140 162" fill="none" stroke="#d59478" stroke-width="1.7" stroke-linecap="round" opacity="0.7"/>`
+  let face: string
+  if (mood === 'surprised') face = `${browsUp(110, '#8a8490')}${eyesWide(128)}${nose(120, 140)}${mouthO(120, 155)}${sweat(180, 98, 1)}`
+  else if (mood === 'happy')
+    face = `${browsSoft(112, '#8a8490')}${eyesHappy(129)}${lines}${nose(120, 140)}${blush(84, 146, 13, 8, '#f58f98', 0.55)}${blush(156, 146, 13, 8, '#f58f98', 0.55)}${mouthGrin(120, 148, 15, true)}${sparkle(40, 84, 0.9)}${sparkle(200, 72, 0.7, '#fff4c2')}`
+  else face = `${browsSoft(112, '#8a8490')}${eyesOpen(128)}${lines}${nose(120, 140)}${blush(84, 146, 13, 8, '#f58f98', 0.5)}${blush(156, 146, 13, 8, '#f58f98', 0.5)}${mouthGrin(120, 148, 14, true)}`
+  const head = `
+    ${back}
+    ${ears(p, 62, 178, 132, '#d99a7a')}
+    <circle cx="62" cy="146" r="4" fill="#f2c14e" stroke="${OUT}" stroke-width="1.6"/><circle cx="178" cy="146" r="4" fill="#f2c14e" stroke="${OUT}" stroke-width="1.6"/>
+    ${headBase(p, x, y, r, '#e8ad8a')}
+    ${face}
+    ${curls}`
+  return svg(NPC_SIZE.w, NPC_SIZE.h, `${defs}${body}${head}`)
+}
+
+// ===========================================================================
+// 金魚伯（鬼夜市撈金魚的好兄弟）：曬黑、汗衫、大肚子、毛巾掛脖子、草帽往後戴，笑嘻嘻。鬼：腳往下漸漸透明
+// ===========================================================================
+
+const JY_HEAD = { x: 120, y: 106, r: 57 }
+
+function jinyuboSvg(mood: NpcMood): string {
+  const { x, y, r } = JY_HEAD
+  const p = 'jy'
+  const defs = `<defs>
+    ${skinDefs(p, '#f6c8a0', '#d8966a', '#e6b088', '#c8845c', [x, y, r])}
+    ${lin('jyShirt', '#fdf6e2', '#e2d2a8')}
+    ${shadeGrad('jyShirtShade', '#6b6440', 0.28)}
+    ${lin('jyHat', '#fae4a6', '#d8ae5a')}
+    ${lin('jyHatIn', '#dcb866', '#a8843a')}
+    ${lin('jyTowel', '#ffffff', '#e2e2dc')}
+    <linearGradient id="jyShortsFade" gradientUnits="userSpaceOnUse" x1="0" y1="266" x2="0" y2="352">
+      <stop offset="0" stop-color="#46649a" stop-opacity="1"/><stop offset="0.4" stop-color="#34507e" stop-opacity="0.7"/><stop offset="1" stop-color="#26385e" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="jySkinFade" gradientUnits="userSpaceOnUse" x1="0" y1="290" x2="0" y2="350">
+      <stop offset="0" stop-color="#d8966a" stop-opacity="0.75"/><stop offset="1" stop-color="#d8966a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="jyOutFade" gradientUnits="userSpaceOnUse" x1="0" y1="266" x2="0" y2="344">
+      <stop offset="0" stop-color="${OUT}" stop-opacity="1"/><stop offset="1" stop-color="${OUT}" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="jyJaw"><path d="M 62 124 Q 70 166 120 166 Q 170 166 178 124 L 178 176 L 62 176 Z"/></clipPath>
+  </defs>`
+  const shoulders = `<path d="M 60 172 Q 120 152 180 172 L 184 206 L 56 206 Z" fill="url(#jySkin)" stroke="${OUT}" stroke-width="${SW}" stroke-linejoin="round"/>
+    ${neckPart(p, 152, 168)}`
+  const shirtD = 'M 82 162 Q 120 186 158 162 L 162 166 Q 164 190 178 204 Q 200 240 186 268 Q 120 288 54 268 Q 40 240 62 204 Q 76 190 78 166 Z'
+  const shirt = cloth(shirtD, 'url(#jyShirt)', 'url(#jyShirtShade)')
+  const belly = `<path d="M 88 252 Q 120 264 152 252" fill="none" stroke="#c8bc98" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M 84 208 Q 90 198 100 196" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.8"/>`
+  const shorts = `
+    <path d="M 62 264 L 178 264 L 186 314 L 128 316 L 120 292 L 112 316 L 54 314 Z" fill="url(#jyShortsFade)" stroke="url(#jyOutFade)" stroke-width="${SW}" stroke-linejoin="round"/>
+    <path d="M 72 316 L 106 316 L 104 350 L 76 350 Z M 134 316 L 168 316 L 164 350 L 136 350 Z" fill="url(#jySkinFade)"/>`
+  const armR = 'M 170 178 C 188 190, 196 214, 192 246 L 174 246 C 176 224, 172 206, 162 194 Z'
+  const arms = `${skin(mirrorPath(armR, 120), p)}${skin(armR, p)}${fist(p, 56, 250, 12, 12)}${fist(p, 184, 250, 12, 12, true)}`
+  // 毛巾：繞過後頸、兩端垂在胸前，尾端一條藍色條紋
+  const towel = `
+    <path d="M 94 160 Q 120 176 146 160 L 150 172 Q 120 190 90 172 Z" fill="url(#jyTowel)" stroke="${OUT}" stroke-width="2.6" stroke-linejoin="round"/>
+    ${cloth('M 90 170 L 108 176 L 106 238 L 86 234 Z', 'url(#jyTowel)')}
+    ${cloth('M 150 170 L 132 176 L 134 238 L 154 234 Z', 'url(#jyTowel)', 'url(#jyShirtShade)')}
+    <path d="M 87 222 L 106 225 M 153 222 L 134 225" stroke="#4a82d0" stroke-width="5"/>
+    <path d="M 92 186 L 104 188 M 148 186 L 136 188" stroke="#d6d6ce" stroke-width="1.6" stroke-linecap="round"/>`
+  const rnd = (i: number) => ((Math.sin(i * 12.9898) * 43758.5453) % 1 + 1) % 1
+  const stubble = Array.from({ length: 44 }, (_, i) => {
+    const a = Math.PI * (0.12 + 0.76 * rnd(i))
+    const d = 36 + rnd(i + 99) * 18
+    return `<circle cx="${(x - Math.cos(a) * d).toFixed(1)}" cy="${(y + 20 + Math.sin(a) * d * 0.72).toFixed(1)}" r="${(0.9 + rnd(i + 7) * 0.7).toFixed(2)}" fill="#7a5a48" opacity="0.5"/>`
+  }).join('')
+  // 草帽往後戴：帽簷像光圈一樣框在頭後面，帽頂蓋住頭頂
+  const brim = `
+    <ellipse cx="120" cy="62" rx="92" ry="26" fill="url(#jyHat)" stroke="${OUT}" stroke-width="${SW}"/>
+    <ellipse cx="120" cy="64" rx="70" ry="17" fill="url(#jyHatIn)" opacity="0.9"/>
+    <path d="M 40 66 Q 60 78 84 80 M 200 66 Q 180 78 156 80" fill="none" stroke="#c09848" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>`
+  const crown = `
+    <path d="M 80 66 C 78 26, 162 26, 160 66 Q 120 78 80 66 Z" fill="url(#jyHat)" stroke="${OUT}" stroke-width="${SW}" stroke-linejoin="round"/>
+    <path d="M 81 58 Q 120 70 159 58 L 160 66 Q 120 78 80 66 Z" fill="#c8503a" stroke="${OUT}" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M 94 42 Q 110 32 128 34" fill="none" stroke="#fff6d6" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <path d="M 88 52 Q 120 44 152 52" fill="none" stroke="#c09848" stroke-width="1.4" opacity="0.7"/>`
+  const sideHair = `
+    <path d="M 64 112 C 62 100, 66 90, 72 84 C 72 94, 72 102, 70 112 Z M 176 112 C 178 100, 174 90, 168 84 C 168 94, 168 102, 170 112 Z" fill="#a6a29c" stroke="${OUT}" stroke-width="2" stroke-linejoin="round"/>`
+  const wrinkles = `<path d="M 100 84 Q 120 80 140 84 M 104 91 Q 120 88 136 91" fill="none" stroke="#b8805a" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 78 126 L 72 124 M 162 126 L 168 124" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/>`
+  let face: string
+  if (mood === 'surprised') face = `${browsUp(104, '#5a5250')}${eyesWide(122)}${nose(120, 137, '#b87858')}${mouthO(120, 154)}${sweat(62, 100, 0.9)}`
+  else if (mood === 'happy')
+    face = `${browsSoft(106, '#5a5250')}${eyesHappy(123)}${nose(120, 137, '#b87858')}${blush(82, 140, 13, 8, '#f07e76', 0.5)}${blush(158, 140, 13, 8, '#f07e76', 0.5)}${mouthGrin(120, 145, 17, true)}${sparkle(34, 110, 0.9)}${sparkle(206, 104, 0.7, '#fff4c2')}`
+  else face = `${browsSoft(106, '#5a5250')}${eyesOpen(122)}${nose(120, 137, '#b87858')}${blush(82, 140, 13, 8, '#f07e76', 0.45)}${blush(158, 140, 13, 8, '#f07e76', 0.45)}${mouthGrin(120, 145, 16, true)}`
+  const head = `
+    ${brim}
+    ${ears(p, 63, 177, 120, '#b87858')}
+    ${headBase(p, x, y, r, '#c98c66')}
+    <g clip-path="url(#jyHeadClip)"><g clip-path="url(#jyJaw)">${stubble}</g></g>
+    ${sideHair}${wrinkles}
+    ${face}
+    ${crown}`
+  return svg(NPC_SIZE.w, NPC_SIZE.h, `${defs}${shoulders}${shirt}${belly}${shorts}${arms}${towel}${head}`)
+}
+
+// ===========================================================================
+// 紅姨（鬼夜市賣法器的女鬼）：紅色旗袍（立領、斜襟盤扣、金色小花）、中分低髮髻插金簪、翠玉手鐲、半閉的眼睛、口紅。
+// 鬼：旗袍下襬往下漸漸透明
+// ===========================================================================
+
+const HY_HEAD = { x: 120, y: 104, r: 55 }
+
+function hongyiSvg(mood: NpcMood): string {
+  const { x, y, r } = HY_HEAD
+  const p = 'hy'
+  const defs = `<defs>
+    ${skinDefs(p, '#fff4ee', '#ecd0c4', '#f6e0d6', '#dcbcae', [x, y, r])}
+    ${lin('hyHair', '#3e3040', '#0c080c')}
+    ${lin('hyDress', '#e2424c', '#9a1822')}
+    ${shadeGrad('hyDressShade', '#3a0008', 0.38)}
+    ${flowerPattern('hyGold', 22, '#e8c066', '#fff0b0', 2.1, '<circle cx="17" cy="6" r="1" fill="#ffe8a0" opacity="0.9"/>')}
+    ${lin('hyJade', '#7ce0aa', '#2a9a64')}
+    <linearGradient id="hyFadeGrad" gradientUnits="userSpaceOnUse" x1="0" y1="240" x2="0" y2="356">
+      <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0.32"/>
+    </linearGradient>
+    <mask id="hyFade" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="360"><rect width="240" height="360" fill="url(#hyFadeGrad)"/></mask>
+  </defs>`
+  const dressD = 'M 98 158 Q 120 166 142 158 L 162 168 Q 174 176 174 194 L 168 244 Q 178 300 172 352 L 68 352 Q 62 300 72 244 L 66 194 Q 66 176 78 168 Z'
+  const sleeve = 'M 78 168 C 66 172, 60 184, 60 198 L 80 200 Z'
+  const armL = 'M 60 196 C 58 216, 64 234, 82 244 L 104 250 L 108 238 C 92 236, 80 226, 78 206 Z'
+  const dress = `
+    <g mask="url(#hyFade)">
+      ${cloth(dressD, 'url(#hyDress)', 'url(#hyDressShade)', 'url(#hyGold)')}
+      <path d="M 160 296 L 166 352" stroke="${OUT}" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/>
+      <path d="M 68 350 L 172 350" stroke="#e8c066" stroke-width="3"/>
+    </g>
+    <!-- 立領＋斜襟、盤扣 -->
+    <path d="M 104 150 L 136 150 L 138 166 Q 120 173 102 166 Z" fill="url(#hyDress)" stroke="${OUT}" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M 104 152 L 136 152" stroke="#e8c066" stroke-width="2"/>
+    <path d="M 132 166 Q 146 178 166 186" fill="none" stroke="${OUT}" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 132 166 Q 146 178 166 186" fill="none" stroke="#e8c066" stroke-width="2.6" stroke-linecap="round"/>
+    ${[[140, 172], [152, 180], [164, 185], [168, 204], [167, 222]].map(([a, b]) => `<path d="M ${a - 5} ${b} L ${a + 5} ${b}" stroke="${OUT}" stroke-width="4.6" stroke-linecap="round"/><path d="M ${a - 5} ${b} L ${a + 5} ${b}" stroke="#f2cf72" stroke-width="2.6" stroke-linecap="round"/><circle cx="${a + 6}" cy="${b}" r="2.4" fill="#f2cf72" stroke="${OUT}" stroke-width="1.2"/>`).join('')}`
+  // 兩手在腰前輕輕交握，左手腕一只翠玉手鐲
+  const arms = `
+    ${cloth(sleeve, 'url(#hyDress)', undefined, 'url(#hyGold)')}${cloth(mirrorPath(sleeve, 120), 'url(#hyDress)', 'url(#hyDressShade)', 'url(#hyGold)')}
+    ${skin(armL, p)}${skin(mirrorPath(armL, 120), p)}
+    <ellipse cx="97" cy="243" rx="5.5" ry="10" transform="rotate(-62 97 243)" fill="url(#hyJade)" stroke="${OUT}" stroke-width="2.2"/>
+    <path d="M 93 240 Q 97 238 101 240" fill="none" stroke="#e8fff2" stroke-width="1.4" stroke-linecap="round"/>
+    ${fist(p, 110, 246, 11, 10)}${fist(p, 130, 246, 11, 10, true)}`
+  const backHair = `
+    <path d="M 64 122 C 56 74, 86 46, 120 46 C 154 46, 184 74, 176 122 L 172 150 Q 120 160 68 150 Z" fill="url(#hyHair)" stroke="${OUT}" stroke-width="${SW}" stroke-linejoin="round"/>
+    <!-- 低髮髻從右後方露出來，插一支金簪、垂一串紅穗 -->
+    <circle cx="170" cy="150" r="17" fill="url(#hyHair)" stroke="${OUT}" stroke-width="${SW}"/>
+    <path d="M 146 140 L 200 126" stroke="${OUT}" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 146 140 L 200 126" stroke="#f2c14e" stroke-width="3.4" stroke-linecap="round"/>
+    <circle cx="202" cy="125" r="4.6" fill="#f2c14e" stroke="${OUT}" stroke-width="1.8"/>
+    <path d="M 202 130 L 198 156 L 206 156 Z" fill="#d8322a" stroke="${OUT}" stroke-width="1.8" stroke-linejoin="round"/>`
+  const frontHair = `
+    <path d="M 63 122 C 58 80, 84 50, 120 49 C 156 50, 182 80, 177 122 C 172 98, 152 76, 122 70 L 118 70 C 88 76, 68 98, 63 122 Z" fill="url(#hyHair)" stroke="${OUT}" stroke-width="${SW}" stroke-linejoin="round"/>
+    <path d="M 120 50 L 120 70" stroke="#5a4a58" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M 84 70 Q 100 58 116 56 M 150 62 Q 162 70 168 84" fill="none" stroke="#7a6a80" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/>`
+  // 半閉的眼睛：上眼皮蓋一半，眼線在外眼角往上挑（sd：外眼角在哪一邊）
+  const calmEye = (ex: number, sd: number) => `
+    <path d="M ${ex - 7.5} 123 Q ${ex} 134 ${ex + 7.5} 123 Z" fill="#2c211e"/>
+    <circle cx="${ex - 2}" cy="127" r="1.7" fill="#fff"/>
+    <path d="M ${ex - sd * 10} 124 Q ${ex} 117 ${ex + sd * 9} 122 L ${ex + sd * 14} 117.5" fill="none" stroke="${OUT}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`
+  const thinBrows = `<path d="M 85 108 Q 97 101 109 106 M 131 106 Q 143 101 155 108" fill="none" stroke="#2a1e24" stroke-width="2.6" stroke-linecap="round"/>`
+  const lips = `<path d="M 111 147 Q 115.5 143 120 145.5 Q 124.5 143 129 147 Q 120 155 111 147 Z" fill="#c8283c" stroke="${OUT}" stroke-width="1.8" stroke-linejoin="round"/><path d="M 113 147.5 Q 120 149 127 147.5" fill="none" stroke="#7a1420" stroke-width="1.2"/>`
+  const mole = `<circle cx="134" cy="154" r="1.5" fill="#5a3a3a"/>`
+  let face: string
+  if (mood === 'surprised') face = `${browsUp(106, '#2a1e24')}${eyesWide(124)}${nose(120, 136, '#d8a898')}<ellipse cx="120" cy="150" rx="5" ry="6.5" fill="#c8283c" stroke="${OUT}" stroke-width="2"/>`
+  else if (mood === 'happy')
+    face = `${thinBrows}${eyesHappy(125, 97, 143, 9)}${nose(120, 136, '#d8a898')}${blush(84, 140, 11, 6, '#f5a0a8', 0.45)}${blush(156, 140, 11, 6, '#f5a0a8', 0.45)}${lips}${mole}`
+  else face = `${thinBrows}${calmEye(97, -1)}${calmEye(143, 1)}${nose(120, 136, '#d8a898')}${lips}${mole}`
+  const head = `
+    ${ears(p, 65, 175, 120, '#d8a898')}
+    <path d="M 65 134 Q 61 142 65 150 Q 69 142 65 134 Z M 175 134 Q 171 142 175 150 Q 179 142 175 134 Z" fill="url(#hyJade)" stroke="${OUT}" stroke-width="1.6"/>
+    ${headBase(p, x, y, r, '#e6c6b8')}
+    ${face}
+    ${frontHair}`
+  return svg(NPC_SIZE.w, NPC_SIZE.h, `${defs}${backHair}${dress}${arms}${head}`)
+}
+
+// ===========================================================================
 
 /**
  * 配角立繪。pose 不在該角色的姿勢清單裡時用預設姿勢。
- * mood：小翰與客人們（akai、zhang、ahao、xiaoyu、linmom、atu）有 normal／happy／surprised，其他人都用 normal。
+ * mood：小翰、客人們（akai、zhang、ahao、xiaoyu、linmom、atu）與阿嬌、金魚伯、紅姨有 normal／happy／surprised，其他人都用 normal。
  */
 export function npcSvg(id: NpcId, pose: NpcPose = 'idle', mood: NpcMood = 'normal'): string {
   const p = NPC_POSES[id].includes(pose) ? pose : NPC_POSES[id][0]
@@ -1167,6 +1412,12 @@ export function npcSvg(id: NpcId, pose: NpcPose = 'idle', mood: NpcMood = 'norma
       return linmomSvg(mood)
     case 'atu':
       return atuSvg(mood)
+    case 'ajiao':
+      return ajiaoSvg(mood)
+    case 'jinyubo':
+      return jinyuboSvg(mood)
+    case 'hongyi':
+      return hongyiSvg(mood)
   }
 }
 

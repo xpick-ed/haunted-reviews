@@ -2,13 +2,12 @@
 
 ## Current
 
-**Doing:** 人物改成 3D Q 版角色（卡通光影＋描邊、會轉身、走路擺手腳、有影子）；修正移動時畫面閃白（後製加 NaN 清洗 pass、降畫質改在黑幕後）。
+**Doing:** 3D Q 版角色＋一輪修正：開始後黑畫面（shader 預先編譯＋載入畫面）、移動抖動（每幀順序）、NPC 碰撞、角色細修、效能。
 
 **Next:**
-1. 真機確認：還會不會閃白、3D 角色在手機上的效能（`?q=low` 會關掉描邊）
-2. 角色細修：阿嬤頭髮在燈下偏亮、小美醒著時臉被頭髮擋住一半、手的形狀
-3. 階段 A 收尾：點地板走路、設定選單（音量、畫質、減少閃爍）、存檔槽、第一章改成阿桂夫婦帶路
-4. 階段 B：客人會走（起夜、視線判定）、村路、鬼夜市
+1. 真機確認：還會不會閃白／抖、載入要等多久、手機順不順（`?q=low` 比較）
+2. 階段 A 收尾：點地板走路、設定選單（音量、畫質、減少閃爍）、存檔槽、第一章改成阿桂夫婦帶路
+3. 階段 B：客人會走（起夜、視線判定）、村路、鬼夜市
 
 **Blockers:** 無
 
@@ -35,6 +34,8 @@
 - 貼圖重新下載：`python3 scripts/fetch_textures.py`（CC0，來源列在 public/tex/CREDITS.txt）
 - 新增台詞：寫進 `src/data/story.lines.json`（who 用 cast.json 的 id），再跑 `scripts/gen_voices.py` 生成語音
 - 新增互動點：`src/world/hotspots.ts`；新增對話：`src/world/dialogues.ts`；新增場景：`src/world/scenes.ts` + `src/scene/` 的視覺
+- 每幀順序靠 useFrame 的負 priority：Ticker -4 → World -3 → 阿嬤 -2 → 鏡頭 -1 → 其他 0。新增會動的東西要注意順序
+- `pkill -f "vite ..."` 會連自己的 shell 一起殺掉（指令列裡也有那串字），停 server 要單獨下指令
 - 3D 角色：長相在 `src/chars/specs.ts`、臉在 `src/chars/faces.ts`、姿勢在 `src/chars/Chibi.tsx` 的 POSES
 - 人物 SVG 預覽（對話頭像）：`src/art/characters.ts` 不依賴 three，可以用 node 匯出 SVG 再轉 PNG 看
 

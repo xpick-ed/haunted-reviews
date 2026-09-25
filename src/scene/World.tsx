@@ -15,6 +15,8 @@ import { night, nightOptions, type PromptOpt } from '../world/night/director'
 /** 場景的固定碰撞 + 站在那裡的 NPC（阿嬤不能跟人重疊）。依場景與時段快取。 */
 const colliderCache = new Map<string, Colliders>()
 function collidersFor(scene: SceneId, phase: string): Colliders {
+  // 夢境的碰撞每場夢都不一樣（src/world/dream.ts 會換掉 DREAM_SCENE.colliders），不快取
+  if (scene === 'dream') return SCENES.dream.colliders
   const key = `${scene}|${phase}`
   let c = colliderCache.get(key)
   if (!c) {

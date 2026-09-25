@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { useStore } from '../store'
 import { objectives } from '../world/hotspots'
 import { nameOf } from '../world/lines'
@@ -37,8 +38,18 @@ export function Hud() {
 }
 
 function Objective() {
-  const s = useStore()
-  const o = objectives(s)
+  // 只挑會影響目標的欄位，不然深夜時間每幀在跑，整張卡每幀重畫
+  const s = useStore(
+    useShallow((x) => ({
+      phase: x.phase,
+      flags: x.flags,
+      nightCount: x.nightCount,
+      guest: x.guest,
+      scene: x.scene,
+      result: x.result,
+    })),
+  )
+  const o = objectives(s as Parameters<typeof objectives>[0])
   if (!o.main || s.result) return null
   return (
     <div className="objective">

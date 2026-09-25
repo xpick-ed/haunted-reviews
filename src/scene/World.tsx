@@ -3,12 +3,26 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useStore } from '../store'
 import { input } from '../world/input'
 import { player, stepPlayer } from '../world/player'
-import { SCENES } from '../world/scenes'
+import { SCENES, npcColliders, type SceneId } from '../world/scenes'
+import type { Colliders } from '../world/collision'
 import { nearestHotspot } from '../world/hotspots'
 import { inRect, segmentHitsBox } from '../world/collision'
 
 // 每幀的遊戲邏輯（放在 Canvas 裡，才拿得到鏡頭位置）：
 // 輸入 → 移動與碰撞 → 在哪個房間 → 哪些建築要淡出 → 附近的熱點 → 出口。
+
+/** 場景的固定碰撞 + 站在那裡的 NPC（阿嬤不能跟人重疊）。依場景與時段快取。 */
+const colliderCache = new Map<string, Colliders>()
+function collidersFor(scene: SceneId, phase: string): Colliders {
+  const key = `${scene}|${phase}`
+  let c = colliderCache.get(key)
+  if (!c) {
+    const base = SCENES[scene].colliders
+    c = { rects: base.rects, circles: [...base.circles, ...npcColliders(scene, phase)], bounds: base.bounds }
+    colliderCache.set(key, c)
+  }
+  return c
+}
 
 export function WorldController() {
   const { camera } = useThree()
@@ -23,7 +37,7 @@ export function WorldController() {
     const scene = SCENES[s.scene]
     const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.result || s.busy
     const move = input.read()
-    stepPlayer(dt, move, scene, frozen)
+    stepPlayer(dt, move, collidersFor(s.scene, s.phase), frozen)
     if (player.dashing) s.spendYin(dt * 1)
 
     // 在哪個房間、哪棟建築
@@ -51,6 +65,6 @@ export function WorldController() {
         }
       }
     }
-  })
+  }, -3)
   return null
 }

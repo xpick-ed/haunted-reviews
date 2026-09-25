@@ -8,6 +8,7 @@ import {
   GM_BED,
   GUEST_DOOR_Z,
   HALL_PART_X,
+  HAN_SWEEP,
   HAN_BED,
   HAN_DESK,
   KITCHEN_JAR,
@@ -271,6 +272,19 @@ export const TEMPLE_SCENE: SceneDef = {
 }
 
 export const SCENES: Record<SceneId, SceneDef> = { home: HOME, temple: TEMPLE_SCENE }
+
+/** NPC 站的位置（畫面與碰撞共用） */
+export const NPC_SPOTS = {
+  xiaohan: { x: HAN_SWEEP.x, z: HAN_SWEEP.z },
+  ayi: { x: TEMPLE.bench.x + 0.2, z: TEMPLE.bench.z + 0.55 },
+}
+
+/** 目前站在場景裡的 NPC 的碰撞圓 */
+export function npcColliders(scene: SceneId, phase: string) {
+  if (scene === 'home' && phase === 'dusk') return [{ ...NPC_SPOTS.xiaohan, r: 0.34 }]
+  if (scene === 'temple') return [{ ...NPC_SPOTS.ayi, r: 0.34 }]
+  return []
+}
 
 /** 客房床邊（蓋被子的熱點）等常用點 */
 export const SPOTS = {

@@ -30,7 +30,7 @@ export function Scene() {
   return (
     <Canvas
       shadows={NO_SHADOW ? false : "percentage"}
-      dpr={quality === 'high' ? [1, 2] : [1, 1.25]}
+      dpr={quality === 'high' ? [1, 1.5] : [1, 1]}
       camera={{ fov: 36, near: 0.5, far: 400, position: [19, 14, 22] }}
       gl={{ antialias: false, powerPreference: 'high-performance', stencil: false }}
       onCreated={({ gl }) => {
@@ -52,11 +52,40 @@ export function Scene() {
         <WorldController />
         <CameraRig />
         <Ticker />
+        <ReadyGate />
         {import.meta.env.DEV && <DevHooks />}
         {!NO_FX && <Effects quality={quality} />}
       </Suspense>
     </Canvas>
   )
+}
+
+/**
+ * 貼圖載完（Suspense 結束）後，先把場景裡所有材質的 shader 編譯好再讓玩家開始。
+ * 不然第一次畫的時候瀏覽器會一口氣編譯幾十個 shader，畫面黑好幾秒、之後也會卡。
+ */
+function ReadyGate() {
+  const { gl, scene, camera } = useThree()
+  useEffect(() => {
+    let done = false
+    const finish = () => {
+      if (done) return
+      done = true
+      useStore.setState({ ready: true })
+    }
+    // 等兩幀讓 MergeStatic 合併完，再編譯
+    const id = requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        gl.compileAsync(scene, camera).then(finish, finish)
+      }),
+    )
+    const t = window.setTimeout(finish, 12000)
+    return () => {
+      cancelAnimationFrame(id)
+      window.clearTimeout(t)
+    }
+  }, [gl, scene, camera])
+  return null
 }
 
 /** 依目前場景換掉整組內容（換場景時由黑幕遮住） */
@@ -83,7 +112,7 @@ function Ticker() {
   useFrame(({ clock }, dt) => {
     wind.value = clock.elapsedTime
     tick(Math.min(dt, 0.1))
-  })
+  }, -4)
   return null
 }
 
@@ -108,7 +137,7 @@ function Daylight({ quality }: { quality: 'high' | 'low' }) {
 
   useEffect(() => {
     const s = sun.current!
-    const size = quality === 'high' ? 4096 : 2048
+    const size = quality === 'high' ? 2048 : 1024
     s.shadow.mapSize.set(size, size)
     s.shadow.map?.dispose()
     s.shadow.map = null as unknown as THREE.WebGLRenderTarget
@@ -142,7 +171,7 @@ function Daylight({ quality }: { quality: 'high' | 'low' }) {
     if (sun.current) {
       sun.current.color.copy(dl.sun)
       sun.current.intensity = dl.sunI
-      const texel = 38 / (quality === 'high' ? 4096 : 2048)
+      const texel = 38 / (quality === 'high' ? 2048 : 1024)
       const cx = Math.round(player.x / texel) * texel
       const cz = Math.round(player.z / texel) * texel
       sun.current.target.position.set(cx, 0, cz)

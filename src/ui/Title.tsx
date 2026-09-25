@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useProgress } from '@react-three/drei'
 import { useStore } from '../store'
 import { readSave } from '../world/save'
 
@@ -6,6 +7,8 @@ import { readSave } from '../world/save'
 
 export function Title() {
   const started = useStore((s) => s.started)
+  const ready = useStore((s) => s.ready)
+  const { progress } = useProgress()
   const [gone, setGone] = useState(false)
   const save = readSave()
 
@@ -26,14 +29,17 @@ export function Title() {
         <h1>靈異好評</h1>
         <p>阿嬤只是想招待客人</p>
         <div className="title-buttons">
-          {save && (
+          {!ready && <div className="loading">{progress < 100 ? `載入中… ${Math.round(progress)}%` : '準備場景中…'}</div>}
+          {ready && save && (
             <button className="tap" onClick={() => useStore.getState().continueGame()}>
               繼續 · 第 {save.nightCount} 晚
             </button>
           )}
-          <button className={save ? 'tap secondary' : 'tap'} onClick={() => useStore.getState().newGame()}>
-            {save ? '重新開始' : '開門'}
-          </button>
+          {ready && (
+            <button className={save ? 'tap secondary' : 'tap'} onClick={() => useStore.getState().newGame()}>
+              {save ? '重新開始' : '開門'}
+            </button>
+          )}
         </div>
       </div>
     </div>

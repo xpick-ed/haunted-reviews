@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { Sparkles } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../store'
-import { TEMPLE } from '../world/scenes'
+import { NPC_SPOTS, TEMPLE } from '../world/scenes'
 import { lanternAt } from './daylight'
 import { TILE, WBox, canvasTexture, planeGeo, useMats } from './kit'
 import { GableRoof, Lantern, Wall, plaqueTexture } from './House'
@@ -39,7 +39,7 @@ export function TempleScene() {
       <TempleLights />
       <Tree position={[TEMPLE.banyan.x, 0, TEMPLE.banyan.z]} scale={0.95} />
       <Tree position={[8.5, 0, -6.5]} scale={0.6} />
-      <ChibiNpc id="ayi" pose="drink" position={[TEMPLE.bench.x + 0.2, 0.2, TEMPLE.bench.z + 0.55]} heading={0.9} seesGhosts outline={quality === 'high'} />
+      <ChibiNpc id="ayi" pose="drink" position={[NPC_SPOTS.ayi.x, 0.2, NPC_SPOTS.ayi.z]} heading={0.9} seesGhosts outline={quality === 'high'} />
       <group visible={isNight}>
         <Sparkles count={40} scale={[20, 1.6, 10]} position={[0, 0.9, 2]} size={3.5} speed={0.3} color="#e8ff8a" opacity={0.9} noise={1.4} />
       </group>

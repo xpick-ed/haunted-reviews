@@ -10,7 +10,7 @@ import { SCENES } from '../world/scenes'
 
 const OUTDOOR = 19
 const INDOOR = 12.5
-const LOOK_AHEAD = 0.45
+const LOOK_AHEAD = 0.35
 /** 開發用：?zoom=0.4 把鏡頭拉近看角色 */
 const ZOOM = import.meta.env.DEV ? Number(new URLSearchParams(location.search).get('zoom')) || 1 : 1
 
@@ -20,6 +20,7 @@ export function CameraRig() {
   const dist = useRef(OUTDOOR)
   const lastScene = useRef<string | null>(null)
   const tmp = useMemo(() => ({ want: new THREE.Vector3(), pos: new THREE.Vector3() }), [])
+  const vel = useRef({ x: 0, z: 0 })
 
   useEffect(() => {
     const cam = camera as THREE.PerspectiveCamera
@@ -33,7 +34,10 @@ export function CameraRig() {
     const s = useStore.getState()
     const scene = SCENES[s.scene]
     const y = scene.floorAt(player.x, player.z) + 0.9
-    tmp.want.set(player.x + player.vx * LOOK_AHEAD, y, player.z + player.vz * LOOK_AHEAD)
+    const kv = 1 - Math.exp(-3 * dt)
+    vel.current.x += (player.vx - vel.current.x) * kv
+    vel.current.z += (player.vz - vel.current.z) * kv
+    tmp.want.set(player.x + vel.current.x * LOOK_AHEAD, y, player.z + vel.current.z * LOOK_AHEAD)
 
     const portrait = size.width < size.height
     const base = s.building ? INDOOR : OUTDOOR
@@ -55,6 +59,6 @@ export function CameraRig() {
       camera.position.y += (Math.random() - 0.5) * a
     }
     camera.lookAt(target.current)
-  })
+  }, -1)
   return null
 }

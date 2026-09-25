@@ -71,13 +71,13 @@ export function Grandma() {
     d.pose = s.busy ? 'reach' : 'clasp'
     d.expr = s.busy ? 'reach' : 'normal'
     if (light.current) light.current.intensity = 2.6 + Math.sin(time * 3.1) * 0.5 + s.warm * 3
-  })
+  }, -2)
 
   return (
     <group ref={group}>
       <Chibi spec={SPECS.grandma} drive={drive} outline={quality === 'high'} />
-      <sprite scale={[2.6, 2.6, 1]} position={[0, 0.85, 0]} renderOrder={1}>
-        <spriteMaterial map={tex.halo} transparent opacity={0.17} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <sprite scale={[2.1, 2.1, 1]} position={[0, 0.55, 0]} renderOrder={1}>
+        <spriteMaterial map={tex.halo} transparent opacity={0.16} blending={THREE.AdditiveBlending} depthWrite={false} />
       </sprite>
       {/* 照亮周圍的青白光：放在頭上後方，不要直接打在她臉上 */}
       <pointLight ref={light} color="#8ff4ff" intensity={2.6} distance={4.5} decay={2} position={[0, 1.9, -0.35]} />
@@ -301,7 +301,7 @@ export function Guest() {
   const state = useStore((s) => s.guest.state)
   const quality = useStore((s) => s.quality)
   const tex = textures()
-  const drive = useRef(newDrive({ pose: 'phone', expr: 'awake', heading: 0 }))
+  const drive = useRef(newDrive({ pose: 'phone', expr: 'awake', heading: 0.5 }))
   const sleepDrive = useRef(newDrive({ expr: 'asleep' }))
 
   const body = useRef<THREE.Group>(null)

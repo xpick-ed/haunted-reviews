@@ -66,7 +66,7 @@ const POSES: Record<PoseName, PoseDef> = {
   reach: { l: [-1.3, -0.12, -0.25], r: [-1.3, -0.12, -0.25], lean: 0.32, head: 0.18 },
   sweep: { l: [-0.85, -0.42, -0.75], r: [-0.5, -0.28, -1.0], lean: 0.1, head: 0.08, prop: 'broom' },
   drink: { l: [0.05, 0.15, -0.25], r: [-0.4, -0.12, -1.1], lean: -0.04, head: 0, prop: 'bottle' },
-  phone: { l: [-0.72, -0.42, -1.38], r: [-0.72, -0.42, -1.38], lean: 0.05, head: 0.42, prop: 'phone' },
+  phone: { l: [-0.72, -0.42, -1.38], r: [-0.72, -0.42, -1.38], lean: 0.02, head: 0.12, prop: 'phone' },
   scared: { l: [-2.7, 0.3, -2.15], r: [-2.7, 0.3, -2.15], lean: -0.12, head: -0.22 },
   bow: { l: [-1.0, -0.36, -1.5], r: [-1.0, -0.36, -1.5], lean: 0.14, head: 0.22, prop: 'incense' },
   fan: { l: [0.05, 0.12, -0.2], r: [-1.1, -0.25, -1.5], lean: 0, head: 0, prop: 'fan' },
@@ -151,7 +151,7 @@ function buildMats(spec: ChibiSpec) {
   return {
     skin: toon(spec.skin, { ghost }),
     nose: toon(darker(spec.skin, 0.93), { ghost }),
-    hair: toon(spec.hair.color, { ghost, glow: 0.16 }),
+    hair: toon(spec.hair.color, { ghost, glow: ghost ? 0.06 : 0.16 }),
     top: toon(spec.top.color, { map: topMap, ghost }),
     accent: toon(spec.top.accent ?? darker(spec.top.color, 0.85), { ghost }),
     bottom: toon(spec.bottom.color, { map: bottomMap, ghost, fade: ghost }),
@@ -398,7 +398,8 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
                   >
                     <P g={capsule(0.053, FORE - 0.1)} m={sleeveFore} o position={[0, -FORE / 2, 0]} />
                     <group position={[0, -FORE - 0.03, 0]}>
-                      <P g={SPHERE()} m={mats.skin} o scale={0.052} />
+                      <P g={SPHERE()} m={mats.skin} o scale={[0.046, 0.056, 0.036]} />
+                      <P g={SPHERE()} m={mats.skin} o position={[-side * 0.034, 0.014, 0.022]} scale={0.02} />
                       {i === 1 && (
                         <HandProps
                           mats={mats}

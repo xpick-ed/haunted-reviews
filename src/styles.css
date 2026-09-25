@@ -1029,3 +1029,16 @@ body,
   opacity: 0.7;
   font-size: 14px;
 }
+
+.loading {
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: rgba(255, 213, 138, 0.8);
+  padding: 10px 0;
+  animation: pulse-text 1.4s ease-in-out infinite;
+}
+@keyframes pulse-text {
+  50% {
+    opacity: 0.45;
+  }
+}

@@ -62,10 +62,10 @@ export function Effects({ quality }: { quality: Quality }) {
   })
 
   const passes = [
-    <N8AO key="ao" aoRadius={1.2} distanceFalloff={0.8} intensity={high ? 2.6 : 2.0} quality={high ? 'medium' : 'performance'} />,
+    <N8AO key="ao" aoRadius={1.2} distanceFalloff={0.8} intensity={high ? 2.6 : 2.0} quality={high ? 'low' : 'performance'} />,
     <primitive key="sanitize" object={sanitize} />,
     <Bloom key="bloom" luminanceThreshold={0.85} luminanceSmoothing={0.2} intensity={high ? 1.1 : 0.8} mipmapBlur />,
-    <TiltShift2 key="tilt" blur={high ? 0.075 : 0.06} taper={0.7} start={[0.5, 0.0]} end={[0.5, 1.0]} samples={high ? 10 : 6} />,
+    <TiltShift2 key="tilt" blur={high ? 0.075 : 0.06} taper={0.7} start={[0.5, 0.0]} end={[0.5, 1.0]} samples={high ? 7 : 5} />,
     <HueSaturation key="hs" ref={hs} saturation={0} />,
     <ChromaticAberration key="ca" ref={ca} offset={offset} radialModulation={false} modulationOffset={0} />,
     <Noise key="noise" ref={noise} opacity={0} blendFunction={BlendFunction.OVERLAY} />,

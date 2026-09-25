@@ -1077,10 +1077,12 @@ function Fader({ id, children }: { id: string; children: ReactNode }) {
   const clones = useRef(new Map<THREE.Material, THREE.Material>())
   const seen = useRef(new WeakSet<THREE.Object3D>())
   const opacity = useRef(1)
+  const scanFrames = useRef(0)
   useFrame(() => {
     const g = group.current
     if (!g) return
-    g.traverse((o) => {
+    // MergeStatic 合併完（幾幀之內）就不會再有新網格，之後不用每幀走整棵樹
+    if (scanFrames.current++ < 240) g.traverse((o) => {
       const m = o as THREE.Mesh
       if (!m.isMesh || seen.current.has(m)) return
       seen.current.add(m)

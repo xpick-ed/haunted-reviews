@@ -1,5 +1,4 @@
-import { resolve } from './collision'
-import type { SceneDef } from './scenes'
+import { resolve, type Colliders } from './collision'
 
 // 阿嬤（玩家）的位置與移動。每幀更新，不放在 zustand 裡（不需要觸發 React 重畫）。
 
@@ -47,7 +46,7 @@ export function placePlayer(x: number, z: number) {
  * 依輸入更新位置。move 是畫面座標（x 右、y 上）。
  * 回傳這一幀實際移動的距離（衝刺扣陰氣用）。
  */
-export function stepPlayer(dt: number, move: { x: number; y: number; dash: boolean }, scene: SceneDef, frozen: boolean): number {
+export function stepPlayer(dt: number, move: { x: number; y: number; dash: boolean }, colliders: Colliders, frozen: boolean): number {
   const want = frozen ? 0 : Math.min(1, Math.hypot(move.x, move.y))
   const top = move.dash && want > 0.1 ? DASH : WALK
   const tx = frozen ? 0 : (RIGHT.x * move.x + FWD.x * move.y) * top
@@ -63,9 +62,13 @@ export function stepPlayer(dt: number, move: { x: number; y: number; dash: boole
   for (let i = 0; i < steps; i++) {
     player.x += (player.vx * dt) / steps
     player.z += (player.vz * dt) / steps
-    resolve(player, RADIUS, scene.colliders)
+    resolve(player, RADIUS, colliders)
   }
   const moved = Math.hypot(player.x - ox, player.z - oz)
+  if (dt > 1e-4) {
+    player.vx = (player.x - ox) / dt
+    player.vz = (player.z - oz) / dt
+  }
   player.speed = moved / Math.max(dt, 1e-4)
   player.dashing = move.dash && player.speed > WALK + 0.3
   const side = player.vx * RIGHT.x + player.vz * RIGHT.z

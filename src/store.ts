@@ -90,6 +90,8 @@ export interface GameState {
   subtitle: Subtitle | null
 
   // 其他
+  /** 場景貼圖載完、shader 預先編譯完，才能按開始 */
+  ready: boolean
   voice: boolean
   quality: Quality
   result: Result | null
@@ -199,6 +201,7 @@ export const useStore = create<GameState>()((set, get) => ({
   choiceIndex: 0,
   subtitle: null,
 
+  ready: false,
   voice: true,
   quality: new URLSearchParams(location.search).get('q') === 'low' ? 'low' : 'high',
   result: null,

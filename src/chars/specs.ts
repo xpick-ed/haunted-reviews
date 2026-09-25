@@ -46,7 +46,7 @@ export const SPECS: Record<string, ChibiSpec> = {
     id: 'grandma',
     scale: 1.0,
     skin: '#f3cfae',
-    hair: { style: 'bun', color: '#cfd3dc' },
+    hair: { style: 'bun', color: '#bcc2cd' },
     top: {
       kind: 'blouse',
       color: '#ffffff',

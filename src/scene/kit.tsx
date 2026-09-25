@@ -38,11 +38,13 @@ const HAS_ROUGH: Record<TexMat, boolean> = {
 }
 
 const BASE = import.meta.env.BASE_URL
+/** 重新下載貼圖（scripts/fetch_textures.py）後要加一：網址變了，玩家手機裡的離線快取才會換新 */
+const TEX_VERSION = 2
 const PATHS: Record<string, string> = {}
 for (const n of Object.keys(TILE) as TexMat[]) {
-  PATHS[`${n}_diff`] = `${BASE}tex/${n}_diff.webp`
-  PATHS[`${n}_nor`] = `${BASE}tex/${n}_nor.webp`
-  if (HAS_ROUGH[n]) PATHS[`${n}_rough`] = `${BASE}tex/${n}_rough.webp`
+  PATHS[`${n}_diff`] = `${BASE}tex/${n}_diff.webp?v=${TEX_VERSION}`
+  PATHS[`${n}_nor`] = `${BASE}tex/${n}_nor.webp?v=${TEX_VERSION}`
+  if (HAS_ROUGH[n]) PATHS[`${n}_rough`] = `${BASE}tex/${n}_rough.webp?v=${TEX_VERSION}`
 }
 
 /** 純色材質（不需要貼圖的小東西） */

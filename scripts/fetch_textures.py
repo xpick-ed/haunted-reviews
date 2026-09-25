@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """下載 Poly Haven 的 CC0 材質，壓成 WebP 放到 public/tex/。
 
-用法：python3 scripts/fetch_textures.py
+用法：python3 scripts/fetch_textures.py（重新下載後，把 src/scene/kit.tsx 的 TEX_VERSION 加一）
 需要 Pillow（pip install pillow）。重跑會覆蓋舊檔。
 """
 import io
@@ -11,7 +11,8 @@ import urllib.request
 
 from PIL import Image
 
-# 遊戲內名稱 → (Poly Haven id, 顏色/法線貼圖邊長, 要不要粗糙度貼圖)
+# 遊戲內名稱 → (Poly Haven id, 顏色貼圖邊長, 要不要粗糙度貼圖)
+# 法線貼圖用一半邊長、粗糙度最多 512：俯視鏡頭看不出差別，下載量少一半以上（手機 4G 要快）
 MATERIALS = {
     "brick": ("red_brick", 1024, True),
     "roof": ("clay_roof_tiles_02", 1024, True),
@@ -47,12 +48,12 @@ def main() -> None:
     total = 0
     for name, (ph_id, size, rough) in MATERIALS.items():
         files = json.loads(get(f"https://api.polyhaven.com/files/{ph_id}"))
-        maps = [("Diffuse", "diff", 82, False), ("nor_gl", "nor", 88, False)]
+        maps = [("Diffuse", "diff", 78, False), ("nor_gl", "nor", 82, False)]
         if rough:
             maps.append(("Rough", "rough", 80, True))
         for key, suffix, q, gray in maps:
             url = files[key]["1k"]["jpg"]["url"]
-            s = size if suffix != "rough" else min(size, 512)
+            s = size if suffix == "diff" else min(size // 2 if suffix == "nor" else size, 512)
             n = save_webp(get(url), OUT / f"{name}_{suffix}.webp", s, q, gray)
             total += n
             print(f"{name}_{suffix}.webp  {n // 1024:5d} KB  ← {ph_id}")

@@ -10,7 +10,7 @@ import { readSave, writeSave } from './world/save'
 import { SCENES, type SceneId } from './world/scenes'
 import { TEA_SEAT } from './scene/layout'
 import type { ObjectState, RoomId } from './world/night/types'
-import { START_META, createNightSlice, night, planFor, yinMax, type NightSlice, type PromptOpt } from './world/night/director'
+import { START_META, createNightSlice, night, planFor, preloadNightVoices, yinMax, type NightSlice, type PromptOpt } from './world/night/director'
 import { HAN_BARKS } from './data/barks'
 
 export type Phase = 'dusk' | 'night' | 'dawn'
@@ -189,6 +189,9 @@ export const useStore = create<GameState>()((set, get) => ({
       intro: true,
       view: [],
     })
+    // 第一晚傍晚會講的話
+    void voice.preload(['core.open', 'core.night', 'gm.incense', 'gm.wait', ...DIALOGUES.han_dusk.steps.map((x) => x.line)])
+    preloadNightVoices(get().plan)
     get().save()
   },
 
@@ -218,6 +221,7 @@ export const useStore = create<GameState>()((set, get) => ({
       intro: true,
       view: [],
     })
+    preloadNightVoices(get().plan)
   },
 
   save: () => {
@@ -480,6 +484,7 @@ export const useStore = create<GameState>()((set, get) => ({
       plan: planFor(s.meta),
       roomLit: { r1: 0, r2: 0 },
     }))
+    preloadNightVoices(get().plan)
     get().save()
   },
 

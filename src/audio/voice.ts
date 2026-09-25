@@ -76,10 +76,14 @@ class VoicePlayer {
     return this.manifest?.[lineId]?.dur ?? 0
   }
 
-  /** 先解碼起來，播的時候就不會延遲 */
+  /** 先下載、解碼起來，播的時候就不會延遲。一次最多抓 4 個，不要跟貼圖搶頻寬 */
   async preload(lineIds: string[]) {
     await this.load()
-    await Promise.all(lineIds.filter((id) => this.has(id)).map((id) => this.buffer(id)))
+    const queue = [...new Set(lineIds)].filter((id) => this.has(id) && !this.buffers.has(id))
+    const worker = async () => {
+      for (let id = queue.shift(); id; id = queue.shift()) await this.buffer(id)
+    }
+    await Promise.all([worker(), worker(), worker(), worker()])
   }
 
   /**
@@ -161,7 +165,8 @@ class VoicePlayer {
       const ctx = audio.ctx
       const line = this.manifest?.[lineId]
       if (!ctx || !line) return Promise.resolve(null)
-      p = fetch(BASE + line.file)
+      // ?h=內容雜湊：台詞重新生成後網址就變了，離線快取不會一直給舊的聲音
+      p = fetch(`${BASE}${line.file}?h=${line.hash}`)
         .then((r) => r.arrayBuffer())
         .then((ab) => ctx.decodeAudioData(ab))
         .catch(() => null)

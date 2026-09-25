@@ -40,6 +40,13 @@ netsh interface portproxy add v4tov4 listenport=5173 listenaddress=0.0.0.0 conne
 `.github/workflows/deploy.yml`：push 到 main 會建置並發布到 GitHub Pages。
 第一次要到 repo 的 **Settings → Pages → Source** 選 **GitHub Actions**。
 
+也可以同時放 Cloudflare Pages（台灣有節點，比較快）：Workers & Pages → Create → Pages → Connect to Git，
+選這個 repo，Build command `npm run build`、Build output `dist`、環境變數 `NODE_VERSION=22`。
+之後 push 到 main 兩邊都會自動更新。快取設定在 `public/_headers`（只有 Cloudflare 看得懂）。
+
+離線快取：`public/sw.js`（只在正式版註冊）。玩過一次之後程式、貼圖、語音都從手機裡拿。
+改了貼圖要把 `src/scene/kit.tsx` 的 `TEX_VERSION` 加一；改了快取規則要把 `sw.js` 的 `V` 加一。
+
 ## 聲音
 
 - 角色語音：`src/data/*.lines.json` 是台詞，`src/data/cast.json` 是每個角色的聲線（edge-tts + ffmpeg 處理）。

@@ -12,6 +12,8 @@
 
 **Blockers:** 無
 
+**另外（2026-09-25）：** 載入加速——貼圖 3.8→1.7 MB（法線 512）、傍晚先載今晚語音、service worker 離線快取、three.js 拆檔；加了 Cloudflare Pages 的 `_headers`，等使用者在 Cloudflare 接上 repo。
+
 ## Backlog
 
 - M2 核心循環（三種客人、六個動作、觀察、星數、評論畫面、存檔、手機版面）

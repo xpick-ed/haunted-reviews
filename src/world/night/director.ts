@@ -1,7 +1,8 @@
 import type { StoreApi } from 'zustand'
 import { audio } from '../../audio'
 import { sfx } from '../../audio/sfx'
-import { BARKS, EVENT_BARKS, EXTRA_BARKS, GM_BARKS, HAN_BARKS, MIAOGONG_BARKS } from '../../data/barks'
+import { BARKS, DIALOGUE_LINES, EVENT_BARKS, EXTRA_BARKS, GM_BARKS, HAN_BARKS, MIAOGONG_BARKS } from '../../data/barks'
+import { voice } from '../../audio/voice'
 import { GUEST_ROOMS } from '../../scene/layout'
 import { player } from '../player'
 import { ACTION_DEFS, nightSpots, type NightCtx, type Option } from './actions'
@@ -154,6 +155,22 @@ export const START_META = (): Meta => ({
   monthIncome: 0,
   sealed: false,
 })
+
+/** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
+export function preloadNightVoices(plan: NightPlan) {
+  const ids: string[] = []
+  const add = (xs?: string[]) => xs && ids.push(...xs)
+  const members = plan.parties.flatMap((p) => p.members)
+  for (const id of members) for (const xs of Object.values(BARKS[id] ?? {})) add(xs)
+  for (const xs of Object.values(GM_BARKS)) add(xs)
+  if (plan.event === 'miaogong') for (const xs of Object.values(MIAOGONG_BARKS)) add(xs)
+  else if (plan.event !== 'none') add(EVENT_BARKS[plan.event])
+  if (members.includes('linmom')) add(EXTRA_BARKS['linmom.worry'])
+  if (members.includes('xiaoyu')) add(DIALOGUE_LINES.xiaoyu_play)
+  if (members.includes('agui')) add(DIALOGUE_LINES.agui_chat)
+  if (plan.story === 'room2') add(HAN_BARKS.room2)
+  void voice.preload(ids)
+}
 
 /** 某晚的住客組合（傍晚的入住卡片就要知道） */
 export const planFor = (m: Meta) => planNight(m.night, m.warm, m.spooky, m.pressure)

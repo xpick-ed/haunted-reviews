@@ -1,0 +1,12 @@
+# Cloudflare Pages 的快取設定（GitHub Pages 會忽略這個檔）。
+# assets/ 的檔名有雜湊，內容永遠不變；tex/ 的網址帶 ?v=（見 src/scene/kit.tsx 的 TEX_VERSION）。
+# sw.js 一定要每次問新版，不然玩家會卡在舊的快取規則。
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/tex/*
+  Cache-Control: public, max-age=2592000
+
+/sw.js
+  Cache-Control: no-cache

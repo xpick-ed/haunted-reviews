@@ -26,6 +26,7 @@ import {
   WING_WALL_TOP,
 } from './layout'
 import { player } from '../world/player'
+import { night } from '../world/night/director'
 import { sfx } from '../audio/sfx'
 import { floralFabricTexture } from '../art/fabric'
 
@@ -411,7 +412,13 @@ function DoubleDoor({
   const isOpen = useRef(false)
   useFrame((_, dt) => {
     if (!auto) return
-    const d = Math.hypot(player.x - center[0], player.z - center[2])
+    let d = Math.hypot(player.x - center[0], player.z - center[2])
+    // 深夜起來走動的客人、巡夜的廟公也會開門
+    const sim = night.sim
+    if (sim) {
+      for (const g of sim.guests) if (g.mode !== 'bed') d = Math.min(d, Math.hypot(g.x - center[0], g.z - center[2]))
+      if (sim.miaogong?.active) d = Math.min(d, Math.hypot(sim.miaogong.x - center[0], sim.miaogong.z - center[2]))
+    }
     const want = d < 1.45
     if (want !== isOpen.current) {
       isOpen.current = want

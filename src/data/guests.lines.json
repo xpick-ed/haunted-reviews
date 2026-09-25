@@ -1,0 +1,1018 @@
+{
+  "xiaomei.arrive.1": {
+    "who": "xiaomei",
+    "text": "哇，這裡好有古早味！"
+  },
+  "xiaomei.idle.1": {
+    "who": "xiaomei",
+    "text": "先拍一張限動……"
+  },
+  "xiaomei.idle.2": {
+    "who": "xiaomei",
+    "text": "這裡晚上好安靜喔。"
+  },
+  "xiaomei.idle.3": {
+    "who": "xiaomei",
+    "text": "訊號怎麼只有一格？"
+  },
+  "xiaomei.sleepy.1": {
+    "who": "xiaomei",
+    "text": "好睏……明天再修圖好了。"
+  },
+  "xiaomei.bathroom.1": {
+    "who": "xiaomei",
+    "text": "嗚……要去廁所，好可怕。"
+  },
+  "xiaomei.woken.1": {
+    "who": "xiaomei",
+    "text": "誰啊……吵醒我了啦。"
+  },
+  "xiaomei.hear.1": {
+    "who": "xiaomei",
+    "text": "什麼聲音？"
+  },
+  "xiaomei.hear.2": {
+    "who": "xiaomei",
+    "text": "是……老鼠嗎？"
+  },
+  "xiaomei.suspect.1": {
+    "who": "xiaomei",
+    "text": "嗯？剛剛那邊是不是有人？"
+  },
+  "xiaomei.seen.1": {
+    "who": "xiaomei",
+    "text": "啊啊啊！有阿嬤在飄！"
+  },
+  "xiaomei.seen.2": {
+    "who": "xiaomei",
+    "text": "鬼、鬼啊——！"
+  },
+  "xiaomei.door.1": {
+    "who": "xiaomei",
+    "text": "門……怎麼自己開了？"
+  },
+  "xiaomei.thanks.1": {
+    "who": "xiaomei",
+    "text": "咦，被子什麼時候蓋好的……好暖。"
+  },
+  "xiaomei.thanks.2": {
+    "who": "xiaomei",
+    "text": "好舒服喔……"
+  },
+  "xiaomei.morning.1": {
+    "who": "xiaomei",
+    "text": "昨晚睡得……還算不錯吧？"
+  },
+  "xiaomei.need_cold.1": {
+    "who": "xiaomei",
+    "text": "好冷喔……"
+  },
+  "xiaomei.need_thirsty.1": {
+    "who": "xiaomei",
+    "text": "好渴……水放哪裡了？"
+  },
+  "xiaomei.need_mosquito.1": {
+    "who": "xiaomei",
+    "text": "有蚊子！好癢！"
+  },
+  "xiaomei.need_dark.1": {
+    "who": "xiaomei",
+    "text": "燈關掉好暗……有點怕。"
+  },
+  "xiaomei.need_insomnia.1": {
+    "who": "xiaomei",
+    "text": "睡不著……翻來翻去。"
+  },
+  "akai.arrive.1": {
+    "who": "akai",
+    "text": "哈囉大家好，歡迎來到今晚的鬼屋！"
+  },
+  "akai.idle.1": {
+    "who": "akai",
+    "text": "兄弟們，這間三合院超有感覺。"
+  },
+  "akai.idle.2": {
+    "who": "akai",
+    "text": "訂閱按了沒？今晚一定拍到！"
+  },
+  "akai.idle.3": {
+    "who": "akai",
+    "text": "我好像感覺到一股涼意……"
+  },
+  "akai.sleepy.1": {
+    "who": "akai",
+    "text": "今天先收工……明天剪片。"
+  },
+  "akai.bathroom.1": {
+    "who": "akai",
+    "text": "帶著鏡頭去廁所，專業的。"
+  },
+  "akai.woken.1": {
+    "who": "akai",
+    "text": "誰？！有東西嗎？快開錄！"
+  },
+  "akai.hear.1": {
+    "who": "akai",
+    "text": "欸欸欸，你們有聽到嗎？"
+  },
+  "akai.hear.2": {
+    "who": "akai",
+    "text": "那個聲音！來了來了！"
+  },
+  "akai.suspect.1": {
+    "who": "akai",
+    "text": "剛剛鏡頭是不是有東西？"
+  },
+  "akai.seen.1": {
+    "who": "akai",
+    "text": "我看到了！真的有阿嬤！"
+  },
+  "akai.seen.2": {
+    "who": "akai",
+    "text": "媽啊——不對，太讚了！"
+  },
+  "akai.door.1": {
+    "who": "akai",
+    "text": "門自己開了！兄弟們看到沒！"
+  },
+  "akai.thanks.1": {
+    "who": "akai",
+    "text": "這個素材可以！"
+  },
+  "akai.thanks.2": {
+    "who": "akai",
+    "text": "今晚值回票價了！"
+  },
+  "akai.morning.1": {
+    "who": "akai",
+    "text": "昨晚的片，絕對百萬觀看。"
+  },
+  "akai.need_cold.1": {
+    "who": "akai",
+    "text": "好冷……是陰氣嗎？"
+  },
+  "akai.need_thirsty.1": {
+    "who": "akai",
+    "text": "拍到口乾舌燥了。"
+  },
+  "akai.need_mosquito.1": {
+    "who": "akai",
+    "text": "蚊子一直入鏡啦！"
+  },
+  "akai.need_scare.1": {
+    "who": "akai",
+    "text": "拜託來點動靜好不好？"
+  },
+  "akai.need_scare.2": {
+    "who": "akai",
+    "text": "這裡的鬼都不給面子欸。"
+  },
+  "akai.capture.1": {
+    "who": "akai",
+    "text": "拍到了！！拍到了！！"
+  },
+  "akai.capture.2": {
+    "who": "akai",
+    "text": "兄弟們你們看到了嗎！"
+  },
+  "akai.capture.3": {
+    "who": "akai",
+    "text": "這支片要爆了！"
+  },
+  "zhang.arrive.1": {
+    "who": "zhang",
+    "text": "嗯，Wi-Fi 密碼是多少？"
+  },
+  "zhang.idle.1": {
+    "who": "zhang",
+    "text": "明天九點開會……"
+  },
+  "zhang.idle.2": {
+    "who": "zhang",
+    "text": "報表還沒改完。"
+  },
+  "zhang.idle.3": {
+    "who": "zhang",
+    "text": "老闆又傳訊息了……"
+  },
+  "zhang.sleepy.1": {
+    "who": "zhang",
+    "text": "睡了，明天還要早起。"
+  },
+  "zhang.bathroom.1": {
+    "who": "zhang",
+    "text": "起來上個廁所……"
+  },
+  "zhang.woken.1": {
+    "who": "zhang",
+    "text": "又吵醒了……我明天要開會。"
+  },
+  "zhang.hear.1": {
+    "who": "zhang",
+    "text": "什麼聲音？很吵。"
+  },
+  "zhang.hear.2": {
+    "who": "zhang",
+    "text": "隔壁在幹嘛？"
+  },
+  "zhang.suspect.1": {
+    "who": "zhang",
+    "text": "……我太累了，眼花。"
+  },
+  "zhang.seen.1": {
+    "who": "zhang",
+    "text": "那、那是什麼？！"
+  },
+  "zhang.seen.2": {
+    "who": "zhang",
+    "text": "不可能……我一定在做夢。"
+  },
+  "zhang.door.1": {
+    "who": "zhang",
+    "text": "門沒關好？怎麼自己開了。"
+  },
+  "zhang.thanks.1": {
+    "who": "zhang",
+    "text": "……這樣好多了。"
+  },
+  "zhang.thanks.2": {
+    "who": "zhang",
+    "text": "嗯，舒服。"
+  },
+  "zhang.morning.1": {
+    "who": "zhang",
+    "text": "還行。至少有睡。"
+  },
+  "zhang.need_cold.1": {
+    "who": "zhang",
+    "text": "半夜怎麼變這麼冷。"
+  },
+  "zhang.need_hot.1": {
+    "who": "zhang",
+    "text": "太悶了，睡不著。"
+  },
+  "zhang.need_thirsty.1": {
+    "who": "zhang",
+    "text": "喉嚨好乾。"
+  },
+  "zhang.need_mosquito.1": {
+    "who": "zhang",
+    "text": "有蚊子，煩。"
+  },
+  "zhang.need_insomnia.1": {
+    "who": "zhang",
+    "text": "腦袋停不下來……睡不著。"
+  },
+  "ahao.arrive.1": {
+    "who": "ahao",
+    "text": "讚喔，三合院欸，超有fu！"
+  },
+  "ahao.idle.1": {
+    "who": "ahao",
+    "text": "明天去哪裡玩咧……"
+  },
+  "ahao.idle.2": {
+    "who": "ahao",
+    "text": "背包好重，肩膀好痠。"
+  },
+  "ahao.idle.3": {
+    "who": "ahao",
+    "text": "這裡星星好多喔。"
+  },
+  "ahao.sleepy.1": {
+    "who": "ahao",
+    "text": "好啦，睡覺睡覺。"
+  },
+  "ahao.bathroom.1": {
+    "who": "ahao",
+    "text": "尿急尿急……"
+  },
+  "ahao.woken.1": {
+    "who": "ahao",
+    "text": "蛤？天亮了喔？"
+  },
+  "ahao.hear.1": {
+    "who": "ahao",
+    "text": "有聲音？可能是貓吧。"
+  },
+  "ahao.hear.2": {
+    "who": "ahao",
+    "text": "嘿？誰在那裡？"
+  },
+  "ahao.suspect.1": {
+    "who": "ahao",
+    "text": "剛剛好像有人……算了。"
+  },
+  "ahao.seen.1": {
+    "who": "ahao",
+    "text": "哇靠，是阿嬤嗎？阿嬤好！"
+  },
+  "ahao.seen.2": {
+    "who": "ahao",
+    "text": "我是不是太累……眼睛花了？"
+  },
+  "ahao.door.1": {
+    "who": "ahao",
+    "text": "風好大喔，門都開了。"
+  },
+  "ahao.thanks.1": {
+    "who": "ahao",
+    "text": "哇，好好吃……誰煮的啊？"
+  },
+  "ahao.thanks.2": {
+    "who": "ahao",
+    "text": "好舒服，爽啦。"
+  },
+  "ahao.morning.1": {
+    "who": "ahao",
+    "text": "睡超飽！下次再來！"
+  },
+  "ahao.need_cold.1": {
+    "who": "ahao",
+    "text": "半夜變好冷……"
+  },
+  "ahao.need_thirsty.1": {
+    "who": "ahao",
+    "text": "口好渴，有水嗎？"
+  },
+  "ahao.need_mosquito.1": {
+    "who": "ahao",
+    "text": "蚊子咬了我十包……"
+  },
+  "ahao.need_hungry.1": {
+    "who": "ahao",
+    "text": "肚子好餓……有沒有東西吃？"
+  },
+  "xiaoyu.arrive.1": {
+    "who": "xiaoyu",
+    "text": "媽媽，這裡好大喔！"
+  },
+  "xiaoyu.idle.1": {
+    "who": "xiaoyu",
+    "text": "媽媽，我還不想睡！"
+  },
+  "xiaoyu.idle.2": {
+    "who": "xiaoyu",
+    "text": "那個阿嬤會飄耶……"
+  },
+  "xiaoyu.idle.3": {
+    "who": "xiaoyu",
+    "text": "我可以玩平板嗎？"
+  },
+  "xiaoyu.sleepy.1": {
+    "who": "xiaoyu",
+    "text": "好睏喔……阿嬤晚安……"
+  },
+  "xiaoyu.bathroom.1": {
+    "who": "xiaoyu",
+    "text": "媽媽，我要尿尿……"
+  },
+  "xiaoyu.woken.1": {
+    "who": "xiaoyu",
+    "text": "嗯……好吵喔……"
+  },
+  "xiaoyu.hear.1": {
+    "who": "xiaoyu",
+    "text": "阿嬤，是妳嗎？"
+  },
+  "xiaoyu.hear.2": {
+    "who": "xiaoyu",
+    "text": "什麼聲音？好好玩！"
+  },
+  "xiaoyu.suspect.1": {
+    "who": "xiaoyu",
+    "text": "我好像看到阿嬤了！"
+  },
+  "xiaoyu.seen.1": {
+    "who": "xiaoyu",
+    "text": "阿嬤！妳又來了！"
+  },
+  "xiaoyu.seen.2": {
+    "who": "xiaoyu",
+    "text": "阿嬤妳在飄耶！好酷！"
+  },
+  "xiaoyu.door.1": {
+    "who": "xiaoyu",
+    "text": "門自己開了！是阿嬤！"
+  },
+  "xiaoyu.thanks.1": {
+    "who": "xiaoyu",
+    "text": "謝謝阿嬤～"
+  },
+  "xiaoyu.thanks.2": {
+    "who": "xiaoyu",
+    "text": "好暖喔……"
+  },
+  "xiaoyu.morning.1": {
+    "who": "xiaoyu",
+    "text": "阿嬤掰掰！我下次再來找妳！"
+  },
+  "xiaoyu.need_cold.1": {
+    "who": "xiaoyu",
+    "text": "媽媽，好冷……"
+  },
+  "xiaoyu.need_thirsty.1": {
+    "who": "xiaoyu",
+    "text": "我口渴……"
+  },
+  "xiaoyu.need_mosquito.1": {
+    "who": "xiaoyu",
+    "text": "有蚊子咬我！"
+  },
+  "xiaoyu.need_play.1": {
+    "who": "xiaoyu",
+    "text": "阿嬤，陪我玩啦～"
+  },
+  "linmom.arrive.1": {
+    "who": "linmom",
+    "text": "小宇，要跟老闆說謝謝。"
+  },
+  "linmom.idle.1": {
+    "who": "linmom",
+    "text": "小宇，該睡覺了喔。"
+  },
+  "linmom.idle.2": {
+    "who": "linmom",
+    "text": "這房子……晚上有點安靜。"
+  },
+  "linmom.idle.3": {
+    "who": "linmom",
+    "text": "明天要早點起床喔。"
+  },
+  "linmom.sleepy.1": {
+    "who": "linmom",
+    "text": "好累……先睡了。"
+  },
+  "linmom.bathroom.1": {
+    "who": "linmom",
+    "text": "去一下洗手間……"
+  },
+  "linmom.woken.1": {
+    "who": "linmom",
+    "text": "怎麼了？小宇？"
+  },
+  "linmom.hear.1": {
+    "who": "linmom",
+    "text": "什、什麼聲音？"
+  },
+  "linmom.hear.2": {
+    "who": "linmom",
+    "text": "是風吧……一定是風。"
+  },
+  "linmom.suspect.1": {
+    "who": "linmom",
+    "text": "剛剛……有人在那邊嗎？"
+  },
+  "linmom.seen.1": {
+    "who": "linmom",
+    "text": "啊！你、你是誰？！"
+  },
+  "linmom.seen.2": {
+    "who": "linmom",
+    "text": "有、有東西在飄！"
+  },
+  "linmom.door.1": {
+    "who": "linmom",
+    "text": "門怎麼自己開了……"
+  },
+  "linmom.thanks.1": {
+    "who": "linmom",
+    "text": "嗯……好舒服。"
+  },
+  "linmom.thanks.2": {
+    "who": "linmom",
+    "text": "謝謝……咦？是誰？"
+  },
+  "linmom.morning.1": {
+    "who": "linmom",
+    "text": "小宇昨晚睡得很好呢。"
+  },
+  "linmom.need_cold.1": {
+    "who": "linmom",
+    "text": "半夜好冷……"
+  },
+  "linmom.need_thirsty.1": {
+    "who": "linmom",
+    "text": "想喝點水……"
+  },
+  "linmom.need_mosquito.1": {
+    "who": "linmom",
+    "text": "好多蚊子，小宇會被咬。"
+  },
+  "linmom.need_dark.1": {
+    "who": "linmom",
+    "text": "燈關了好暗……有點怕。"
+  },
+  "agui.arrive.1": {
+    "who": "agui",
+    "text": "阿翰，阿嬤的厝整理得真好！"
+  },
+  "agui.idle.1": {
+    "who": "agui",
+    "text": "這張床，以前阿春也睡過喔。"
+  },
+  "agui.idle.2": {
+    "who": "agui",
+    "text": "老伴，你有沒有聞到菜脯蛋？"
+  },
+  "agui.idle.3": {
+    "who": "agui",
+    "text": "這裡一點都沒變。"
+  },
+  "agui.sleepy.1": {
+    "who": "agui",
+    "text": "好啦，老人家要睡了。"
+  },
+  "agui.bathroom.1": {
+    "who": "agui",
+    "text": "人老了，半夜一直跑廁所。"
+  },
+  "agui.woken.1": {
+    "who": "agui",
+    "text": "誰啊？半夜吵吵鬧鬧。"
+  },
+  "agui.hear.1": {
+    "who": "agui",
+    "text": "阿春，是妳吧？"
+  },
+  "agui.hear.2": {
+    "who": "agui",
+    "text": "什麼聲音……老伴，你聽到沒？"
+  },
+  "agui.suspect.1": {
+    "who": "agui",
+    "text": "那邊……是阿春嗎？"
+  },
+  "agui.seen.1": {
+    "who": "agui",
+    "text": "阿春，是妳吧？"
+  },
+  "agui.seen.2": {
+    "who": "agui",
+    "text": "真的是妳！妳還在！"
+  },
+  "agui.door.1": {
+    "who": "agui",
+    "text": "門開了……阿春，進來坐。"
+  },
+  "agui.thanks.1": {
+    "who": "agui",
+    "text": "阿春，還是妳最會照顧人。"
+  },
+  "agui.thanks.2": {
+    "who": "agui",
+    "text": "好暖……跟以前一樣。"
+  },
+  "agui.morning.1": {
+    "who": "agui",
+    "text": "阿春，我們下次再來看妳喔。"
+  },
+  "agui.need_cold.1": {
+    "who": "agui",
+    "text": "老骨頭怕冷……"
+  },
+  "agui.need_thirsty.1": {
+    "who": "agui",
+    "text": "口乾……倒杯水來喝。"
+  },
+  "agui.need_mosquito.1": {
+    "who": "agui",
+    "text": "蚊子真多，點個蚊香。"
+  },
+  "agui.need_chat.1": {
+    "who": "agui",
+    "text": "阿春，出來開講啦。"
+  },
+  "atu.arrive.1": {
+    "who": "atu",
+    "text": "……好久沒來了。"
+  },
+  "atu.idle.1": {
+    "who": "atu",
+    "text": "……這張桌子還在。"
+  },
+  "atu.idle.2": {
+    "who": "atu",
+    "text": "……菜脯蛋的味道。"
+  },
+  "atu.idle.3": {
+    "who": "atu",
+    "text": "……嗯，安靜。"
+  },
+  "atu.sleepy.1": {
+    "who": "atu",
+    "text": "……睏了。"
+  },
+  "atu.bathroom.1": {
+    "who": "atu",
+    "text": "……去一下廁所。"
+  },
+  "atu.woken.1": {
+    "who": "atu",
+    "text": "……吵什麼。"
+  },
+  "atu.hear.1": {
+    "who": "atu",
+    "text": "……有人？"
+  },
+  "atu.hear.2": {
+    "who": "atu",
+    "text": "……阿春？"
+  },
+  "atu.suspect.1": {
+    "who": "atu",
+    "text": "……那邊有人。"
+  },
+  "atu.seen.1": {
+    "who": "atu",
+    "text": "……阿春，好久不見。"
+  },
+  "atu.seen.2": {
+    "who": "atu",
+    "text": "……妳都沒變。"
+  },
+  "atu.door.1": {
+    "who": "atu",
+    "text": "……門開了，是她。"
+  },
+  "atu.thanks.1": {
+    "who": "atu",
+    "text": "……多謝。"
+  },
+  "atu.thanks.2": {
+    "who": "atu",
+    "text": "……好，好。"
+  },
+  "atu.morning.1": {
+    "who": "atu",
+    "text": "……會再來。"
+  },
+  "atu.need_cold.1": {
+    "who": "atu",
+    "text": "……有點冷。"
+  },
+  "atu.need_thirsty.1": {
+    "who": "atu",
+    "text": "……要喝水。"
+  },
+  "atu.need_mosquito.1": {
+    "who": "atu",
+    "text": "……蚊子。"
+  },
+  "atu.need_chat.1": {
+    "who": "atu",
+    "text": "……阿春，來坐。"
+  },
+  "linmom.worry.1": {
+    "who": "linmom",
+    "text": "小宇，你在跟誰講話？"
+  },
+  "linmom.worry.2": {
+    "who": "linmom",
+    "text": "那邊……沒有人啊？"
+  },
+  "gm.tuck.1": {
+    "who": "grandma",
+    "text": "被子拉好，才不會著涼。"
+  },
+  "gm.tuck.2": {
+    "who": "grandma",
+    "text": "乖乖睡，阿嬤在這裡。"
+  },
+  "gm.temp.1": {
+    "who": "grandma",
+    "text": "電風扇轉一下，涼涼的。"
+  },
+  "gm.temp.2": {
+    "who": "grandma",
+    "text": "這樣比較好睡。"
+  },
+  "gm.water.1": {
+    "who": "grandma",
+    "text": "半夜口渴，水放這裡喔。"
+  },
+  "gm.water.2": {
+    "who": "grandma",
+    "text": "喝點溫水，才不會咳嗽。"
+  },
+  "gm.coil.1": {
+    "who": "grandma",
+    "text": "點個蚊香，蚊子走開。"
+  },
+  "gm.coil.2": {
+    "who": "grandma",
+    "text": "阿嬤幫你把蚊子趕走。"
+  },
+  "gm.nightlight.1": {
+    "who": "grandma",
+    "text": "留一盞小燈，就不怕黑了。"
+  },
+  "gm.nightlight.2": {
+    "who": "grandma",
+    "text": "燈開著，阿嬤陪你。"
+  },
+  "gm.cook.1": {
+    "who": "grandma",
+    "text": "來煎個菜脯蛋！"
+  },
+  "gm.cook.2": {
+    "who": "grandma",
+    "text": "阿嬤的拿手菜，馬上好。"
+  },
+  "gm.deliver.1": {
+    "who": "grandma",
+    "text": "宵夜來囉，趁熱吃。"
+  },
+  "gm.deliver.2": {
+    "who": "grandma",
+    "text": "吃飽才睡得好。"
+  },
+  "gm.pat.1": {
+    "who": "grandma",
+    "text": "拍拍，睡喔睡喔。"
+  },
+  "gm.pat.2": {
+    "who": "grandma",
+    "text": "秀秀，沒事沒事。"
+  },
+  "gm.lullaby.1": {
+    "who": "grandma",
+    "text": "嬰仔嬰嬰睏，一暝大一寸～"
+  },
+  "gm.lullaby.2": {
+    "who": "grandma",
+    "text": "嗯～嗯嗯～搖啊搖～"
+  },
+  "gm.window.1": {
+    "who": "grandma",
+    "text": "風這麼大，窗關起來。"
+  },
+  "gm.window.2": {
+    "who": "grandma",
+    "text": "夜裡涼，關窗關窗。"
+  },
+  "gm.flicker.1": {
+    "who": "grandma",
+    "text": "燈閃一下下就好。"
+  },
+  "gm.flicker.2": {
+    "who": "grandma",
+    "text": "這樣……算嚇人嗎？"
+  },
+  "gm.rocker.1": {
+    "who": "grandma",
+    "text": "搖椅借阿嬤坐一下。"
+  },
+  "gm.rocker.2": {
+    "who": "grandma",
+    "text": "以前阿公最愛坐這張。"
+  },
+  "gm.knock.1": {
+    "who": "grandma",
+    "text": "叩叩，有人在嗎？"
+  },
+  "gm.knock.2": {
+    "who": "grandma",
+    "text": "阿嬤只是敲個門……"
+  },
+  "gm.mirror.1": {
+    "who": "grandma",
+    "text": "鏡子裡的阿嬤，漂不漂亮？"
+  },
+  "gm.mirror.2": {
+    "who": "grandma",
+    "text": "嘿，看這裡～"
+  },
+  "gm.play.1": {
+    "who": "grandma",
+    "text": "好，陪你玩一下下。"
+  },
+  "gm.play.2": {
+    "who": "grandma",
+    "text": "來，阿嬤跟你玩。"
+  },
+  "gm.chat.1": {
+    "who": "grandma",
+    "text": "老朋友，來開講一下。"
+  },
+  "gm.chat.2": {
+    "who": "grandma",
+    "text": "好久不見了。"
+  },
+  "gm.seen.1": {
+    "who": "grandma",
+    "text": "唉呀，被看到了……"
+  },
+  "gm.seen.2": {
+    "who": "grandma",
+    "text": "歹勢歹勢，嚇到你了。"
+  },
+  "gm.nearmiss.1": {
+    "who": "grandma",
+    "text": "好險……"
+  },
+  "gm.nearmiss.2": {
+    "who": "grandma",
+    "text": "差一點點。"
+  },
+  "gm.carry.1": {
+    "who": "grandma",
+    "text": "端穩端穩，別灑出來。"
+  },
+  "gm.carry.2": {
+    "who": "grandma",
+    "text": "宵夜來了，慢慢走。"
+  },
+  "gm.noyin.1": {
+    "who": "grandma",
+    "text": "陰氣不夠了……"
+  },
+  "gm.noyin.2": {
+    "who": "grandma",
+    "text": "阿嬤有點累了……"
+  },
+  "gm.freeze.1": {
+    "who": "grandma",
+    "text": "一、二、三……木頭人。"
+  },
+  "gm.freeze.2": {
+    "who": "grandma",
+    "text": "不要動、不要動……"
+  },
+  "gm.captured.1": {
+    "who": "grandma",
+    "text": "阿嬤這樣上鏡嗎？"
+  },
+  "gm.captured.2": {
+    "who": "grandma",
+    "text": "要拍就拍好看一點啦。"
+  },
+  "miaogong.arrive.1": {
+    "who": "miaogong",
+    "text": "這間厝陰氣真重……"
+  },
+  "miaogong.arrive.2": {
+    "who": "miaogong",
+    "text": "阿翰，今晚我幫你巡一巡。"
+  },
+  "miaogong.patrol.1": {
+    "who": "miaogong",
+    "text": "嗯……這裡沒事。"
+  },
+  "miaogong.patrol.2": {
+    "who": "miaogong",
+    "text": "有什麼東西……出來啊。"
+  },
+  "miaogong.patrol.3": {
+    "who": "miaogong",
+    "text": "符都準備好了。"
+  },
+  "miaogong.spot.1": {
+    "who": "miaogong",
+    "text": "那邊！有東西！"
+  },
+  "miaogong.spot.2": {
+    "who": "miaogong",
+    "text": "別躲了，我看到了！"
+  },
+  "miaogong.catch.1": {
+    "who": "miaogong",
+    "text": "看妳往哪跑！"
+  },
+  "miaogong.catch.2": {
+    "who": "miaogong",
+    "text": "一張符給妳！"
+  },
+  "miaogong.leave.1": {
+    "who": "miaogong",
+    "text": "……應該沒事了吧。"
+  },
+  "miaogong.leave.2": {
+    "who": "miaogong",
+    "text": "我先回廟裡，有事再叫我。"
+  },
+  "event.dog.1": {
+    "who": "grandma",
+    "text": "隔壁的小黑又在亂叫了……"
+  },
+  "event.dog.2": {
+    "who": "xiaohan",
+    "text": "阿嬤，隔壁的狗今晚好吵。"
+  },
+  "event.blackout.1": {
+    "who": "xiaohan",
+    "text": "颱風要來了，可能會停電……"
+  },
+  "event.blackout.2": {
+    "who": "grandma",
+    "text": "停電了！客人會怕……"
+  },
+  "event.mosquitoes.1": {
+    "who": "grandma",
+    "text": "今年蚊子特別多……"
+  },
+  "event.mosquitoes.2": {
+    "who": "xiaohan",
+    "text": "蚊子好多，蚊香要記得點。"
+  },
+  "event.coldsnap.1": {
+    "who": "xiaohan",
+    "text": "寒流來了，晚上會很冷。"
+  },
+  "event.coldsnap.2": {
+    "who": "grandma",
+    "text": "這麼冷，被子要蓋好。"
+  },
+  "han.room2.1": {
+    "who": "xiaohan",
+    "text": "儲藏間整理好了，今晚開始有兩間客房！"
+  },
+  "han.room2.2": {
+    "who": "xiaohan",
+    "text": "阿嬤，妳的東西我收好了，不會丟。"
+  },
+  "han.monthEnd.1": {
+    "who": "xiaohan",
+    "text": "這個月……總算撐過來了。"
+  },
+  "han.monthEnd.2": {
+    "who": "xiaohan",
+    "text": "帳算完了，下個月再加油。"
+  },
+  "han.broke.1": {
+    "who": "xiaohan",
+    "text": "這個月又虧錢了……怎麼辦。"
+  },
+  "han.broke.2": {
+    "who": "xiaohan",
+    "text": "再這樣下去，房子可能保不住。"
+  },
+  "han.good.1": {
+    "who": "xiaohan",
+    "text": "這個月評價好好！阿嬤，妳看到了嗎？"
+  },
+  "han.good.2": {
+    "who": "xiaohan",
+    "text": "客人都說睡得很好，好奇怪喔。"
+  },
+  "dlg.xiaoyu.1": {
+    "who": "xiaoyu",
+    "text": "阿嬤！我們來玩一二三木頭人！"
+  },
+  "dlg.xiaoyu.2": {
+    "who": "grandma",
+    "text": "好啊，小聲一點，媽媽在睡覺。"
+  },
+  "dlg.xiaoyu.3": {
+    "who": "xiaoyu",
+    "text": "一、二、三……木頭人！阿嬤不能動！"
+  },
+  "dlg.xiaoyu.4": {
+    "who": "grandma",
+    "text": "阿嬤最會當木頭人了，站一整晚都不累。"
+  },
+  "dlg.xiaoyu.5": {
+    "who": "xiaoyu",
+    "text": "哈哈，阿嬤妳的腳在飄耶！"
+  },
+  "dlg.xiaoyu.6": {
+    "who": "grandma",
+    "text": "噓——這是阿嬤跟你的祕密喔。"
+  },
+  "dlg.xiaoyu.7": {
+    "who": "xiaoyu",
+    "text": "好！打勾勾！阿嬤晚安！"
+  },
+  "dlg.agui.1": {
+    "who": "agui",
+    "text": "阿春，我就知道妳還在。"
+  },
+  "dlg.agui.2": {
+    "who": "grandma",
+    "text": "阿桂，妳還是那麼大聲。"
+  },
+  "dlg.agui.3": {
+    "who": "atu",
+    "text": "……灶腳的菜脯蛋味，是妳吧。"
+  },
+  "dlg.agui.4": {
+    "who": "agui",
+    "text": "妳孫子很乖喔，一個人撐這間厝。"
+  },
+  "dlg.agui.5": {
+    "who": "grandma",
+    "text": "就是太乖了，阿嬤才放不下心。"
+  },
+  "dlg.agui.6": {
+    "who": "atu",
+    "text": "……妳在等什麼？"
+  },
+  "dlg.agui.7": {
+    "who": "grandma",
+    "text": "等他哪一天笑著說：阿嬤，我可以了。"
+  },
+  "dlg.agui.8": {
+    "who": "agui",
+    "text": "憨人，那妳就慢慢等，我們陪妳。"
+  }
+}

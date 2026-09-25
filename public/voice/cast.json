@@ -258,5 +258,68 @@
    "wave": "triangle",
    "jitter": 0.04
   }
+ },
+ {
+  "id": "zhang",
+  "name": "張經理",
+  "desc": "40 多歲的商務客。正經、疲倦、講話快而短，淺眠怕吵。",
+  "ghost": false,
+  "color": "#9fb4c8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "+12%",
+   "pitch": "+2Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 230,
+   "wave": "square",
+   "jitter": 0.03
+  }
+ },
+ {
+  "id": "ahao",
+  "name": "阿豪",
+  "desc": "20 多歲的背包客。隨性、有點憨、台灣腔，晚睡、半夜會找東西吃。",
+  "ghost": false,
+  "color": "#9ad17a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-8%",
+   "pitch": "+18Hz",
+   "fx": [
+    "hearty"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.12
+  }
+ },
+ {
+  "id": "linmom",
+  "name": "林太太",
+  "desc": "30 多歲的媽媽，帶小宇來住。溫柔、容易緊張。",
+  "ghost": false,
+  "color": "#f2b8a8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "+0%",
+   "pitch": "+4Hz",
+   "fx": [
+    "warm"
+   ]
+  },
+  "blip": {
+   "freq": 440,
+   "wave": "sine",
+   "jitter": 0.08
+  }
  }
 ]

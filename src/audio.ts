@@ -289,6 +289,50 @@ class GameAudio {
     n.stop(t + 1.45)
   }
 
+  /** 狗叫（「汪！汪！」兩聲） */
+  dogBark() {
+    const ctx = this.ctx
+    if (!ctx) return
+    for (const off of [0, 0.22]) {
+      const t = ctx.currentTime + off
+      const o = ctx.createOscillator()
+      o.type = 'sawtooth'
+      o.frequency.setValueAtTime(520, t)
+      o.frequency.exponentialRampToValueAtTime(230, t + 0.13)
+      const bp = ctx.createBiquadFilter()
+      bp.type = 'bandpass'
+      bp.frequency.value = 900
+      bp.Q.value = 1.1
+      const g = ctx.createGain()
+      g.gain.setValueAtTime(0.0001, t)
+      g.gain.exponentialRampToValueAtTime(0.35, t + 0.015)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16)
+      o.connect(bp).connect(g).connect(this.bus.sfx)
+      o.start(t)
+      o.stop(t + 0.18)
+    }
+  }
+
+  /** 打雷（停電的颱風夜） */
+  thunder() {
+    const ctx = this.ctx
+    if (!ctx) return
+    const t = ctx.currentTime
+    const n = ctx.createBufferSource()
+    n.buffer = this.noiseBuf
+    const lp = ctx.createBiquadFilter()
+    lp.type = 'lowpass'
+    lp.frequency.setValueAtTime(900, t)
+    lp.frequency.exponentialRampToValueAtTime(120, t + 1.8)
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(0.0001, t)
+    g.gain.exponentialRampToValueAtTime(0.7, t + 0.05)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 2.4)
+    n.connect(lp).connect(g).connect(this.bus.sfx)
+    n.start(t)
+    n.stop(t + 2.5)
+  }
+
   dawn() {
     const ctx = this.ctx
     if (!ctx) return

@@ -10,12 +10,13 @@ import { Interior } from './Interior'
 import { Yard } from './Yard'
 import { Landscape } from './Landscape'
 import { MergeStatic } from './MergeStatic'
-import { Grandma, Guest } from './Characters'
+import { Grandma } from './Characters'
+import { Guests } from './Guests'
 import { Effects } from './Effects'
 import { CameraRig } from './CameraRig'
 import { WorldController } from './World'
 import { TempleScene } from './Temple'
-import { ExitSigns, HotspotMarkers } from './Markers'
+import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { ChibiNpc } from '../chars/Chibi'
 import { HAN_SWEEP } from './layout'
 import { player } from '../world/player'
@@ -47,6 +48,7 @@ export function Scene() {
           <SceneContent quality={quality} />
           <Grandma />
           <HotspotMarkers />
+          <NightMarkers />
           <ExitSigns />
         </MatsProvider>
         <WorldController />
@@ -101,7 +103,7 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
         <Interior />
         <Yard />
       </MergeStatic>
-      <Guest />
+      <Guests />
       {phase === 'dusk' && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )

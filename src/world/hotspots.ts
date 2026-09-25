@@ -1,5 +1,5 @@
 import type { GameState } from '../store'
-import { BED, DRESSER, HAN_SWEEP, SEWING, SINK, STOVE, TEA_SEAT } from '../scene/layout'
+import { DRESSER, HAN_SWEEP, SEWING, SINK, STOVE, TEA_SEAT } from '../scene/layout'
 import { SPOTS, TEMPLE, type SceneId } from './scenes'
 
 // 可以互動的地點（DESIGN §6：動作是空間的，走到床邊才能蓋被子）。
@@ -50,26 +50,6 @@ export const HOTSPOTS: Hotspot[] = [
     run: (s) => s.sit(),
   },
   {
-    id: 'bed',
-    scene: 'home',
-    ...SPOTS.bedside,
-    r: 1.05,
-    icon: { x: BED.x, z: BED.z + 0.75 }, iconY: 1.2,
-    label: (s) => (s.phase === 'night' ? '蓋被子' : null),
-    cost: () => 10,
-    run: (s) => s.act('tuck'),
-  },
-  {
-    id: 'fan',
-    scene: 'home',
-    ...SPOTS.fan,
-    r: 0.85,
-    icon: SPOTS.fanBody, iconY: 1.6,
-    label: (s) => (s.phase === 'night' ? '調溫' : null),
-    cost: () => 5,
-    run: (s) => s.act('temp'),
-  },
-  {
     id: 'photo',
     scene: 'home',
     x: DRESSER.x + 0.75,
@@ -86,7 +66,8 @@ export const HOTSPOTS: Hotspot[] = [
     z: STOVE.z,
     r: 1.1,
     icon: { x: STOVE.x, z: STOVE.z }, iconY: 1.5,
-    label: () => '看看灶',
+    // 深夜換成「煮宵夜」（world/night/actions.ts）
+    label: (s) => (s.phase === 'night' ? null : '看看灶'),
     run: (s) => s.bark('gm.stove'),
   },
   {
@@ -96,7 +77,7 @@ export const HOTSPOTS: Hotspot[] = [
     z: SINK.z,
     r: 0.9,
     icon: { x: SINK.x, z: SINK.z }, iconY: 2.2,
-    label: () => '照鏡子',
+    label: (s) => (s.phase === 'night' ? null : '照鏡子'),
     run: (s) => s.bark('gm.mirror'),
   },
   {
@@ -149,18 +130,24 @@ export function nearestHotspot(s: GameState, x: number, z: number): { h: Hotspot
   return best
 }
 
-/** 目標（HUD 左上角）。第二行是可選的提示。 */
+/** 目標（HUD 左上角）。第二行是提示。深夜的挑戰另外顯示。 */
 export function objectives(s: GameState): { main: string | null; extra: string | null } {
+  const n = s.meta.night
   if (s.phase === 'dusk') {
     const extra = !s.flags.ayi_met ? '可選：出大門沿著路往東，去土地公廟看看' : null
     if (!s.flags.incense_today) return { main: '到神明廳上香（正身中間）', extra }
-    if (!s.flags.han_talk && s.nightCount === 1) return { main: '去埕裡看看小翰', extra }
+    if (!s.flags.han_talk && n === 1) return { main: '去埕裡看看小翰', extra }
     return { main: '坐在埕裡的竹椅上，等客人入住', extra }
   }
   if (s.phase === 'night') {
-    if (s.guest.state === 'asleep' && s.guest.sleepDepth === 0) return { main: '小美睡著了。去客房幫她蓋被子', extra: null }
-    if (s.guest.state !== 'asleep') return { main: '小美住右邊的客房。等她睡著（24:00）再幫她蓋被子', extra: '竹椅可以打盹，快轉時間' }
-    return { main: '讓小美一覺到天亮', extra: '竹椅可以打盹，快轉時間' }
+    // 教學月：每晚提示一個新玩法
+    const tips: Record<number, string> = {
+      1: '被客人看著時「站著不動」就不會被發現（一二三木頭人）。靠近客人可以看到她需要什麼',
+      2: '阿凱想被嚇、張經理怕吵：在阿凱附近做嚇人的事，但別吵醒隔壁',
+      3: '小宇看得到阿嬤，想找妳玩——但別讓媽媽看到他對空氣講話',
+      4: '颱風夜會停電。阿桂和阿土伯是老朋友，不怕妳',
+    }
+    return { main: '照顧好今晚的客人，一直到天亮', extra: tips[n] ?? '竹椅可以打盹，快轉時間' }
   }
   return { main: null, extra: null }
 }

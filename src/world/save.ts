@@ -1,4 +1,5 @@
 import type { SceneId } from './scenes'
+import type { Meta } from './night/director'
 
 // 存檔：localStorage。槽 0 是自動存檔，1–3 之後給手動存檔（DESIGN §23）。
 // 只在傍晚存（深夜是一局，中途離開就從那晚的傍晚重來）。
@@ -12,6 +13,8 @@ export interface SaveData {
   nightCount: number
   yin: number
   flags: Record<string, boolean>
+  /** 月份進度：錢、名聲、技能、升級……（舊存檔沒有） */
+  meta?: Meta
 }
 
 const key = (slot: number) => `haunted-reviews.save.${slot}`

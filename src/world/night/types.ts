@@ -48,6 +48,8 @@ export type ActionId =
   // 看得到阿嬤的人
   | 'play' // 陪小孩玩
   | 'chat' // 跟老朋友聊天
+  // 其他
+  | 'calm' // 安撫狗
 
 /** 客人會講的話的種類（src/data/barks.ts 依這些 key 列出台詞 id） */
 export type BarkKind =

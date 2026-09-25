@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test:motion": "tsx scripts/sim-motion.ts"
+    "test:motion": "tsx scripts/sim-motion.ts",
+    "test:night": "tsx scripts/sim-night.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

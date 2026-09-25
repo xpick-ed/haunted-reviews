@@ -3,7 +3,7 @@
 import { grandmaSvg, guestSvg } from './characters'
 import { npcSvg, sparkle } from './npcs'
 
-export const PORTRAIT_IDS = ['grandma', 'xiaomei', 'xiaohan', 'ayi', 'miaogong', 'agui'] as const
+export const PORTRAIT_IDS = ['grandma', 'xiaomei', 'xiaohan', 'ayi', 'miaogong', 'agui', 'akai', 'zhang', 'ahao', 'xiaoyu', 'linmom', 'atu'] as const
 export type PortraitId = (typeof PORTRAIT_IDS)[number]
 export type PortraitMood = 'normal' | 'happy' | 'surprised'
 
@@ -18,6 +18,12 @@ const CROP: Record<PortraitId, [number, number, number]> = {
   ayi: [28, 26, 184],
   miaogong: [34, 28, 172],
   agui: [28, 36, 184],
+  akai: [30, 22, 180],
+  zhang: [32, 22, 176],
+  ahao: [30, 22, 180],
+  xiaoyu: [26, 36, 188],
+  linmom: [32, 24, 176],
+  atu: [30, 24, 180],
 }
 
 const OUT = '#3b2a2a'
@@ -61,7 +67,13 @@ export function portraitSvg(id: PortraitId, mood: PortraitMood = 'normal'): stri
     case 'xiaomei':
       return crop(guestSvg(mood === 'surprised' ? 'scared' : 'awake'), CROP.xiaomei)
     case 'xiaohan':
-      return crop(npcSvg('xiaohan', 'idle', mood), CROP.xiaohan)
+    case 'akai':
+    case 'zhang':
+    case 'ahao':
+    case 'xiaoyu':
+    case 'linmom':
+    case 'atu':
+      return crop(npcSvg(id, 'idle', mood), CROP[id])
     default:
       return crop(npcSvg(id, 'idle'), CROP[id])
   }

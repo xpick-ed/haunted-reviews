@@ -7,6 +7,7 @@ import {
   FLOOR_Y,
   GM_BED,
   GUEST_DOOR_Z,
+  GUEST_ROOMS,
   HALL_PART_X,
   HAN_SWEEP,
   HAN_BED,
@@ -137,12 +138,17 @@ function homeColliders(): Colliders {
   add(box(KITCHEN_TABLE.x, KITCHEN_TABLE.z, 0.8, 0.8))
   add(box(TOILET.x, TOILET.z, 0.5, 0.6))
   add(box(SINK.x, SINK.z, 0.5, 0.6))
+  // 客房二（舊儲藏室）
+  const r2 = GUEST_ROOMS.r2
+  add(box(r2.bed.x, r2.bed.z, r2.bed.w + 0.2, r2.bed.l + 0.2))
+  add(box(r2.nightstand[0], r2.nightstand[1], 0.44, 0.44))
 
   const circles = [
     { x: ROCKER.x, z: ROCKER.z, r: 0.38 },
     { x: KITCHEN_JAR.x, z: KITCHEN_JAR.z, r: 0.42 },
     { x: BUCKET.x, z: BUCKET.z, r: 0.22 },
     { x: WING_R.x0 + 0.5, z: BED.z + BED.l / 2 + 0.3, r: 0.22 }, // 電扇
+    { x: GUEST_ROOMS.r2.fan[0], z: GUEST_ROOMS.r2.fan[1], r: 0.22 }, // 客房二的電扇
     { x: TEA.x, z: TEA.z, r: 0.4 }, // 茶桌
     { x: TEA.x + 0.75, z: TEA.z + 0.2, r: 0.3 }, // 另一張竹椅
     { x: -5.35, z: 6.55, r: 0.45 }, // 水缸

@@ -3,23 +3,28 @@ import type { FaceSpec } from './faces'
 // 每個角色的長相：身材、髮型、衣服、配件、表情。
 // 顏色跟 2D 插畫（src/art/）對齊，對話框的頭像跟 3D 角色是同一個人。
 
-export type HairStyle = 'bun' | 'long' | 'short' | 'bald' | 'crew' | 'perm'
-export type TopKind = 'blouse' | 'hoodie' | 'tee' | 'singlet' | 'jacket'
+export type HairStyle = 'bun' | 'long' | 'short' | 'bald' | 'crew' | 'perm' | 'messy' | 'sidepart' | 'bowl' | 'ponytail'
+export type TopKind = 'blouse' | 'hoodie' | 'tee' | 'singlet' | 'jacket' | 'shirt' | 'cardigan'
 export type BottomKind = 'wide' | 'pants' | 'shorts'
 export type Sleeve = 'long' | 'short' | 'none'
 
 export interface Print {
+  /** floral（預設）：小碎花；stripe：橫條紋（petals[0] 是條紋色）；plaid：格子（petals 是格線色） */
+  kind?: 'floral' | 'stripe' | 'plaid'
   base: string
   petals: string[]
   center: string
   seed: number
+  /** floral／plaid：重複次數；stripe：身體一圈有幾條 */
   repeat?: number
 }
 
 export interface ChibiSpec {
   id: string
-  /** 整體縮放（大人 1.1、老人 1.0、小孩 0.8） */
+  /** 整體縮放（大人 1.1、老人 1.0、小孩 0.72） */
   scale: number
+  /** 頭的額外縮放（小孩頭比較大） */
+  headScale?: number
   skin: string
   hair: { style: HairStyle; color: string }
   top: { kind: TopKind; color: string; sleeve: Sleeve; print?: Print; accent?: string }
@@ -32,11 +37,28 @@ export interface ChibiSpec {
     hairpin?: boolean
     collar?: boolean
     towel?: boolean
-    glasses?: boolean
+    /** true：粗黑框（廟公）；'thin'：細框（上班族、老人） */
+    glasses?: boolean | 'thin'
+    /** 細框眼鏡的顏色 */
+    glassesColor?: string
     visor?: string
     redNose?: boolean
     hood?: boolean
     knots?: string
+    /** 反戴的棒球帽（顏色） */
+    cap?: string
+    /** 綁在額頭的頭巾（顏色） */
+    bandana?: string
+    /** 領帶（顏色）；上班族鬆開的領帶 */
+    tie?: string
+    /** 白襯衫的領子 */
+    shirtCollar?: boolean
+    /** 開襟外套裡面那件的顏色（林太太） */
+    innerTop?: string
+    /** 胸口的小標誌（YouTuber 帽 T 上的紅色 logo） */
+    logo?: string
+    /** 綁馬尾的髮圈顏色 */
+    hairTie?: string
   }
   faces: Record<string, FaceSpec>
 }
@@ -76,6 +98,7 @@ export const SPECS: Record<string, ChibiSpec> = {
       awake: { eyes: 'down', mouth: 'small', brows: 'soft', blush: true, lashes: true },
       scared: { eyes: 'wide', mouth: 'scream', brows: 'worried', fear: true, sweat: true },
       asleep: { eyes: 'closed', mouth: 'o', blush: true, lashes: true, brows: 'soft' },
+      happy: { eyes: 'happy', mouth: 'smile', brows: 'soft', blush: true, lashes: true },
     },
   },
   xiaohan: {
@@ -128,6 +151,118 @@ export const SPECS: Record<string, ChibiSpec> = {
     bottom: { kind: 'wide', color: '#ffffff', print: { base: '#6b3fa0', petals: ['#f6c6ea', '#ffffff'], center: '#f2c44a', seed: 31, repeat: 1.6 } },
     feet: { kind: 'slipper', color: '#c0392b' },
     extras: { visor: '#5fd0a0', earrings: true },
-    faces: { normal: { eyes: 'happy', mouth: 'goldgrin', brows: 'soft', blush: true, wrinkles: true } },
+    faces: {
+      normal: { eyes: 'happy', mouth: 'goldgrin', brows: 'soft', blush: true, wrinkles: true },
+      awake: { eyes: 'happy', mouth: 'goldgrin', brows: 'soft', blush: true, wrinkles: true },
+      scared: { eyes: 'wide', mouth: 'o', brows: 'worried', wrinkles: true, sweat: true },
+      asleep: { eyes: 'closed', mouth: 'small', brows: 'soft', wrinkles: true },
+      happy: { eyes: 'happy', mouth: 'goldgrin', brows: 'soft', blush: true, wrinkles: true },
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // 客人（GuestId，見 src/world/night/types.ts）。表情都有 awake／scared／asleep／happy。
+  // -------------------------------------------------------------------------
+
+  akai: {
+    id: 'akai',
+    scale: 1.08,
+    skin: '#f0c8a4',
+    hair: { style: 'messy', color: '#8a5634' },
+    top: { kind: 'hoodie', color: '#2c2c33', sleeve: 'long', accent: '#1d1d22' },
+    bottom: { kind: 'pants', color: '#394562' },
+    feet: { kind: 'shoe', color: '#f1f1ee' },
+    extras: { hood: true, cap: '#d8443a', logo: '#e0453a' },
+    faces: {
+      awake: { eyes: 'open', mouth: 'grin', brows: 'soft' },
+      scared: { eyes: 'wide', mouth: 'scream', brows: 'worried', fear: true, sweat: true },
+      asleep: { eyes: 'closed', mouth: 'o', brows: 'soft' },
+      happy: { eyes: 'happy', mouth: 'grin', brows: 'soft', blush: true },
+    },
+  },
+  zhang: {
+    id: 'zhang',
+    scale: 1.1,
+    skin: '#eac4a2',
+    hair: { style: 'sidepart', color: '#1b191c' },
+    top: { kind: 'shirt', color: '#f3f4f6', sleeve: 'long' },
+    bottom: { kind: 'pants', color: '#5d636f' },
+    feet: { kind: 'shoe', color: '#19191b' },
+    extras: { glasses: 'thin', glassesColor: '#2a2a30', tie: '#24365f', shirtCollar: true },
+    faces: {
+      awake: { eyes: 'open', mouth: 'flat', brows: 'soft', bags: true },
+      scared: { eyes: 'wide', mouth: 'scream', brows: 'worried', sweat: true, bags: true },
+      asleep: { eyes: 'closed', mouth: 'small', brows: 'soft', bags: true },
+      happy: { eyes: 'happy', mouth: 'smile', brows: 'soft', bags: true },
+    },
+  },
+  ahao: {
+    id: 'ahao',
+    scale: 1.08,
+    skin: '#dca67c',
+    hair: { style: 'crew', color: '#2a2320' },
+    top: { kind: 'tee', color: '#7b8451', sleeve: 'short' },
+    bottom: { kind: 'shorts', color: '#b49b6b' },
+    feet: { kind: 'slipper', color: '#5a4632' },
+    extras: { bandana: '#2f8f7a' },
+    faces: {
+      awake: { eyes: 'open', mouth: 'smile', brows: 'soft', stubble: true },
+      scared: { eyes: 'wide', mouth: 'o', brows: 'worried', sweat: true, stubble: true },
+      asleep: { eyes: 'closed', mouth: 'o', brows: 'soft', stubble: true },
+      happy: { eyes: 'happy', mouth: 'grin', brows: 'soft', stubble: true },
+    },
+  },
+  xiaoyu: {
+    id: 'xiaoyu',
+    scale: 0.72,
+    headScale: 1.12,
+    skin: '#f8d8bb',
+    hair: { style: 'bowl', color: '#221a1a' },
+    top: { kind: 'tee', color: '#ffffff', sleeve: 'short', print: { kind: 'stripe', base: '#f8d54a', petals: ['#f08a3a'], center: '', seed: 0, repeat: 5 } },
+    bottom: { kind: 'shorts', color: '#4a78c8' },
+    feet: { kind: 'shoe', color: '#e2463a' },
+    faces: {
+      awake: { eyes: 'open', mouth: 'small', brows: 'soft', blush: true, eyeSize: 1.35 },
+      scared: { eyes: 'wide', mouth: 'o', brows: 'worried', sweat: true, eyeSize: 1.2 },
+      asleep: { eyes: 'closed', mouth: 'o', brows: 'soft', blush: true, eyeSize: 1.2 },
+      happy: { eyes: 'happy', mouth: 'grin', brows: 'soft', blush: true, eyeSize: 1.25 },
+    },
+  },
+  linmom: {
+    id: 'linmom',
+    scale: 1.0,
+    skin: '#f5d4b8',
+    hair: { style: 'ponytail', color: '#3a2a24' },
+    top: { kind: 'cardigan', color: '#e2cead', sleeve: 'long', accent: '#cbb591' },
+    bottom: { kind: 'pants', color: '#2e3a5c' },
+    feet: { kind: 'shoe', color: '#7a4a32' },
+    extras: { innerTop: '#a9c8e8', hairTie: '#e07a8a' },
+    faces: {
+      awake: { eyes: 'open', mouth: 'small', brows: 'worried', blush: true, lashes: true },
+      scared: { eyes: 'wide', mouth: 'scream', brows: 'worried', fear: true, sweat: true, lashes: true },
+      asleep: { eyes: 'closed', mouth: 'small', brows: 'soft', lashes: true },
+      happy: { eyes: 'happy', mouth: 'smile', brows: 'soft', blush: true, lashes: true },
+    },
+  },
+  atu: {
+    id: 'atu',
+    scale: 1.0,
+    skin: '#e3b18c',
+    hair: { style: 'bald', color: '#ecebe6' },
+    top: {
+      kind: 'shirt',
+      color: '#ffffff',
+      sleeve: 'short',
+      print: { kind: 'plaid', base: '#aebccb', petals: ['#7089a6', '#e8e2d0'], center: '', seed: 0, repeat: 2.5 },
+    },
+    bottom: { kind: 'pants', color: '#7a7c82' },
+    feet: { kind: 'slipper', color: '#3d6bb3' },
+    extras: { glasses: 'thin', glassesColor: '#7a5a34', shirtCollar: true },
+    faces: {
+      awake: { eyes: 'open', mouth: 'smile', brows: 'soft', wrinkles: true, browColor: '#f2f0ea' },
+      scared: { eyes: 'wide', mouth: 'o', brows: 'worried', wrinkles: true, sweat: true, browColor: '#f2f0ea' },
+      asleep: { eyes: 'closed', mouth: 'o', brows: 'soft', wrinkles: true, browColor: '#f2f0ea' },
+      happy: { eyes: 'happy', mouth: 'grin', brows: 'soft', blush: true, wrinkles: true, browColor: '#f2f0ea' },
+    },
   },
 }

@@ -5,12 +5,14 @@ import { objectives } from '../world/hotspots'
 import { nameOf } from '../world/lines'
 import { SCENES } from '../world/scenes'
 import { input } from '../world/input'
-import { Result } from './Result'
+import { NEED_INFO } from '../world/night/guests'
+import { yinMax, type GuestView } from '../world/night/director'
+import { portraitDataUrl, type PortraitId } from '../art/portraits'
 import { DialogueBox } from './DialogueBox'
 import { Joystick } from './Joystick'
+import { MonthSummary, NightIntro, NightSummaryCard, SkillTree, monthNight } from './NightScreens'
 
 const PHASE_NAME = { dusk: '傍晚', night: '深夜', dawn: '清晨' } as const
-const STATE_NAME = { awake: '醒著', asleep: '睡著', scared: '嚇到' } as const
 
 function clockText(t: number) {
   const h = Math.floor(t) % 24
@@ -20,19 +22,31 @@ function clockText(t: number) {
 
 export function Hud() {
   const dialogue = useStore((s) => s.dialogue)
-  const result = useStore((s) => s.result)
+  const summary = useStore((s) => s.summary)
+  const month = useStore((s) => s.month)
+  const intro = useStore((s) => s.intro)
+  const panel = useStore((s) => s.panel)
+  const modal = !!summary || !!month || intro || !!panel
   return (
     <div className="hud">
-      <Objective />
+      <Watched />
+      {!modal && (
+        <div className="left-col">
+          <Objective />
+          <GuestsPanel />
+        </div>
+      )}
       <Status />
-      <GuestCard />
       <RoomName />
       <Subtitles />
-      {!dialogue && !result && <ActionButton />}
-      {!dialogue && !result && <Joystick />}
+      {!dialogue && !modal && <ActionButton />}
+      {!dialogue && !modal && <Joystick />}
       <KeyHint />
       {dialogue && <DialogueBox />}
-      {result && <Result />}
+      {intro && !dialogue && <NightIntro />}
+      {panel === 'skills' && <SkillTree />}
+      {summary && <NightSummaryCard />}
+      {month && <MonthSummary />}
     </div>
   )
 }
@@ -43,24 +57,34 @@ function Objective() {
     useShallow((x) => ({
       phase: x.phase,
       flags: x.flags,
-      nightCount: x.nightCount,
-      guest: x.guest,
+      meta: x.meta,
       scene: x.scene,
-      result: x.result,
     })),
   )
+  const challenges = useStore((x) => x.challenges)
   const o = objectives(s as Parameters<typeof objectives>[0])
-  if (!o.main || s.result) return null
+  const mn = monthNight(s.meta.night)
+  if (!o.main) return null
   return (
     <div className="objective">
       <div className="objective-head">
         <span className="objective-tag">目標</span>
         <span className="muted">
-          第 {s.nightCount} 晚 · 農曆二月 · {SCENES[s.scene].name}
+          第 {mn.month} 個月 · 第 {mn.night} 晚 · {SCENES[s.scene].name}
         </span>
       </div>
       <div className="objective-main">{o.main}</div>
       {o.extra && <div className="objective-extra">{o.extra}</div>}
+      {s.phase === 'night' && challenges.length > 0 && (
+        <ul className="challenges">
+          {challenges.map((c) => (
+            <li key={c.id} className={c.done ? 'done' : c.failed ? 'failed' : ''}>
+              <span className="tick">{c.done ? '✓' : c.failed ? '✗' : '○'}</span>
+              {c.label}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
@@ -69,8 +93,14 @@ function Status() {
   const phase = useStore((s) => s.phase)
   const quarter = useStore((s) => Math.floor(s.time * 4))
   const yin = useStore((s) => Math.round(s.yin))
+  const max = useStore((s) => yinMax(s.meta))
+  const money = useStore((s) => s.meta.money)
+  const heart = useStore((s) => s.meta.heart)
+  const pts = useStore((s) => s.meta.skillPts)
   const voice = useStore((s) => s.voice)
   const toggleVoice = useStore((s) => s.toggleVoice)
+  const openPanel = useStore((s) => s.openPanel)
+  const modal = useStore((s) => !!s.summary || !!s.month || s.intro || !!s.panel || !!s.dialogue)
   return (
     <div className="status">
       <div className="clock">
@@ -80,49 +110,102 @@ function Status() {
       <div className="yin">
         <span className="label ghost">陰氣</span>
         <div className="meter">
-          <i style={{ width: `${yin}%` }} />
+          <i style={{ width: `${(yin / max) * 100}%` }} />
         </div>
         <span className="num">{yin}</span>
       </div>
-      <button className="chip icon" onClick={toggleVoice} aria-label="語音開關">
-        {voice ? '🔊' : '🔇'}
-      </button>
+      <div className="status-row">
+        <span className="pill money" title="民宿的錢">
+          💰 {money.toLocaleString()}
+        </span>
+        <span className={`pill heart ${heart < 30 ? 'low' : ''}`} title="小翰的心">
+          ❤️ {heart}
+        </span>
+      </div>
+      <div className="status-row">
+        {phase === 'dusk' && !modal && (
+          <button className={`chip ${pts > 0 ? 'glow' : ''}`} onClick={() => openPanel('skills')}>
+            技能{pts > 0 ? ` · ${pts} 點` : ''}
+          </button>
+        )}
+        <button className="chip icon" onClick={toggleVoice} aria-label="語音開關">
+          {voice ? '🔊' : '🔇'}
+        </button>
+      </div>
     </div>
   )
 }
 
-/** 在客房裡才看得到小美的狀態（DESIGN §6.4 觀察） */
-function GuestCard() {
-  const room = useStore((s) => s.room)
+/** 深夜的住客列表：頭像、醒著沒、看過的需求、舒適與驚嚇 */
+function GuestsPanel() {
   const phase = useStore((s) => s.phase)
-  const guest = useStore((s) => s.guest)
-  if (room !== 'guest' || phase !== 'night') return null
+  const view = useStore((s) => s.view)
+  const [open, setOpen] = useState(() => innerHeight > 520)
+  if (phase !== 'night' || !view.length) return null
   return (
-    <div className="guest-card">
-      <div className="avatar">美</div>
+    <div className={`guests-panel ${open ? '' : 'closed'}`}>
+      <button className="guests-toggle" onClick={() => setOpen(!open)}>
+        今晚住客 {open ? '▾' : '▸'}
+      </button>
+      {open && view.map((g) => <GuestRow key={g.id} g={g} />)}
+    </div>
+  )
+}
+
+function GuestRow({ g }: { g: GuestView }) {
+  const state = !g.awake ? 'asleep' : g.fear > 55 ? 'scared' : g.mode !== 'bed' ? 'walk' : 'awake'
+  const STATE = { asleep: '💤 睡著', scared: '😱 害怕', walk: '🚶 走動', awake: '👀 醒著' }
+  const known = g.needs.filter((n) => n.known)
+  const unknown = g.needs.length - known.length
+  return (
+    <div className={`guest-row ${g.suspicion > 0.5 && !g.seesGhost ? 'alert' : ''}`}>
+      <div className="guest-face">
+        <img src={portraitDataUrl(g.id as PortraitId, g.fear > 55 ? 'surprised' : g.comfort > 70 ? 'happy' : 'normal')} alt="" draggable={false} />
+        <span className="room-tag">{g.room === 'r1' ? '一' : '二'}</span>
+      </div>
       <div className="guest-info">
         <div className="row between">
           <span className="guest-name">
-            小美 <span className="muted">一般旅客</span>
+            {g.name} <span className="muted">{g.label}</span>
           </span>
-          <span className={`state state-${guest.state}`}>{STATE_NAME[guest.state]}</span>
+          <span className={`state state-${state}`}>{STATE[state]}</span>
         </div>
-        <div className="meter-row">
-          <span className="label">舒適</span>
-          <div className="meter warm">
-            <i style={{ width: `${Math.min(100, guest.comfort)}%` }} />
-          </div>
-          <span className="num">{guest.comfort}</span>
+        <div className="guest-needs">
+          {known.map((n) => (
+            <span key={n.kind} className="need" title={NEED_INFO[n.kind].label}>
+              {NEED_INFO[n.kind].icon}
+              <small>{NEED_INFO[n.kind].label}</small>
+            </span>
+          ))}
+          {unknown > 0 && <span className="need unknown">？靠近看看</span>}
+          {!g.needs.length && g.awake && <span className="muted">沒事</span>}
         </div>
-        <div className="meter-row">
-          <span className="label">驚嚇</span>
-          <div className="meter fear">
-            <i style={{ width: `${Math.min(100, guest.fear)}%` }} />
-          </div>
-          <span className="num">{guest.fear}</span>
+        <div className="mini-bars">
+          <i className="bar warm" style={{ width: `${Math.min(100, g.comfort)}%` }} />
+          <i className="bar fear" style={{ width: `${Math.min(100, g.fear)}%` }} />
         </div>
       </div>
     </div>
+  )
+}
+
+/** 被看著：畫面邊緣變紅、中間提示「別動」 */
+function Watched() {
+  const w = useStore((s) => Math.round(s.watched * 20) / 20)
+  const phase = useStore((s) => s.phase)
+  if (phase !== 'night' || w < 0.1) return null
+  return (
+    <>
+      <div className="watched-vignette" style={{ opacity: Math.min(1, w * 1.3) }} />
+      {w > 0.25 && (
+        <div className={`watched ${w > 0.7 ? 'hot' : ''}`}>
+          <span>{w > 0.7 ? '要被發現了！別動！' : '被盯著……站著別動'}</span>
+          <div className="meter fear">
+            <i style={{ width: `${w * 100}%` }} />
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -151,21 +234,43 @@ function ActionButton() {
   const prompt = useStore((s) => s.prompt)
   const yin = useStore((s) => s.yin)
   const busy = useStore((s) => s.busy)
+  const cycle = useStore((s) => s.cycleOption)
   if (!prompt) return null
-  const short = prompt.cost > yin
+  const o = prompt.opts[prompt.i] ?? prompt.opts[0]
+  if (!o) return null
+  const short = o.cost > yin
+  const many = prompt.opts.length > 1
   return (
-    <button
-      className={`action-btn ${short ? 'short' : ''}`}
-      disabled={busy}
-      onPointerDown={(e) => {
-        e.stopPropagation()
-        input.fireAction()
-      }}
-    >
-      <span className="action-label">{prompt.label}</span>
-      {prompt.cost > 0 && <span className="action-cost">陰氣 {prompt.cost}</span>}
-      <span className="action-key">E</span>
-    </button>
+    <div className="action-wrap">
+      {many && (
+        <button
+          className="cycle-btn"
+          onPointerDown={(e) => {
+            e.stopPropagation()
+            cycle()
+          }}
+        >
+          <span className="cycle-arrow">⟳</span>
+          <span>
+            {prompt.i + 1}/{prompt.opts.length}
+          </span>
+          <span className="action-key small">Q</span>
+        </button>
+      )}
+      <button
+        className={`action-btn ${short ? 'short' : ''} ${o.needed ? 'needed' : ''}`}
+        disabled={busy}
+        onPointerDown={(e) => {
+          e.stopPropagation()
+          input.fireAction()
+        }}
+      >
+        {o.needed && <span className="needed-tag">有人需要</span>}
+        <span className="action-label">{o.label}</span>
+        {o.cost > 0 && <span className="action-cost">陰氣 {o.cost}</span>}
+        <span className="action-key">E</span>
+      </button>
+    </div>
   )
 }
 
@@ -173,13 +278,13 @@ function KeyHint() {
   const [show, setShow] = useState(() => !matchMedia('(pointer: coarse)').matches)
   useEffect(() => {
     if (!show) return
-    const t = window.setTimeout(() => setShow(false), 12000)
+    const t = window.setTimeout(() => setShow(false), 14000)
     return () => window.clearTimeout(t)
   }, [show])
   if (!show) return null
   return (
     <div className="key-hint">
-      <b>WASD</b> 移動　<b>Shift</b> 快飄　<b>E</b> 互動
+      <b>WASD</b> 移動　<b>Shift</b> 快飄　<b>E</b> 互動　<b>Q</b> 換動作
     </div>
   )
 }

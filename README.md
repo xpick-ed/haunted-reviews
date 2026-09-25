@@ -15,6 +15,7 @@
 | 移動 | WASD／方向鍵 | 左半邊螢幕任意處拖曳（浮動搖桿） |
 | 快飄（扣陰氣） | Shift | 搖桿推到底 |
 | 互動／下一句 | E／空白鍵 | 右下角動作鍵、點對話框 |
+| 換動作（同一處有好幾個能做的事） | Q／Tab | 動作鍵左邊的 ⟳ |
 | 手把 | 左搖桿、A 互動、RT 快飄 | |
 
 ## 開發
@@ -61,13 +62,15 @@ TypeScript + Vite + React + react-three-fiber（Three.js）+ @react-three/postpr
 
 ```
 src/
-  store.ts          遊戲狀態與規則（陰氣、客人、動作、星數）
+  store.ts          遊戲狀態（流程、時間、陰氣、對話、互動），深夜的部分接 world/night/director.ts
   audio.ts          合成音效、環境音、語音
   audio/            語音（voice.ts）、音效（sfx.ts）
   chars/            3D Q 版角色（長相、臉、姿勢、卡通材質）
   art/              對話頭像與 SVG 插畫、客家花布
   data/             台詞（*.lines.json）、角色聲線（cast.json）
   world/            遊戲規則：輸入、碰撞、玩家移動、場景定義、熱點、對話、存檔
+    night/          深夜模擬（純 TS，Node 可測）：客人、行程、視線與懷疑、聲音、需求、
+                    動作、廟公、狗、住客排程、技能、升級、評分、月結（director.ts 接到 store）
   scene/
     layout.ts       三合院平面配置（所有座標從這裡來）
     kit.tsx         共用材質、世界座標 UV、風吹、canvas／SVG 貼圖
@@ -77,7 +80,8 @@ src/
     Landscape.tsx   草地、路、水田、電線桿、遠山、夜霧、螢火蟲
     Plants.tsx      香蕉樹、竹叢、植物共用工具
     Tree.tsx        榕樹
-    Characters.tsx  阿嬤、小美、花布被子
+    Characters.tsx  阿嬤（端宵夜的碗也在這）
+    Guests.tsx      深夜的客人（床上／走動／睡著）、被子、視線扇形、需求泡泡、廟公、小黑、閃電
     Temple.tsx      土地公廟場景
     World.tsx       每幀的遊戲邏輯（移動、房間判定、淡出、熱點、出口）
     Markers.tsx     熱點光點、出口路牌

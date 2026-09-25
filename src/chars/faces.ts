@@ -19,6 +19,12 @@ export interface FaceSpec {
   sweat?: boolean
   lashes?: boolean
   eyeColor?: string
+  /** 眼睛大小倍率（小孩的大眼睛 1.3） */
+  eyeSize?: number
+  /** 黑眼圈／眼袋（累的上班族） */
+  bags?: boolean
+  /** 眉毛顏色（阿土伯的白眉毛：會加一圈深色描邊） */
+  browColor?: string
 }
 
 /** 臉這片球面的範圍（SphereGeometry 的 phi／theta 參數） */
@@ -103,7 +109,27 @@ function draw(ctx: CanvasRenderingContext2D, f: FaceSpec) {
       ctx.fill()
     }
   }
-  for (const s of [-1, 1]) drawEye(ctx, X(s * EYE_DX), EYE_Y, s, f)
+  for (const s of [-1, 1]) {
+    const k = f.eyeSize ?? 1
+    const x = X(s * EYE_DX)
+    ctx.save()
+    ctx.translate(x, EYE_Y)
+    ctx.scale(k, k)
+    ctx.translate(-x, -EYE_Y)
+    drawEye(ctx, x, EYE_Y, s, f)
+    ctx.restore()
+  }
+  if (f.bags) {
+    ctx.strokeStyle = 'rgba(120,80,110,0.45)'
+    ctx.lineWidth = 1.8
+    for (const s of [-1, 1]) {
+      const x = X(s * EYE_DX)
+      ctx.beginPath()
+      ctx.moveTo(x - 8, EYE_Y + 12)
+      ctx.quadraticCurveTo(x, EYE_Y + 16, x + 8, EYE_Y + 12)
+      ctx.stroke()
+    }
+  }
   drawBrows(ctx, f)
   if (f.wrinkles) {
     // 魚尾紋
@@ -228,8 +254,16 @@ function drawEye(ctx: CanvasRenderingContext2D, x: number, y: number, s: number,
 function drawBrows(ctx: CanvasRenderingContext2D, f: FaceSpec) {
   const b = f.brows ?? 'soft'
   if (b === 'none') return
-  ctx.strokeStyle = b === 'stern' ? '#3b2a2a' : 'rgba(80,55,45,0.85)'
-  ctx.lineWidth = b === 'stern' ? 4 : 2.6
+  // 淺色眉毛（白眉）先畫一圈深色描邊，不然在皮膚上看不到
+  const passes: [string, number][] = f.browColor
+    ? [
+        [LINE, (b === 'stern' ? 4 : 3.4) + 2.6],
+        [f.browColor, b === 'stern' ? 4 : 3.4],
+      ]
+    : [[b === 'stern' ? '#3b2a2a' : 'rgba(80,55,45,0.85)', b === 'stern' ? 4 : 2.6]]
+  for (const [color, width] of passes) {
+  ctx.strokeStyle = color
+  ctx.lineWidth = width
   for (const s of [-1, 1]) {
     const x = X(s * EYE_DX)
     ctx.beginPath()
@@ -244,6 +278,7 @@ function drawBrows(ctx: CanvasRenderingContext2D, f: FaceSpec) {
       ctx.quadraticCurveTo(x, BROW_Y - 5, x + 9, BROW_Y)
     }
     ctx.stroke()
+  }
   }
 }
 

@@ -96,6 +96,57 @@ export function fadeTexture() {
 
 const patternCache = new Map<string, THREE.CanvasTexture>()
 
+function finishPattern(key: string, c: HTMLCanvasElement, rx: number, ry: number) {
+  const t = new THREE.CanvasTexture(c)
+  t.wrapS = t.wrapT = THREE.RepeatWrapping
+  t.repeat.set(rx, ry)
+  t.colorSpace = THREE.SRGBColorSpace
+  t.anisotropy = 4
+  patternCache.set(key, t)
+  return t
+}
+
+/** 橫條紋（小宇的條紋 T 恤）。count：身體一圈上下有幾條 */
+export function stripePrint(base: string, stripe: string, count = 5): THREE.CanvasTexture {
+  const key = `stripe|${base}|${stripe}|${count}`
+  const hit = patternCache.get(key)
+  if (hit) return hit
+  const c = document.createElement('canvas')
+  c.width = 16
+  c.height = 64
+  const ctx = c.getContext('2d')!
+  ctx.fillStyle = base
+  ctx.fillRect(0, 0, 16, 64)
+  ctx.fillStyle = stripe
+  ctx.fillRect(0, 22, 16, 20)
+  return finishPattern(key, c, 1, count)
+}
+
+/** 格子布（阿土伯洗到褪色的格子襯衫） */
+export function plaidPrint(base: string, lines: string[], repeat = 3): THREE.CanvasTexture {
+  const key = `plaid|${base}|${lines.join()}|${repeat}`
+  const hit = patternCache.get(key)
+  if (hit) return hit
+  const S = 128
+  const c = document.createElement('canvas')
+  c.width = S
+  c.height = S
+  const ctx = c.getContext('2d')!
+  ctx.fillStyle = base
+  ctx.fillRect(0, 0, S, S)
+  const [a, b = a] = lines
+  ctx.globalAlpha = 0.55
+  ctx.fillStyle = a
+  ctx.fillRect(0, 40, S, 26)
+  ctx.fillRect(40, 0, 26, S)
+  ctx.globalAlpha = 0.7
+  ctx.fillStyle = b
+  ctx.fillRect(0, 100, S, 5)
+  ctx.fillRect(100, 0, 5, S)
+  ctx.globalAlpha = 1
+  return finishPattern(key, c, repeat, repeat)
+}
+
 /** 小碎花布（阿嬤衫、阿桂的花褲）。可以無縫拼接。 */
 export function floralPrint(base: string, petals: string[], center: string, seed: number, repeat = 3): THREE.CanvasTexture {
   const key = `${base}|${petals.join()}|${center}|${seed}|${repeat}`

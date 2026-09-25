@@ -1,3 +1,5 @@
+import { DIALOGUE_LINES } from '../data/barks'
+
 // 對話腳本。每一步是一句台詞（id 對到 *.lines.json）；可以有選項跳到標籤，或在結束時設旗標。
 // unseen：對方看不到阿嬤，阿嬤的台詞會標「聽不到」（DESIGN §20）。
 
@@ -22,6 +24,8 @@ export interface Dialogue {
 }
 
 export const DIALOGUES: Record<string, Dialogue> = {
+  xiaoyu_play: { steps: DIALOGUE_LINES.xiaoyu_play.map((line) => ({ line })) },
+  agui_chat: { steps: DIALOGUE_LINES.agui_chat.map((line) => ({ line })) },
   han_dusk: {
     unseen: true,
     steps: [{ line: 'han.dusk.1' }, { line: 'han.dusk.2' }, { line: 'han.dusk.3' }, { line: 'han.dusk.4' }, { line: 'han.dusk.5', set: 'han_talk' }],

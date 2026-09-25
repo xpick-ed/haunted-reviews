@@ -2,16 +2,32 @@ import { createContext, useContext, useMemo, useRef, type MutableRefObject, type
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { FACE_PATCH, faceTexture } from './faces'
-import { SPECS, type ChibiSpec } from './specs'
-import { floralPrint, outlineMat, toon, toonGradient } from './toon'
+import { SPECS, type ChibiSpec, type Print } from './specs'
+import { floralPrint, outlineMat, plaidPrint, stripePrint, toon, toonGradient } from './toon'
 import { player } from '../world/player'
 import { turnToward, type TurnState } from '../world/motion'
 
 // 3D Q 版角色：大頭、三階卡通光影、深棕描邊。身體由幾何零件組成，
 // 手腳掛在關節上用程式擺動（走路、待機呼吸、各種動作），整個人會轉向移動的方向。
 
-export type PoseName = 'idle' | 'clasp' | 'reach' | 'sweep' | 'drink' | 'phone' | 'scared' | 'bow' | 'fan'
-type PropName = 'broom' | 'bottle' | 'phone' | 'fan' | 'incense'
+export type PoseName =
+  | 'idle'
+  | 'clasp'
+  | 'reach'
+  | 'sweep'
+  | 'drink'
+  | 'phone'
+  | 'scared'
+  | 'bow'
+  | 'fan'
+  | 'film' // 雙手舉攝影機到眼前（YouTuber；走路時手也不放下）
+  | 'laptop' // 坐著打筆電
+  | 'sit' // 坐著，手放在腿上
+  | 'wave' // 小孩舉手揮揮
+  | 'flashlight' // 右手往前拿手電筒（廟公巡夜）
+  | 'eat' // 右手捧碗、左手拿筷子往嘴裡送
+type PropName = 'broom' | 'bottle' | 'phone' | 'fan' | 'incense' | 'camera' | 'laptop' | 'flashlight' | 'bowl'
+type LeftPropName = 'chopsticks'
 
 /** 由外部每幀改寫，角色讀它來動 */
 export interface Drive {
@@ -59,6 +75,11 @@ interface PoseDef {
   lean: number
   head: number
   prop?: PropName
+  /** 左手拿的東西 */
+  propL?: LeftPropName
+  /** 走路時手擺動的比例（0＝手固定不擺，例如舉著攝影機） */
+  swingL?: number
+  swingR?: number
 }
 
 const POSES: Record<PoseName, PoseDef> = {
@@ -71,8 +92,69 @@ const POSES: Record<PoseName, PoseDef> = {
   scared: { l: [-2.7, 0.3, -2.15], r: [-2.7, 0.3, -2.15], lean: -0.12, head: -0.22 },
   bow: { l: [-1.0, -0.36, -1.5], r: [-1.0, -0.36, -1.5], lean: 0.14, head: 0.22, prop: 'incense' },
   fan: { l: [0.05, 0.12, -0.2], r: [-1.1, -0.25, -1.5], lean: 0, head: 0, prop: 'fan' },
+  // 以下角度用 scratchpad/pose_solve.py 依手的目標位置解出來（手肘、前臂不穿進身體）
+  film: { l: [-1.6, 0.55, -1.0], r: [-1.95, 0.55, -0.45], lean: -0.02, head: 0.04, prop: 'camera', swingL: 0, swingR: 0 },
+  laptop: { l: [-0.95, -0.4, 0], r: [-0.95, -0.4, 0], lean: 0.08, head: 0.34, prop: 'laptop', swingL: 0, swingR: 0 },
+  sit: { l: [-0.75, -0.1, 0], r: [-0.75, -0.1, 0], lean: 0, head: 0.04 },
+  wave: { l: [0.05, 0.12, -0.18], r: [-0.2, 2.35, -0.25], lean: -0.04, head: -0.12, swingR: 0 },
+  flashlight: { l: [0.05, 0.12, -0.18], r: [-1.7, 0.7, 0], lean: 0.05, head: 0.1, prop: 'flashlight', swingR: 0 },
+  eat: { l: [-1.75, 0.7, -0.8], r: [-1.05, -0.7, 0], lean: 0.04, head: 0.08, prop: 'bowl', propL: 'chopsticks', swingL: 0, swingR: 0 },
 }
 const DRINK_UP: Arm = [-2.25, -0.4, -1.8]
+/** 吃飯：左手在碗邊（低）和嘴邊（POSES.eat.l）之間來回 */
+const EAT_LOW: Arm = [-1.15, 0.7, -1.35]
+
+// ---------------------------------------------------------------------------
+// 道具擺放：依姿勢算出手的位置與方向，反推道具在手座標裡的擺法
+// ---------------------------------------------------------------------------
+
+const AX = new THREE.Vector3(1, 0, 0)
+const AZ = new THREE.Vector3(0, 0, 1)
+
+/** 手在軀幹座標（原點在髖部）裡的位置與方向，跟 Chibi 的關節階層算法一樣 */
+function handFrame(arm: Arm, side: 1 | -1) {
+  const qArm = new THREE.Quaternion().setFromAxisAngle(AZ, side * arm[1]).multiply(new THREE.Quaternion().setFromAxisAngle(AX, arm[0]))
+  const qHand = qArm.clone().multiply(new THREE.Quaternion().setFromAxisAngle(AX, arm[2]))
+  const pos = new THREE.Vector3(side * SHOULDER_X, SHOULDER_Y - HIP_Y, 0)
+    .add(new THREE.Vector3(0, -UPPER, 0).applyQuaternion(qArm))
+    .add(new THREE.Vector3(0, -FORE - 0.03, 0).applyQuaternion(qHand))
+  return { pos, quat: qHand }
+}
+
+interface Fit {
+  position: V3
+  quaternion: [number, number, number, number]
+}
+
+/**
+ * 道具在手座標裡的擺法。at：道具原點在軀幹座標的位置（null＝就在手上）；
+ * rot：道具在軀幹座標的方向（歐拉角），或 dir：道具的 +z 要指向哪裡。
+ */
+function propFit(arm: Arm, side: 1 | -1, at: V3 | null, rot: V3 | null, dir?: V3): Fit {
+  const f = handFrame(arm, side)
+  const inv = f.quat.clone().invert()
+  const target = at ? new THREE.Vector3(...at) : f.pos
+  const p = target.sub(f.pos).applyQuaternion(inv)
+  const want = dir ? new THREE.Quaternion().setFromUnitVectors(AZ, new THREE.Vector3(...dir).normalize()) : new THREE.Quaternion().setFromEuler(new THREE.Euler(...(rot ?? [0, 0, 0])))
+  const q = inv.multiply(want)
+  return { position: [p.x, p.y, p.z], quaternion: [q.x, q.y, q.z, q.w] }
+}
+
+/** 軀幹座標的 y（原點在髖部） */
+const ty = (yAbs: number) => yAbs - HIP_Y
+
+const FITS = {
+  // 攝影機在臉前面、鏡頭朝前
+  camera: propFit(POSES.film.r, -1, [0.0, ty(0.955), 0.37], [0, 0, 0]),
+  // 筆電平放在腿上，鍵盤在手底下
+  laptop: propFit(POSES.laptop.r, -1, [0.0, ty(0.525), 0.29], [0, 0, 0]),
+  // 手電筒往前、稍微朝下
+  flashlight: propFit(POSES.flashlight.r, -1, null, [0.3, 0, 0]),
+  // 碗口朝上
+  bowl: propFit(POSES.eat.r, -1, null, [0, 0, 0]),
+  // 筷子尖朝嘴巴
+  chopsticks: propFit(POSES.eat.l, 1, null, null, [-0.35, 0.3, -0.9]),
+}
 
 // ---------------------------------------------------------------------------
 // 幾何（共用快取）
@@ -147,8 +229,8 @@ function buildMats(spec: ChibiSpec) {
   const ghost = !!spec.ghost
   const tp = spec.top.print
   const bp = spec.bottom.print
-  const topMap = tp ? floralPrint(tp.base, tp.petals, tp.center, tp.seed, tp.repeat) : null
-  const bottomMap = bp ? floralPrint(bp.base, bp.petals, bp.center, bp.seed, bp.repeat) : null
+  const topMap = tp ? printTexture(tp) : null
+  const bottomMap = bp ? printTexture(bp) : null
   return {
     skin: toon(spec.skin, { ghost }),
     nose: toon(darker(spec.skin, 0.93), { ghost }),
@@ -166,8 +248,32 @@ function buildMats(spec: ChibiSpec) {
     visor: toon(spec.extras?.visor ?? '#5fd0a0', { side: THREE.DoubleSide }),
     amber: toon('#8a5a2a', { glow: 0.3 }),
     wood: toon('#b89a5a'),
-    screen: new THREE.MeshBasicMaterial({ color: new THREE.Color(0.55, 0.75, 1.2), toneMapped: false }),
+    screen: SCREEN,
+    lens: toon('#233246', { glow: 0.25 }),
+    silver: toon('#b9bdc6'),
+    metal: toon('#34373e'),
+    rice: toon('#f7f3ea'),
+    blueBand: toon('#4a78c8'),
+    rec: REC,
+    beam: BEAM,
+    cap: toon(spec.extras?.cap ?? '#d8443a', { side: THREE.DoubleSide }),
+    bandana: toon(spec.extras?.bandana ?? '#2f8f7a'),
+    tie: toon(spec.extras?.tie ?? '#24365f'),
+    innerTop: toon(spec.extras?.innerTop ?? '#a9c8e8'),
+    logo: toon(spec.extras?.logo ?? '#e0453a', { glow: 0.3 }),
+    hairTie: toon(spec.extras?.hairTie ?? '#e07a8a'),
+    glasses: toon(spec.extras?.glassesColor ?? '#1c1a1c'),
   }
+}
+
+const SCREEN = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.55, 0.75, 1.2), toneMapped: false })
+const REC = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 0.15, 0.12), toneMapped: false })
+const BEAM = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.6, 2.3, 1.7), toneMapped: false })
+
+function printTexture(p: Print) {
+  if (p.kind === 'stripe') return stripePrint(p.base, p.petals[0] ?? '#ffffff', p.repeat ?? 5)
+  if (p.kind === 'plaid') return plaidPrint(p.base, p.petals, p.repeat ?? 3)
+  return floralPrint(p.base, p.petals, p.center, p.seed, p.repeat)
 }
 type Mats = ReturnType<typeof buildMats>
 
@@ -277,6 +383,14 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
     } else if (d.pose === 'scared') {
       L[0] += (Math.random() - 0.5) * 0.08
       Rr[0] += (Math.random() - 0.5) * 0.08
+    } else if (d.pose === 'wave') {
+      // 手臂舉高，在身體側面左右揮
+      Rr[1] += Math.sin(t * 9) * 0.28
+    } else if (d.pose === 'eat') {
+      // 左手（筷子）在碗邊和嘴邊之間來回
+      const k = 0.5 + 0.5 * Math.sin(t * 3.2)
+      for (let i = 0; i < 3; i++) L[i] = THREE.MathUtils.lerp(EAT_LOW[i], p.l[i], k)
+      headX -= 0.08 * k
     }
     if (spec.ghost) {
       // 飄：手往後拖、身體前傾
@@ -284,8 +398,8 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
       Rr[0] += 0.4 * a
       lean += 0.22 * a
     } else {
-      L[0] += Math.sin(c.phase) * 0.6 * a
-      Rr[0] -= Math.sin(c.phase) * 0.6 * a
+      L[0] += Math.sin(c.phase) * 0.6 * a * (p.swingL ?? 1)
+      Rr[0] -= Math.sin(c.phase) * 0.6 * a * (p.swingR ?? 1)
     }
 
     const k = 1 - Math.exp(-12 * dt)
@@ -330,7 +444,7 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
       if (arm.x) arm.x.rotation.x = v[0]
       if (arm.e) arm.e.rotation.x = v[2]
     })
-    for (const [name, g] of Object.entries(props.current)) if (g) g.visible = p.prop === name
+    for (const [name, g] of Object.entries(props.current)) if (g) g.visible = p.prop === name || p.propL === name
     if (face.current) {
       const want = faceMat(spec, spec.faces[d.expr] ? d.expr : Object.keys(spec.faces)[0])
       if (face.current.material !== want) face.current.material = want
@@ -339,10 +453,11 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
 
   const headNode = <Head spec={spec} mats={mats} faceRef={face} />
 
+  const hs = spec.headScale ?? 1
   if (headOnly) {
     return (
       <Ctx.Provider value={ctx}>
-        <group ref={root} scale={spec.scale}>
+        <group ref={root} scale={spec.scale * hs}>
           {headNode}
         </group>
       </Ctx.Provider>
@@ -408,6 +523,14 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
                           }}
                         />
                       )}
+                      {i === 0 && (
+                        <LeftHandProps
+                          mats={mats}
+                          refs={(name, el) => {
+                            props.current[name] = el
+                          }}
+                        />
+                      )}
                     </group>
                   </group>
                 </group>
@@ -415,7 +538,9 @@ export function Chibi({ spec, drive, outline = true, shadow = true, legs = true,
             ))}
             <group ref={head} position={[0, NECK_Y - HIP_Y, 0]}>
               <P g={cyl(0.062, 0.07, 0.08)} m={mats.skin} position={[0, 0, 0]} />
-              <group position={[0, HEAD_C, 0]}>{headNode}</group>
+              <group position={[0, HEAD_C * hs, 0]} scale={hs}>
+                {headNode}
+              </group>
             </group>
           </group>
         </group>
@@ -471,6 +596,25 @@ function TorsoExtras({ spec, mats }: { spec: ChibiSpec; mats: Mats }) {
           ))}
         </>
       )}
+      {e.shirtCollar &&
+        [-1, 1].map((sd) => (
+          <P key={`col${sd}`} g={box(0.075, 0.014, 0.055)} m={mats.top} o position={[sd * 0.045, neck - 0.012, 0.105]} rotation={[0.55, sd * 0.55, sd * 0.45]} />
+        ))}
+      {e.tie && (
+        <group>
+          <P g={box(0.05, 0.045, 0.03)} m={mats.tie} o position={[0.012, neck - 0.07, 0.158]} rotation={[0.2, 0, 0.14]} />
+          <P g={box(0.055, 0.2, 0.012)} m={mats.tie} o position={[0.024, neck - 0.2, 0.174]} rotation={[0.08, 0, 0.1]} />
+        </group>
+      )}
+      {e.innerTop && (
+        <group>
+          <P g={box(0.1, 0.34, 0.012)} m={mats.innerTop} position={[0, base + 0.22, 0.168]} />
+          {[-1, 1].map((sd) => (
+            <P key={`cd${sd}`} g={box(0.022, 0.35, 0.016)} m={mats.accent} position={[sd * 0.06, base + 0.22, 0.17]} />
+          ))}
+        </group>
+      )}
+      {e.logo && <P g={cyl(0.03, 0.03, 0.006, 18)} m={mats.logo} position={[0.08, base + 0.3, 0.166]} rotation={[Math.PI / 2 - 0.12, 0, 0]} />}
       {e.towel && (
         <group position={[SHOULDER_X - 0.04, SHOULDER_Y - HIP_Y, 0]}>
           <P g={box(0.13, 0.02, 0.2)} m={mats.white} position={[0, 0.055, 0]} />
@@ -500,23 +644,56 @@ function Head({ spec, mats, faceRef }: { spec: ChibiSpec; mats: Mats; faceRef: M
       <P g={SPHERE()} m={e.redNose ? mats.red : mats.nose} position={[0, -0.34 * R, 0.955 * R]} scale={e.redNose ? 0.046 : 0.028} />
       {e.earrings &&
         [1, -1].map((s) => <P key={s} g={SPHERE()} m={mats.gold} position={[s * R * 1.0, -0.33 * R, 0.02]} scale={0.02} />)}
-      {e.glasses && <Glasses mats={mats} />}
+      {e.glasses && <Glasses mats={mats} thin={e.glasses === 'thin'} />}
       <Hair spec={spec} mats={mats} />
+      {e.cap && <Cap mats={mats} />}
+      {e.bandana && <Bandana mats={mats} />}
     </group>
   )
 }
 
-function Glasses({ mats }: { mats: Mats }) {
-  const rim = G('rim', () => new THREE.TorusGeometry(0.058, 0.009, 6, 20))
+function Glasses({ mats, thin = false }: { mats: Mats; thin?: boolean }) {
+  const rim = thin ? G('rimThin', () => new THREE.TorusGeometry(0.052, 0.0055, 6, 22)) : G('rim', () => new THREE.TorusGeometry(0.058, 0.009, 6, 20))
+  const m = thin ? mats.glasses : mats.dark
   const ex = 0.35 * R
   const ey = -0.19 * R
   const ez = 0.99 * R
   return (
     <group>
       {[1, -1].map((s) => (
-        <P key={s} g={rim} m={mats.dark} position={[s * ex, ey, ez]} rotation={[0, s * 0.3, 0]} />
+        <P key={s} g={rim} m={m} position={[s * ex, ey, ez]} rotation={[0, s * 0.3, 0]} />
       ))}
-      <P g={cyl(0.007, 0.007, 0.06, 6)} m={mats.dark} position={[0, ey + 0.01, ez + 0.02]} rotation={[0, 0, Math.PI / 2]} />
+      <P g={cyl(thin ? 0.004 : 0.007, thin ? 0.004 : 0.007, 0.06, 6)} m={m} position={[0, ey + 0.01, ez + 0.02]} rotation={[0, 0, Math.PI / 2]} />
+    </group>
+  )
+}
+
+/** 反戴的棒球帽：帽頂蓋在頭上、帽簷在後腦勺 */
+function Cap({ mats }: { mats: Mats }) {
+  return (
+    <group>
+      <P g={hairCap(1.13, 0.36 * Math.PI)} m={mats.cap} o rotation={[0.12, 0, 0]} />
+      <P g={G('capbrim', () => new THREE.CircleGeometry(0.17, 18, 0, Math.PI))} m={mats.cap} position={[0, R * 0.33, -R * 1.0]} rotation={[-Math.PI / 2 - 0.2, 0, 0]} />
+      <P g={SPHERE()} m={mats.cap} position={[0, R * 1.12, -R * 0.12]} scale={0.024} />
+      {/* 反戴時前面看得到的調整帶開口 */}
+      <P g={G('capstrap', () => new THREE.TorusGeometry(0.05, 0.012, 6, 14, Math.PI))} m={mats.cap} position={onHead(1.12, 0.35 * Math.PI, 0)} rotation={[0.25, 0, 0]} />
+    </group>
+  )
+}
+
+/** 綁在額頭的頭巾，結打在後腦 */
+function Bandana({ mats }: { mats: Mats }) {
+  return (
+    <group>
+      <group position={[0, R * 0.4, 0]} rotation={[-0.15, 0, 0]}>
+        <P g={G('band', () => new THREE.TorusGeometry(R * 0.96, 0.034, 8, 36))} m={mats.bandana} o rotation={[Math.PI / 2, 0, 0]} />
+      </group>
+      <group position={[0, R * 0.28, -R * 0.96]}>
+        <P g={SPHERE()} m={mats.bandana} o scale={[0.045, 0.04, 0.035]} />
+        {[-1, 1].map((s) => (
+          <P key={s} g={box(0.045, 0.15, 0.012)} m={mats.bandana} o position={[s * 0.035, -0.08, -0.02]} rotation={[0.25, 0, s * 0.35]} />
+        ))}
+      </group>
     </group>
   )
 }
@@ -596,6 +773,51 @@ function Hair({ spec, mats }: { spec: ChibiSpec; mats: Mats }) {
           <P g={hairBack(1.03, 0.3 * Math.PI, 0.35 * Math.PI)} m={h} />
         </group>
       )
+    case 'messy':
+      // 亂翹的染髮（通常戴著帽子）：瀏海往下翹、兩側往外翹
+      return (
+        <group>
+          <P g={hairCap(1.07, 0.5 * Math.PI)} m={h} o rotation={[-0.18, 0, 0]} />
+          <P g={hairBack(1.05, 0.3 * Math.PI, 0.38 * Math.PI)} m={h} />
+          {[-0.55, -0.2, 0.15, 0.5].map((ph, i) => (
+            <P key={i} g={cone(0.055, 0.14)} m={h} o position={onHead(1.04, 0.31 * Math.PI, ph)} rotation={normalRot(0.31 * Math.PI, ph, 1.0 + (i % 2) * 0.3)} />
+          ))}
+          {[-1, 1].map((sd) => (
+            <P key={`s${sd}`} g={cone(0.06, 0.15)} m={h} o position={onHead(1.03, 0.42 * Math.PI, sd * 1.35)} rotation={normalRot(0.42 * Math.PI, sd * 1.35, 0.5)} />
+          ))}
+        </group>
+      )
+    case 'sidepart':
+      // 上班族旁分：一邊梳得鼓起來
+      return (
+        <group>
+          <P g={hairCap(1.06, 0.45 * Math.PI)} m={h} o rotation={[-0.12, 0, 0]} />
+          <P g={hairBack(1.045, 0.3 * Math.PI, 0.36 * Math.PI)} m={h} />
+          <P g={SPHERE()} m={h} o position={onHead(0.98, 0.22 * Math.PI, -0.45)} scale={[0.15, 0.075, 0.12]} rotation={[0.35, -0.45, 0.25]} />
+          <P g={SPHERE()} m={h} o position={onHead(0.97, 0.3 * Math.PI, 0.55)} scale={[0.12, 0.06, 0.1]} rotation={[0.5, 0.55, -0.2]} />
+        </group>
+      )
+    case 'bowl':
+      // 小孩的西瓜皮：一圈剪齊，瀏海在眉毛上面
+      return (
+        <group>
+          <P g={hairCap(1.09, 0.47 * Math.PI)} m={h} o />
+          <P g={hairBack(1.07, 0.3 * Math.PI, 0.42 * Math.PI)} m={h} />
+        </group>
+      )
+    case 'ponytail':
+      // 低馬尾＋側分瀏海
+      return (
+        <group>
+          <P g={hairCap(1.07, 0.52 * Math.PI)} m={h} o rotation={[-0.3, 0, 0]} />
+          <P g={hairBack(1.055, 0.3 * Math.PI, 0.45 * Math.PI)} m={h} />
+          <P g={G('sidebangs', () => new THREE.SphereGeometry(R * 1.08, 24, 6, Math.PI / 2 - 1.15, 1.55, 0.19 * Math.PI, 0.15 * Math.PI))} m={h} o />
+          <group position={[0, -R * 0.2, -R * 0.98]} rotation={[0.5, 0, 0]}>
+            <P g={SPHERE()} m={mats.hairTie} scale={0.036} />
+            <P g={capsule(0.056, 0.22)} m={h} o position={[0, -0.15, -0.03]} rotation={[0.15, 0, 0]} />
+          </group>
+        </group>
+      )
     case 'perm': {
       const curls: V3[] = []
       for (let i = 0; i < 26; i++) {
@@ -645,6 +867,34 @@ function HandProps({ mats, refs }: { mats: Mats; refs: (name: string, el: THREE.
       <group ref={(el) => refs('fan', el)} visible={false} position={[0, 0.03, 0.03]} rotation={[0, 0, 0]}>
         <mesh geometry={fanGeo} material={fanMat} />
       </group>
+      {/* 攝影機：機身、鏡頭、翻開的螢幕（朝自己）、錄影紅燈 */}
+      <group ref={(el) => refs('camera', el)} visible={false} position={FITS.camera.position} quaternion={FITS.camera.quaternion}>
+        <P g={box(0.075, 0.085, 0.15)} m={mats.dark} o />
+        <P g={cyl(0.034, 0.03, 0.05, 16)} m={mats.lens} o position={[0, 0.005, 0.095]} rotation={[Math.PI / 2, 0, 0]} />
+        <P g={box(0.075, 0.055, 0.008)} m={mats.dark} o position={[0.075, 0.01, -0.035]} rotation={[0, -0.25, 0]} />
+        <mesh geometry={G('camscreen', () => new THREE.PlaneGeometry(0.066, 0.046))} material={mats.screen} position={[0.076, 0.01, -0.041]} rotation={[0, Math.PI - 0.25, 0]} />
+        <mesh geometry={SPHERE()} material={mats.rec} position={[-0.02, 0.046, 0.05]} scale={0.011} />
+      </group>
+      {/* 筆電：底座平放，螢幕在遠端往後仰、朝向自己發光 */}
+      <group ref={(el) => refs('laptop', el)} visible={false} position={FITS.laptop.position} quaternion={FITS.laptop.quaternion}>
+        <P g={box(0.28, 0.014, 0.19)} m={mats.silver} o />
+        <group position={[0, 0.007, 0.095]} rotation={[0.3, 0, 0]}>
+          <P g={box(0.28, 0.18, 0.008)} m={mats.silver} o position={[0, 0.09, 0]} />
+          <mesh geometry={G('lapscreen', () => new THREE.PlaneGeometry(0.25, 0.155))} material={mats.screen} position={[0, 0.09, -0.005]} rotation={[0, Math.PI, 0]} />
+        </group>
+      </group>
+      {/* 手電筒：握把在手上、燈頭朝前 */}
+      <group ref={(el) => refs('flashlight', el)} visible={false} position={FITS.flashlight.position} quaternion={FITS.flashlight.quaternion}>
+        <P g={cyl(0.022, 0.022, 0.15, 12)} m={mats.metal} o position={[0, 0, 0.03]} rotation={[Math.PI / 2, 0, 0]} />
+        <P g={cyl(0.036, 0.024, 0.05, 14)} m={mats.metal} o position={[0, 0, 0.125]} rotation={[Math.PI / 2, 0, 0]} />
+        <mesh geometry={G('flashlens', () => new THREE.CircleGeometry(0.031, 16))} material={mats.beam} position={[0, 0, 0.151]} />
+      </group>
+      {/* 飯碗：碗口朝上、上面一坨白飯 */}
+      <group ref={(el) => refs('bowl', el)} visible={false} position={FITS.bowl.position} quaternion={FITS.bowl.quaternion}>
+        <P g={G('bowl', () => new THREE.LatheGeometry([[0, 0], [0.035, 0], [0.04, 0.008], [0.068, 0.045], [0.072, 0.06]].map(([x, y]) => new THREE.Vector2(x, y)), 18))} m={mats.white} o position={[0, 0.02, 0.02]} />
+        <P g={cyl(0.069, 0.069, 0.008, 18)} m={mats.blueBand} position={[0, 0.07, 0.02]} />
+        <P g={SPHERE()} m={mats.rice} position={[0, 0.075, 0.02]} scale={[0.058, 0.03, 0.058]} />
+      </group>
       <group ref={(el) => refs('incense', el)} visible={false} position={[0.05, 0, 0.03]} rotation={[Math.PI - 0.3, 0, 0]}>
         {[-0.02, 0, 0.02].map((x) => (
           <group key={x} position={[x, 0.14, 0]}>
@@ -653,6 +903,17 @@ function HandProps({ mats, refs }: { mats: Mats; refs: (name: string, el: THREE.
           </group>
         ))}
       </group>
+    </group>
+  )
+}
+
+/** 左手拿的東西（筷子） */
+function LeftHandProps({ mats, refs }: { mats: Mats; refs: (name: string, el: THREE.Group | null) => void }) {
+  return (
+    <group ref={(el) => refs('chopsticks', el)} visible={false} position={FITS.chopsticks.position} quaternion={FITS.chopsticks.quaternion}>
+      {[-0.008, 0.008].map((x) => (
+        <P key={x} g={cyl(0.0035, 0.005, 0.2, 5)} m={mats.wood} position={[x, 0, 0.07]} rotation={[Math.PI / 2, 0, 0]} />
+      ))}
     </group>
   )
 }

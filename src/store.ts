@@ -10,10 +10,10 @@ import { readSave, writeSave } from './world/save'
 import { SCENES, type SceneId } from './world/scenes'
 import { TEA_SEAT } from './scene/layout'
 import type { ObjectState, RoomId } from './world/night/types'
+import { START_META, createNightSlice, night, planFor, yinMax, type NightSlice, type PromptOpt } from './world/night/director'
+import { HAN_BARKS } from './data/barks'
 
-export type GuestState = 'awake' | 'asleep' | 'scared'
 export type Phase = 'dusk' | 'night' | 'dawn'
-export type ActionKind = 'temp' | 'tuck'
 export type Quality = 'high' | 'low'
 
 export interface Subtitle {
@@ -22,38 +22,17 @@ export interface Subtitle {
   id: number
 }
 
-export interface Guest {
-  name: string
-  state: GuestState
-  comfort: number
-  fear: number
-  sleepDepth: number
-}
-
-export interface Result {
-  stars: number
-  review: string
-  reply: string
-  scared: boolean
-}
-
 export interface Prompt {
-  id: string
-  label: string
-  cost: number
+  opts: PromptOpt[]
+  i: number
+  /** 選項組合的指紋（變了才更新） */
+  key: string
 }
 
 const HOURS_PER_SEC = 1 / 37.5 // 深夜 300 秒走完 8 小時（DESIGN §2.2）
-const COMFORT_NEED = 60 // 一般情侶（DESIGN §5）
-const FEAR_MAX = 10
 const DUSK_TIME = 18.6
 
-export const ACTIONS: Record<ActionKind, { name: string; yin: number; comfort: number; fear: number; line: string }> = {
-  temp: { name: '調溫', yin: 5, comfort: 10, fear: 0, line: 'core.temp' },
-  tuck: { name: '蓋被子', yin: 10, comfort: 20, fear: 8, line: 'core.tuck' },
-}
-
-export interface GameState {
+export interface GameState extends NightSlice {
   // 流程
   started: boolean
   scene: SceneId
@@ -64,17 +43,13 @@ export interface GameState {
   time: number
   running: boolean
   isNight: boolean
-  nightCount: number
   yin: number
   flags: Record<string, boolean>
 
-  // 客人（DESIGN §4–6）
-  guest: Guest
+  // 阿嬤
   busy: boolean
   horror: number
   warm: number
-  flicker: number
-  tuckAt: number
 
   // 阿嬤在哪（World 每幀算，只在改變時寫入）
   room: string | null
@@ -92,7 +67,7 @@ export interface GameState {
 
   // 深夜的物件狀態（小夜燈、蚊香、水杯、窗、宵夜、搖椅、鏡子、灶），畫面依這個顯示
   objects: Record<string, ObjectState>
-  /** 每間客房天花板燈的亮度 0..1（客人醒著亮、睡著暗、閃爍時跳動）。畫面每幀用 getState() 讀 */
+  /** 每間客房天花板燈的亮度 0..1。畫面每幀用 getState() 讀 */
   roomLit: Record<RoomId, number>
 
   // 其他
@@ -100,34 +75,34 @@ export interface GameState {
   ready: boolean
   voice: boolean
   quality: Quality
-  result: Result | null
   hasSave: boolean
 
   newGame: () => void
   continueGame: () => void
   tick: (dt: number) => void
   interact: () => void
-  startDialogue: (id: string) => void
+  cycleOption: () => void
+  startDialogue: (id: string, onEnd?: () => void) => void
   advance: () => void
   choose: (k: number) => void
   goto: (to: SceneId, spawn: string) => void
-  act: (kind: ActionKind) => void
   incense: (where: 'home' | 'temple') => void
   sit: () => void
   spendYin: (v: number) => void
-  bark: (lineId: string) => void
+  bark: (lineId: string, quiet?: boolean) => void
   say: (text: string) => void
-  setWorld: (patch: Partial<Pick<GameState, 'room' | 'building' | 'faded' | 'prompt'>>) => void
+  setWorld: (patch: { room?: string | null; building?: string | null; faded?: string; prompt?: Prompt | null }) => void
   toggleVoice: () => void
   setQuality: (q: Quality) => void
   resetNight: () => void
+  closeIntro: () => void
+  openPanel: (p: 'skills' | null) => void
   save: () => void
 }
 
 let subId = 0
-const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
-const freshGuest = (): Guest => ({ name: '小美', state: 'awake', comfort: 50, fear: 5, sleepDepth: 0 })
 const later = (ms: number, fn: () => void) => window.setTimeout(fn, ms)
+let dialogueEnd: (() => void) | null = null
 
 /** 沒有語音檔時，至少讓三個主角用瀏覽器語音唸 */
 const LEGACY_SPEAKER: Record<string, '阿嬤' | '小美' | '小翰'> = { grandma: '阿嬤', xiaomei: '小美', xiaohan: '小翰' }
@@ -142,33 +117,6 @@ function speakLine(id: string) {
   if (legacy) audio.speak(l.text, legacy)
 }
 
-// DESIGN §4 的星數公式
-function judge(g: Guest): Result {
-  const comfortDiff = g.comfort - COMFORT_NEED
-  const fearDiff = Math.max(0, g.fear - FEAR_MAX)
-  const raw = 3 + clamp(comfortDiff / 15, -2, 1.5) - clamp(fearDiff / 12, 0, 3)
-  const stars = clamp(Math.round(raw), 1, 5)
-  const scared = g.fear > FEAR_MAX
-  if (scared) {
-    return {
-      stars,
-      scared,
-      review: '房間很乾淨，但半夜有人幫我蓋被子。這間民宿好像只有一個員工，而且我沒看到她。',
-      reply: '不好意思，我們會改進。',
-    }
-  }
-  if (stars >= 4) {
-    return {
-      stars,
-      scared,
-      review: '睡到一半覺得被子被拉好了，超暖。老闆人很好，雖然一直沒看到人。',
-      reply: '謝謝光臨，歡迎再來！',
-    }
-  }
-  if (stars === 3) return { stars, scared, review: '還可以，房間有點舊，但睡得意外地好。', reply: '謝謝！' }
-  return { stars, scared, review: '有點冷，也沒什麼特別的。', reply: '下次會幫您把房間弄暖一點。' }
-}
-
 /** 每天重設的旗標（名字以 _today 結尾） */
 function clearDaily(flags: Record<string, boolean>) {
   const out: Record<string, boolean> = {}
@@ -177,6 +125,8 @@ function clearDaily(flags: Record<string, boolean>) {
 }
 
 export const useStore = create<GameState>()((set, get) => ({
+  ...createNightSlice(set as never, get as never),
+
   started: false,
   scene: 'home',
   blackout: false,
@@ -185,16 +135,12 @@ export const useStore = create<GameState>()((set, get) => ({
   time: DUSK_TIME,
   running: false,
   isNight: false,
-  nightCount: 1,
   yin: 60,
   flags: {},
 
-  guest: freshGuest(),
   busy: false,
   horror: 0,
   warm: 0,
-  flicker: 0,
-  tuckAt: 0,
 
   room: null,
   building: null,
@@ -212,7 +158,6 @@ export const useStore = create<GameState>()((set, get) => ({
   ready: false,
   voice: true,
   quality: new URLSearchParams(location.search).get('q') === 'low' ? 'low' : 'high',
-  result: null,
   hasSave: readSave() !== null,
 
   // ---------------------------------------------------------------------------
@@ -225,6 +170,7 @@ export const useStore = create<GameState>()((set, get) => ({
     audio.setNight(false)
     const [x, z] = SCENES.home.spawns.start
     placePlayer(x, z)
+    night.sim = null
     set({
       started: true,
       scene: 'home',
@@ -232,14 +178,17 @@ export const useStore = create<GameState>()((set, get) => ({
       time: DUSK_TIME,
       running: false,
       isNight: false,
-      nightCount: 1,
       yin: 60,
       flags: {},
-      guest: freshGuest(),
-      result: null,
+      meta: START_META(),
+      plan: planFor(START_META()),
+      objects: {},
+      summary: null,
+      month: null,
       dialogue: null,
+      intro: true,
+      view: [],
     })
-    later(1500, () => get().bark('core.open'))
     get().save()
   },
 
@@ -250,6 +199,7 @@ export const useStore = create<GameState>()((set, get) => ({
     audio.doorCreak()
     audio.setNight(false)
     placePlayer(d.x, d.z)
+    night.sim = null
     set({
       started: true,
       scene: d.scene,
@@ -257,19 +207,23 @@ export const useStore = create<GameState>()((set, get) => ({
       time: DUSK_TIME,
       running: false,
       isNight: false,
-      nightCount: d.nightCount,
       yin: d.yin,
       flags: d.flags,
-      guest: freshGuest(),
-      result: null,
+      meta: { ...START_META(), ...(d.meta ?? {}), night: d.meta?.night ?? d.nightCount },
+      plan: planFor({ ...START_META(), ...(d.meta ?? {}), night: d.meta?.night ?? d.nightCount }),
+      objects: {},
+      summary: null,
+      month: null,
       dialogue: null,
+      intro: true,
+      view: [],
     })
   },
 
   save: () => {
     const s = get()
     if (!s.started || s.phase !== 'dusk' || s.transitioning) return
-    writeSave({ scene: s.scene, x: player.x, z: player.z, nightCount: s.nightCount, yin: s.yin, flags: s.flags })
+    writeSave({ scene: s.scene, x: player.x, z: player.z, nightCount: s.meta.night, yin: s.yin, flags: s.flags, meta: s.meta })
     if (!s.hasSave) set({ hasSave: true })
   },
 
@@ -277,31 +231,26 @@ export const useStore = create<GameState>()((set, get) => ({
   // 時間
   // ---------------------------------------------------------------------------
 
-  tick: (dt) => {
+  tick: (rawDt) => {
     const s = get()
+    const dt = rawDt * s.timeScale
     const fx: Partial<GameState> = {}
-    if (s.horror > 0) fx.horror = Math.max(0, s.horror - dt / 0.9)
-    if (s.warm > 0) fx.warm = Math.max(0, s.warm - dt / 1.6)
-    if (s.flicker > 0) fx.flicker = Math.max(0, s.flicker - dt / 0.9)
+    if (s.horror > 0) fx.horror = Math.max(0, s.horror - rawDt / 0.9)
+    if (s.warm > 0) fx.warm = Math.max(0, s.warm - rawDt / 1.6)
     if (Object.keys(fx).length) set(fx)
     if (!s.running || s.dialogue || s.transitioning) return
 
     const time = s.time + dt * HOURS_PER_SEC
     const patch: Partial<GameState> = { time }
-    const night = time > 20 && time < 29.5
-    if (night !== s.isNight) {
-      patch.isNight = night
-      audio.setNight(night)
-    }
-    if (time >= 24 && s.guest.state === 'awake' && !s.busy) {
-      patch.guest = { ...s.guest, state: 'asleep' }
-      set(patch)
-      get().say('小美睡著了。')
-      return
+    const isNight = time > 20 && time < 29.5
+    if (isNight !== s.isNight) {
+      patch.isNight = isNight
+      audio.setNight(isNight)
     }
     if (time >= 30) {
-      set({ ...patch, time: 30, running: false, phase: 'dawn', result: judge(s.guest) })
+      set({ ...patch, time: 30, running: false, phase: 'dawn', carrying: false })
       audio.dawn()
+      get().finishNight()
       return
     }
     set(patch)
@@ -320,14 +269,26 @@ export const useStore = create<GameState>()((set, get) => ({
       else get().advance()
       return
     }
-    if (!s.started || s.transitioning || s.result || s.busy || !s.prompt) return
-    const h = HOTSPOTS.find((x) => x.id === s.prompt!.id)
-    if (h) h.run(get())
+    if (!s.started || s.transitioning || s.summary || s.month || s.intro || s.panel || s.busy || !s.prompt) return
+    const o = s.prompt.opts[s.prompt.i] ?? s.prompt.opts[0]
+    if (!o) return
+    if (o.hotspot) {
+      const h = HOTSPOTS.find((x) => x.id === o.hotspot)
+      if (h) h.run(get())
+    } else if (o.option) get().runOption(o.option)
   },
 
-  startDialogue: (id) => {
+  cycleOption: () => {
+    const p = get().prompt
+    if (!p || p.opts.length < 2) return
+    sfx.play('ui_select', { volume: 0.4 })
+    set({ prompt: { ...p, i: (p.i + 1) % p.opts.length } })
+  },
+
+  startDialogue: (id, onEnd) => {
     const d = DIALOGUES[id]
     if (!d) return
+    dialogueEnd = onEnd ?? null
     sfx.play('ui_confirm', { volume: 0.5 })
     set({ dialogue: { id, i: 0 }, choiceIndex: 0, typing: true })
     runStep(id, 0)
@@ -344,6 +305,9 @@ export const useStore = create<GameState>()((set, get) => ({
     if (next >= d.steps.length) {
       voice.stop()
       set({ dialogue: null, typing: false })
+      const end = dialogueEnd
+      dialogueEnd = null
+      end?.()
       get().save()
       return
     }
@@ -379,59 +343,6 @@ export const useStore = create<GameState>()((set, get) => ({
     })
   },
 
-  act: (kind) => {
-    const s = get()
-    if (s.busy || s.phase !== 'night' || s.result) return
-    const def = ACTIONS[kind]
-    if (s.yin < def.yin) {
-      get().bark('gm.tired')
-      return
-    }
-    set({ busy: true, yin: s.yin - def.yin })
-    audio.whoosh()
-    if (kind === 'tuck') sfx.play('cloth', { volume: 0.8 })
-
-    later(450, () => {
-      const st = get()
-      const g = st.guest
-      const now = performance.now()
-      if (kind === 'tuck' && g.state !== 'asleep') {
-        // 搞砸：對醒著的客人蓋被子，驚嚇 ×3（DESIGN §6）
-        set({
-          guest: { ...g, state: 'scared', comfort: g.comfort - 10, fear: g.fear + def.fear * 3 },
-          horror: 1,
-          flicker: 1,
-          tuckAt: now,
-        })
-        audio.scream()
-        audio.heartbeat()
-        audio.bassDrop()
-        get().bark('core.scream')
-        later(1100, () => get().bark('core.dontfear'))
-        later(3000, () => {
-          set((x) => ({
-            guest: { ...x.guest, state: x.guest.state === 'scared' ? 'awake' : x.guest.state },
-            busy: false,
-          }))
-        })
-      } else {
-        set({
-          guest: {
-            ...g,
-            comfort: g.comfort + def.comfort,
-            fear: g.fear + (kind === 'tuck' ? def.fear : 0),
-            sleepDepth: g.sleepDepth + (kind === 'tuck' ? 1 : 0),
-          },
-          warm: 1,
-          tuckAt: kind === 'tuck' ? now : st.tuckAt,
-        })
-        audio.chime()
-        get().bark(def.line)
-        later(1100, () => set({ busy: false }))
-      }
-    })
-  },
-
   incense: (where) => {
     const s = get()
     const flag = where === 'home' ? 'incense_today' : 'temple_today'
@@ -439,10 +350,12 @@ export const useStore = create<GameState>()((set, get) => ({
       get().bark(where === 'home' ? 'gm.incense.done' : 'temple.incense.done')
       return
     }
+    // DESIGN §3.1：家裡 +10（神明廳修復後 +30）、土地公廟 +25
+    const gain = where === 'home' ? (s.meta.upgrades.includes('shrine') ? 30 : 10) : 25
     set({
       busy: true,
       flags: { ...s.flags, [flag]: true },
-      yin: Math.min(100, s.yin + (where === 'home' ? 10 : 25)), // DESIGN §3.1
+      yin: Math.min(yinMax(s.meta), s.yin + gain),
       warm: 1,
     })
     sfx.play('incense')
@@ -469,12 +382,12 @@ export const useStore = create<GameState>()((set, get) => ({
         placePlayer(TEA_SEAT.x + 0.9, TEA_SEAT.z + 0.4)
         set({ phase: 'night', time: 22, running: true, isNight: true })
         audio.setNight(true)
+        get().nightBegin()
       })
       later(2500, () => {
         set({ blackout: false, transitioning: false })
-        get().bark('core.night')
+        if (get().meta.night === 1) get().bark('core.night')
       })
-      later(6200, () => get().bark('core.wow'))
       return
     }
     if (s.phase === 'night' && s.time < 29) {
@@ -482,40 +395,45 @@ export const useStore = create<GameState>()((set, get) => ({
       set({ transitioning: true })
       later(700, () => set({ blackout: true }))
       later(1400, () => {
+        // 打盹：快轉一小時，模擬用大一點的步伐跑過去
         const st = get()
-        const time = Math.min(29.5, Math.floor(st.time) + 1)
-        const patch: Partial<GameState> = { time }
-        if (time >= 24 && st.guest.state === 'awake') patch.guest = { ...st.guest, state: 'asleep' }
-        set(patch)
+        const target = Math.min(29.5, Math.floor(st.time) + 1)
+        const steps = Math.round(((target - st.time) / HOURS_PER_SEC) / 0.25)
+        for (let i = 0; i < steps; i++) {
+          set({ time: get().time + 0.25 * HOURS_PER_SEC })
+          get().nightStep(0.25)
+        }
+        set({ time: target })
       })
       later(2100, () => set({ blackout: false, transitioning: false }))
     }
   },
 
-  spendYin: (v) => set((s) => ({ yin: Math.max(0, s.yin - v) })),
+  spendYin: (v) => set((s) => ({ yin: Math.max(0, s.yin - v * (s.meta.skills.includes('swift') ? 0.5 : 1)) })),
 
   // ---------------------------------------------------------------------------
   // 字幕與語音
   // ---------------------------------------------------------------------------
 
-  bark: (lineId) => {
+  bark: (lineId, quiet = false) => {
     const l = line(lineId)
     set({ subtitle: { who: l.who, text: l.text, id: ++subId } })
-    if (get().voice) speakLine(lineId)
+    if (get().voice && !quiet) speakLine(lineId)
   },
 
   say: (text) => set({ subtitle: { who: '', text, id: ++subId } }),
 
   setWorld: (patch) => {
     const s = get()
-    for (const [k, v] of Object.entries(patch)) {
-      const cur = s[k as keyof typeof patch]
-      const same = k === 'prompt' ? JSON.stringify(cur) === JSON.stringify(v) : cur === v
-      if (!same) {
-        set(patch)
-        return
-      }
+    const out: Partial<GameState> = {}
+    if (patch.room !== undefined && patch.room !== s.room) out.room = patch.room
+    if (patch.building !== undefined && patch.building !== s.building) out.building = patch.building
+    if (patch.faded !== undefined && patch.faded !== s.faded) out.faded = patch.faded
+    if (patch.prompt !== undefined) {
+      const k = patch.prompt?.key ?? ''
+      if (k !== (s.prompt?.key ?? '')) out.prompt = patch.prompt
     }
+    if (Object.keys(out).length) set(out)
   },
 
   toggleVoice: () =>
@@ -544,21 +462,46 @@ export const useStore = create<GameState>()((set, get) => ({
     audio.setNight(false)
     const [x, z] = SCENES.home.spawns.start
     placePlayer(x, z)
+    night.sim = null
     set((s) => ({
       scene: 'home',
       phase: 'dusk',
       time: DUSK_TIME,
       running: false,
       isNight: false,
-      guest: freshGuest(),
-      result: null,
-      yin: Math.min(100, s.yin + 30),
+      yin: Math.min(yinMax(s.meta), s.yin + 30),
       flags: clearDaily(s.flags),
       subtitle: null,
       busy: false,
-      nightCount: s.nightCount + 1,
+      objects: {},
+      carrying: false,
+      view: [],
+      intro: true,
+      plan: planFor(s.meta),
+      roomLit: { r1: 0, r2: 0 },
     }))
     get().save()
+  },
+
+  closeIntro: () => {
+    const s = get()
+    if (!s.intro) return
+    sfx.play('ui_confirm', { volume: 0.5 })
+    set({ intro: false })
+    if (s.meta.night === 1 && !s.flags.opened) {
+      set({ flags: { ...get().flags, opened: true } })
+      later(700, () => get().bark('core.open'))
+    }
+    // 第二晚：小翰把儲藏室整理成第二間客房
+    if (s.plan.story === 'room2' && !s.flags.story_room2) {
+      set({ flags: { ...get().flags, story_room2: true } })
+      HAN_BARKS.room2.forEach((id, i) => later(900 + i * 3600, () => get().bark(id)))
+    }
+  },
+
+  openPanel: (p) => {
+    sfx.play('ui_select', { volume: 0.4 })
+    set({ panel: p })
   },
 }))
 
@@ -577,4 +520,5 @@ function runStep(id: string, i: number) {
 if (import.meta.env.DEV) {
   ;(window as unknown as { __store: typeof useStore; __player: typeof player }).__store = useStore
   ;(window as unknown as { __player: typeof player }).__player = player
+  ;(window as unknown as { __night: typeof night }).__night = night
 }

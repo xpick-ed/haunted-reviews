@@ -2,12 +2,13 @@
 
 ## Current
 
-**Doing:** 3D Q 版角色＋一輪修正：開始後黑畫面（shader 預先編譯＋載入畫面）、移動抖動（每幀順序）、NPC 碰撞、角色細修、效能。
+**Doing:** 深夜大改版完成（客人會走會看、一二三木頭人、需求＋動作清單、兩間客房、七種客人、月循環、技能樹、升級、廟公、狗、停電、入住卡片、天亮結算、月結）。`npm run test:night` 全過，瀏覽器看過入住卡、技能樹、深夜 HUD、客房、結算、月結（電腦＋手機直式）。
 
 **Next:**
-1. 真機確認：還會不會閃白／抖、載入要等多久、手機順不順（`?q=low` 比較）
-2. 階段 A 收尾：點地板走路、設定選單（音量、畫質、減少閃爍）、存檔槽、第一章改成阿桂夫婦帶路
-3. 階段 B：客人會走（起夜、視線判定）、村路、鬼夜市
+1. 真機玩一整個月：難度（一晚 300 秒夠不夠做事？視線會不會太嚴？）、手機左欄會不會太擠
+2. 孫子的心／錢歸零的後果（目前只有月底小翰的台詞）；快飄聲音與「快飄省力」沒接到模擬的 noise
+3. 小宇跟阿嬤玩時林太太看到的「worry」要有畫面；YouTuber 拍到時畫面加錄影框
+4. 階段 A 收尾：設定選單（音量、畫質、減少閃爍）、存檔槽
 
 **Blockers:** 無
 
@@ -25,7 +26,8 @@
 
 - `?zoom=0.4`（dev 模式）：鏡頭拉近看角色
 - `window.__player`（dev 模式）：阿嬤的位置，測試時可以直接 `__player.x = 7.5` 瞬移
-- `window.__store`（dev 模式）可以直接操作遊戲狀態，例如 `__store.getState().act('tuck')`、`__store.setState({ time: 23 })`
+- `window.__store`（dev 模式）可以直接操作遊戲狀態，例如 `__store.getState().sit()`、`__store.setState({ time: 23 })`；`window.__night.sim` 是深夜模擬（客人在 `.guests`）
+- 深夜平衡：`npm run test:night`（`ONLY=M1-N2 TRACE=zhang TRACE_SEED=102` 印出某位客人整晚的狀態）
 - `window.__three`（dev 模式）：`gl.info.render.calls` 量 draw call
 - 網址參數：`?q=low|high` 畫質；dev 限定 `?fx=0` 關後製、`?nofx=ao,bloom,tilt` 關單一效果、`?shadow=0` 關陰影
 - Three r155+ 的點光源是物理單位，intensity 大概 1–8 就夠；之前設 24 整個爆白

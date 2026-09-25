@@ -4,6 +4,7 @@ import { Sparkles } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../store'
 import { NPC_SPOTS, TEMPLE } from '../world/scenes'
+import { MARKET_CLOSE, MARKET_OPEN } from '../world/sceneMarket'
 import { lanternAt } from './daylight'
 import { TILE, WBox, canvasTexture, planeGeo, useMats } from './kit'
 import { GableRoof, Lantern, Wall, plaqueTexture } from './House'
@@ -37,6 +38,7 @@ export function TempleScene() {
       </MergeStatic>
       <Smoke x={TEMPLE.burner.x} z={TEMPLE.burner.z} y={1.35} />
       <TempleLights />
+      <MarketPath />
       <Tree position={[TEMPLE.banyan.x, 0, TEMPLE.banyan.z]} scale={0.95} />
       <Tree position={[8.5, 0, -6.5]} scale={0.6} />
       <ChibiNpc id="ayi" pose="drink" position={[NPC_SPOTS.ayi.x, 0.2, NPC_SPOTS.ayi.z]} heading={0.9} seesGhosts outline={quality === 'high'} />
@@ -327,6 +329,97 @@ function Greenery({ quality }: { quality: Quality }) {
       <mesh material={mats.leaf} position={[7.5, 0.6, 1.5]} castShadow>
         <icosahedronGeometry args={[0.9, 1]} />
       </mesh>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// 往鬼夜市的小路（DESIGN §25.1）：只在夜市開的時候（深夜 00:00–04:30）出現。
+// 廟埕東側一條泥土小徑，一路插著青色的小燈，盡頭一座小木牌坊（出口在 sceneMarket 對應的位置）。
+// ---------------------------------------------------------------------------
+
+const PATH_PTS: [number, number][] = [
+  [4.6, 0.6],
+  [7.2, -1.2],
+  [9.6, -3.4],
+  [11.6, -5.6],
+  [13.4, -7.4],
+  [14.8, -8.6],
+]
+
+function MarketPath() {
+  const open = useStore((s) => s.phase === 'night' && s.time >= MARKET_OPEN && s.time < MARKET_CLOSE)
+  const mats = useMats()
+  const glow = useMemo(() => new THREE.MeshBasicMaterial({ color: new THREE.Color(0.35, 1.8, 1.5), toneMapped: false }), [])
+  const dirt = useMemo(() => {
+    const m = mats.mud.clone()
+    m.color.setRGB(0.62, 0.58, 0.52)
+    // 夜裡看得出來：一點點青色的微光（鬼火照的）
+    m.emissive.set('#1a4a44')
+    m.emissiveIntensity = 0.35
+    return m
+  }, [mats])
+  const light = useRef<THREE.PointLight>(null)
+  const lamps = useRef<(THREE.Mesh | null)[]>([])
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime
+    if (light.current) light.current.intensity = 5 + Math.sin(t * 2.2) * 0.8
+    lamps.current.forEach((m, i) => m?.scale.setScalar(0.85 + Math.sin(t * 3 + i * 1.3) * 0.15))
+  })
+  if (!open) return null
+  return (
+    <group>
+      {/* 小徑：一段段的泥土 */}
+      {PATH_PTS.slice(1).map((b, i) => {
+        const a = PATH_PTS[i]
+        const len = Math.hypot(b[0] - a[0], b[1] - a[1])
+        return (
+          <mesh
+            key={i}
+            material={dirt}
+            position={[(a[0] + b[0]) / 2, 0.02 + i * 0.001, (a[1] + b[1]) / 2]}
+            rotation={[-Math.PI / 2, 0, Math.atan2(b[1] - a[1], b[0] - a[0])]}
+            receiveShadow
+          >
+            <planeGeometry args={[len + 0.6, 1.4]} />
+          </mesh>
+        )
+      })}
+      {/* 路邊插著的青色小燈 */}
+      {PATH_PTS.slice(0, -1).map(([x, z], i) => {
+        const side = i % 2 ? 1 : -1
+        return (
+          <group key={i} position={[x + side * 0.7, 0, z + side * 0.5]}>
+            <mesh material={mats.darkWood} position={[0, 0.45, 0]}>
+              <cylinderGeometry args={[0.025, 0.03, 0.9, 5]} />
+            </mesh>
+            <mesh
+              ref={(el) => {
+                lamps.current[i] = el
+              }}
+              material={glow}
+              position={[0, 1.0, 0]}
+            >
+              <sphereGeometry args={[0.1, 10, 8]} />
+            </mesh>
+          </group>
+        )
+      })}
+      {/* 小木牌坊（夜市的入口） */}
+      <group position={[14.6, 0, -8.2]} rotation-y={-0.75}>
+        {[-1, 1].map((s) => (
+          <WBox key={s} mat="darkWood" size={[0.16, 2.6, 0.16]} position={[s * 1.1, 1.3, 0]} />
+        ))}
+        <WBox mat="darkWood" size={[2.8, 0.2, 0.22]} position={[0, 2.55, 0]} />
+        <WBox mat="redPaint" size={[2.4, 0.1, 0.14]} position={[0, 2.25, 0]} />
+        {[-0.7, 0.7].map((x) => (
+          <mesh key={x} material={glow} position={[x, 2.0, 0.08]} scale={[1, 1.3, 1]}>
+            <sphereGeometry args={[0.12, 12, 10]} />
+          </mesh>
+        ))}
+      </group>
+      <pointLight ref={light} position={[14.2, 1.6, -7.6]} color="#4fe0c8" intensity={5} distance={8} decay={2} />
+      <Sparkles count={24} scale={[9, 1.2, 9]} position={[10.5, 0.8, -4.6]} size={4} speed={0.25} color="#8ff4e0" opacity={0.8} noise={1} />
     </group>
   )
 }

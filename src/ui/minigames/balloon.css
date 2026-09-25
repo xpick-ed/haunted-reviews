@@ -1,0 +1,17 @@
+/* 射氣球（卡片共用 goldfish.css 的 mk- 樣式） */
+
+.bl-darts {
+  display: flex;
+  gap: 4px;
+}
+.bl-darts i {
+  display: block;
+  width: 7px;
+  height: 20px;
+  border-radius: 3px 3px 1px 1px;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.2s;
+}
+.bl-darts i.on {
+  background: linear-gradient(180deg, #d8d8dc 0 35%, #c8302a 35% 75%, #f2c42a 75%);
+}

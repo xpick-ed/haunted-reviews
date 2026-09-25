@@ -1,0 +1,166 @@
+/* 紅姨的法器攤（src/ui/Relics.tsx） */
+
+.relic-sheet {
+  width: min(100%, 560px);
+  background: linear-gradient(180deg, rgba(40, 14, 16, 0.97), rgba(14, 22, 24, 0.97));
+  border-color: rgba(143, 244, 255, 0.35);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(79, 224, 200, 0.12);
+}
+.relic-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.relic-face {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #5a2a2e, #1c1216);
+  border: 1px solid rgba(255, 120, 120, 0.35);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ff9a9a;
+}
+.relic-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.relic-title {
+  flex: 1;
+  min-width: 0;
+}
+.merit-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 244, 255, 0.45);
+  background: rgba(79, 224, 200, 0.1);
+  color: #bff8ee;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.merit-badge b {
+  font-size: 20px;
+}
+.merit-badge small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.merit-icon {
+  font-size: 15px;
+}
+.relic-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.relic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 480px) {
+  .relic-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.relic {
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 4px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(143, 244, 255, 0.28);
+  cursor: pointer;
+  transition:
+    transform 0.08s,
+    background 0.2s,
+    border-color 0.2s;
+}
+.relic:not(:disabled):hover {
+  background: rgba(79, 224, 200, 0.1);
+  border-color: rgba(143, 244, 255, 0.6);
+}
+.relic:not(:disabled):active {
+  transform: scale(0.98);
+}
+.relic-icon {
+  grid-row: span 2;
+  font-size: 30px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: radial-gradient(circle, rgba(255, 200, 120, 0.25), rgba(255, 200, 120, 0) 70%);
+}
+.relic-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.relic-body b {
+  font-size: 15px;
+  color: var(--gold-2);
+}
+.relic-desc {
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(243, 239, 230, 0.75);
+}
+.relic-cost {
+  justify-self: start;
+  font-size: 12px;
+  color: #bff8ee;
+  font-variant-numeric: tabular-nums;
+}
+.relic.poor {
+  opacity: 0.55;
+}
+.relic.poor .relic-cost {
+  color: var(--danger);
+}
+.relic.owned {
+  cursor: default;
+  border-color: rgba(111, 224, 124, 0.5);
+  background: rgba(111, 224, 124, 0.08);
+}
+.relic.owned .relic-cost {
+  color: #9be8a4;
+}
+.relic.fresh {
+  animation: relic-got 0.9s ease-out;
+}
+@keyframes relic-got {
+  0% {
+    box-shadow: 0 0 0 0 rgba(143, 244, 255, 0.8);
+    transform: scale(1.04);
+  }
+  100% {
+    box-shadow: 0 0 0 18px rgba(143, 244, 255, 0);
+    transform: scale(1);
+  }
+}
+.relic-title .sheet-title {
+  font-size: clamp(18px, 5.2vw, 24px);
+  letter-spacing: 2px;
+  white-space: nowrap;
+}

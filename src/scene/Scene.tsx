@@ -31,9 +31,12 @@ const NO_SHADOW = params.get('shadow') === '0'
 
 export function Scene() {
   const quality = useStore((s) => s.quality)
+  // 玩小遊戲時 3D 畫面停住（手機比較順；遊戲時間也跟著停）
+  const paused = useStore((s) => !!s.minigame)
   const setQuality = useStore((s) => s.setQuality)
   return (
     <Canvas
+      frameloop={paused ? 'never' : 'always'}
       shadows={NO_SHADOW ? false : "percentage"}
       dpr={quality === 'high' ? [1, 1.5] : [1, 1]}
       camera={{ fov: 36, near: 0.5, far: 400, position: [19, 14, 22] }}

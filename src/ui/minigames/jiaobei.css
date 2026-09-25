@@ -1,0 +1,213 @@
+/* 擲筊 */
+.jb-panel {
+  width: min(94vw, 520px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 14px 16px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(48, 20, 14, 0.97), rgba(22, 10, 7, 0.97));
+  border: 1.5px solid rgba(242, 180, 91, 0.5);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+}
+.jb-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.jb-title {
+  white-space: nowrap;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: var(--gold-2);
+}
+.jb-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.jb-left i {
+  width: 16px;
+  height: 8px;
+  border-radius: 16px 16px 2px 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.jb-left i.on {
+  background: linear-gradient(180deg, #e46a4a, #9e1b14);
+  box-shadow: 0 0 6px rgba(255, 90, 60, 0.5);
+}
+.jb-left em {
+  white-space: nowrap;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 6px;
+}
+.jb-close {
+  margin-left: auto;
+  font: inherit;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+.jb-stage {
+  position: relative;
+  height: clamp(300px, 52vh, 420px);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: none;
+}
+.jb-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.jb-ask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 56%;
+  text-align: center;
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 17px;
+  color: #ffe9c8;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+.jb-outcome {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36%;
+  padding: 6px 0 10px;
+  background: radial-gradient(ellipse at center, rgba(20, 6, 4, 0.65), rgba(20, 6, 4, 0) 70%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+  animation: jb-stamp 0.45s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+.jb-outcome b {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 52px;
+  letter-spacing: 10px;
+  color: #ffe0a0;
+  text-shadow:
+    0 0 18px rgba(255, 190, 90, 0.8),
+    0 3px 12px rgba(0, 0, 0, 0.9);
+}
+.jb-outcome.xiao b,
+.jb-outcome.yin b {
+  color: #f0d6cf;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
+}
+.jb-outcome span {
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 16px;
+  color: #fff4e0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+.jb-blessing {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(82%, 320px);
+  padding: 18px 18px 16px;
+  border-radius: 16px;
+  text-align: center;
+  background: linear-gradient(180deg, #fff3d6, #f2d9a0);
+  color: #5a1c14;
+  border: 3px solid #d9a441;
+  box-shadow:
+    0 0 40px rgba(255, 200, 100, 0.55),
+    0 14px 40px rgba(0, 0, 0, 0.6);
+  animation: jb-bless 0.55s cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+.jb-bless-kicker {
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: #a0522d;
+}
+.jb-bless-name {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  margin: 4px 0;
+}
+.jb-bless-desc {
+  font-size: 15px;
+}
+.jb-act {
+  position: relative;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  color: #2b1a05;
+  background: linear-gradient(135deg, var(--gold), #d98a2e);
+  box-shadow: 0 6px 20px rgba(242, 180, 91, 0.35);
+  cursor: pointer;
+  touch-action: none;
+}
+.jb-act:disabled {
+  opacity: 0.5;
+}
+.jb-act:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.jb-key {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  letter-spacing: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: rgba(43, 26, 5, 0.2);
+}
+@media (pointer: coarse) {
+  .jb-key {
+    display: none;
+  }
+}
+@keyframes jb-stamp {
+  from {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+@keyframes jb-bless {
+  from {
+    transform: translate(-50%, -40%) scale(0.7);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jb-outcome,
+  .jb-blessing {
+    animation: fade 0.3s ease-out;
+  }
+}

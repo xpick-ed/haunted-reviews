@@ -1,0 +1,337 @@
+/* 煮宵夜 */
+.cook-panel {
+  width: min(94vw, 520px);
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 14px 16px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(44, 28, 18, 0.97), rgba(20, 13, 9, 0.97));
+  border: 1.5px solid rgba(242, 180, 91, 0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+}
+.cook-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cook-title {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--gold-2);
+  white-space: nowrap;
+}
+.cook-steps {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.cook-steps span {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.cook-steps span.on {
+  color: #2b1a05;
+  background: var(--gold);
+  border-color: var(--gold);
+  font-weight: 700;
+}
+.cook-steps span.done {
+  color: #9be8a4;
+  border-color: rgba(111, 224, 124, 0.5);
+}
+.cook-close {
+  margin-left: auto;
+  font: inherit;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+.cook-steps + .cook-close {
+  margin-left: 0;
+}
+.cook-flavor {
+  margin: 0;
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 16px;
+  color: #f3e6cf;
+}
+.cook-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.cook-card {
+  position: relative;
+  font: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(242, 180, 91, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    transform 0.12s,
+    border-color 0.15s,
+    background 0.15s;
+}
+.cook-card.on {
+  border-color: var(--gold);
+  background: rgba(242, 180, 91, 0.12);
+  box-shadow: 0 0 16px rgba(242, 180, 91, 0.3);
+  transform: translateY(-2px);
+}
+.cook-card-icon {
+  font-size: 30px;
+  line-height: 1.1;
+}
+.cook-card-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold-2);
+}
+.cook-card-comfort {
+  font-size: 12px;
+  color: #ffcf9a;
+}
+.cook-card-likes {
+  font-size: 11px;
+  color: var(--muted);
+}
+.cook-card-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  color: #9fd0ff;
+  border: 1px solid rgba(159, 208, 255, 0.5);
+}
+.cook-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+.cook-stage {
+  position: relative;
+  height: clamp(210px, 38vh, 300px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #120a07;
+  cursor: pointer;
+  touch-action: none;
+}
+.cook-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 指針量表（熱油、翻面） */
+.cook-gauge {
+  position: relative;
+  height: 22px;
+  margin: 2px 26px;
+  border-radius: 11px;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.cook-gauge.oil {
+  background: linear-gradient(90deg, #3b5f8a, #d9b24a 55%, #d95a2a 85%, #6a1a10);
+}
+.cook-gauge.brown {
+  background: linear-gradient(90deg, #f6e8a8, #e39b32 55%, #7a3a12 78%, #1c0e06);
+}
+.cook-gauge.brown.boil {
+  background: linear-gradient(90deg, #cfe3f2, #efe0bd 55%, #c08a4a 78%, #3a2410);
+}
+.cook-zone {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  border-radius: 6px;
+  border: 2px solid #6fe07c;
+  background: rgba(111, 224, 124, 0.22);
+  box-shadow: 0 0 12px rgba(111, 224, 124, 0.45);
+}
+.cook-needle {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  width: 4px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+.cook-gauge-l,
+.cook-gauge-r {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.cook-gauge-l {
+  right: calc(100% + 6px);
+}
+.cook-gauge-r {
+  left: calc(100% + 6px);
+}
+.cook-beat {
+  text-align: center;
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 17px;
+  color: var(--gold-2);
+  min-height: 24px;
+}
+
+.cook-act {
+  position: relative;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  color: #2b1a05;
+  background: linear-gradient(135deg, var(--gold), #d98a2e);
+  box-shadow: 0 6px 20px rgba(242, 180, 91, 0.35);
+  cursor: pointer;
+  touch-action: none;
+}
+.cook-act:active {
+  transform: scale(0.97);
+}
+.cook-key {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  letter-spacing: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: rgba(43, 26, 5, 0.2);
+}
+@media (pointer: coarse) {
+  .cook-key {
+    display: none;
+  }
+}
+
+/* 起鍋 */
+.cook-reveal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: radial-gradient(circle at 50% 42%, rgba(80, 50, 20, 0.55), rgba(10, 6, 4, 0.85));
+  animation: fade 0.3s ease-out;
+}
+.cook-dish {
+  position: relative;
+  font-size: 64px;
+  line-height: 1;
+  animation: cook-pop 0.5s cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+.cook-steam {
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
+  animation: cook-steam 1.6s ease-out infinite;
+}
+.cook-verdict {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--gold-2);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+.cook-line {
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  color: #f3e6cf;
+}
+.cook-quality {
+  width: 60%;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.cook-quality i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #f2a25a, var(--gold-2));
+  box-shadow: 0 0 8px rgba(242, 180, 91, 0.6);
+  animation: cook-fill 0.8s ease-out;
+}
+.cook-bonus {
+  font-size: 12px;
+  color: var(--muted);
+}
+@keyframes cook-pop {
+  from {
+    transform: scale(0.3) translateY(20px);
+    opacity: 0;
+  }
+}
+@keyframes cook-steam {
+  from {
+    transform: translateY(10px) scale(0.6);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateY(-30px) scale(1.6);
+    opacity: 0;
+  }
+}
+@keyframes cook-fill {
+  from {
+    width: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cook-dish,
+  .cook-steam {
+    animation: none;
+  }
+}

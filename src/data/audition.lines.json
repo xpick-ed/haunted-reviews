@@ -1,0 +1,45 @@
+{
+  "core.open": { "who": "xiaohan", "text": "阿嬤，我們開張了。" },
+  "core.night": { "who": "xiaohan", "text": "今晚有客人喔，阿嬤，妳不要嚇到人家。" },
+  "core.wow": { "who": "xiaomei", "text": "哇，這裡好有氣氛喔……" },
+  "core.scream": { "who": "xiaomei", "text": "啊啊啊——！！！", "tts": "啊啊——啊啊啊啊啊啊啊啊啊！", "rate": "-8%", "pitch": "+40Hz", "fx": ["scream"] },
+  "core.dontfear": { "who": "grandma", "text": "免驚，是阿嬤啦。" },
+  "core.tuck": { "who": "grandma", "text": "來，阿嬤幫你蓋被。" },
+  "core.temp": { "who": "grandma", "text": "阿嬤幫你調涼一點喔。" },
+
+  "grandma.a1": { "who": "grandma", "text": "呷飽沒？灶腳還有菜脯蛋喔。" },
+  "grandma.a2": { "who": "grandma", "text": "唉唷，這個孫仔，都不會照顧自己。" },
+
+  "xiaohan.a1": { "who": "xiaohan", "text": "又是一星……到底是哪裡做不好？" },
+  "xiaohan.a2": { "who": "xiaohan", "text": "阿嬤，如果妳還在，一定知道要怎麼辦吧。" },
+
+  "xiaomei.a1": { "who": "xiaomei", "text": "奇怪，我剛剛明明有關燈啊？" },
+  "xiaomei.a2": { "who": "xiaomei", "text": "這個被子……是誰幫我蓋的？" },
+
+  "agui.a1": { "who": "agui", "text": "阿春啊，是妳吧？我就知道妳還在！" },
+  "agui.a2": { "who": "agui", "text": "小翰啊，你阿嬤的菜脯蛋，全村沒人煎得贏啦！" },
+
+  "atu.a1": { "who": "atu", "text": "……嗯。回來就好。" },
+  "atu.a2": { "who": "atu", "text": "這間厝，當年是我幫忙蓋的。" },
+
+  "miaogong.a1": { "who": "miaogong", "text": "最近這附近，不太平靜喔。" },
+  "miaogong.a2": { "who": "miaogong", "text": "符貼上去，有事沒事都會好一點。" },
+
+  "ayi.a1": { "who": "ayi", "text": "嗝……妳、妳也是新來的喔？" },
+  "ayi.a2": { "who": "ayi", "text": "再一杯就好……再一杯就好啦……" },
+
+  "acai.a1": { "who": "acai", "text": "灶火要旺，菜才會香！" },
+  "acai.a2": { "who": "acai", "text": "我當年辦桌，一次就是五十桌啦！" },
+
+  "xiaoyu.a1": { "who": "xiaoyu", "text": "阿嬤，妳為什麼會飄？" },
+  "xiaoyu.a2": { "who": "xiaoyu", "text": "媽媽都看不到妳耶，好好笑喔！" },
+
+  "medium.a1": { "who": "medium", "text": "妳不是壞的，妳只是放不下。" },
+  "medium.a2": { "who": "medium", "text": "這間屋子，有人一直在等。" },
+
+  "akai.a1": { "who": "akai", "text": "各位觀眾！我們現在就在傳說中的鬼屋民宿！" },
+  "akai.a2": { "who": "akai", "text": "剛剛那個你們有拍到嗎？有拍到嗎！" },
+
+  "chendong.a1": { "who": "chendong", "text": "年輕人，這塊地的價錢，我可以開得很漂亮。" },
+  "chendong.a2": { "who": "chendong", "text": "哎呀，我只是來住一晚，看看風景而已。" }
+}

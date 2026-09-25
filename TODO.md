@@ -2,16 +2,17 @@
 
 ## Current
 
-**Doing:** M1 畫面精緻化完成：PBR 材質（Poly Haven）、細緻三合院、插畫人物、客家花布、水田／電線桿／香蕉樹／竹叢／榕樹、AO＋移軸後製。
+**Doing:** 階段 A（垂直切片）第一版完成：可以操控阿嬤走動、進出房間、換場景（民宿 ↔ 土地公廟）、對話框、目標、自動存檔、每個角色不同聲音。
 
 **Next:**
-1. 在真的手機跟電腦上跑，看效能（headless 是軟體渲染 0.5fps，量不準）。手機卡的話用 `?q=low` 比較
-2. 畫面小修：
-   - 阿嬤「伸手」姿勢的手臂有點彆扭（src/art/characters.ts）
-   - 路燈的光錐在直式畫面像一個黃色三角形，可能要淡一點或拿掉
-   - 月亮在寬景鏡頭看不到（鏡頭俯角太大）
-3. M1 收尾：客人「起夜」、語音在 Windows Edge／Chrome 測試
-4. M2 核心循環：三種客人、六個動作、觀察線索、存檔
+1. 真機試玩：手機搖桿手感、效能（`?q=low` 比較）、語音音量
+2. 開 GitHub Pages：repo Settings → Pages → Source 選「GitHub Actions」，之後 push 就自動上線
+3. 階段 A 收尾：
+   - 點地板走路（觸控輔助）
+   - 設定選單（音量分軌、畫質、減少閃爍）
+   - 存檔槽 1–3 與匯出存檔碼
+   - 第一章逐晚劇本改成阿桂夫婦帶路（DESIGN §14）
+4. 階段 B：客人 NPC 會走（起夜、視線判定）、村路場景、鬼夜市
 
 **Blockers:** 無
 
@@ -27,6 +28,7 @@
 
 ## 開發筆記
 
+- `window.__player`（dev 模式）：阿嬤的位置，測試時可以直接 `__player.x = 7.5` 瞬移
 - `window.__store`（dev 模式）可以直接操作遊戲狀態，例如 `__store.getState().act('tuck')`、`__store.setState({ time: 23 })`
 - `window.__three`（dev 模式）：`gl.info.render.calls` 量 draw call
 - 網址參數：`?q=low|high` 畫質；dev 限定 `?fx=0` 關後製、`?nofx=ao,bloom,tilt` 關單一效果、`?shadow=0` 關陰影
@@ -34,6 +36,8 @@
 - headless Chromium 是軟體渲染（high 約 0.5fps），Playwright 預設 5 秒截圖逾時會失敗，要用 `browser_run_code_unsafe` 自己 `page.screenshot({ timeout: 120000 })`
 - 測 high 要擋掉自動降級：`__store.setState({ quality: 'high', setQuality: () => {} })`
 - 貼圖重新下載：`python3 scripts/fetch_textures.py`（CC0，來源列在 public/tex/CREDITS.txt）
+- 新增台詞：寫進 `src/data/story.lines.json`（who 用 cast.json 的 id），再跑 `scripts/gen_voices.py` 生成語音
+- 新增互動點：`src/world/hotspots.ts`；新增對話：`src/world/dialogues.ts`；新增場景：`src/world/scenes.ts` + `src/scene/` 的視覺
 - 人物 SVG 預覽：`src/art/characters.ts` 不依賴 three，可以用 node 匯出 SVG 再轉 PNG 看
 
 ## 參考

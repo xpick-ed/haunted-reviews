@@ -1,0 +1,136 @@
+{
+ "cloth": {
+  "files": [
+   "cloth_1.mp3",
+   "cloth_2.mp3",
+   "cloth_3.mp3",
+   "cloth_4.mp3"
+  ],
+  "volume": 0.9
+ },
+ "creak": {
+  "files": [
+   "creak_1.mp3",
+   "creak_2.mp3",
+   "creak_3.mp3"
+  ],
+  "volume": 0.6
+ },
+ "dialogue_next": {
+  "files": [
+   "dialogue_next_1.mp3"
+  ],
+  "volume": 0.45
+ },
+ "door_close": {
+  "files": [
+   "door_close_1.mp3",
+   "door_close_2.mp3",
+   "door_close_3.mp3"
+  ],
+  "volume": 0.8
+ },
+ "door_open": {
+  "files": [
+   "door_open_1.mp3",
+   "door_open_2.mp3"
+  ],
+  "volume": 0.8
+ },
+ "footstep_grass": {
+  "files": [
+   "footstep_grass_1.mp3",
+   "footstep_grass_2.mp3",
+   "footstep_grass_3.mp3",
+   "footstep_grass_4.mp3",
+   "footstep_grass_5.mp3"
+  ],
+  "volume": 0.5
+ },
+ "footstep_stone": {
+  "files": [
+   "footstep_stone_1.mp3",
+   "footstep_stone_2.mp3",
+   "footstep_stone_3.mp3",
+   "footstep_stone_4.mp3",
+   "footstep_stone_5.mp3"
+  ],
+  "volume": 0.5
+ },
+ "footstep_wood": {
+  "files": [
+   "footstep_wood_1.mp3",
+   "footstep_wood_2.mp3",
+   "footstep_wood_3.mp3",
+   "footstep_wood_4.mp3",
+   "footstep_wood_5.mp3"
+  ],
+  "volume": 0.5
+ },
+ "incense": {
+  "files": [
+   "incense_1.mp3"
+  ],
+  "volume": 0.8
+ },
+ "knock": {
+  "files": [
+   "knock_1.mp3",
+   "knock_2.mp3"
+  ],
+  "volume": 0.7
+ },
+ "pickup": {
+  "files": [
+   "pickup_1.mp3",
+   "pickup_2.mp3"
+  ],
+  "volume": 0.6
+ },
+ "pot": {
+  "files": [
+   "pot_1.mp3",
+   "pot_2.mp3",
+   "pot_3.mp3"
+  ],
+  "volume": 0.6
+ },
+ "switch": {
+  "files": [
+   "switch_1.mp3"
+  ],
+  "volume": 0.7
+ },
+ "temple_bell": {
+  "files": [
+   "temple_bell_1.mp3"
+  ],
+  "volume": 0.9
+ },
+ "ui_cancel": {
+  "files": [
+   "ui_cancel_1.mp3"
+  ],
+  "volume": 0.5
+ },
+ "ui_confirm": {
+  "files": [
+   "ui_confirm_1.mp3"
+  ],
+  "volume": 0.6
+ },
+ "ui_select": {
+  "files": [
+   "ui_select_1.mp3",
+   "ui_select_2.mp3"
+  ],
+  "volume": 0.5
+ },
+ "whoosh": {
+  "files": [
+   "whoosh_1.mp3",
+   "whoosh_2.mp3"
+  ],
+  "volume": 0.7
+ }
+}

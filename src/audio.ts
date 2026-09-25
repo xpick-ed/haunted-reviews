@@ -1,10 +1,20 @@
-// 佔位音效：全部用 Web Audio 現場合成，之後換成真正的音檔（DESIGN §16.2）。
-// 語音用瀏覽器內建 Web Speech API（DESIGN §15.5，M3 換 edge-tts 音檔）。
+// 音訊總管：AudioContext、混音匯流排（語音／音效／環境／音樂），以及幾個 Web Audio 現場合成的音效。
+// 語音檔見 audio/voice.ts（edge-tts 預生成），取樣音效見 audio/sfx.ts（Kenney CC0）。
+// speak() 會先找有沒有生成好的語音檔，沒有才退回瀏覽器內建的 Web Speech。
 
-type Who = '阿嬤' | '小美' | '小翰' | ''
+import { voice } from './audio/voice'
+
+type Who = string
+export type BusName = 'voice' | 'sfx' | 'ambience' | 'music'
+type Volumes = Record<BusName | 'master', number>
 
 class GameAudio {
-  private ctx: AudioContext | null = null
+  /** 第一次 init() 之後才有（瀏覽器要使用者點過才能出聲） */
+  ctx: AudioContext | null = null
+  /** 混音匯流排，全部接到 master。init() 之後才有 */
+  bus!: Record<BusName, GainNode>
+  private volumes: Volumes = { master: 0.9, voice: 1, sfx: 0.9, ambience: 0.8, music: 0.6 }
+  private ducked = false
   private master!: GainNode
   private verb!: ConvolverNode
   private cricketGain!: GainNode
@@ -21,15 +31,25 @@ class GameAudio {
     const ctx = new Ctor()
     this.ctx = ctx
     this.master = ctx.createGain()
-    this.master.gain.value = 0.9
+    this.master.gain.value = this.volumes.master
     this.master.connect(ctx.destination)
+    this.bus = {
+      voice: ctx.createGain(),
+      sfx: ctx.createGain(),
+      ambience: ctx.createGain(),
+      music: ctx.createGain(),
+    }
+    for (const k of Object.keys(this.bus) as BusName[]) {
+      this.bus[k].gain.value = this.volumes[k]
+      this.bus[k].connect(this.bus.sfx)
+    }
 
     // 簡單的殘響：一段衰減的雜訊當脈衝響應
     this.verb = ctx.createConvolver()
     this.verb.buffer = this.impulse(1.8, 2.5)
     const wet = ctx.createGain()
     wet.gain.value = 0.22
-    this.verb.connect(wet).connect(this.master)
+    this.verb.connect(wet).connect(this.bus.sfx)
 
     this.noiseBuf = this.noise(2)
     this.startAmbience()
@@ -40,6 +60,30 @@ class GameAudio {
       }
       load()
       speechSynthesis.addEventListener('voiceschanged', load)
+    }
+    void voice.load()
+  }
+
+  /** 設定音量（0–1）。init 之前設也可以，init 時會套用。 */
+  setVolume(name: BusName | 'master', v: number) {
+    this.volumes[name] = Math.max(0, Math.min(1, v))
+    if (!this.ctx) return
+    const node = name === 'master' ? this.master : this.bus[name]
+    const target = name === 'ambience' || name === 'music' ? this.volumes[name] * (this.ducked ? 0.55 : 1) : this.volumes[name]
+    node.gain.setTargetAtTime(target, this.ctx.currentTime, 0.05)
+  }
+
+  getVolume(name: BusName | 'master') {
+    return this.volumes[name]
+  }
+
+  /** 有人講話時把環境音與音樂壓低一點 */
+  duck(on: boolean) {
+    if (!this.ctx || this.ducked === on) return
+    this.ducked = on
+    const t = this.ctx.currentTime
+    for (const k of ['ambience', 'music'] as const) {
+      this.bus[k].gain.setTargetAtTime(this.volumes[k] * (on ? 0.55 : 1), t, on ? 0.08 : 0.4)
     }
   }
 
@@ -52,7 +96,7 @@ class GameAudio {
     cr.loop = true
     this.cricketGain = ctx.createGain()
     this.cricketGain.gain.value = 0
-    cr.connect(this.cricketGain).connect(this.master)
+    cr.connect(this.cricketGain).connect(this.bus.ambience)
     cr.start()
     // 風
     const wind = ctx.createBufferSource()
@@ -63,7 +107,7 @@ class GameAudio {
     lp.frequency.value = 380
     this.windGain = ctx.createGain()
     this.windGain.gain.value = 0
-    wind.connect(lp).connect(this.windGain).connect(this.master)
+    wind.connect(lp).connect(this.windGain).connect(this.bus.ambience)
     wind.start()
   }
 
@@ -87,7 +131,7 @@ class GameAudio {
       g.gain.setValueAtTime(0, t)
       g.gain.linearRampToValueAtTime(0.16, t + 0.008)
       g.gain.exponentialRampToValueAtTime(0.001, t + 1.9)
-      g.connect(this.master)
+      g.connect(this.bus.sfx)
       g.connect(this.verb)
       for (const [mult, amp] of [
         [1, 1],
@@ -121,7 +165,7 @@ class GameAudio {
     g.gain.setValueAtTime(0, t)
     g.gain.linearRampToValueAtTime(0.12, t + 0.2)
     g.gain.linearRampToValueAtTime(0, t + 0.6)
-    src.connect(bp).connect(g).connect(this.master)
+    src.connect(bp).connect(g).connect(this.bus.sfx)
     src.start(t)
     src.stop(t + 0.7)
   }
@@ -149,7 +193,7 @@ class GameAudio {
     g.gain.linearRampToValueAtTime(0.22, t + 0.03)
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.85)
     o.connect(bp).connect(g)
-    g.connect(this.master)
+    g.connect(this.bus.sfx)
     g.connect(this.verb)
     o.start(t)
     lfo.start(t)
@@ -161,7 +205,7 @@ class GameAudio {
     const ng = ctx.createGain()
     ng.gain.setValueAtTime(0.09, t)
     ng.gain.exponentialRampToValueAtTime(0.001, t + 0.2)
-    n.connect(ng).connect(this.master)
+    n.connect(ng).connect(this.bus.sfx)
     n.start(t)
     n.stop(t + 0.25)
   }
@@ -180,7 +224,7 @@ class GameAudio {
         g.gain.setValueAtTime(0.0001, t)
         g.gain.exponentialRampToValueAtTime(off === 0 ? 0.5 : 0.35, t + 0.012)
         g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16)
-        o.connect(g).connect(this.master)
+        o.connect(g).connect(this.bus.sfx)
         o.start(t)
         o.stop(t + 0.2)
       }
@@ -199,7 +243,7 @@ class GameAudio {
     g.gain.setValueAtTime(0.0001, t)
     g.gain.exponentialRampToValueAtTime(0.35, t + 0.05)
     g.gain.exponentialRampToValueAtTime(0.0001, t + 1.3)
-    o.connect(g).connect(this.master)
+    o.connect(g).connect(this.bus.sfx)
     o.start(t)
     o.stop(t + 1.4)
   }
@@ -225,7 +269,7 @@ class GameAudio {
     lp.type = 'lowpass'
     lp.frequency.value = 900
     o.connect(lp).connect(g)
-    g.connect(this.master)
+    g.connect(this.bus.sfx)
     g.connect(this.verb)
     o.start(t)
     trem.start(t)
@@ -240,7 +284,7 @@ class GameAudio {
     const ng = ctx.createGain()
     ng.gain.setValueAtTime(0.5, t + 1.15)
     ng.gain.exponentialRampToValueAtTime(0.001, t + 1.4)
-    n.connect(nl).connect(ng).connect(this.master)
+    n.connect(nl).connect(ng).connect(this.bus.sfx)
     n.start(t + 1.15)
     n.stop(t + 1.45)
   }
@@ -261,7 +305,7 @@ class GameAudio {
       g.gain.setValueAtTime(0.0001, t)
       g.gain.exponentialRampToValueAtTime(0.06, t + 0.01)
       g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12)
-      o.connect(g).connect(this.master)
+      o.connect(g).connect(this.bus.sfx)
       o.start(t)
       o.stop(t + 0.15)
     }
@@ -270,7 +314,10 @@ class GameAudio {
 
   // ---------- 語音 ----------
   speak(text: string, who: Who) {
-    if (!('speechSynthesis' in window) || !who) return
+    if (!who) return
+    // 有生成好的語音檔就用檔案
+    if (voice.playText(text) > 0) return
+    if (!('speechSynthesis' in window)) return
     speechSynthesis.cancel()
     const u = new SpeechSynthesisUtterance(text)
     u.lang = 'zh-TW'
@@ -294,6 +341,7 @@ class GameAudio {
   }
 
   stopSpeech() {
+    voice.stop()
     if ('speechSynthesis' in window) speechSynthesis.cancel()
   }
 

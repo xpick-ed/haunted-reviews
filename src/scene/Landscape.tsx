@@ -227,9 +227,18 @@ function buildSeedlings(quality: Quality) {
 // 草與野花
 // ---------------------------------------------------------------------------
 
-function buildGrass(quality: Quality) {
-  const r = seeded(9001)
-  const count = quality === 'high' ? 7000 : 2000
+type Ground = ReturnType<typeof groundAt>
+
+/** 草與野花。其他場景（土地公廟）可以傳自己的地面判定進來。 */
+export function buildGrass(
+  quality: Quality,
+  opts: { ground?: (x: number, z: number) => Ground; rMin?: number; rSpan?: number; seed?: number; scale?: number } = {},
+) {
+  const ground = opts.ground ?? groundAt
+  const rMin = opts.rMin ?? 10.5
+  const rSpan = opts.rSpan ?? 30
+  const r = seeded(opts.seed ?? 9001)
+  const count = Math.round((quality === 'high' ? 7000 : 2000) * (opts.scale ?? 1))
   const matrices: THREE.Matrix4[] = []
   const colors: THREE.Color[] = []
   const flowers: THREE.Matrix4[] = []
@@ -243,10 +252,10 @@ function buildGrass(quality: Quality) {
     tries++
     // 越靠近三合院越密
     const a = r() * Math.PI * 2
-    const rad = 10.5 + 30 * Math.pow(r(), 1.3)
+    const rad = rMin + rSpan * Math.pow(r(), 1.3)
     const x = Math.cos(a) * rad * 1.15
     const z = Math.sin(a) * rad * 0.95
-    const g = groundAt(x, z)
+    const g = ground(x, z)
     if (!g || (g === 'bank' && r() < 0.6)) continue
     const y = g === 'bank' ? BANK.top : 0
     const h = g === 'bank' ? 0.18 + r() * 0.2 : 0.22 + r() * 0.35
@@ -260,7 +269,7 @@ function buildGrass(quality: Quality) {
       for (let i = 0; i < n && flowers.length < flowerCount; i++) {
         const fx = x + (r() - 0.5) * 1.2
         const fz = z + (r() - 0.5) * 1.2
-        if (groundAt(fx, fz) !== 'grass') continue
+        if (ground(fx, fz) !== 'grass') continue
         const k = 0.8 + r() * 0.5
         flowers.push(new THREE.Matrix4().compose(new THREE.Vector3(fx, 0.16 + r() * 0.16, fz), new THREE.Quaternion(), new THREE.Vector3(k, k, k)))
         flowerCols.push(col.clone().offsetHSL(0, 0, (r() - 0.5) * 0.1))

@@ -1,0 +1,457 @@
+{
+ "acai.a1": {
+  "file": "acai.a1.mp3",
+  "who": "acai",
+  "text": "灶火要旺，菜才會香！",
+  "dur": 2.57,
+  "hash": "7c1acfe81478"
+ },
+ "acai.a2": {
+  "file": "acai.a2.mp3",
+  "who": "acai",
+  "text": "我當年辦桌，一次就是五十桌啦！",
+  "dur": 2.59,
+  "hash": "8ce5734be573"
+ },
+ "agui.a1": {
+  "file": "agui.a1.mp3",
+  "who": "agui",
+  "text": "阿春啊，是妳吧？我就知道妳還在！",
+  "dur": 4.51,
+  "hash": "e785e9aeb611"
+ },
+ "agui.a2": {
+  "file": "agui.a2.mp3",
+  "who": "agui",
+  "text": "小翰啊，你阿嬤的菜脯蛋，全村沒人煎得贏啦！",
+  "dur": 4.87,
+  "hash": "b576436d0a44"
+ },
+ "akai.a1": {
+  "file": "akai.a1.mp3",
+  "who": "akai",
+  "text": "各位觀眾！我們現在就在傳說中的鬼屋民宿！",
+  "dur": 4.18,
+  "hash": "1d575db03e24"
+ },
+ "akai.a2": {
+  "file": "akai.a2.mp3",
+  "who": "akai",
+  "text": "剛剛那個你們有拍到嗎？有拍到嗎！",
+  "dur": 3.67,
+  "hash": "97c3af7ff856"
+ },
+ "atu.a1": {
+  "file": "atu.a1.mp3",
+  "who": "atu",
+  "text": "……嗯。回來就好。",
+  "dur": 4.42,
+  "hash": "4bd733a43d84"
+ },
+ "atu.a2": {
+  "file": "atu.a2.mp3",
+  "who": "atu",
+  "text": "這間厝，當年是我幫忙蓋的。",
+  "dur": 4.42,
+  "hash": "231ec6a75b82"
+ },
+ "ayi.1": {
+  "file": "ayi.1.mp3",
+  "who": "ayi",
+  "text": "嗝……喲，這不是阿春嬤嗎？妳也還沒走喔？",
+  "dur": 5.16,
+  "hash": "62682b002ae6"
+ },
+ "ayi.2": {
+  "file": "ayi.2.mp3",
+  "who": "grandma",
+  "text": "阿義，你又喝了。",
+  "dur": 2.33,
+  "hash": "274e9eafc16d"
+ },
+ "ayi.3": {
+  "file": "ayi.3.mp3",
+  "who": "ayi",
+  "text": "鬼喝酒不會醉啦……只是比較開心。嗝。",
+  "dur": 4.8,
+  "hash": "0e02055fb362"
+ },
+ "ayi.4": {
+  "file": "ayi.4.mp3",
+  "who": "ayi",
+  "text": "聽說妳孫子開民宿？要不要我去幫忙嚇客人，嘿嘿。",
+  "dur": 6.1,
+  "hash": "2999ded43bfa"
+ },
+ "ayi.5a": {
+  "file": "ayi.5a.mp3",
+  "who": "ayi",
+  "text": "好啦好啦……那給妳一個秘訣：客人醒著的時候，千萬不要碰被子。",
+  "dur": 6.12,
+  "hash": "d94faf725b53"
+ },
+ "ayi.5b": {
+  "file": "ayi.5b.mp3",
+  "who": "ayi",
+  "text": "燈閃一閃、杯子動一動，那種拿相機的年輕人最愛了。",
+  "dur": 6.0,
+  "hash": "1750634636de"
+ },
+ "ayi.6b": {
+  "file": "ayi.6b.mp3",
+  "who": "ayi",
+  "text": "不過妳這張慈祥的臉喔……嚇不到人啦，哈哈，嗝。",
+  "dur": 4.97,
+  "hash": "0a66d8ae03e8"
+ },
+ "ayi.7": {
+  "file": "ayi.7.mp3",
+  "who": "ayi",
+  "text": "陰氣不夠的時候，來廟裡上個香，土地公會分妳一點。",
+  "dur": 5.66,
+  "hash": "d8d5a73ea730"
+ },
+ "ayi.a1": {
+  "file": "ayi.a1.mp3",
+  "who": "ayi",
+  "text": "嗝……妳、妳也是新來的喔？",
+  "dur": 2.83,
+  "hash": "6693ebcbb63b"
+ },
+ "ayi.a2": {
+  "file": "ayi.a2.mp3",
+  "who": "ayi",
+  "text": "再一杯就好……再一杯就好啦……",
+  "dur": 2.86,
+  "hash": "fef88738a451"
+ },
+ "ayi.again": {
+  "file": "ayi.again.mp3",
+  "who": "ayi",
+  "text": "嗝……還沒天亮喔？再一瓶就好……",
+  "dur": 3.82,
+  "hash": "5172efb12322"
+ },
+ "ayi.how": {
+  "file": "ayi.how.mp3",
+  "who": "grandma",
+  "text": "……你說說看，要怎麼嚇？",
+  "dur": 3.1,
+  "hash": "b862b7cba1be"
+ },
+ "ayi.no": {
+  "file": "ayi.no.mp3",
+  "who": "grandma",
+  "text": "不要！我是要照顧客人的。",
+  "dur": 4.27,
+  "hash": "547654f37f93"
+ },
+ "chendong.a1": {
+  "file": "chendong.a1.mp3",
+  "who": "chendong",
+  "text": "年輕人，這塊地的價錢，我可以開得很漂亮。",
+  "dur": 3.79,
+  "hash": "119f6b8940ea"
+ },
+ "chendong.a2": {
+  "file": "chendong.a2.mp3",
+  "who": "chendong",
+  "text": "哎呀，我只是來住一晚，看看風景而已。",
+  "dur": 3.62,
+  "hash": "69bf65ee98af"
+ },
+ "core.dontfear": {
+  "file": "core.dontfear.mp3",
+  "who": "grandma",
+  "text": "免驚，是阿嬤啦。",
+  "dur": 2.62,
+  "hash": "42467badf79e"
+ },
+ "core.night": {
+  "file": "core.night.mp3",
+  "who": "xiaohan",
+  "text": "今晚有客人喔，阿嬤，妳不要嚇到人家。",
+  "dur": 4.2,
+  "hash": "98ef1dc9b42a"
+ },
+ "core.open": {
+  "file": "core.open.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤，我們開張了。",
+  "dur": 2.69,
+  "hash": "a61799d8cc48"
+ },
+ "core.scream": {
+  "file": "core.scream.mp3",
+  "who": "xiaomei",
+  "text": "啊啊啊——！！！",
+  "dur": 2.14,
+  "hash": "29b6be8beddb"
+ },
+ "core.temp": {
+  "file": "core.temp.mp3",
+  "who": "grandma",
+  "text": "阿嬤幫你調涼一點喔。",
+  "dur": 2.98,
+  "hash": "9c626fb72b09"
+ },
+ "core.tuck": {
+  "file": "core.tuck.mp3",
+  "who": "grandma",
+  "text": "來，阿嬤幫你蓋被。",
+  "dur": 2.69,
+  "hash": "5ffb37b862fd"
+ },
+ "core.wow": {
+  "file": "core.wow.mp3",
+  "who": "xiaomei",
+  "text": "哇，這裡好有氣氛喔……",
+  "dur": 2.57,
+  "hash": "10f1a3db7442"
+ },
+ "gm.incense": {
+  "file": "gm.incense.mp3",
+  "who": "grandma",
+  "text": "列祖列宗，保佑今天的客人睡得好。",
+  "dur": 4.58,
+  "hash": "4d19c773ae57"
+ },
+ "gm.incense.done": {
+  "file": "gm.incense.done.mp3",
+  "who": "grandma",
+  "text": "今天的香已經上過了。",
+  "dur": 2.93,
+  "hash": "22dc8d01375b"
+ },
+ "gm.mirror": {
+  "file": "gm.mirror.mp3",
+  "who": "grandma",
+  "text": "鏡子裡……還是看不到自己啊。",
+  "dur": 3.65,
+  "hash": "edd8ddd2c138"
+ },
+ "gm.nap": {
+  "file": "gm.nap.mp3",
+  "who": "grandma",
+  "text": "阿嬤瞇一下就好……",
+  "dur": 2.38,
+  "hash": "f97b3b21dbfc"
+ },
+ "gm.nobed": {
+  "file": "gm.nobed.mp3",
+  "who": "grandma",
+  "text": "還不能蓋，小美還醒著。等她睡著再說。",
+  "dur": 6.38,
+  "hash": "e97a537eb1e0"
+ },
+ "gm.notyet": {
+  "file": "gm.notyet.mp3",
+  "who": "grandma",
+  "text": "還沒上香，心裡不踏實。",
+  "dur": 3.43,
+  "hash": "928ae8184eab"
+ },
+ "gm.photo.1": {
+  "file": "gm.photo.1.mp3",
+  "who": "grandma",
+  "text": "這張是小翰滿月的時候……他哭得好大聲。",
+  "dur": 5.06,
+  "hash": "73dd5e00fb8e"
+ },
+ "gm.photo.2": {
+  "file": "gm.photo.2.mp3",
+  "who": "grandma",
+  "text": "那時候他阿公還在，抱著他在埕裡走來走去。",
+  "dur": 6.02,
+  "hash": "de5982cacec8"
+ },
+ "gm.photo.3": {
+  "file": "gm.photo.3.mp3",
+  "who": "grandma",
+  "text": "唉，一轉眼，他都自己開民宿了。",
+  "dur": 4.27,
+  "hash": "3dc67e206934"
+ },
+ "gm.sewing": {
+  "file": "gm.sewing.mp3",
+  "who": "grandma",
+  "text": "小翰的制服，以前都是阿嬤用這台車的。",
+  "dur": 5.3,
+  "hash": "5a0b63e1c004"
+ },
+ "gm.stove": {
+  "file": "gm.stove.mp3",
+  "who": "grandma",
+  "text": "灶是冷的。以前這個時候，整間厝都是菜脯蛋的味道。",
+  "dur": 7.56,
+  "hash": "ec590f9c7a34"
+ },
+ "gm.tired": {
+  "file": "gm.tired.mp3",
+  "who": "grandma",
+  "text": "陰氣不夠了……去上個香吧。",
+  "dur": 3.36,
+  "hash": "05043ec3f09f"
+ },
+ "gm.wait": {
+  "file": "gm.wait.mp3",
+  "who": "grandma",
+  "text": "來，坐下來等客人。",
+  "dur": 3.05,
+  "hash": "ae921baa9995"
+ },
+ "grandma.a1": {
+  "file": "grandma.a1.mp3",
+  "who": "grandma",
+  "text": "呷飽沒？灶腳還有菜脯蛋喔。",
+  "dur": 5.14,
+  "hash": "aee43f04d14f"
+ },
+ "grandma.a2": {
+  "file": "grandma.a2.mp3",
+  "who": "grandma",
+  "text": "唉唷，這個孫仔，都不會照顧自己。",
+  "dur": 4.54,
+  "hash": "e0d0a258fb28"
+ },
+ "han.again": {
+  "file": "han.again.mp3",
+  "who": "xiaohan",
+  "text": "床單換了，毛巾放了，熱水瓶也裝滿了……應該沒問題吧。",
+  "dur": 5.45,
+  "hash": "f35a5367a485"
+ },
+ "han.dusk.1": {
+  "file": "han.dusk.1.mp3",
+  "who": "xiaohan",
+  "text": "第一組客人……希望她會喜歡這裡。",
+  "dur": 3.55,
+  "hash": "d7bd49a31431"
+ },
+ "han.dusk.2": {
+  "file": "han.dusk.2.mp3",
+  "who": "grandma",
+  "text": "傻孩子，阿嬤會幫你顧好的。",
+  "dur": 3.79,
+  "hash": "7a90ac449fea"
+ },
+ "han.dusk.3": {
+  "file": "han.dusk.3.mp3",
+  "who": "xiaohan",
+  "text": "奇怪，怎麼突然覺得背後暖暖的。",
+  "dur": 3.82,
+  "hash": "2e5338648c81"
+ },
+ "han.dusk.4": {
+  "file": "han.dusk.4.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤，如果妳還在就好了。",
+  "dur": 3.19,
+  "hash": "9ec2c4d81b40"
+ },
+ "han.dusk.5": {
+  "file": "han.dusk.5.mp3",
+  "who": "grandma",
+  "text": "阿嬤就在這裡啊……你看不到而已。",
+  "dur": 4.25,
+  "hash": "805fcaf7988e"
+ },
+ "han.sleep": {
+  "file": "han.sleep.mp3",
+  "who": "xiaohan",
+  "text": "呼……明天還要早起做早餐……",
+  "dur": 3.24,
+  "hash": "19f5b5c20ae8"
+ },
+ "medium.a1": {
+  "file": "medium.a1.mp3",
+  "who": "medium",
+  "text": "妳不是壞的，妳只是放不下。",
+  "dur": 3.14,
+  "hash": "4628ea236bb6"
+ },
+ "medium.a2": {
+  "file": "medium.a2.mp3",
+  "who": "medium",
+  "text": "這間屋子，有人一直在等。",
+  "dur": 3.02,
+  "hash": "e1afb889cd29"
+ },
+ "mei.sleepy": {
+  "file": "mei.sleepy.mp3",
+  "who": "xiaomei",
+  "text": "好睏……明天再拍照好了。",
+  "dur": 2.62,
+  "hash": "2bf68d6d9a6d"
+ },
+ "miaogong.a1": {
+  "file": "miaogong.a1.mp3",
+  "who": "miaogong",
+  "text": "最近這附近，不太平靜喔。",
+  "dur": 3.55,
+  "hash": "382cc14f6385"
+ },
+ "miaogong.a2": {
+  "file": "miaogong.a2.mp3",
+  "who": "miaogong",
+  "text": "符貼上去，有事沒事都會好一點。",
+  "dur": 4.25,
+  "hash": "fa77283f1183"
+ },
+ "temple.incense": {
+  "file": "temple.incense.mp3",
+  "who": "grandma",
+  "text": "土地公，拜託您，保佑這間民宿。",
+  "dur": 4.51,
+  "hash": "dad29068a3ab"
+ },
+ "temple.incense.done": {
+  "file": "temple.incense.done.mp3",
+  "who": "grandma",
+  "text": "今天已經拜過土地公了。",
+  "dur": 3.29,
+  "hash": "b11d33d1bfb8"
+ },
+ "xiaohan.a1": {
+  "file": "xiaohan.a1.mp3",
+  "who": "xiaohan",
+  "text": "又是一星……到底是哪裡做不好？",
+  "dur": 3.12,
+  "hash": "a3ffbe42d54c"
+ },
+ "xiaohan.a2": {
+  "file": "xiaohan.a2.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤，如果妳還在，一定知道要怎麼辦吧。",
+  "dur": 4.66,
+  "hash": "6741ea82ade6"
+ },
+ "xiaomei.a1": {
+  "file": "xiaomei.a1.mp3",
+  "who": "xiaomei",
+  "text": "奇怪，我剛剛明明有關燈啊？",
+  "dur": 3.24,
+  "hash": "1ab6a2c495eb"
+ },
+ "xiaomei.a2": {
+  "file": "xiaomei.a2.mp3",
+  "who": "xiaomei",
+  "text": "這個被子……是誰幫我蓋的？",
+  "dur": 2.74,
+  "hash": "3cfe37ac00af"
+ },
+ "xiaoyu.a1": {
+  "file": "xiaoyu.a1.mp3",
+  "who": "xiaoyu",
+  "text": "阿嬤，妳為什麼會飄？",
+  "dur": 2.62,
+  "hash": "e53fd948807e"
+ },
+ "xiaoyu.a2": {
+  "file": "xiaoyu.a2.mp3",
+  "who": "xiaoyu",
+  "text": "媽媽都看不到妳耶，好好笑喔！",
+  "dur": 3.22,
+  "hash": "776552740224"
+ }
+}

@@ -1,6 +1,6 @@
 import { Scene } from './scene/Scene'
 import { Hud } from './ui/Hud'
-import { Intro } from './ui/Intro'
+import { Blackout, Title } from './ui/Title'
 import { useStore } from './store'
 
 export default function App() {
@@ -11,7 +11,8 @@ export default function App() {
         <Scene />
       </div>
       {started && <Hud />}
-      <Intro />
+      <Blackout />
+      <Title />
     </>
   )
 }

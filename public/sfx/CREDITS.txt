@@ -1,0 +1,10 @@
+Sound effects
+=============
+
+Kenney (https://kenney.nl) — CC0 1.0 Universal (public domain)
+  RPG Audio:        door_open, door_close, cloth, creak, pot, switch
+  Impact Sounds:    footstep_wood, footstep_stone, footstep_grass, knock
+  Interface Sounds: ui_select, ui_confirm, ui_cancel, dialogue_next, pickup
+
+Synthesized by scripts/fetch_sfx.py for this game — CC0
+  whoosh, incense (match strike + small bowl bell), temple_bell

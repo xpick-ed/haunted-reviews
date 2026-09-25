@@ -1,0 +1,40 @@
+{
+  "han.dusk.1": { "who": "xiaohan", "text": "第一組客人……希望她會喜歡這裡。" },
+  "han.dusk.2": { "who": "grandma", "text": "傻孩子，阿嬤會幫你顧好的。" },
+  "han.dusk.3": { "who": "xiaohan", "text": "奇怪，怎麼突然覺得背後暖暖的。" },
+  "han.dusk.4": { "who": "xiaohan", "text": "阿嬤，如果妳還在就好了。" },
+  "han.dusk.5": { "who": "grandma", "text": "阿嬤就在這裡啊……你看不到而已。" },
+  "han.again": { "who": "xiaohan", "text": "床單換了，毛巾放了，熱水瓶也裝滿了……應該沒問題吧。" },
+  "han.sleep": { "who": "xiaohan", "text": "呼……明天還要早起做早餐……" },
+
+  "gm.incense": { "who": "grandma", "text": "列祖列宗，保佑今天的客人睡得好。" },
+  "gm.incense.done": { "who": "grandma", "text": "今天的香已經上過了。" },
+  "gm.notyet": { "who": "grandma", "text": "還沒上香，心裡不踏實。" },
+  "gm.wait": { "who": "grandma", "text": "來，坐下來等客人。" },
+  "gm.nap": { "who": "grandma", "text": "阿嬤瞇一下就好……" },
+  "gm.photo.1": { "who": "grandma", "text": "這張是小翰滿月的時候……他哭得好大聲。" },
+  "gm.photo.2": { "who": "grandma", "text": "那時候他阿公還在，抱著他在埕裡走來走去。" },
+  "gm.photo.3": { "who": "grandma", "text": "唉，一轉眼，他都自己開民宿了。" },
+  "gm.stove": { "who": "grandma", "text": "灶是冷的。以前這個時候，整間厝都是菜脯蛋的味道。" },
+  "gm.mirror": { "who": "grandma", "text": "鏡子裡……還是看不到自己啊。" },
+  "gm.sewing": { "who": "grandma", "text": "小翰的制服，以前都是阿嬤用這台車的。" },
+  "gm.nobed": { "who": "grandma", "text": "還不能蓋，小美還醒著。等她睡著再說。" },
+  "gm.tired": { "who": "grandma", "text": "陰氣不夠了……去上個香吧。" },
+
+  "mei.sleepy": { "who": "xiaomei", "text": "好睏……明天再拍照好了。" },
+
+  "temple.incense": { "who": "grandma", "text": "土地公，拜託您，保佑這間民宿。" },
+  "temple.incense.done": { "who": "grandma", "text": "今天已經拜過土地公了。" },
+
+  "ayi.1": { "who": "ayi", "text": "嗝……喲，這不是阿春嬤嗎？妳也還沒走喔？" },
+  "ayi.2": { "who": "grandma", "text": "阿義，你又喝了。" },
+  "ayi.3": { "who": "ayi", "text": "鬼喝酒不會醉啦……只是比較開心。嗝。" },
+  "ayi.4": { "who": "ayi", "text": "聽說妳孫子開民宿？要不要我去幫忙嚇客人，嘿嘿。" },
+  "ayi.no": { "who": "grandma", "text": "不要！我是要照顧客人的。" },
+  "ayi.5a": { "who": "ayi", "text": "好啦好啦……那給妳一個秘訣：客人醒著的時候，千萬不要碰被子。" },
+  "ayi.how": { "who": "grandma", "text": "……你說說看，要怎麼嚇？" },
+  "ayi.5b": { "who": "ayi", "text": "燈閃一閃、杯子動一動，那種拿相機的年輕人最愛了。" },
+  "ayi.6b": { "who": "ayi", "text": "不過妳這張慈祥的臉喔……嚇不到人啦，哈哈，嗝。" },
+  "ayi.7": { "who": "ayi", "text": "陰氣不夠的時候，來廟裡上個香，土地公會分妳一點。" },
+  "ayi.again": { "who": "ayi", "text": "嗝……還沒天亮喔？再一瓶就好……" }
+}

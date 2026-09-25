@@ -1,8 +1,10 @@
 import { useMemo, useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { Billboard } from '@react-three/drei'
 import * as THREE from 'three'
-import { GRANDMA_HOME, useStore } from '../store'
+import { useStore } from '../store'
+import { player } from '../world/player'
+import { SCENES } from '../world/scenes'
 import { BED, FLOOR_Y, PILLOW_Z } from './layout'
 import { canvasTexture, svgTexture } from './kit'
 import {
@@ -64,42 +66,33 @@ const GM_W = (GM_H * GRANDMA_SIZE.w) / GRANDMA_SIZE.h
 
 export function Grandma() {
   const tex = textures()
-  const { camera } = useThree()
   const group = useRef<THREE.Group>(null)
   const body = useRef<THREE.Mesh>(null)
   const mat = useRef<THREE.MeshBasicMaterial>(null)
   const light = useRef<THREE.PointLight>(null)
-  const pos = useRef(new THREE.Vector3(...GRANDMA_HOME))
-  const prev = useRef(new THREE.Vector3(...GRANDMA_HOME))
-  const facing = useRef(1)
-  const tmp = useMemo(() => ({ target: new THREE.Vector3(), right: new THREE.Vector3(), vel: new THREE.Vector3() }), [])
+  const floorY = useRef(FLOOR_Y)
+  const lean = useRef(0)
 
-  useFrame(({ clock }, dt) => {
+  useFrame(({ clock }, rawDt) => {
+    const dt = Math.min(rawDt, 0.1)
     const s = useStore.getState()
-    const t = s.grandmaTarget ?? GRANDMA_HOME
-    tmp.target.set(t[0], t[1], t[2])
-    prev.current.copy(pos.current)
-    pos.current.lerp(tmp.target, 1 - Math.pow(0.03, dt))
-
-    // 往哪邊飄就面向哪邊（以畫面左右為準）
-    tmp.right.setFromMatrixColumn(camera.matrixWorld, 0)
-    const side = tmp.vel.subVectors(pos.current, prev.current).dot(tmp.right)
-    if (Math.abs(side) > 0.002) facing.current = Math.sign(side)
-
     const time = clock.elapsedTime
-    const bob = Math.sin(time * 2.2) * 0.06
-    group.current?.position.set(pos.current.x, pos.current.y + FLOOR_Y + 0.15 + bob, pos.current.z)
+    // 地板高度平滑跟上（從埕飄上台基不會跳一下）
+    const f = SCENES[s.scene].floorAt(player.x, player.z)
+    floorY.current += (f - floorY.current) * (1 - Math.exp(-8 * dt))
+    const moving = Math.min(1, player.speed / 2.5)
+    const bob = Math.sin(time * (2.2 + moving * 4)) * (0.06 + moving * 0.03)
+    group.current?.position.set(player.x, floorY.current + 0.15 + bob, player.z)
 
     if (body.current) {
       // 轉身時 scale.x 從一邊翻到另一邊，會有一下變薄的「轉身」感
       const sx = body.current.scale.x
-      body.current.scale.x = sx + (facing.current - sx) * (1 - Math.pow(0.0005, dt))
-      body.current.rotation.z = Math.sin(time * 1.3) * 0.025
+      body.current.scale.x = sx + (player.facing - sx) * (1 - Math.pow(0.0005, dt))
+      // 往前飄時身體微微前傾
+      lean.current += (-player.facing * moving * 0.12 - lean.current) * (1 - Math.exp(-6 * dt))
+      body.current.rotation.z = Math.sin(time * 1.3) * 0.025 + lean.current
     }
-    if (mat.current) {
-      const reaching = s.busy && s.grandmaTarget !== null && pos.current.distanceTo(tmp.target) < 0.6
-      mat.current.map = reaching ? tex.grandmaReach : tex.grandmaIdle
-    }
+    if (mat.current) mat.current.map = s.busy ? tex.grandmaReach : tex.grandmaIdle
     if (light.current) light.current.intensity = 2.6 + Math.sin(time * 3.1) * 0.5 + s.warm * 3
   })
 

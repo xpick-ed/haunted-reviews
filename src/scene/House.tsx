@@ -16,17 +16,24 @@ import {
   WING_L,
   WING_PORCH,
   WING_R,
+  HALL_PART_X,
+  MAIN_RIDGE_Z,
+  MAIN_WALL_TOP,
+  ROOF_SLOPE,
+  SIDE_DOOR_W,
+  SIDE_DOOR_Z,
+  WING_BACK_DOOR_Z,
+  WING_WALL_TOP,
 } from './layout'
+import { player } from '../world/player'
+import { sfx } from '../audio/sfx'
+import { floralFabricTexture } from '../art/fabric'
 
 // 三合院本體：台基、牆、窗、門、屋頂、步口廊、燈籠、春聯。
 // 右護龍（客房）的屋頂與外牆包在 <Fader> 裡，聚焦房間時會淡出。
 
-const SLOPE = 0.52 // 屋頂坡度（高／水平）
+const SLOPE = ROOF_SLOPE // 屋頂坡度（高／水平）
 const ROOF_T = 0.14 // 屋頂板厚
-const MAIN_RIDGE_Z = (MAIN.z0 + MAIN.z1) / 2
-const MAIN_WALL_TOP = MAIN.ridgeY - (MAIN.z1 - MAIN_RIDGE_Z) * SLOPE // 前後牆頂剛好碰到屋頂
-const WING_RIDGE_X = (WING_R.x0 + WING_R.x1) / 2
-const WING_WALL_TOP = WING_R.ridgeY - (WING_R.x1 - WING_RIDGE_X) * SLOPE
 const SKIRT_H = 0.72 // 石砌牆裙高度
 
 export function House() {
@@ -306,7 +313,7 @@ function RoundWindow({ center, r, glow = null, inward }: { center: [number, numb
 
 const COUPLET_FONT = [{ spec: `700 80px ${BRUSH_FONT}`, text: '天增歲月人增壽春滿乾坤福滿門西河衍派春福' }]
 
-function coupletTexture(text: string) {
+export function coupletTexture(text: string) {
   return canvasTexture(
     96,
     96 * text.length,
@@ -328,7 +335,7 @@ function coupletTexture(text: string) {
   )
 }
 
-function plaqueTexture(text: string) {
+export function plaqueTexture(text: string) {
   return canvasTexture(
     512,
     128,
@@ -384,6 +391,7 @@ function DoubleDoor({
   h,
   inward,
   open = 0,
+  auto = false,
   doufang,
 }: {
   facing: 'x' | 'z'
@@ -392,18 +400,44 @@ function DoubleDoor({
   h: number
   inward: 1 | -1
   open?: number
+  /** 阿嬤靠近就自己打開（鬼開門） */
+  auto?: boolean
   doufang?: string
 }) {
   const mats = useMats()
   const fang = useMemo(() => (doufang ? doufangTexture(doufang) : null), [doufang])
+  const leaves = useRef<(THREE.Group | null)[]>([])
+  const angle = useRef(open)
+  const isOpen = useRef(false)
+  useFrame((_, dt) => {
+    if (!auto) return
+    const d = Math.hypot(player.x - center[0], player.z - center[2])
+    const want = d < 1.45
+    if (want !== isOpen.current) {
+      isOpen.current = want
+      sfx.play(want ? 'door_open' : 'door_close', { volume: 0.55 })
+    }
+    const target = want ? 1.35 : 0
+    angle.current += (target - angle.current) * (1 - Math.exp(-(want ? 7 : 4) * Math.min(dt, 0.1)))
+    leaves.current.forEach((g, i) => {
+      if (g) g.rotation.y = -(i === 0 ? -1 : 1) * angle.current
+    })
+  })
   const leafW = w / 2
   const t = 0.07
   // 在「門面座標」裡建（門面在 XY 平面、室內在 -Z），再轉到世界
   const rotY = facing === 'z' ? (inward === -1 ? 0 : Math.PI) : inward === -1 ? Math.PI / 2 : -Math.PI / 2
   return (
-    <group position={center} rotation={[0, rotY, 0]}>
-      {[-1, 1].map((s) => (
-        <group key={s} position={[s * (w / 2), 0, -0.02]} rotation={[0, -s * open, 0]}>
+    <group position={center} rotation={[0, rotY, 0]} userData={auto ? { noMerge: true } : undefined}>
+      {[-1, 1].map((s, i) => (
+        <group
+          key={s}
+          ref={(el) => {
+            leaves.current[i] = el
+          }}
+          position={[s * (w / 2), 0, -0.02]}
+          rotation={[0, -s * open, 0]}
+        >
           <WBox mat="wood" size={[leafW, h, t]} position={[-s * (leafW / 2), 0, 0]} />
           {/* 門板上的橫帶與門環 */}
           {[-0.3, 0.3].map((y) => (
@@ -412,7 +446,7 @@ function DoubleDoor({
           <mesh material={mats.gold} position={[-s * (leafW - 0.12), 0.02, t / 2 + 0.03]}>
             <torusGeometry args={[0.055, 0.012, 8, 20]} />
           </mesh>
-          {fang && open === 0 && (
+          {fang && (auto || open === 0) && (
             <mesh position={[-s * (leafW / 2), 0.35, t / 2 + 0.012]} rotation={[0, 0, Math.PI / 4]}>
               <planeGeometry args={[0.26, 0.26]} />
               <meshStandardMaterial map={fang} roughness={0.85} />
@@ -552,7 +586,7 @@ const eaveTileMat = new THREE.MeshStandardMaterial({ color: '#8f4a31', roughness
  * 雙坡屋頂。axis：屋脊方向。ridge：屋脊在垂直軸上的座標。edges：兩側屋簷的座標。
  * from／to：沿屋脊方向的範圍（含出挑）。
  */
-function GableRoof({
+export function GableRoof({
   axis,
   ridge,
   ridgeY,
@@ -765,58 +799,92 @@ function MainHall() {
     ],
     [],
   )
+  const partOpenings = useMemo<Opening[]>(() => [{ c: SIDE_DOOR_Z, w: SIDE_DOOR_W, y0: 0, y1: 2.2 }], [])
   const doorTop = FLOOR_Y + 2.45
   const colTop = MAIN.ridgeY - (MAIN_PORCH.columnZ - MAIN_RIDGE_Z) * SLOPE - 0.2
+  const Gable = ({ x }: { x: number }) => (
+    <group>
+      <GableWall plane="zy" at={x} pts={gablePts} />
+      <WBox mat="stone" size={[0.36, SKIRT_H, MAIN.z1 - MAIN.z0]} position={[x, FLOOR_Y + SKIRT_H / 2, MAIN_RIDGE_Z]} />
+      {/* 鳥踏：山牆上的一道橫線腳 */}
+      <WBox mat="trim" size={[0.42, 0.08, MAIN.z1 - MAIN.z0 + 0.1]} position={[x, MAIN_WALL_TOP - 0.05, MAIN_RIDGE_Z]} />
+    </group>
+  )
   return (
     <group>
-      <Wall axis="x" from={MAIN.x0} to={MAIN.x1} at={MAIN.z1} top={MAIN_WALL_TOP} openings={MAIN_FRONT_OPENINGS} />
+      {/* 遠側：後牆、西山牆（不會擋鏡頭） */}
       <Wall axis="x" from={MAIN.x0} to={MAIN.x1} at={MAIN.z0} top={MAIN_WALL_TOP} />
-      {[MAIN.x0, MAIN.x1].map((x) => (
-        <group key={x}>
-          <GableWall plane="zy" at={x} pts={gablePts} />
-          <WBox mat="stone" size={[0.36, SKIRT_H, MAIN.z1 - MAIN.z0]} position={[x, FLOOR_Y + SKIRT_H / 2, MAIN_RIDGE_Z]} />
-          {/* 鳥踏：山牆上的一道橫線腳 */}
-          <WBox mat="trim" size={[0.42, 0.08, MAIN.z1 - MAIN.z0 + 0.1]} position={[x, MAIN_WALL_TOP - 0.05, MAIN_RIDGE_Z]} />
-        </group>
-      ))}
-      {/* 室內隔間：中間是神明廳 */}
-      {[-2.1, 2.1].map((x) => (
-        <WBox key={x} mat="plaster" size={[0.14, MAIN_WALL_TOP - FLOOR_Y, MAIN.z1 - MAIN.z0 - 0.3]} position={[x, (MAIN_WALL_TOP + FLOOR_Y) / 2, MAIN_RIDGE_Z]} />
-      ))}
+      <Gable x={MAIN.x0} />
       <WBox mat="plaster" size={[4.06, MAIN_WALL_TOP - FLOOR_Y, 0.04]} position={[0, (MAIN_WALL_TOP + FLOOR_Y) / 2, MAIN.z0 + 0.17]} castShadow={false} />
 
-      <BambooWindow facing="z" center={[-4.4, FLOOR_Y + 1.575, MAIN.z1]} w={1.3} h={1.25} inward={-1} glow="dim" />
-      <BambooWindow facing="z" center={[4.4, FLOOR_Y + 1.575, MAIN.z1]} w={1.3} h={1.25} inward={-1} glow="warm" />
-      <DoubleDoor facing="z" center={[0, FLOOR_Y + 1.225, MAIN.z1 - 0.1]} w={1.7} h={2.45} inward={-1} open={1.25} />
-      <Couplets z={MAIN.z1 + 0.16} doorW={1.7} doorTop={doorTop} />
+      {/* 近側：前牆、東山牆、隔間、屋頂。阿嬤進屋或被擋住時淡出 */}
+      <Fader id="main">
+        <MergeStatic>
+          <Wall axis="x" from={MAIN.x0} to={MAIN.x1} at={MAIN.z1} top={MAIN_WALL_TOP} openings={MAIN_FRONT_OPENINGS} />
+          <Gable x={MAIN.x1} />
+          {[-HALL_PART_X, HALL_PART_X].map((x) => (
+            <Wall key={x} axis="z" from={MAIN.z0 + 0.15} to={MAIN.z1 - 0.15} at={x} top={MAIN_WALL_TOP} thick={0.14} mat="plaster" openings={partOpenings} skirt={false} />
+          ))}
+          <BambooWindow facing="z" center={[-4.4, FLOOR_Y + 1.575, MAIN.z1]} w={1.3} h={1.25} inward={-1} glow="dim" />
+          <BambooWindow facing="z" center={[4.4, FLOOR_Y + 1.575, MAIN.z1]} w={1.3} h={1.25} inward={-1} glow="warm" />
+          <DoubleDoor facing="z" center={[0, FLOOR_Y + 1.225, MAIN.z1 - 0.1]} w={1.7} h={2.45} inward={-1} open={1.25} />
+          <Couplets z={MAIN.z1 + 0.16} doorW={1.7} doorTop={doorTop} />
+          {[-HALL_PART_X, HALL_PART_X].map((x) => (
+            <DoorCurtain key={x} x={x} z={SIDE_DOOR_Z} />
+          ))}
+          <GableRoof
+            axis="x"
+            ridge={MAIN_RIDGE_Z}
+            ridgeY={MAIN.ridgeY}
+            from={MAIN.x0 - 0.65}
+            to={MAIN.x1 + 0.65}
+            edges={[MAIN.z0 - 0.5, MAIN_PORCH.z1]}
+            style="swallow"
+          />
+        {/* 步口廊：柱子、樑 */}
+        {MAIN_PORCH.columnsX.map((x) => (
+          <group key={x} position={[x, 0, MAIN_PORCH.columnZ]}>
+            <mesh material={mats.stone} position={[0, FLOOR_Y + 0.11, 0]} castShadow receiveShadow>
+              <cylinderGeometry args={[0.2, 0.22, 0.22, 8]} />
+            </mesh>
+            <mesh material={mats.redPaint} position={[0, (FLOOR_Y + 0.22 + colTop) / 2, 0]} castShadow receiveShadow>
+              <cylinderGeometry args={[0.13, 0.14, colTop - FLOOR_Y - 0.22, 16]} />
+            </mesh>
+            <WBox mat="darkWood" size={[0.3, 0.12, 0.3]} position={[0, colTop, 0]} />
+            {/* 穿樑：柱頭拉回正身牆 */}
+            <WBox mat="darkWood" size={[0.14, 0.18, MAIN.z1 - MAIN_PORCH.columnZ]} position={[0, colTop + 0.06, (MAIN.z1 + MAIN_PORCH.columnZ) / 2 - 0.15]} />
+          </group>
+        ))}
+        <WBox mat="darkWood" size={[MAIN.x1 - MAIN.x0 + 0.4, 0.2, 0.2]} position={[0, colTop + 0.12, MAIN_PORCH.columnZ]} />
+        <Lantern position={[-1.25, colTop - 0.55, MAIN_PORCH.columnZ + 0.02]} drop={0.3} />
+        <Lantern position={[1.25, colTop - 0.55, MAIN_PORCH.columnZ + 0.02]} drop={0.3} />
+        </MergeStatic>
+      </Fader>
 
-      {/* 步口廊：柱子、樑 */}
-      {MAIN_PORCH.columnsX.map((x) => (
-        <group key={x} position={[x, 0, MAIN_PORCH.columnZ]}>
-          <mesh material={mats.stone} position={[0, FLOOR_Y + 0.11, 0]} castShadow receiveShadow>
-            <cylinderGeometry args={[0.2, 0.22, 0.22, 8]} />
-          </mesh>
-          <mesh material={mats.redPaint} position={[0, (FLOOR_Y + 0.22 + colTop) / 2, 0]} castShadow receiveShadow>
-            <cylinderGeometry args={[0.13, 0.14, colTop - FLOOR_Y - 0.22, 16]} />
-          </mesh>
-          <WBox mat="darkWood" size={[0.3, 0.12, 0.3]} position={[0, colTop, 0]} />
-          {/* 穿樑：柱頭拉回正身牆 */}
-          <WBox mat="darkWood" size={[0.14, 0.18, MAIN.z1 - MAIN_PORCH.columnZ]} position={[0, colTop + 0.06, (MAIN.z1 + MAIN_PORCH.columnZ) / 2 - 0.15]} />
-        </group>
+    </group>
+  )
+}
+
+/** 門簾：神明廳通往兩側房間的門口，掛半截花布 */
+function DoorCurtain({ x, z }: { x: number; z: number }) {
+  const mat = useMemo(() => {
+    const t = floralFabricTexture().clone()
+    t.repeat.set(1.4, 1.2)
+    t.needsUpdate = true
+    return new THREE.MeshStandardMaterial({ map: t, roughness: 0.95, side: THREE.DoubleSide })
+  }, [])
+  const h = 1.0
+  return (
+    <group position={[x, FLOOR_Y + 2.2 - h / 2, z]} rotation={[0, Math.PI / 2, 0]}>
+      {[-1, 1].map((s) => (
+        <mesh key={s} position={[(s * SIDE_DOOR_W) / 4, 0, 0]} material={mat}>
+          <planeGeometry args={[SIDE_DOOR_W / 2 - 0.02, h]} />
+        </mesh>
       ))}
-      <WBox mat="darkWood" size={[MAIN.x1 - MAIN.x0 + 0.4, 0.2, 0.2]} position={[0, colTop + 0.12, MAIN_PORCH.columnZ]} />
-      {/* 正身屋頂：前坡伸到步口廊 */}
-      <GableRoof
-        axis="x"
-        ridge={MAIN_RIDGE_Z}
-        ridgeY={MAIN.ridgeY}
-        from={MAIN.x0 - 0.65}
-        to={MAIN.x1 + 0.65}
-        edges={[MAIN.z0 - 0.5, MAIN_PORCH.z1]}
-        style="swallow"
-      />
-      <Lantern position={[-1.25, colTop - 0.55, MAIN_PORCH.columnZ + 0.02]} drop={0.3} />
-      <Lantern position={[1.25, colTop - 0.55, MAIN_PORCH.columnZ + 0.02]} drop={0.3} />
+      <mesh position={[0, h / 2 + 0.02, 0]} rotation={[0, 0, Math.PI / 2]} material={undefined}>
+        <cylinderGeometry args={[0.015, 0.015, SIDE_DOOR_W + 0.1, 6]} />
+        <meshStandardMaterial color="#3d271a" />
+      </mesh>
     </group>
   )
 }
@@ -845,7 +913,7 @@ function Wing({ side }: { side: 1 | -1 }) {
   const roundHole = useMemo<Hole[]>(() => [{ cu: ridgeX, cy: FLOOR_Y + 1.75, r: 0.46 }], [ridgeX])
   const innerOpenings = useMemo<Opening[]>(
     () => [
-      { c: -0.3, w: 1.0, y0: 0, y1: 2.2 },
+      { c: WING_BACK_DOOR_Z, w: 1.0, y0: 0, y1: 2.2 },
       { c: GUEST_DOOR_Z, w: 1.0, y0: 0, y1: 2.2 },
       { c: GUEST_WINDOW_IN_Z, w: 1.1, y0: 0.95, y1: 2.05 },
     ],
@@ -853,7 +921,7 @@ function Wing({ side }: { side: 1 | -1 }) {
   )
   const outerOpenings = useMemo<Opening[]>(
     () => [
-      { c: -0.3, w: 1.0, y0: 1.0, y1: 2.0 },
+      { c: WING_BACK_DOOR_Z, w: 1.0, y0: 1.0, y1: 2.0 },
       { c: GUEST_WINDOW_OUT_Z, w: 1.0, y0: 1.0, y1: 2.0 },
     ],
     [],
@@ -861,52 +929,55 @@ function Wing({ side }: { side: 1 | -1 }) {
   const postX = inner - side * (WING_PORCH - 0.12)
   const postTop = W.ridgeY - Math.abs(postX - ridgeX) * SLOPE - 0.2
   const isGuest = side === 1
+  const id = isGuest ? 'wingR' : 'wingL'
 
-  // 客房（右護龍）的屋頂、外牆、前山牆在聚焦時淡出
-  const Fadeable = isGuest ? Fader : Passthrough
+  // 鏡頭在 +x、+z 那側：右護龍擋鏡頭的是外牆，左護龍擋鏡頭的是內牆（朝埕那面）
+  const innerWall = (
+    <group>
+      <Wall axis="z" from={W.z0} to={W.z1} at={inner} top={WING_WALL_TOP} openings={innerOpenings} />
+      <DoubleDoor facing="x" center={[inner, FLOOR_Y + 1.1, WING_BACK_DOOR_Z]} w={1.0} h={2.2} inward={inIn} auto />
+      <DoubleDoor facing="x" center={[inner, FLOOR_Y + 1.1, GUEST_DOOR_Z]} w={1.0} h={2.2} inward={inIn} doufang="春" auto />
+      <BambooWindow facing="x" center={[inner, FLOOR_Y + 1.5, GUEST_WINDOW_IN_Z]} w={1.1} h={1.1} inward={inIn} glow={isGuest ? null : 'fire'} />
+    </group>
+  )
+  const outerWall = (
+    <group>
+      <Wall axis="z" from={W.z0} to={W.z1} at={outer} top={WING_WALL_TOP} openings={outerOpenings} />
+      <BambooWindow facing="x" center={[outer, FLOOR_Y + 1.5, WING_BACK_DOOR_Z]} w={1.0} h={1.0} inward={inOut} glow={isGuest ? 'dim' : null} />
+      <BambooWindow facing="x" center={[outer, FLOOR_Y + 1.5, GUEST_WINDOW_OUT_Z]} w={1.0} h={1.0} inward={inOut} glow={null} />
+    </group>
+  )
 
   return (
     <group>
-      <Wall axis="z" from={W.z0} to={W.z1} at={inner} top={WING_WALL_TOP} openings={innerOpenings} />
+      {/* 遠側 */}
+      {isGuest ? innerWall : outerWall}
       <GableWall plane="xy" at={W.z0} pts={gablePts} />
       <WBox mat="stone" size={[W.x1 - W.x0, SKIRT_H, 0.36]} position={[ridgeX, FLOOR_Y + SKIRT_H / 2, W.z0]} />
-      {/* 前後房間的隔間 */}
-      <WBox mat="plaster" size={[W.x1 - W.x0 - 0.3, WING_WALL_TOP - FLOOR_Y, 0.14]} position={[ridgeX, (WING_WALL_TOP + FLOOR_Y) / 2, W.split]} />
 
-      <Fadeable>
+      {/* 近側：擋鏡頭的牆、前山牆、隔間、屋頂 */}
+      <Fader id={id}>
         <MergeStatic>
-        <Wall axis="z" from={W.z0} to={W.z1} at={outer} top={WING_WALL_TOP} openings={outerOpenings} />
-        <GableWall plane="xy" at={W.z1} pts={gablePts} holes={roundHole} />
-        <WBox mat="stone" size={[W.x1 - W.x0, SKIRT_H, 0.36]} position={[ridgeX, FLOOR_Y + SKIRT_H / 2, W.z1]} />
-        <WBox mat="trim" size={[W.x1 - W.x0 + 0.1, 0.08, 0.42]} position={[ridgeX, WING_WALL_TOP - 0.05, W.z1]} />
-        <RoundWindow center={[ridgeX, FLOOR_Y + 1.75, W.z1]} r={0.46} inward={-1} glow={isGuest ? null : 'dim'} />
-        <BambooWindow facing="x" center={[outer, FLOOR_Y + 1.5, -0.3]} w={1.0} h={1.0} inward={inOut} glow="dim" />
-        <BambooWindow facing="x" center={[outer, FLOOR_Y + 1.5, GUEST_WINDOW_OUT_Z]} w={1.0} h={1.0} inward={inOut} glow={isGuest ? null : 'fire'} />
-        {isGuest && <GuestRoomLining />}
-        <GableRoof
-          axis="z"
-          ridge={ridgeX}
-          ridgeY={W.ridgeY}
-          from={W.z0 - 0.15}
-          to={W.z1 + 0.5}
-          edges={side === 1 ? [inner - WING_PORCH, outer + 0.45] : [outer - 0.45, inner + WING_PORCH]}
-          style="horseback"
-        />
-        {!isGuest && <Chimney x={outer - side * 0.75} z={4.4} />}
+          {isGuest ? outerWall : innerWall}
+          <GableWall plane="xy" at={W.z1} pts={gablePts} holes={roundHole} />
+          <WBox mat="stone" size={[W.x1 - W.x0, SKIRT_H, 0.36]} position={[ridgeX, FLOOR_Y + SKIRT_H / 2, W.z1]} />
+          <WBox mat="trim" size={[W.x1 - W.x0 + 0.1, 0.08, 0.42]} position={[ridgeX, WING_WALL_TOP - 0.05, W.z1]} />
+          <RoundWindow center={[ridgeX, FLOOR_Y + 1.75, W.z1]} r={0.46} inward={-1} glow={null} />
+          <WBox mat="plaster" size={[W.x1 - W.x0 - 0.3, WING_WALL_TOP - FLOOR_Y, 0.14]} position={[ridgeX, (WING_WALL_TOP + FLOOR_Y) / 2, W.split]} />
+          {isGuest && <GuestRoomLining />}
+          <GableRoof
+            axis="z"
+            ridge={ridgeX}
+            ridgeY={W.ridgeY}
+            from={W.z0 - 0.15}
+            to={W.z1 + 0.5}
+            edges={side === 1 ? [inner - WING_PORCH, outer + 0.45] : [outer - 0.45, inner + WING_PORCH]}
+            style="horseback"
+          />
+          {!isGuest && <Chimney x={outer - side * 0.75} z={4.4} />}
         </MergeStatic>
-      </Fadeable>
+      </Fader>
 
-      {/* 門窗（朝埕） */}
-      <DoubleDoor facing="x" center={[inner, FLOOR_Y + 1.1, -0.3]} w={1.0} h={2.2} inward={inIn} />
-      <DoubleDoor facing="x" center={[inner, FLOOR_Y + 1.1, GUEST_DOOR_Z]} w={1.0} h={2.2} inward={inIn} doufang="春" />
-      <BambooWindow
-        facing="x"
-        center={[inner, FLOOR_Y + 1.5, GUEST_WINDOW_IN_Z]}
-        w={1.1}
-        h={1.1}
-        inward={inIn}
-        glow={isGuest ? null : 'fire'}
-      />
       {/* 走廊柱與樑 */}
       {[-1.5, 0.95, 3.45, 5.75].map((z) => (
         <group key={z}>
@@ -1000,11 +1071,8 @@ function Chimney({ x, z }: { x: number; z: number }) {
 // 淡出（聚焦客房時，看穿屋頂與外牆）
 // ---------------------------------------------------------------------------
 
-function Passthrough({ children }: { children: ReactNode }) {
-  return <>{children}</>
-}
-
-function Fader({ children }: { children: ReactNode }) {
+/** 阿嬤在這棟建築裡、或建築擋住鏡頭時，子物件淡出（見 world/World.tsx 的遮擋判定） */
+function Fader({ id, children }: { id: string; children: ReactNode }) {
   const group = useRef<THREE.Group>(null)
   const clones = useRef(new Map<THREE.Material, THREE.Material>())
   const seen = useRef(new WeakSet<THREE.Object3D>())
@@ -1026,11 +1094,27 @@ function Fader({ children }: { children: ReactNode }) {
       }
       m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material)
     })
-    const target = useStore.getState().focusRoom ? 0.08 : 1
+    for (const [orig, c] of clones.current) {
+      const a = orig as THREE.MeshStandardMaterial
+      const b = c as THREE.MeshStandardMaterial
+      if (a.color && b.color) b.color.copy(a.color)
+      if (a.emissive && b.emissive) {
+        b.emissive.copy(a.emissive)
+        b.emissiveIntensity = a.emissiveIntensity
+      }
+      if (a.map !== b.map || a.emissiveMap !== b.emissiveMap) {
+        b.map = a.map
+        b.emissiveMap = a.emissiveMap
+        b.needsUpdate = true
+      }
+    }
+    const target = useStore.getState().faded.split(',').includes(id) ? 0 : 1
     const prev = opacity.current
-    opacity.current += (target - opacity.current) * 0.12
-    if (Math.abs(opacity.current - prev) < 1e-4 && Math.abs(opacity.current - target) < 1e-3) return
+    opacity.current += (target - opacity.current) * 0.15
+    if (Math.abs(opacity.current - target) < 0.01) opacity.current = target
+    if (Math.abs(opacity.current - prev) < 1e-4 && opacity.current === target && g.visible === (target > 0)) return
     const o = opacity.current
+    g.visible = o > 0.01
     for (const c of clones.current.values()) {
       const wasT = c.transparent
       c.opacity = o

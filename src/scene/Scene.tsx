@@ -13,6 +13,12 @@ import { MergeStatic } from './MergeStatic'
 import { Grandma, Guest } from './Characters'
 import { Effects } from './Effects'
 import { CameraRig } from './CameraRig'
+import { WorldController } from './World'
+import { TempleScene } from './Temple'
+import { ExitSigns, HotspotMarkers } from './Markers'
+import { Npc } from './Npc'
+import { HAN_SWEEP } from './layout'
+import { player } from '../world/player'
 
 const params = new URLSearchParams(location.search)
 const NO_FX = params.get('fx') === '0'
@@ -38,21 +44,37 @@ export function Scene() {
           <Daylight quality={quality} />
           <SkyDome />
           <EnvLight />
-          <Landscape quality={quality} />
-          <MergeStatic>
-            <House />
-            <Interior />
-            <Yard />
-          </MergeStatic>
+          <SceneContent quality={quality} />
           <Grandma />
-          <Guest />
+          <HotspotMarkers />
+          <ExitSigns />
         </MatsProvider>
+        <WorldController />
         <CameraRig />
         <Ticker />
         {import.meta.env.DEV && <DevHooks />}
         {!NO_FX && <Effects quality={quality} />}
       </Suspense>
     </Canvas>
+  )
+}
+
+/** 依目前場景換掉整組內容（換場景時由黑幕遮住） */
+function SceneContent({ quality }: { quality: 'high' | 'low' }) {
+  const scene = useStore((s) => s.scene)
+  const phase = useStore((s) => s.phase)
+  if (scene === 'temple') return <TempleScene />
+  return (
+    <group>
+      <Landscape quality={quality} />
+      <MergeStatic>
+        <House />
+        <Interior />
+        <Yard />
+      </MergeStatic>
+      <Guest />
+      {phase === 'dusk' && <Npc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} facing={-1} />}
+    </group>
   )
 }
 
@@ -120,7 +142,12 @@ function Daylight({ quality }: { quality: 'high' | 'low' }) {
     if (sun.current) {
       sun.current.color.copy(dl.sun)
       sun.current.intensity = dl.sunI
-      sun.current.position.copy(dl.sunPos).multiplyScalar(1.6)
+      const texel = 38 / (quality === 'high' ? 4096 : 2048)
+      const cx = Math.round(player.x / texel) * texel
+      const cz = Math.round(player.z / texel) * texel
+      sun.current.target.position.set(cx, 0, cz)
+      sun.current.target.updateMatrixWorld()
+      sun.current.position.copy(dl.sunPos).multiplyScalar(1.6).add(sun.current.target.position)
     }
   })
 

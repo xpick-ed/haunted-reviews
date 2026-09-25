@@ -1,0 +1,262 @@
+[
+ {
+  "id": "grandma",
+  "name": "阿春嬤",
+  "desc": "78 歲，往生三年的阿嬤鬼。溫暖、慢、笑咪咪，聲音帶一點空靈的回音。",
+  "ghost": true,
+  "color": "#ffd58a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-16%",
+   "pitch": "-14Hz",
+   "fx": [
+    "elder",
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "sine",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "xiaohan",
+  "name": "小翰",
+  "desc": "26 歲的孫子，辭掉台北工作回來開民宿。溫和、有點累、講話很直。",
+  "ghost": false,
+  "color": "#8ff4ff",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-6%",
+   "pitch": "-3Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 190,
+   "wave": "triangle",
+   "jitter": 0.06
+  }
+ },
+ {
+  "id": "xiaomei",
+  "name": "小美",
+  "desc": "20 多歲的女生旅客，活潑、愛拍照，膽子不大。",
+  "ghost": false,
+  "color": "#ffa6c9",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "+8%",
+   "pitch": "+14Hz",
+   "fx": [
+    "bright"
+   ]
+  },
+  "blip": {
+   "freq": 520,
+   "wave": "sine",
+   "jitter": 0.14
+  }
+ },
+ {
+  "id": "agui",
+  "name": "阿桂",
+  "desc": "75 歲的鄰居阿婆（活人），阿嬤生前的好朋友。爽朗大嗓門，講話會抖。",
+  "ghost": false,
+  "color": "#f7b267",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "+4%",
+   "pitch": "-34Hz",
+   "fx": [
+    "tremble",
+    "loud"
+   ]
+  },
+  "blip": {
+   "freq": 360,
+   "wave": "square",
+   "jitter": 0.18
+  }
+ },
+ {
+  "id": "atu",
+  "name": "阿土伯",
+  "desc": "80 歲，阿桂的老伴。話很少、很慢、聲音沙啞。",
+  "ghost": false,
+  "color": "#b8a07a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-26%",
+   "pitch": "-22Hz",
+   "fx": [
+    "elder",
+    "raspy"
+   ]
+  },
+  "blip": {
+   "freq": 130,
+   "wave": "sawtooth",
+   "jitter": 0.05
+  }
+ },
+ {
+  "id": "miaogong",
+  "name": "王伯",
+  "desc": "60 多歲的廟公。粗聲粗氣、很嚴肅，但不是壞人。",
+  "ghost": false,
+  "color": "#e8504a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-12%",
+   "pitch": "-12Hz",
+   "fx": [
+    "gruff"
+   ]
+  },
+  "blip": {
+   "freq": 150,
+   "wave": "square",
+   "jitter": 0.04
+  }
+ },
+ {
+  "id": "ayi",
+  "name": "阿義",
+  "desc": "50 多歲的醉鬼阿飄，在土地公廟附近晃。講話含糊、慢、搖來搖去。",
+  "ghost": true,
+  "color": "#9fd18a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-24%",
+   "pitch": "-8Hz",
+   "fx": [
+    "drunk",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 170,
+   "wave": "triangle",
+   "jitter": 0.3
+  }
+ },
+ {
+  "id": "acai",
+  "name": "阿財",
+  "desc": "日治時期的總鋪師，灶腳的鬼。又老又豪爽，嗓門大。",
+  "ghost": true,
+  "color": "#ff9a52",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiNeural",
+   "rate": "-2%",
+   "pitch": "-28Hz",
+   "fx": [
+    "elder",
+    "hearty",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 160,
+   "wave": "sawtooth",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "xiaoyu",
+  "name": "小宇",
+  "desc": "7 歲的小男孩，跟爸媽來住，看得到阿嬤。",
+  "ghost": false,
+  "color": "#7fd3ff",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiaNeural",
+   "rate": "+4%",
+   "pitch": "+6Hz",
+   "fx": [
+    "child"
+   ]
+  },
+  "blip": {
+   "freq": 640,
+   "wave": "sine",
+   "jitter": 0.16
+  }
+ },
+ {
+  "id": "medium",
+  "name": "林老師",
+  "desc": "40 多歲的通靈師。冷靜、神祕、講話很慢，看得到阿嬤。",
+  "ghost": false,
+  "color": "#c7a6ff",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-XiaoxiaoNeural",
+   "rate": "-18%",
+   "pitch": "-18Hz",
+   "fx": [
+    "mystic"
+   ]
+  },
+  "blip": {
+   "freq": 250,
+   "wave": "sine",
+   "jitter": 0.03
+  }
+ },
+ {
+  "id": "akai",
+  "name": "阿凱",
+  "desc": "20 多歲的靈異 YouTuber。誇張、講很快、整晚對著鏡頭講話。",
+  "ghost": false,
+  "color": "#ffe14a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiNeural",
+   "rate": "+18%",
+   "pitch": "+4Hz",
+   "fx": [
+    "bright",
+    "loud"
+   ]
+  },
+  "blip": {
+   "freq": 420,
+   "wave": "square",
+   "jitter": 0.2
+  }
+ },
+ {
+  "id": "chendong",
+  "name": "陳董",
+  "desc": "50 歲的建商，想買地蓋透天。油滑、很客氣、笑裡藏刀。",
+  "ghost": false,
+  "color": "#d9c27a",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-4%",
+   "pitch": "-6Hz",
+   "fx": [
+    "smooth"
+   ]
+  },
+  "blip": {
+   "freq": 210,
+   "wave": "triangle",
+   "jitter": 0.04
+  }
+ }
+]

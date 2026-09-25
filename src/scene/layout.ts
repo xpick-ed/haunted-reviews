@@ -73,7 +73,7 @@ export const ROOMS: Record<string, { name: string; area: Area; building: 'main' 
   guest: { name: '客房', area: { x0: WING_R.x0, z0: WING_R.split, x1: WING_R.x1, z1: WING_R.z1 }, building: 'wingR' },
   bath: { name: '浴廁', area: { x0: WING_R.x0, z0: WING_R.z0, x1: WING_R.x1, z1: WING_R.split }, building: 'wingR' },
   kitchen: { name: '灶腳', area: { x0: WING_L.x0, z0: WING_L.split, x1: WING_L.x1, z1: WING_L.z1 }, building: 'wingL' },
-  storage: { name: '儲藏間', area: { x0: WING_L.x0, z0: WING_L.z0, x1: WING_L.x1, z1: WING_L.split }, building: 'wingL' },
+  storage: { name: '客房二', area: { x0: WING_L.x0, z0: WING_L.z0, x1: WING_L.x1, z1: WING_L.split }, building: 'wingL' },
 }
 
 /** 護龍朝埕那面牆上的門（z）：後間與前間各一扇 */
@@ -98,3 +98,75 @@ export const TEA = { x: -3.6, z: -0.9 }
 export const TEA_SEAT = { x: TEA.x - 0.75, z: TEA.z + 0.1 }
 /** 傍晚小翰在埕裡掃地的位置 */
 export const HAN_SWEEP = { x: 2.6, z: 1.8 }
+
+// ---------------------------------------------------------------------------
+// 客房（深夜玩法）：客房一在右護龍前間；客房二是左護龍後間（原本的儲藏間，第二晚起開放）
+// ---------------------------------------------------------------------------
+
+export interface BedDef {
+  x: number
+  z: number
+  w: number
+  l: number
+  /** 床墊表面高度 */
+  topY: number
+}
+
+type XZ = [number, number]
+
+export interface GuestRoomDef {
+  id: 'r1' | 'r2'
+  name: string
+  /** 對應 ROOMS 的 key */
+  room: string
+  bed: BedDef
+  /** 枕頭中心的 z（床頭在 z 小的那端） */
+  pillowZ: number
+  /** 房門：門內一步、門外一步 */
+  doorIn: XZ
+  doorOut: XZ
+  /** 阿嬤站著蓋被子／輕拍的位置 */
+  bedside: XZ
+  fan: XZ
+  /** 天花板吊燈（小夜燈） */
+  lamp: XZ
+  /** 床頭櫃（水杯、宵夜放這裡） */
+  nightstand: XZ
+  /** 蚊香（地上） */
+  coil: XZ
+  /** 關窗的站位（沒有就是 null） */
+  window: XZ | null
+}
+
+export const GUEST_ROOMS: Record<'r1' | 'r2', GuestRoomDef> = {
+  r1: {
+    id: 'r1',
+    name: '客房一',
+    room: 'guest',
+    bed: BED,
+    pillowZ: PILLOW_Z,
+    doorIn: [WING_R.x0 + 0.5, GUEST_DOOR_Z],
+    doorOut: [WING_R.x0 - 0.55, GUEST_DOOR_Z],
+    bedside: [BED.x - BED.w / 2 - 0.45, BED.z + 0.1],
+    fan: [WING_R.x0 + 0.5, BED.z + BED.l / 2 + 0.3],
+    lamp: [BED.x - 0.3, BED.z - 0.2],
+    nightstand: [WING_R.x1 - 0.42, BED.z - BED.l / 2 + 0.28],
+    coil: [BED.x - 0.1, BED.z + BED.l / 2 + 0.45],
+    window: [WING_R.x1 - 0.42, GUEST_WINDOW_OUT_Z],
+  },
+  r2: {
+    id: 'r2',
+    name: '客房二',
+    room: 'storage',
+    bed: { x: WING_L.x0 + 1.1, z: -0.35, w: 1.5, l: 2.2, topY: FLOOR_Y + 0.55 },
+    pillowZ: -0.35 - 1.1 + 0.3,
+    doorIn: [WING_L.x1 - 0.5, -0.3],
+    doorOut: [WING_L.x1 + 0.55, -0.3],
+    bedside: [WING_L.x1 - 0.55, -0.25],
+    fan: [WING_L.x1 - 0.45, 1.0],
+    lamp: [WING_L.x0 + 1.4, -0.5],
+    nightstand: [WING_L.x1 - 0.45, -1.55],
+    coil: [WING_L.x0 + 1.1, 1.05],
+    window: null,
+  },
+}

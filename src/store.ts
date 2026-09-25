@@ -9,6 +9,7 @@ import { placePlayer, player } from './world/player'
 import { readSave, writeSave } from './world/save'
 import { SCENES, type SceneId } from './world/scenes'
 import { TEA_SEAT } from './scene/layout'
+import type { ObjectState, RoomId } from './world/night/types'
 
 export type GuestState = 'awake' | 'asleep' | 'scared'
 export type Phase = 'dusk' | 'night' | 'dawn'
@@ -88,6 +89,11 @@ export interface GameState {
   skipTyping: number
   choiceIndex: number
   subtitle: Subtitle | null
+
+  // 深夜的物件狀態（小夜燈、蚊香、水杯、窗、宵夜、搖椅、鏡子、灶），畫面依這個顯示
+  objects: Record<string, ObjectState>
+  /** 每間客房天花板燈的亮度 0..1（客人醒著亮、睡著暗、閃爍時跳動）。畫面每幀用 getState() 讀 */
+  roomLit: Record<RoomId, number>
 
   // 其他
   /** 場景貼圖載完、shader 預先編譯完，才能按開始 */
@@ -201,6 +207,8 @@ export const useStore = create<GameState>()((set, get) => ({
   choiceIndex: 0,
   subtitle: null,
 
+  objects: {},
+  roomLit: { r1: 0, r2: 0 },
   ready: false,
   voice: true,
   quality: new URLSearchParams(location.search).get('q') === 'low' ? 'low' : 'high',

@@ -517,7 +517,17 @@ export const useStore = create<GameState>()((set, get) => ({
       return { voice: on }
     }),
 
-  setQuality: (q) => set({ quality: q }),
+  setQuality: (q) => {
+    const s = get()
+    if (s.quality === q) return
+    if (!s.started || s.transitioning) {
+      set({ quality: q })
+      return
+    }
+    set({ blackout: true, transitioning: true })
+    later(450, () => set({ quality: q }))
+    later(1100, () => set({ blackout: false, transitioning: false }))
+  },
 
   resetNight: () => {
     audio.setNight(false)

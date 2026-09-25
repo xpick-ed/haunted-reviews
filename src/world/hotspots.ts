@@ -54,7 +54,7 @@ export const HOTSPOTS: Hotspot[] = [
     scene: 'home',
     ...SPOTS.bedside,
     r: 1.05,
-    icon: { x: BED.x, z: BED.z }, iconY: 1.5,
+    icon: { x: BED.x, z: BED.z + 0.75 }, iconY: 1.2,
     label: (s) => (s.phase === 'night' ? '蓋被子' : null),
     cost: () => 10,
     run: (s) => s.act('tuck'),

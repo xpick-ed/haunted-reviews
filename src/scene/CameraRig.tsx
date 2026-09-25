@@ -11,6 +11,8 @@ import { SCENES } from '../world/scenes'
 const OUTDOOR = 19
 const INDOOR = 12.5
 const LOOK_AHEAD = 0.45
+/** 開發用：?zoom=0.4 把鏡頭拉近看角色 */
+const ZOOM = import.meta.env.DEV ? Number(new URLSearchParams(location.search).get('zoom')) || 1 : 1
 
 export function CameraRig() {
   const { camera, size } = useThree()
@@ -35,7 +37,7 @@ export function CameraRig() {
 
     const portrait = size.width < size.height
     const base = s.building ? INDOOR : OUTDOOR
-    const wantDist = base * (portrait ? 1.35 : 1)
+    const wantDist = base * (portrait ? 1.35 : 1) * ZOOM
 
     // 換場景（或剛開始）直接跳到位，不要從上一個場景滑過來
     const snap = lastScene.current !== s.scene

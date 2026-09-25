@@ -2,17 +2,13 @@
 
 ## Current
 
-**Doing:** 階段 A（垂直切片）第一版完成：可以操控阿嬤走動、進出房間、換場景（民宿 ↔ 土地公廟）、對話框、目標、自動存檔、每個角色不同聲音。
+**Doing:** 人物改成 3D Q 版角色（卡通光影＋描邊、會轉身、走路擺手腳、有影子）；修正移動時畫面閃白（後製加 NaN 清洗 pass、降畫質改在黑幕後）。
 
 **Next:**
-1. 真機試玩：手機搖桿手感、效能（`?q=low` 比較）、語音音量
-2. 開 GitHub Pages：repo Settings → Pages → Source 選「GitHub Actions」，之後 push 就自動上線
-3. 階段 A 收尾：
-   - 點地板走路（觸控輔助）
-   - 設定選單（音量分軌、畫質、減少閃爍）
-   - 存檔槽 1–3 與匯出存檔碼
-   - 第一章逐晚劇本改成阿桂夫婦帶路（DESIGN §14）
-4. 階段 B：客人 NPC 會走（起夜、視線判定）、村路場景、鬼夜市
+1. 真機確認：還會不會閃白、3D 角色在手機上的效能（`?q=low` 會關掉描邊）
+2. 角色細修：阿嬤頭髮在燈下偏亮、小美醒著時臉被頭髮擋住一半、手的形狀
+3. 階段 A 收尾：點地板走路、設定選單（音量、畫質、減少閃爍）、存檔槽、第一章改成阿桂夫婦帶路
+4. 階段 B：客人會走（起夜、視線判定）、村路、鬼夜市
 
 **Blockers:** 無
 
@@ -28,6 +24,7 @@
 
 ## 開發筆記
 
+- `?zoom=0.4`（dev 模式）：鏡頭拉近看角色
 - `window.__player`（dev 模式）：阿嬤的位置，測試時可以直接 `__player.x = 7.5` 瞬移
 - `window.__store`（dev 模式）可以直接操作遊戲狀態，例如 `__store.getState().act('tuck')`、`__store.setState({ time: 23 })`
 - `window.__three`（dev 模式）：`gl.info.render.calls` 量 draw call
@@ -38,7 +35,8 @@
 - 貼圖重新下載：`python3 scripts/fetch_textures.py`（CC0，來源列在 public/tex/CREDITS.txt）
 - 新增台詞：寫進 `src/data/story.lines.json`（who 用 cast.json 的 id），再跑 `scripts/gen_voices.py` 生成語音
 - 新增互動點：`src/world/hotspots.ts`；新增對話：`src/world/dialogues.ts`；新增場景：`src/world/scenes.ts` + `src/scene/` 的視覺
-- 人物 SVG 預覽：`src/art/characters.ts` 不依賴 three，可以用 node 匯出 SVG 再轉 PNG 看
+- 3D 角色：長相在 `src/chars/specs.ts`、臉在 `src/chars/faces.ts`、姿勢在 `src/chars/Chibi.tsx` 的 POSES
+- 人物 SVG 預覽（對話頭像）：`src/art/characters.ts` 不依賴 three，可以用 node 匯出 SVG 再轉 PNG 看
 
 ## 參考
 

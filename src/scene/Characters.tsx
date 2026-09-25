@@ -1,28 +1,18 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Billboard } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../store'
 import { player } from '../world/player'
 import { SCENES } from '../world/scenes'
 import { BED, FLOOR_Y, PILLOW_Z } from './layout'
 import { canvasTexture, svgTexture } from './kit'
-import {
-  BURST_SIZE,
-  GRANDMA_SIZE,
-  GUEST_SIZE,
-  SLEEP_SIZE,
-  Z_SIZE,
-  burstSvg,
-  grandmaSvg,
-  guestSleepSvg,
-  guestSvg,
-  zSvg,
-} from '../art/characters'
+import { BURST_SIZE, Z_SIZE, burstSvg, zSvg } from '../art/characters'
 import { floralFabricTexture } from '../art/fabric'
+import { Chibi, R as HEAD_R, SEAT_Y, TOP_Y, newDrive } from '../chars/Chibi'
+import { SPECS } from '../chars/specs'
 
-// 人物：SVG 立繪貼在面向鏡頭的平面上（DESIGN §15.1 的 HD-2D 做法）。
-// 阿嬤不受光（她自己會發光）；小美受房間燈光影響。
+// 人物：3D Q 版角色（src/chars/）。阿嬤是鬼：半透明、發光、沒有影子。
+// 小美坐在床上、嚇到會跳起來、睡著時頭躺在枕頭上；花布被子與房間燈光也在這裡。
 
 const ease = (k: number) => 1 - Math.pow(1 - k, 3)
 const backOut = (k: number) => {
@@ -46,11 +36,6 @@ function makeTextures() {
     ctx.fillRect(0, 0, w, h)
   })
   return {
-    grandmaIdle: svgTexture(grandmaSvg('idle'), GRANDMA_SIZE.w, GRANDMA_SIZE.h, 3),
-    grandmaReach: svgTexture(grandmaSvg('reach'), GRANDMA_SIZE.w, GRANDMA_SIZE.h, 3),
-    guestAwake: svgTexture(guestSvg('awake'), GUEST_SIZE.w, GUEST_SIZE.h, 3),
-    guestScared: svgTexture(guestSvg('scared'), GUEST_SIZE.w, GUEST_SIZE.h, 3),
-    guestSleep: svgTexture(guestSleepSvg(), SLEEP_SIZE.w, SLEEP_SIZE.h, 3),
     burst: svgTexture(burstSvg(), BURST_SIZE.w, BURST_SIZE.h, 3),
     z: svgTexture(zSvg(), Z_SIZE.w, Z_SIZE.h, 3),
     halo,
@@ -58,20 +43,16 @@ function makeTextures() {
 }
 
 // ---------------------------------------------------------------------------
-// 阿嬤：半透明、發青白光、飄著、穿牆（她是鬼，不用找路）
+// 阿嬤：半透明、發青白光、飄著、沒有影子
 // ---------------------------------------------------------------------------
-
-const GM_H = 1.75
-const GM_W = (GM_H * GRANDMA_SIZE.w) / GRANDMA_SIZE.h
 
 export function Grandma() {
   const tex = textures()
+  const quality = useStore((s) => s.quality)
   const group = useRef<THREE.Group>(null)
-  const body = useRef<THREE.Mesh>(null)
-  const mat = useRef<THREE.MeshBasicMaterial>(null)
   const light = useRef<THREE.PointLight>(null)
   const floorY = useRef(FLOOR_Y)
-  const lean = useRef(0)
+  const drive = useRef(newDrive({ pose: 'clasp', heading: 0.7 }))
 
   useFrame(({ clock }, rawDt) => {
     const dt = Math.min(rawDt, 0.1)
@@ -81,33 +62,25 @@ export function Grandma() {
     const f = SCENES[s.scene].floorAt(player.x, player.z)
     floorY.current += (f - floorY.current) * (1 - Math.exp(-8 * dt))
     const moving = Math.min(1, player.speed / 2.5)
-    const bob = Math.sin(time * (2.2 + moving * 4)) * (0.06 + moving * 0.03)
-    group.current?.position.set(player.x, floorY.current + 0.15 + bob, player.z)
+    const bob = Math.sin(time * (2.2 + moving * 3)) * 0.05
+    group.current?.position.set(player.x, floorY.current + 0.18 + bob, player.z)
 
-    if (body.current) {
-      // 轉身時 scale.x 從一邊翻到另一邊，會有一下變薄的「轉身」感
-      const sx = body.current.scale.x
-      body.current.scale.x = sx + (player.facing - sx) * (1 - Math.pow(0.0005, dt))
-      // 往前飄時身體微微前傾
-      lean.current += (-player.facing * moving * 0.12 - lean.current) * (1 - Math.exp(-6 * dt))
-      body.current.rotation.z = Math.sin(time * 1.3) * 0.025 + lean.current
-    }
-    if (mat.current) mat.current.map = s.busy ? tex.grandmaReach : tex.grandmaIdle
+    const d = drive.current
+    d.speed = player.speed
+    if (Math.hypot(player.vx, player.vz) > 0.25) d.heading = Math.atan2(player.vx, player.vz)
+    d.pose = s.busy ? 'reach' : 'clasp'
+    d.expr = s.busy ? 'reach' : 'normal'
     if (light.current) light.current.intensity = 2.6 + Math.sin(time * 3.1) * 0.5 + s.warm * 3
   })
 
   return (
     <group ref={group}>
-      <Billboard position={[0, GM_H / 2, 0]}>
-        <mesh ref={body} renderOrder={2}>
-          <planeGeometry args={[GM_W, GM_H]} />
-          <meshBasicMaterial ref={mat} map={tex.grandmaIdle} transparent opacity={0.92} depthWrite={false} side={THREE.DoubleSide} />
-        </mesh>
-      </Billboard>
-      <sprite scale={[2.8, 2.8, 1]} position={[0, 0.95, -0.02]} renderOrder={1}>
-        <spriteMaterial map={tex.halo} transparent opacity={0.32} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <Chibi spec={SPECS.grandma} drive={drive} outline={quality === 'high'} />
+      <sprite scale={[2.6, 2.6, 1]} position={[0, 0.85, 0]} renderOrder={1}>
+        <spriteMaterial map={tex.halo} transparent opacity={0.17} blending={THREE.AdditiveBlending} depthWrite={false} />
       </sprite>
-      <pointLight ref={light} color="#8ff4ff" intensity={2.6} distance={4.5} decay={2} position={[0, 1.1, 0]} />
+      {/* 照亮周圍的青白光：放在頭上後方，不要直接打在她臉上 */}
+      <pointLight ref={light} color="#8ff4ff" intensity={2.6} distance={4.5} decay={2} position={[0, 1.9, -0.35]} />
     </group>
   )
 }
@@ -116,12 +89,10 @@ export function Grandma() {
 // 小美：床上的立繪、睡著的頭、花布被子、房間的燈
 // ---------------------------------------------------------------------------
 
-const GU_W = 0.95
-const GU_H = (GU_W * GUEST_SIZE.h) / GUEST_SIZE.w
-const GU_POS: [number, number, number] = [BED.x, BED.topY + 0.62, PILLOW_Z + 0.35]
-
-const SLEEP_W = 0.56
-const SLEEP_H = (SLEEP_W * SLEEP_SIZE.h) / SLEEP_SIZE.w
+const MEI = SPECS.xiaomei
+/** 坐在床上：屁股貼在床墊上 */
+const MEI_POS: [number, number, number] = [BED.x, BED.topY - SEAT_Y * MEI.scale + 0.03, PILLOW_Z + 0.3]
+const MEI_TOP = BED.topY + (TOP_Y - SEAT_Y) * MEI.scale
 
 const Q = {
   halfTop: (BED.w + 0.12) / 2, // 被面平的部分
@@ -328,7 +299,10 @@ function Zzz() {
 
 export function Guest() {
   const state = useStore((s) => s.guest.state)
+  const quality = useStore((s) => s.quality)
   const tex = textures()
+  const drive = useRef(newDrive({ pose: 'phone', expr: 'awake', heading: 0 }))
+  const sleepDrive = useRef(newDrive({ expr: 'asleep' }))
 
   const body = useRef<THREE.Group>(null)
   const burst = useRef<THREE.Sprite>(null)
@@ -340,30 +314,31 @@ export function Guest() {
     const since = (performance.now() - s.tuckAt) / 1000
     const scared = s.guest.state === 'scared'
 
-    if (body.current) {
-      // 嚇到跳起來
-      body.current.position.y = scared && since < 0.6 ? Math.sin((since / 0.6) * Math.PI) * 0.55 : 0
-    }
+    // 嚇到跳起來
+    const hop = scared && since < 0.6 ? Math.sin((since / 0.6) * Math.PI) * 0.45 : 0
+    const d = drive.current
+    d.hop = hop
+    d.pose = scared ? 'scared' : 'phone'
+    d.expr = scared ? 'scared' : 'awake'
     if (burst.current) {
       const k = scared ? backOut(THREE.MathUtils.clamp(since / 0.35, 0, 1)) : 0
       const wob = 1 + Math.sin(clock.elapsedTime * 18) * 0.04
       burst.current.scale.set(0.6 * k * wob, 0.6 * k * wob, 1)
       ;(burst.current.material as THREE.SpriteMaterial).rotation = Math.sin(clock.elapsedTime * 11) * 0.12
-      burst.current.position.y = BED.topY + 1.55 + (body.current?.position.y ?? 0)
+      burst.current.position.y = MEI_TOP + 0.3 + hop
     }
     if (roomLight.current) {
       const awake = s.guest.state !== 'asleep'
-      let i = awake ? 6 : 1.2
-      i += s.warm * 5
+      // 3D 角色的卡通材質對近距離的點光很敏感，燈不能太亮（頭會爆白）
+      let i = awake ? 2.6 : 0.7
+      i += s.warm * 2.5
       if (s.flicker > 0 && Math.random() < s.flicker * 0.8) i *= 0.15 + Math.random() * 0.6
       roomLight.current.intensity = i
     }
     if (phoneLight.current) {
-      phoneLight.current.intensity = s.guest.state === 'awake' ? 1.4 * (0.92 + Math.sin(clock.elapsedTime * 0.7) * 0.08) : 0
+      phoneLight.current.intensity = s.guest.state === 'awake' ? 0.35 * (0.92 + Math.sin(clock.elapsedTime * 0.7) * 0.08) : 0
     }
   })
-
-  const guestMap = state === 'scared' ? tex.guestScared : tex.guestAwake
 
   return (
     <group>
@@ -371,41 +346,28 @@ export function Guest() {
 
       {/* 醒著 / 嚇到：坐在床上 */}
       {state !== 'asleep' && (
-        <group ref={body}>
-          <Billboard position={GU_POS}>
-            <mesh castShadow>
-              <planeGeometry args={[GU_W, GU_H]} />
-              <meshStandardMaterial
-                map={guestMap}
-                emissiveMap={guestMap}
-                emissive="#4d4d4d"
-                transparent
-                alphaTest={0.4}
-                roughness={0.9}
-                side={THREE.DoubleSide}
-              />
-            </mesh>
-          </Billboard>
+        <group ref={body} position={MEI_POS} userData={{ noMerge: true }}>
+          <Chibi spec={MEI} drive={drive} legs={false} outline={quality === 'high'} />
         </group>
       )}
-      <sprite ref={burst} position={[BED.x + 0.38, BED.topY + 1.55, PILLOW_Z + 0.35]} scale={[0, 0, 1]} visible={state === 'scared'} renderOrder={3}>
+      <sprite ref={burst} position={[BED.x + 0.32, MEI_TOP + 0.3, PILLOW_Z + 0.3]} scale={[0, 0, 1]} visible={state === 'scared'} renderOrder={3}>
         <spriteMaterial map={tex.burst} transparent depthWrite={false} />
       </sprite>
 
       {/* 睡著：頭躺在枕頭上 + zzz */}
       {state === 'asleep' && (
         <>
-          <mesh position={[BED.x, BED.topY + 0.25, PILLOW_Z + 0.02]} rotation={[-Math.PI / 2 + 0.45, 0, 0]}>
-            <planeGeometry args={[SLEEP_W, SLEEP_H]} />
-            <meshStandardMaterial map={tex.guestSleep} emissiveMap={tex.guestSleep} emissive="#404040" transparent alphaTest={0.4} roughness={0.9} side={THREE.DoubleSide} />
-          </mesh>
+          {/* 頭躺在枕頭上，臉朝上（稍微轉向鏡頭） */}
+          <group position={[BED.x, BED.topY + 0.13 + HEAD_R * MEI.scale * 0.7, PILLOW_Z + 0.02]} rotation={[-Math.PI / 2 + 0.35, 0, 0]} userData={{ noMerge: true }}>
+            <Chibi spec={MEI} drive={sleepDrive} headOnly outline={quality === 'high'} />
+          </group>
           <Zzz />
         </>
       )}
 
       {/* 房間的燈、手機的藍光 */}
       <pointLight ref={roomLight} position={[BED.x - 0.3, FLOOR_Y + 2.35, BED.z - 0.2]} color="#ffbe6e" intensity={6} distance={7.5} decay={2} />
-      <pointLight ref={phoneLight} position={[BED.x, BED.topY + 0.5, PILLOW_Z + 0.75]} color="#7fa8ff" intensity={1.4} distance={2.6} decay={2} />
+      <pointLight ref={phoneLight} position={[BED.x, BED.topY + 0.45, PILLOW_Z + 0.85]} color="#7fa8ff" intensity={0.35} distance={1.8} decay={2} />
     </group>
   )
 }

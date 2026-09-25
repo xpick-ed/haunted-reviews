@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Bloom, ChromaticAberration, EffectComposer, HueSaturation, N8AO, Noise, SMAA, TiltShift2, Vignette } from '@react-three/postprocessing'
-import { BlendFunction } from 'postprocessing'
+import { BlendFunction, ShaderPass } from 'postprocessing'
 import * as THREE from 'three'
 import { useStore, type Quality } from '../store'
 
@@ -12,7 +12,36 @@ import { useStore, type Quality } from '../store'
 // - 恐怖瞬間：去飽和、色差、雜訊、暗角，平常全部是 0
 // 高畫質用 MSAA 4x 抗鋸齒，低畫質用 SMAA。
 // 注意：N8AO 不要開 halfRes，直式畫面下會算出壞值，被 Bloom 擴散成整片白。
+// 就算開了全解析度，偶爾還是會有單一像素是 NaN／無限大，被 Bloom 一擴散就整個畫面閃白。
+// 所以在 AO 後面、Bloom 前面放一個「清洗」pass，把壞值歸零、太亮的夾住。
+
+function makeSanitizePass() {
+  return new ShaderPass(
+    new THREE.ShaderMaterial({
+      uniforms: { inputBuffer: { value: null } },
+      vertexShader: /* glsl */ `
+        varying vec2 vUv;
+        void main() {
+          vUv = position.xy * 0.5 + 0.5;
+          gl_Position = vec4(position.xy, 1.0, 1.0);
+        }`,
+      fragmentShader: /* glsl */ `
+        uniform sampler2D inputBuffer;
+        varying vec2 vUv;
+        void main() {
+          vec4 c = texture2D(inputBuffer, vUv);
+          bool bad = any(isnan(c)) || any(isinf(c));
+          gl_FragColor = bad ? vec4(0.0, 0.0, 0.0, 1.0) : min(c, vec4(24.0));
+        }`,
+      depthTest: false,
+      depthWrite: false,
+    }),
+    'inputBuffer',
+  )
+}
+
 export function Effects({ quality }: { quality: Quality }) {
+  const sanitize = useMemo(makeSanitizePass, [quality])
   const ca = useRef<any>(null)
   const noise = useRef<any>(null)
   const vig = useRef<any>(null)
@@ -34,6 +63,7 @@ export function Effects({ quality }: { quality: Quality }) {
 
   const passes = [
     <N8AO key="ao" aoRadius={1.2} distanceFalloff={0.8} intensity={high ? 2.6 : 2.0} quality={high ? 'medium' : 'performance'} />,
+    <primitive key="sanitize" object={sanitize} />,
     <Bloom key="bloom" luminanceThreshold={0.85} luminanceSmoothing={0.2} intensity={high ? 1.1 : 0.8} mipmapBlur />,
     <TiltShift2 key="tilt" blur={high ? 0.075 : 0.06} taper={0.7} start={[0.5, 0.0]} end={[0.5, 1.0]} samples={high ? 10 : 6} />,
     <HueSaturation key="hs" ref={hs} saturation={0} />,

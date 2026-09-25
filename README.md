@@ -52,7 +52,7 @@ netsh interface portproxy add v4tov4 listenport=5173 listenaddress=0.0.0.0 conne
 ## 技術
 
 TypeScript + Vite + React + react-three-fiber（Three.js）+ @react-three/postprocessing（N8AO、Bloom、TiltShift）+ zustand。
-材質是 Poly Haven 的 CC0 貼圖（`scripts/fetch_textures.py`），人物是 SVG 插畫。
+材質是 Poly Haven 的 CC0 貼圖（`scripts/fetch_textures.py`），人物是程式建的 3D Q 版角色，對話頭像是 SVG 插畫。
 音效目前全部用 Web Audio 現場合成，語音用瀏覽器內建 Web Speech API；正式素材見 DESIGN.md §15–16。
 
 手機太卡的話在網址後面加 `?q=low`。
@@ -64,7 +64,8 @@ src/
   store.ts          遊戲狀態與規則（陰氣、客人、動作、星數）
   audio.ts          合成音效、環境音、語音
   audio/            語音（voice.ts）、音效（sfx.ts）
-  art/              人物與 NPC 的 SVG 插畫、對話頭像、客家花布
+  chars/            3D Q 版角色（長相、臉、姿勢、卡通材質）
+  art/              對話頭像與 SVG 插畫、客家花布
   data/             台詞（*.lines.json）、角色聲線（cast.json）
   world/            遊戲規則：輸入、碰撞、玩家移動、場景定義、熱點、對話、存檔
   scene/
@@ -77,7 +78,6 @@ src/
     Plants.tsx      香蕉樹、竹叢、植物共用工具
     Tree.tsx        榕樹
     Characters.tsx  阿嬤、小美、花布被子
-    Npc.tsx         NPC 立牌（小翰、阿義、廟公、阿桂）
     Temple.tsx      土地公廟場景
     World.tsx       每幀的遊戲邏輯（移動、房間判定、淡出、熱點、出口）
     Markers.tsx     熱點光點、出口路牌

@@ -16,7 +16,7 @@ import { CameraRig } from './CameraRig'
 import { WorldController } from './World'
 import { TempleScene } from './Temple'
 import { ExitSigns, HotspotMarkers } from './Markers'
-import { Npc } from './Npc'
+import { ChibiNpc } from '../chars/Chibi'
 import { HAN_SWEEP } from './layout'
 import { player } from '../world/player'
 
@@ -38,7 +38,7 @@ export function Scene() {
         gl.toneMappingExposure = 1.05
       }}
     >
-      <PerformanceMonitor onDecline={() => setQuality('low')} flipflops={2} />
+      <PerformanceMonitor onDecline={() => setQuality('low')} flipflops={1} />
       <Suspense fallback={null}>
         <MatsProvider anisotropy={quality === 'high' ? 8 : 4}>
           <Daylight quality={quality} />
@@ -73,7 +73,7 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
         <Yard />
       </MergeStatic>
       <Guest />
-      {phase === 'dusk' && <Npc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} facing={-1} />}
+      {phase === 'dusk' && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )
 }

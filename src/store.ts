@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { audio } from './audio'
+import { BED } from './scene/layout'
 
 export type GuestState = 'awake' | 'asleep' | 'scared'
 export type Phase = 'dusk' | 'night' | 'dawn'
@@ -28,8 +29,7 @@ export interface Result {
   scared: boolean
 }
 
-// 右護龍前間的床位（見 House.tsx 的座標）
-export const BED = { x: 8.5, z: 4.0 }
+// 場景座標見 scene/layout.ts
 export const GRANDMA_HOME: [number, number, number] = [-2.5, 0, 2.5]
 export const GRANDMA_BEDSIDE: [number, number, number] = [BED.x - 1.1, 0, BED.z + 0.4]
 
@@ -127,7 +127,7 @@ export const useStore = create<State>()((set, get) => ({
   tuckAt: 0,
   subtitle: null,
   voice: true,
-  quality: 'high',
+  quality: new URLSearchParams(location.search).get('q') === 'low' ? 'low' : 'high',
   result: null,
   nightCount: 1,
 

@@ -1,0 +1,10 @@
+Textures from Poly Haven (https://polyhaven.com), CC0 public domain.
+  brick: https://polyhaven.com/a/red_brick
+  roof: https://polyhaven.com/a/clay_roof_tiles_02
+  yard: https://polyhaven.com/a/dirty_concrete
+  tile: https://polyhaven.com/a/terracotta_floor_tiles
+  wood: https://polyhaven.com/a/dark_wooden_planks
+  plaster: https://polyhaven.com/a/white_plaster_rough_01
+  stone: https://polyhaven.com/a/japanese_stone_wall
+  grass: https://polyhaven.com/a/grass_ground
+  mud: https://polyhaven.com/a/brown_mud_02

@@ -1,21 +1,24 @@
 import { useMemo, useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Bloom, ChromaticAberration, DepthOfField, EffectComposer, HueSaturation, Noise, Vignette } from '@react-three/postprocessing'
+import { useFrame } from '@react-three/fiber'
+import { Bloom, ChromaticAberration, EffectComposer, HueSaturation, N8AO, Noise, SMAA, TiltShift2, Vignette } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
 import { useStore, type Quality } from '../store'
 
-// 後製：平常是泛光 + 景深的模型屋感；客人被嚇到的瞬間切成恐怖片（DESIGN §15.2）。
-// 景深只在橫式、非觸控裝置開：手機上太吃效能，而且直式視角下會把整個畫面糊掉。
+// 後製（DESIGN §15.2）：
+// - N8AO：環境光遮蔽，東西接觸的地方有柔和的陰影，模型屋才「站得住」
+// - Bloom：燈籠、窗光、路燈的光暈
+// - TiltShift：上下模糊，微縮模型感
+// - 恐怖瞬間：去飽和、色差、雜訊、暗角，平常全部是 0
+// 高畫質用 MSAA 4x 抗鋸齒，低畫質用 SMAA。
+// 注意：N8AO 不要開 halfRes，直式畫面下會算出壞值，被 Bloom 擴散成整片白。
 export function Effects({ quality }: { quality: Quality }) {
-  const { size } = useThree()
   const ca = useRef<any>(null)
   const noise = useRef<any>(null)
   const vig = useRef<any>(null)
   const hs = useRef<any>(null)
   const offset = useMemo(() => new THREE.Vector2(0, 0), [])
-  const touch = useMemo(() => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches, [])
-  const dof = quality === 'high' && !touch && size.width >= size.height
+  const high = quality === 'high'
 
   useFrame(() => {
     const h = useStore.getState().horror
@@ -23,24 +26,29 @@ export function Effects({ quality }: { quality: Quality }) {
     if (ca.current) ca.current.offset.set(0.007 * hh, 0.004 * hh)
     if (noise.current) noise.current.blendMode.opacity.value = 0.4 * hh
     if (vig.current) {
-      vig.current.uniforms.get('darkness').value = 0.55 + 0.7 * h
-      vig.current.uniforms.get('offset').value = 0.25 - 0.1 * h
+      vig.current.uniforms.get('darkness').value = 0.5 + 0.75 * h
+      vig.current.uniforms.get('offset').value = 0.28 - 0.12 * h
     }
     if (hs.current) hs.current.uniforms.get('saturation').value = -0.92 * h
   })
 
   const passes = [
-    <Bloom key="bloom" luminanceThreshold={0.6} luminanceSmoothing={0.25} intensity={quality === 'high' ? 1.05 : 0.7} mipmapBlur />,
-    dof ? <DepthOfField key="dof" target={[4, 1.2, 2]} focalLength={0.03} bokehScale={2.2} height={480} /> : null,
+    <N8AO key="ao" aoRadius={1.2} distanceFalloff={0.8} intensity={high ? 2.6 : 2.0} quality={high ? 'medium' : 'performance'} />,
+    <Bloom key="bloom" luminanceThreshold={0.85} luminanceSmoothing={0.2} intensity={high ? 1.1 : 0.8} mipmapBlur />,
+    <TiltShift2 key="tilt" blur={high ? 0.075 : 0.06} taper={0.7} start={[0.5, 0.0]} end={[0.5, 1.0]} samples={high ? 10 : 6} />,
     <HueSaturation key="hs" ref={hs} saturation={0} />,
     <ChromaticAberration key="ca" ref={ca} offset={offset} radialModulation={false} modulationOffset={0} />,
     <Noise key="noise" ref={noise} opacity={0} blendFunction={BlendFunction.OVERLAY} />,
-    <Vignette key="vig" ref={vig} eskil={false} offset={0.25} darkness={0.55} />,
-  ].filter((p) => p !== null)
+    <Vignette key="vig" ref={vig} eskil={false} offset={0.28} darkness={0.5} />,
+  ]
+  if (!high) passes.push(<SMAA key="smaa" />)
+  // 開發用：?nofx=ao,bloom,tilt 關掉指定的效果
+  const off = new URLSearchParams(location.search).get('nofx')?.split(',') ?? []
+  const shown = import.meta.env.DEV && off.length ? passes.filter((p) => !off.includes(String(p.key))) : passes
 
   return (
-    <EffectComposer key={dof ? 'dof' : 'nodof'} multisampling={0}>
-      {passes}
+    <EffectComposer key={quality} multisampling={high ? 4 : 0}>
+      {shown}
     </EffectComposer>
   )
 }

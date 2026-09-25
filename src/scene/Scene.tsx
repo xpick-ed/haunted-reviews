@@ -1,44 +1,56 @@
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { PerformanceMonitor, Sparkles, Stars } from '@react-three/drei'
+import { Environment, Lightformer, PerformanceMonitor } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../store'
 import { makeDaylight, sampleDaylight } from './daylight'
+import { MatsProvider, wind } from './kit'
 import { House } from './House'
-import { Tree } from './Tree'
+import { Interior } from './Interior'
+import { Yard } from './Yard'
+import { Landscape } from './Landscape'
+import { MergeStatic } from './MergeStatic'
 import { Grandma, Guest } from './Characters'
 import { Effects } from './Effects'
 import { CameraRig } from './CameraRig'
-import { concreteTexture, groundTexture } from '../textures'
+
+const params = new URLSearchParams(location.search)
+const NO_FX = params.get('fx') === '0'
+const NO_SHADOW = params.get('shadow') === '0'
 
 export function Scene() {
   const quality = useStore((s) => s.quality)
   const setQuality = useStore((s) => s.setQuality)
   return (
     <Canvas
-      shadows
-      dpr={[1, 1.5]}
-      camera={{ fov: 34, near: 0.5, far: 260, position: [15, 11.5, 18] }}
-      gl={{ antialias: false, powerPreference: 'high-performance' }}
+      shadows={NO_SHADOW ? false : "percentage"}
+      dpr={quality === 'high' ? [1, 2] : [1, 1.25]}
+      camera={{ fov: 36, near: 0.5, far: 400, position: [19, 14, 22] }}
+      gl={{ antialias: false, powerPreference: 'high-performance', stencil: false }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping
-        gl.toneMappingExposure = 1.0
+        gl.toneMappingExposure = 1.05
       }}
     >
       <PerformanceMonitor onDecline={() => setQuality('low')} flipflops={2} />
       <Suspense fallback={null}>
-        <Daylight />
-        <SkyDome />
-        <Ground />
-        <House />
-        <Tree position={[-14.5, 0, 1.5]} />
-        <Tree position={[13, 0, -12]} scale={0.7} />
-        <NightSky />
-        <Grandma />
-        <Guest />
+        <MatsProvider anisotropy={quality === 'high' ? 8 : 4}>
+          <Daylight quality={quality} />
+          <SkyDome />
+          <EnvLight />
+          <Landscape quality={quality} />
+          <MergeStatic>
+            <House />
+            <Interior />
+            <Yard />
+          </MergeStatic>
+          <Grandma />
+          <Guest />
+        </MatsProvider>
         <CameraRig />
         <Ticker />
-        <Effects quality={quality} />
+        {import.meta.env.DEV && <DevHooks />}
+        {!NO_FX && <Effects quality={quality} />}
       </Suspense>
     </Canvas>
   )
@@ -46,11 +58,26 @@ export function Scene() {
 
 function Ticker() {
   const tick = useStore((s) => s.tick)
-  useFrame((_, dt) => tick(Math.min(dt, 0.1)))
+  useFrame(({ clock }, dt) => {
+    wind.value = clock.elapsedTime
+    tick(Math.min(dt, 0.1))
+  })
   return null
 }
 
-function Daylight() {
+/** 環境光（反射用）：只算一次，亮度跟著天色調 */
+function EnvLight() {
+  return (
+    <Environment frames={1} resolution={64}>
+      <Lightformer form="rect" intensity={1.2} color="#b9c8ea" position={[0, 12, 0]} rotation-x={Math.PI / 2} scale={[30, 30, 1]} />
+      <Lightformer form="rect" intensity={0.8} color="#ffcf9a" position={[-14, 4, 10]} scale={[12, 6, 1]} />
+      <Lightformer form="rect" intensity={0.4} color="#6f86b8" position={[14, 3, -12]} scale={[16, 6, 1]} />
+      <Lightformer form="rect" intensity={0.25} color="#3a4a3a" position={[0, -6, 0]} rotation-x={-Math.PI / 2} scale={[30, 30, 1]} />
+    </Environment>
+  )
+}
+
+function Daylight({ quality }: { quality: 'high' | 'low' }) {
   const { scene } = useThree()
   const amb = useRef<THREE.AmbientLight>(null)
   const hemi = useRef<THREE.HemisphereLight>(null)
@@ -58,46 +85,50 @@ function Daylight() {
   const dl = useMemo(makeDaylight, [])
 
   useEffect(() => {
-    scene.background = new THREE.Color('#f2a25a')
-    scene.fog = new THREE.Fog('#f7c69a', 30, 95)
     const s = sun.current!
-    s.shadow.mapSize.set(2048, 2048)
-    s.shadow.camera.left = -24
-    s.shadow.camera.right = 24
-    s.shadow.camera.top = 24
-    s.shadow.camera.bottom = -24
-    s.shadow.camera.near = 1
-    s.shadow.camera.far = 90
-    s.shadow.bias = -0.0006
-    s.shadow.normalBias = 0.02
-    s.shadow.camera.updateProjectionMatrix()
-  }, [scene])
+    const size = quality === 'high' ? 4096 : 2048
+    s.shadow.mapSize.set(size, size)
+    s.shadow.map?.dispose()
+    s.shadow.map = null as unknown as THREE.WebGLRenderTarget
+    const cam = s.shadow.camera
+    cam.left = -19
+    cam.right = 19
+    cam.top = 19
+    cam.bottom = -19
+    cam.near = 1
+    cam.far = 110
+    cam.updateProjectionMatrix()
+    s.shadow.bias = -0.0004
+    s.shadow.normalBias = 0.025
+    s.shadow.radius = 3
+  }, [quality])
 
   useFrame(() => {
     const t = useStore.getState().time
     sampleDaylight(t, dl)
-    ;(scene.background as THREE.Color).copy(dl.sky)
-    ;(scene.fog as THREE.Fog).color.copy(dl.fog)
+    if (scene.fog) (scene.fog as THREE.Fog).color.copy(dl.fog)
+    scene.environmentIntensity = THREE.MathUtils.lerp(0.85, 0.16, dl.moon)
     if (amb.current) {
       amb.current.color.copy(dl.amb)
-      amb.current.intensity = dl.ambI
+      amb.current.intensity = dl.ambI * 0.7
     }
     if (hemi.current) {
       hemi.current.color.copy(dl.hemiSky)
       hemi.current.groundColor.copy(dl.hemiGround)
-      hemi.current.intensity = 0.35
+      hemi.current.intensity = THREE.MathUtils.lerp(0.35, 0.12, dl.moon)
     }
     if (sun.current) {
       sun.current.color.copy(dl.sun)
       sun.current.intensity = dl.sunI
-      sun.current.position.copy(dl.sunPos)
+      sun.current.position.copy(dl.sunPos).multiplyScalar(1.6)
     }
   })
 
   return (
     <>
-      <ambientLight ref={amb} intensity={0.5} />
-      <hemisphereLight ref={hemi} intensity={0.35} />
+      <fog attach="fog" args={['#f7c69a', 45, 160]} />
+      <ambientLight ref={amb} intensity={0.4} />
+      <hemisphereLight ref={hemi} intensity={0.3} />
       <directionalLight ref={sun} castShadow position={[-28, 7, 14]} intensity={2} />
     </>
   )
@@ -130,7 +161,6 @@ const SKY_FRAG = /* glsl */ `
 `
 
 function SkyDome() {
-  const mat = useRef<THREE.ShaderMaterial>(null)
   const dl = useMemo(makeDaylight, [])
   const uniforms = useMemo(
     () => ({
@@ -149,48 +179,18 @@ function SkyDome() {
     uniforms.glow.value = 1 - dl.moon
   })
   return (
-    <mesh scale={[220, 220, 220]}>
+    <mesh scale={[300, 300, 300]} renderOrder={-1}>
       <sphereGeometry args={[1, 32, 16]} />
-      <shaderMaterial ref={mat} uniforms={uniforms} vertexShader={SKY_VERT} fragmentShader={SKY_FRAG} side={THREE.BackSide} depthWrite={false} />
+      <shaderMaterial uniforms={uniforms} vertexShader={SKY_VERT} fragmentShader={SKY_FRAG} side={THREE.BackSide} depthWrite={false} fog={false} />
     </mesh>
   )
 }
 
-function Ground() {
-  const grass = useMemo(() => groundTexture(28), [])
-  const slab = useMemo(() => concreteTexture(7, 5), [])
-  return (
-    <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow position={[0, -0.01, 0]}>
-        <planeGeometry args={[140, 140]} />
-        <meshStandardMaterial map={grass} roughness={1} />
-      </mesh>
-      {/* 埕（前院水泥地） */}
-      <mesh position={[0, 0.05, 1.6]} receiveShadow castShadow>
-        <boxGeometry args={[14.2, 0.12, 10.2]} />
-        <meshStandardMaterial map={slab} roughness={0.95} />
-      </mesh>
-      {/* 門前小路 */}
-      <mesh position={[0, 0.02, 12]} receiveShadow>
-        <boxGeometry args={[3.2, 0.06, 10]} />
-        <meshStandardMaterial color="#7d7669" roughness={1} />
-      </mesh>
-    </group>
-  )
-}
-
-function NightSky() {
-  const isNight = useStore((s) => s.isNight)
-  return (
-    <group visible={isNight}>
-      <Stars radius={130} depth={40} count={2200} factor={4.5} saturation={0} fade speed={0.4} />
-      {/* 月亮：不受霧影響、不做色調映射，讓泛光把它點亮 */}
-      <mesh position={[-48, 40, -70]}>
-        <sphereGeometry args={[3.2, 24, 24]} />
-        <meshBasicMaterial color="#fff2c8" toneMapped={false} fog={false} />
-      </mesh>
-      {/* 螢火蟲 */}
-      <Sparkles count={70} scale={[16, 2.5, 12]} position={[0, 1.6, 1.5]} size={3.5} speed={0.25} color="#e8ff8a" opacity={0.9} noise={1.2} />
-    </group>
-  )
+/** 開發用：把 renderer 掛到 window，方便量 draw call、截圖時暫停 */
+function DevHooks() {
+  const { gl, scene, camera, invalidate, setFrameloop } = useThree()
+  useEffect(() => {
+    ;(window as unknown as { __three: unknown }).__three = { gl, scene, camera, invalidate, setFrameloop }
+  }, [gl, scene, camera, invalidate, setFrameloop])
+  return null
 }

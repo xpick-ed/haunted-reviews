@@ -19,9 +19,9 @@ interface Key {
 const KEYS: Key[] = [
   { t: 18.0, sky: '#f2a25a', fog: '#f7c69a', sun: '#ffc48a', sunI: 2.4, amb: '#7a6a70', ambI: 0.7, hemiSky: '#f4b183', hemiGround: '#3b3a2f', moon: 0, lantern: 0.25 },
   { t: 19.3, sky: '#6a4f8f', fog: '#8c6fa8', sun: '#ff9a70', sunI: 0.9, amb: '#4a4468', ambI: 0.45, hemiSky: '#6a4f8f', hemiGround: '#22202a', moon: 0.15, lantern: 1 },
-  { t: 20.6, sky: '#151d3d', fog: '#1e2a4f', sun: '#c9d8ff', sunI: 1.3, amb: '#2a3352', ambI: 0.46, hemiSky: '#2c3a66', hemiGround: '#141618', moon: 1, lantern: 1 },
-  { t: 24.0, sky: '#070b1c', fog: '#0c1329', sun: '#bcd0ff', sunI: 1.5, amb: '#1c2440', ambI: 0.42, hemiSky: '#1d2a4d', hemiGround: '#0c0d10', moon: 1, lantern: 1 },
-  { t: 28.6, sky: '#0b1226', fog: '#131b33', sun: '#bcd0ff', sunI: 1.3, amb: '#1e2642', ambI: 0.42, hemiSky: '#22305a', hemiGround: '#0e0f12', moon: 1, lantern: 1 },
+  { t: 20.6, sky: '#151d3d', fog: '#1a2548', sun: '#aabfff', sunI: 0.8, amb: '#2a3352', ambI: 0.26, hemiSky: '#2c3a66', hemiGround: '#141618', moon: 1, lantern: 1 },
+  { t: 24.0, sky: '#070b1c', fog: '#0b1228', sun: '#9fb6ff', sunI: 0.75, amb: '#1c2440', ambI: 0.22, hemiSky: '#1d2a4d', hemiGround: '#0c0d10', moon: 1, lantern: 1 },
+  { t: 28.6, sky: '#0b1226', fog: '#111a33', sun: '#9fb6ff', sunI: 0.7, amb: '#1e2642', ambI: 0.22, hemiSky: '#22305a', hemiGround: '#0e0f12', moon: 1, lantern: 1 },
   { t: 30.0, sky: '#9fc3e6', fog: '#cfe0f0', sun: '#fff0d0', sunI: 2.2, amb: '#7f8ea0', ambI: 0.6, hemiSky: '#bcd7ee', hemiGround: '#3a4a3a', moon: 0, lantern: 0.25 },
 ]
 

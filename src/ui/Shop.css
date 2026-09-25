@@ -1,0 +1,203 @@
+/* 柑仔店面板：紅底白字的老招牌、阿嬌的對話泡泡、木頭貨架感的商品格 */
+
+.sheet.shop {
+  width: min(100%, 460px);
+  gap: 12px;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 22px, rgba(0, 0, 0, 0.03) 22px 44px),
+    linear-gradient(180deg, rgba(48, 32, 22, 0.97), rgba(24, 16, 11, 0.97));
+}
+
+.shop-sign {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 22px 7px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #b3261e, #8e1b16);
+  border: 2px solid #e9c46a;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.18);
+  color: #fff6e2;
+  line-height: 1.15;
+}
+.shop-sign span {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.shop-sign small {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #ffe2a8;
+}
+
+.shop-talk {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.shop-face {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #6a4a5a, #2a1c24);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffd1e0;
+}
+.shop-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.shop-bubble {
+  position: relative;
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #fff8ec;
+  color: #3a2618;
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  animation: pop-in 0.2s ease-out;
+}
+.shop-bubble::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 16px;
+  border: 7px solid transparent;
+  border-left: 0;
+  border-right-color: #fff8ec;
+}
+.shop-bubble b {
+  display: block;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #b3261e;
+}
+
+.shop-goods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.shop-item {
+  position: relative;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(120, 84, 52, 0.28), rgba(70, 46, 28, 0.35));
+  border: 1px solid rgba(233, 196, 106, 0.3);
+  border-radius: 12px;
+  padding: 8px 10px 8px 50px;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  cursor: pointer;
+  transition:
+    transform 0.08s,
+    background 0.2s;
+}
+.shop-item:not(:disabled):hover {
+  background: linear-gradient(180deg, rgba(150, 104, 62, 0.38), rgba(90, 58, 34, 0.42));
+}
+.shop-item:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.shop-item:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.shop-item.pop {
+  animation: shop-pop 0.4s ease-out;
+}
+@keyframes shop-pop {
+  30% {
+    transform: scale(1.05);
+    border-color: #ffd58a;
+  }
+}
+.shop-icon {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 28px;
+  line-height: 1;
+}
+.shop-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+.shop-desc {
+  font-size: 11px;
+  color: var(--muted);
+}
+.shop-price {
+  font-size: 13px;
+  color: var(--gold-2);
+  font-variant-numeric: tabular-nums;
+}
+.shop-have {
+  position: absolute;
+  right: 8px;
+  top: 7px;
+  font-size: 11px;
+  color: var(--ghost);
+  font-variant-numeric: tabular-nums;
+}
+
+.shop-pantry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+.shop-chip {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+
+.shop-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.shop-foot .btn {
+  margin-left: auto;
+  min-width: 96px;
+}
+.shop-money {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 400px) {
+  .shop-item {
+    padding-left: 44px;
+  }
+  .shop-icon {
+    font-size: 24px;
+  }
+  .shop-foot .muted {
+    display: none;
+  }
+}

@@ -53,6 +53,40 @@ export const DIALOGUES: Record<string, Dialogue> = {
     ],
   },
   ayi_again: { steps: [{ line: 'ayi.again' }] },
+  // 柑仔店的阿嬌（村路，DESIGN §25）：看得到阿嬤的老朋友
+  ajiao_first: {
+    steps: [
+      { line: 'ajiao.first.1' },
+      { line: 'ajiao.first.2' },
+      {
+        line: 'ajiao.first.3',
+        choices: [
+          { line: 'ajiao.q.see', goto: 'see' },
+          { line: 'ajiao.q.buy', goto: 'buy' },
+        ],
+      },
+      { label: 'see', line: 'ajiao.q.see' },
+      { line: 'ajiao.see' },
+      { line: 'ajiao.first.4', goto: 'shop' },
+      { label: 'buy', line: 'ajiao.q.buy' },
+      { line: 'ajiao.first.4' },
+      { label: 'shop', line: 'ajiao.first.5' },
+      { line: 'ajiao.first.6', set: 'ajiao_met' },
+    ],
+  },
+  // 鬼夜市（src/data/market.lines.json）
+  hongyi_1: {
+    steps: [
+      { line: 'hongyi.1' },
+      { line: 'market.gm.1' },
+      { line: 'hongyi.2' },
+      { line: 'hongyi.3' },
+      { line: 'market.gm.2' },
+      { line: 'hongyi.4' },
+      { line: 'hongyi.5', set: 'hongyi_met' },
+    ],
+  },
+  jinyubo_1: { steps: [{ line: 'jinyubo.1' }, { line: 'market.gm.3' }, { line: 'jinyubo.2', set: 'jinyubo_met' }] },
 }
 
 export function indexOfLabel(d: Dialogue, label: string) {

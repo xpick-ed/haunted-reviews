@@ -59,6 +59,7 @@ const inRect = (x: number, z: number, g: PaddyGroup, m = 0) =>
 
 /** 某一點地上是什麼：草地、田埂上、或不能放東西 */
 function groundAt(x: number, z: number): 'grass' | 'bank' | null {
+  if (x > BACK_PATH.x - 0.8 && x < BACK_PATH.x + 0.8 && z > BACK_PATH.z1 - 0.6 && z < BACK_PATH.z0) return null // 往後院的小路
   if (x > COMPOUND.x0 - 0.2 && x < COMPOUND.x1 + 0.2 && z > COMPOUND.z0 - 0.2 && z < COMPOUND.z1 + 0.2) return null
   if (z > ROAD.z - ROAD.width / 2 - 0.15 && z < DITCH.z1 + 0.15) return null
   if (Math.abs(x) < FENCE.gateHalf + 0.25 && z > FENCE.z - 0.1 && z < ROAD.z) return null
@@ -598,6 +599,7 @@ export function Landscape({ quality }: { quality: Quality }) {
       <Tree position={[14.5, 0, -13.5]} scale={0.75} />
       <BananaTrees />
       <BambooGrove />
+      <GardenPath />
 
       {/* 夜霧 */}
       {mist.map((m, i) => (
@@ -612,6 +614,49 @@ export function Landscape({ quality }: { quality: Quality }) {
         <Sparkles count={70} scale={[40, 1.4, 8]} position={[4, 0.8, 19]} size={3.5} speed={0.3} color="#e8ff8a" opacity={0.9} noise={1.5} />
         <Sparkles count={40} scale={[16, 1.4, 30]} position={[-30, 0.8, -8]} size={3.5} speed={0.3} color="#e8ff8a" opacity={0.9} noise={1.5} />
       </group>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// 往後院菜園的小路（沿著左護龍外面往北）＋竹編的小門（出口在 world/scenes.ts 的 HOME.exits）
+// ---------------------------------------------------------------------------
+
+const BACK_PATH = { x: -11.5, z0: -2.6, z1: -16.4 }
+
+function GardenPath() {
+  const mats = useMats()
+  const dirt = useMemo(() => {
+    const m = mats.mud.clone()
+    m.color.set('#a08c6e')
+    return m
+  }, [mats])
+  const len = BACK_PATH.z0 - BACK_PATH.z1
+  const gateZ = -15.9
+  return (
+    <group>
+      <mesh geometry={planeGeo(1.2, len, TILE.mud)} material={dirt} rotation-x={-Math.PI / 2} position={[BACK_PATH.x, 0.015, (BACK_PATH.z0 + BACK_PATH.z1) / 2]} receiveShadow />
+      {/* 竹編小門：兩根竹柱、上面一根橫竹、兩邊短短的竹籬 */}
+      {[-1, 1].map((s) => (
+        <mesh key={s} material={mats.bamboo} position={[BACK_PATH.x + s * 0.9, 0.95, gateZ]} castShadow>
+          <cylinderGeometry args={[0.045, 0.05, 1.9, 7]} />
+        </mesh>
+      ))}
+      <mesh material={mats.bamboo} position={[BACK_PATH.x, 1.86, gateZ]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0.04, 0.04, 2.1, 7]} />
+      </mesh>
+      {[-1, 1].map((s) =>
+        [0.35, 0.75].map((y) => (
+          <mesh key={`${s}${y}`} material={mats.bamboo} position={[BACK_PATH.x + s * 1.9, y, gateZ]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.025, 0.025, 2.0, 6]} />
+          </mesh>
+        )),
+      )}
+      {[-2.8, -2.3, -1.4, 1.4, 2.3, 2.8].map((dx) => (
+        <mesh key={dx} material={mats.bamboo} position={[BACK_PATH.x + dx, 0.5, gateZ]} castShadow>
+          <cylinderGeometry args={[0.028, 0.032, 1.0, 5]} />
+        </mesh>
+      ))}
     </group>
   )
 }

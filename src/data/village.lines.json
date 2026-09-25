@@ -1,0 +1,178 @@
+{
+ "ajiao.first.1": {
+  "who": "ajiao",
+  "text": "唉唷！阿春？妳……妳不是去年就……"
+ },
+ "ajiao.first.2": {
+  "who": "grandma",
+  "text": "阿嬌，是我啦。免驚。"
+ },
+ "ajiao.first.3": {
+  "who": "ajiao",
+  "text": "我哪會驚！活到這個歲數，什麼沒看過。妳氣色還比我好咧。"
+ },
+ "ajiao.q.see": {
+  "who": "grandma",
+  "text": "妳看得到我喔？"
+ },
+ "ajiao.see": {
+  "who": "ajiao",
+  "text": "我們這種老的，眼睛比較利啦。廟口那個王伯也看得到，妳要小心一點。"
+ },
+ "ajiao.q.buy": {
+  "who": "grandma",
+  "text": "我想跟妳拿一點東西。"
+ },
+ "ajiao.first.4": {
+  "who": "grandma",
+  "text": "小翰開了民宿，我半夜幫他顧客人，有時候要煮點東西給人家吃。"
+ },
+ "ajiao.first.5": {
+  "who": "ajiao",
+  "text": "要什麼自己拿，記在小翰的帳上。那個囡仔小時候偷我多少糖仔，我都記得。"
+ },
+ "ajiao.first.6": {
+  "who": "grandma",
+  "text": "多謝啦，阿嬌。"
+ },
+ "ajiao.hi.1": {
+  "who": "ajiao",
+  "text": "阿春，今天要拿什麼？"
+ },
+ "ajiao.hi.2": {
+  "who": "ajiao",
+  "text": "來啦來啦，蚊香剛到貨。"
+ },
+ "ajiao.hi.3": {
+  "who": "ajiao",
+  "text": "妳又飄過來了，嚇我一跳。"
+ },
+ "ajiao.night.1": {
+  "who": "ajiao",
+  "text": "這麼晚了還出來？我也睡不著，陪我坐一下。"
+ },
+ "ajiao.night.2": {
+  "who": "ajiao",
+  "text": "三更半夜的，要買什麼快一點，我要看八點檔重播。"
+ },
+ "ajiao.buy.1": {
+  "who": "ajiao",
+  "text": "拿去拿去。"
+ },
+ "ajiao.buy.2": {
+  "who": "ajiao",
+  "text": "記帳記帳，小翰會算。"
+ },
+ "ajiao.buy.3": {
+  "who": "ajiao",
+  "text": "這個好，這個我也有在用。"
+ },
+ "ajiao.broke": {
+  "who": "ajiao",
+  "text": "阿春，小翰的帳快要記不下了啦。"
+ },
+ "village.phone.1": {
+  "who": "grandma",
+  "text": "以前都在這裡打電話給台北的兒子，一塊錢講三分鐘。"
+ },
+ "village.phone.2": {
+  "who": "grandma",
+  "text": "這支電話還在啊……現在大家都用手機了。"
+ },
+ "village.banyan.1": {
+  "who": "grandma",
+  "text": "以前夏天，大家都在這棵榕樹下泡茶、開講。"
+ },
+ "village.banyan.2": {
+  "who": "grandma",
+  "text": "阿土伯以前在這裡下棋，輸了就賴皮。"
+ },
+ "village.banyan.night": {
+  "who": "grandma",
+  "text": "晚上的榕樹下好涼……以前的人都說這裡有東西。現在有東西的是我。"
+ },
+ "village.betel": {
+  "who": "grandma",
+  "text": "檳榔攤的小姐是阿嬌的孫女，嘴巴很甜。"
+ },
+ "village.betel.night": {
+  "who": "grandma",
+  "text": "燈還開著……這麼晚了，還有卡車司機要來買。"
+ },
+ "village.bike": {
+  "who": "grandma",
+  "text": "野狼的……是阿土伯的吧，騎了三十年還捨不得換。"
+ },
+ "village.tablet": {
+  "who": "grandma",
+  "text": "路邊的石頭公，逢年過節大家都會來拜一下。"
+ },
+ "garden.leaf.1": {
+  "who": "grandma",
+  "text": "地瓜葉嫩嫩的，炒一盤剛好。"
+ },
+ "garden.leaf.2": {
+  "who": "grandma",
+  "text": "採上面的嫩葉就好，留著明天再長。"
+ },
+ "garden.leaf.done": {
+  "who": "grandma",
+  "text": "今天採過了，留一點給明天。"
+ },
+ "garden.potato.1": {
+  "who": "grandma",
+  "text": "這粒地瓜真大粒！煮粥最好。"
+ },
+ "garden.potato.2": {
+  "who": "grandma",
+  "text": "地瓜挖出來了，土還香香的。"
+ },
+ "garden.potato.done": {
+  "who": "grandma",
+  "text": "今天挖過了，不要貪心。"
+ },
+ "garden.egg.1": {
+  "who": "grandma",
+  "text": "母雞仔，借兩粒蛋喔。"
+ },
+ "garden.egg.2": {
+  "who": "grandma",
+  "text": "還熱熱的……好啦好啦，別啄我！"
+ },
+ "garden.egg.done": {
+  "who": "grandma",
+  "text": "今天的蛋拿過了，讓牠們休息。"
+ },
+ "garden.egg.chase": {
+  "who": "grandma",
+  "text": "哎唷！好啦好啦，我走就是了！"
+ },
+ "garden.radish.1": {
+  "who": "grandma",
+  "text": "菜脯曬得剛剛好，香。"
+ },
+ "garden.radish.2": {
+  "who": "grandma",
+  "text": "這是我去年醃的，還夠吃一陣子。"
+ },
+ "garden.radish.done": {
+  "who": "grandma",
+  "text": "今天拿過了，菜脯要慢慢吃。"
+ },
+ "garden.well": {
+  "who": "grandma",
+  "text": "這口井，我嫁過來的時候就有了。"
+ },
+ "garden.well.night": {
+  "who": "grandma",
+  "text": "半夜壓水太大聲，會吵到客人。"
+ },
+ "garden.scarecrow": {
+  "who": "grandma",
+  "text": "這個稻草人穿的是阿公的舊衫……麻雀還是照樣來。"
+ },
+ "garden.enter": {
+  "who": "grandma",
+  "text": "後院的菜，都是我以前種的。小翰有在顧，還不錯嘛。"
+ }
+}

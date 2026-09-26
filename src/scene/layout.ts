@@ -170,3 +170,6 @@ export const GUEST_ROOMS: Record<'r1' | 'r2', GuestRoomDef> = {
     window: null,
   },
 }
+
+/** 地基主（陰陽眼才看得到的守護靈）站的位置：灶腳前門邊 */
+export const DIJIZHU = { x: -8.55, z: 5.45 }

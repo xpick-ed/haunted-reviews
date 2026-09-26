@@ -24,6 +24,7 @@ import { RiverScene } from './River'
 import { SchoolScene } from './School'
 import { HillScene } from './Hill'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
+import { VisionLayer } from './Vision'
 import { ChibiNpc } from '../chars/Chibi'
 import { HAN_SWEEP } from './layout'
 import { player } from '../world/player'
@@ -59,6 +60,7 @@ export function Scene() {
           <Grandma />
           <HotspotMarkers />
           <NightMarkers />
+          <VisionLayer />
           <ExitSigns />
         </MatsProvider>
         <WorldController />

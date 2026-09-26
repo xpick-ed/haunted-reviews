@@ -1,4 +1,4 @@
-import { GUEST_ROOMS, FENCE, SINK, ROCKER } from '../../scene/layout'
+import { GUEST_ROOMS, FENCE, MAIN, SINK, ROCKER } from '../../scene/layout'
 import { HOME } from '../scenes'
 import type { Rect } from '../collision'
 import { seeded } from '../rng'
@@ -13,6 +13,9 @@ import type { BarkKind, GuestId, NeedKind, NightEvent, ObjectState, RoomId } fro
 
 type XZ = [number, number]
 const HOURS_PER_SEC = 1 / 37.5
+
+/** 壁虎平常趴的地方（神明廳門口的牆上）；牆邊的地上是附身的互動點 */
+export const GECKO_HOME: [number, number] = [-1.6, MAIN.z1 + 0.35]
 
 export const SIGHT_RANGE = 6
 /** 視野半角（弧度）：±70° */
@@ -78,6 +81,8 @@ export interface GuestRT {
   deepUntil: number
   /** 夢到阿嬤（評論會提到） */
   dreamt: boolean
+  /** 最近走過的腳印（陰陽眼看得到）：[x, z, 小時, 左右腳] */
+  trail: [number, number, number, number][]
   /** 已經講過入睡台詞 */
   sleptOnce: boolean
 }
@@ -109,6 +114,14 @@ export interface PatrolRT {
 export interface DogRT {
   x: number
   z: number
+  heading: number
+  speed: number
+  /** 被附身 */
+  possessed: boolean
+  /** 附身時吠了一聲（畫面播動畫） */
+  woofT: number
+  /** 今晚是「狗叫」的晚上 */
+  event: boolean
   barking: boolean
   calm: boolean
   barkT: number
@@ -129,8 +142,18 @@ export interface GrandmaState {
   walkFactor: number
   /** 躲在衣櫃、神桌下……：誰都看不到（廟公經過會開來檢查） */
   hidden?: boolean
-  /** 附身在貓身上：(x, z) 是貓的位置；客人看到的是貓 */
-  cat?: boolean
+  /** 附身在動物身上：(x, z) 是牠的位置；客人看到的是動物，不是鬼 */
+  body?: 'cat' | 'dog' | 'gecko'
+}
+
+/** 壁虎：平常趴在神明廳門邊的牆上；附身時沿著牆和天花板走 */
+export interface GeckoRT {
+  x: number
+  z: number
+  heading: number
+  speed: number
+  possessed: boolean
+  chirpT: number
 }
 
 /** 阿咪：晚上在屋裡亂晃的橘貓。經過醒著的客人床邊會被摸（舒適 +）；阿嬤可以附身 */
@@ -219,7 +242,10 @@ export class NightSim {
   event: NightEvent
   miaogong: PatrolRT | null = null
   dog: DogRT | null = null
+  /** 廟公被狗叫聲引開：走去看，看完再回來巡 */
+  private mgDetour: { x: number; z: number; wait: number } | null = null
   cat: CatRT
+  gecko: GeckoRT
   hour = 22
   private rnd: () => number
   private needPlan: { g: GuestRT; kind: NeedKind; at: number }[] = []
@@ -238,6 +264,7 @@ export class NightSim {
     this.fortune = opts.fortune ?? null
     const [cx, cz] = NODES.tea
     this.cat = { x: cx, z: cz, heading: 0, speed: 0, pose: 'sit', path: [], wait: 6, node: 'tea', possessed: false, meowT: 0 }
+    this.gecko = { x: GECKO_HOME[0], z: GECKO_HOME[1], heading: 0, speed: 0, possessed: false, chirpT: 0 }
     this.event = plan.event
     for (const p of plan.parties) {
       p.members.forEach((id, slot) => {
@@ -282,6 +309,7 @@ export class NightSim {
           sleptOnce: false,
           deepUntil: 0,
           dreamt: false,
+          trail: [],
         }
         this.guests.push(g)
         for (const n of def.needs) {
@@ -297,8 +325,9 @@ export class NightSim {
     if (plan.event === 'mosquitoes' && !this.upgrades.has('net'))
       for (const g of this.guests) if (!this.items.has('charm') || this.rnd() < 0.5) this.needPlan.push({ g, kind: 'mosquito', at: 23.4 + this.rnd() * 0.4 })
     if (plan.event === 'coldsnap') for (const g of this.guests) this.needPlan.push({ g, kind: 'cold', at: 25 + this.rnd() * 0.5 })
-    // 鎮狗鈴：狗今晚不會叫
-    if (plan.event === 'dog' && !this.items.has('bell')) this.dog = { x: 1.2, z: FENCE.z + 1.3, barking: false, calm: false, barkT: 0, startAt: 25.3, stopT: 0 }
+    // 小黑每晚都睡在大門外；「狗叫」的晚上半夜會叫（有鎮狗鈴就不叫）
+    const barks = plan.event === 'dog' && !this.items.has('bell')
+    this.dog = { x: 1.2, z: FENCE.z + 1.3, heading: Math.PI, speed: 0, possessed: false, woofT: 0, event: barks, barking: false, calm: !barks, barkT: 0, startAt: 25.3, stopT: 0 }
     if (plan.event === 'miaogong') {
       const path = MIAOGONG_LOOP.map((n) => NODES[n])
       this.miaogong = { x: path[0][0], z: path[0][1], heading: Math.PI, speed: 0, i: 1, path, suspicion: 0, catches: 0, active: false, left: false, barkT: 0 }
@@ -316,6 +345,7 @@ export class NightSim {
     this.updateMiaogong(dt, hour, gm)
     this.updateDog(dt, hour, gm)
     this.updateCat(dt, gm)
+    this.updateGecko(dt, gm)
     this.doorEvents(gm)
     return this.out
   }
@@ -351,7 +381,7 @@ export class NightSim {
   private updateCat(dt: number, gm: GrandmaState) {
     const c = this.cat
     c.meowT = Math.max(0, c.meowT - dt)
-    if (gm.cat) {
+    if (gm.body === 'cat') {
       const dx = gm.x - c.x
       const dz = gm.z - c.z
       if (dx || dz) c.heading = Math.atan2(dx, dz)
@@ -399,6 +429,20 @@ export class NightSim {
       g.comfort += dt * HOURS_PER_SEC * (c.possessed ? 12 : 4)
       if (c.possessed && c.speed < 0.2) c.pose = 'rub'
     }
+  }
+
+  /** 接下來會出現的需求（地基主的提示）：最近的幾個 */
+  upcoming(n = 3) {
+    return this.needPlan
+      .filter((p) => p.at > this.hour)
+      .sort((a, b) => a.at - b.at)
+      .slice(0, n)
+      .map((p) => ({ who: p.g.def.name, room: p.g.room, kind: p.kind, at: p.at }))
+  }
+
+  /** 陰陽眼：看得到每個人心裡想要什麼 */
+  revealNeeds() {
+    for (const g of this.guests) for (const n of g.needs) n.known = true
   }
 
   /** 附身的貓喵一聲：附近醒著的人會轉頭看貓（把注意力引開） */
@@ -565,6 +609,12 @@ export class NightSim {
         const step = Math.min(d, left)
         g.x += (dx / d) * step
         g.z += (dz / d) * step
+        // 每走 0.45 公尺留一個腳印（最多 40 個）
+        const last = g.trail[g.trail.length - 1]
+        if (!last || Math.hypot(last[0] - g.x, last[1] - g.z) > 0.45) {
+          g.trail.push([g.x, g.z, this.hour, last ? 1 - last[3] : 0])
+          if (g.trail.length > 40) g.trail.shift()
+        }
         if (g.scaredT <= 0 && g.tellT <= 0) g.heading = Math.atan2(dx, dz)
         left -= step
         if (step >= d) s.path.shift()
@@ -620,7 +670,7 @@ export class NightSim {
   }
 
   private sight(g: GuestRT, dt: number, gm: GrandmaState) {
-    if (!gm.home || !g.awake || g.scaredT > 0 || gm.hidden || gm.cat) {
+    if (!gm.home || !g.awake || g.scaredT > 0 || gm.hidden || gm.body) {
       g.suspicion = Math.max(0, g.suspicion - dt * 0.5)
       return
     }
@@ -891,6 +941,25 @@ export class NightSim {
       return
     }
     m.barkT = Math.max(0, m.barkT - dt)
+    // 被狗叫聲引開：先走過去看一看
+    if (this.mgDetour) {
+      const dv = this.mgDetour
+      const ddx = dv.x - m.x
+      const ddz = dv.z - m.z
+      const dd = Math.hypot(ddx, ddz)
+      if (dd > 1.2) {
+        m.x += (ddx / dd) * 1.3 * dt
+        m.z += (ddz / dd) * 1.3 * dt
+        m.heading = Math.atan2(ddx, ddz)
+        m.speed = 1.3
+      } else {
+        m.speed = 0
+        m.heading += dt * 0.8
+        dv.wait -= dt
+        if (dv.wait <= 0) this.mgDetour = null
+      }
+      return
+    }
     // 沿著路線繞
     const [tx, tz] = m.path[m.i]
     const dx = tx - m.x
@@ -912,7 +981,7 @@ export class NightSim {
       this.emit({ t: 'mg', kind: 'patrol' })
     }
     // 手電筒：看得遠、比較窄；木頭人對他比較沒用
-    if (!gm.home || gm.cat) return
+    if (!gm.home || gm.body) return
     if (gm.hidden) {
       // 躲著：廟公經過會隨手打開檢查（衣櫃、神桌下……）
       this.inspectT = Math.max(0, this.inspectT - dt)
@@ -950,7 +1019,23 @@ export class NightSim {
 
   private updateDog(dt: number, hour: number, gm: GrandmaState) {
     const d = this.dog
-    if (!d || d.calm) return
+    if (!d) return
+    d.woofT = Math.max(0, d.woofT - dt)
+    if (gm.body === 'dog') {
+      const dx = gm.x - d.x
+      const dz = gm.z - d.z
+      if (dx || dz) d.heading = Math.atan2(dx, dz)
+      d.x = gm.x
+      d.z = gm.z
+      d.speed = gm.speed
+      d.possessed = true
+      // 附身就不亂叫了
+      if (d.barking) this.calmDog()
+      return
+    }
+    d.possessed = false
+    d.speed = 0
+    if (d.calm) return
     if (!d.barking && hour >= d.startAt) {
       d.barking = true
       this.emit({ t: 'dog', kind: 'start' })
@@ -963,6 +1048,71 @@ export class NightSim {
       this.noise(d.x, d.z, 0.55)
     }
     void gm
+  }
+
+  private updateGecko(dt: number, gm: GrandmaState) {
+    const g = this.gecko
+    g.chirpT = Math.max(0, g.chirpT - dt)
+    if (gm.body === 'gecko') {
+      const dx = gm.x - g.x
+      const dz = gm.z - g.z
+      if (dx || dz) g.heading = Math.atan2(dx, dz)
+      g.x = gm.x
+      g.z = gm.z
+      g.speed = gm.speed
+      g.possessed = true
+    } else {
+      g.possessed = false
+      g.speed = 0
+    }
+  }
+
+  /** 今晚的碟仙玩過了 */
+  ouijaDone = false
+
+  /** 碟仙的結果（DESIGN §26.2）：安慰 → 舒適；嚇他 → 驚嚇；說出只有鬼知道的事 → 觀眾暴增（算拍到） */
+  ouija(id: GuestId, r: { comfort: number; scare: number; secret: number }) {
+    this.ouijaDone = true
+    const g = this.guests.find((x) => x.id === id)
+    if (!g) return
+    g.comfort += r.comfort * 7 + r.secret * 4
+    g.fear += r.scare * 9 + r.secret * 4
+    for (let i = 0; i < r.secret; i++) {
+      g.captures++
+      this.emit({ t: 'capture', who: g.id })
+    }
+    if (r.scare + r.secret > 0) this.satisfy(g.room, 'scare', 0)
+  }
+
+  /** 附身的小黑吠一聲：附近醒著的人會嚇一跳、轉頭看；廟公會走過去看看 */
+  woof() {
+    const d = this.dog
+    if (!d) return
+    d.woofT = 0.8
+    this.noise(d.x, d.z, 0.5)
+    for (const g of this.guests) {
+      if (!g.awake || g.def.seesGhost) continue
+      if (Math.hypot(g.x - d.x, g.z - d.z) > 8) continue
+      g.fear += g.def.type === 'timid' ? 5 : 2
+    }
+    const m = this.miaogong
+    if (m?.active && Math.hypot(m.x - d.x, m.z - d.z) < 16) {
+      this.mgDetour = { x: d.x, z: d.z, wait: 10 }
+      this.emit({ t: 'mg', kind: 'spot' })
+    }
+  }
+
+  /** 附身的壁虎叫一聲（嘖嘖嘖）：附近醒著的人抬頭看天花板 */
+  chirp() {
+    const k = this.gecko
+    k.chirpT = 1.0
+    for (const g of this.guests) {
+      if (!g.awake || g.scaredT > 0) continue
+      if (Math.hypot(g.x - k.x, g.z - k.z) > 6) continue
+      g.lookTarget = Math.atan2(k.x - g.x, k.z - g.z)
+      g.tellT = 0.3
+      g.lookT = 4 + this.rnd() * 2
+    }
   }
 
   calmDog() {

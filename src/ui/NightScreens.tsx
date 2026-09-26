@@ -1,6 +1,6 @@
 import { useStore } from '../store'
 import { GUESTS } from '../world/night/guests'
-import { NIGHTS_PER_MONTH, SKILLS, type SkillDef } from '../world/night/plan'
+import { FESTIVAL_NAME, NIGHTS_PER_MONTH, SKILLS, festivalOf, type SkillDef } from '../world/night/plan'
 import { line } from '../world/lines'
 import { portraitDataUrl, type PortraitId } from '../art/portraits'
 import type { NightEvent } from '../world/night/types'
@@ -49,6 +49,12 @@ export function NightIntro() {
   const openPanel = useStore((s) => s.openPanel)
   const mn = monthNight(meta.night)
   const ev = EVENT_INFO[plan.event]
+  const fest = festivalOf(meta.night)
+  const FEST_DESC = {
+    tudigong: '土地公廟前搭了歌仔戲台，今晚人鬼一起看戲。',
+    qingming: '家人上山掃墓的日子。小翰傍晚去了墓仔埔。',
+    zhongyuan: '好兄弟們放假的日子：廟埕有戲、溪邊放水燈。',
+  }
   return (
     <div className="screen-backdrop">
       <div className="sheet intro-card">
@@ -84,6 +90,12 @@ export function NightIntro() {
             })}
           </div>
         ))}
+        {fest && (
+          <div className="event-box festival">
+            <b>🏮 {FESTIVAL_NAME[fest]}</b>
+            <span>{FEST_DESC[fest]}</span>
+          </div>
+        )}
         {ev && (
           <div className="event-box">
             <b>⚠ {ev.name}</b>

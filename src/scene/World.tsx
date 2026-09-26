@@ -56,6 +56,10 @@ export function WorldController() {
         e.preventDefault()
         useStore.getState().cycleOption()
       }
+      // V：陰陽眼、T：念力
+      const st = useStore.getState()
+      if (k === 'v' && st.started && !st.dialogue && !st.minigame) st.toggleVision()
+      if (k === 't' && st.started && !st.dialogue && !st.minigame && st.phase === 'night' && st.scene === 'home') st.toggleTK()
     }
     window.addEventListener('keydown', onKey)
     return () => {
@@ -72,9 +76,20 @@ export function WorldController() {
     const move = input.read()
     // 躲著的時候一推搖桿就出來
     if (s.hidden && !s.dialogue && !s.minigame && Math.hypot(move.x, move.y) > 0.5) s.exitHide()
-    const colliders = s.scene === 'home' && s.phase === 'night' ? withGuests(collidersFor(s.scene, s.phase)) : collidersFor(s.scene, s.phase)
+    // 壁虎沿著牆和天花板爬：不受牆和家具擋
+    const colliders =
+      s.possess === 'gecko'
+        ? { rects: [], circles: [], bounds: SCENES.home.colliders.bounds }
+        : s.scene === 'home' && s.phase === 'night'
+          ? withGuests(collidersFor(s.scene, s.phase))
+          : collidersFor(s.scene, s.phase)
     stepPlayer(dt, move, colliders, frozen)
     if (player.dashing) s.spendYin(dt * 1)
+    // 陰陽眼每秒扣一點陰氣；扣完就閉上
+    if (s.vision && s.started && !s.dialogue && !s.minigame && !s.panel) {
+      s.spendYin(dt * 0.6)
+      if (useStore.getState().yin <= 0) s.toggleVision()
+    }
     // 開始快飄：輕輕的一陣風聲
     if (player.dashing && !wasDashing) sfx.play('whoosh', { volume: 0.22 })
     wasDashing = player.dashing
@@ -100,15 +115,20 @@ export function WorldController() {
     if (promptOpen && s.hidden) {
       prompt = { opts: [{ key: 'unhide', label: '出來', cost: 0, needed: false, spot: s.hidden, special: 'unhide' }], i: 0, key: 'unhide' }
     } else if (promptOpen && s.possess) {
-      const opts: PromptOpt[] = [
-        { key: 'meow', label: '喵一聲（引開注意）', cost: 0, needed: false, spot: 'cat', special: 'meow' },
-        { key: 'unpossess', label: '離開阿咪', cost: 0, needed: false, spot: 'cat', special: 'unpossess' },
-      ]
-      prompt = { opts, i: s.prompt?.key === 'cat' ? s.prompt.i : 0, key: 'cat' }
+      const body = s.possess
+      const act: PromptOpt =
+        body === 'dog'
+          ? { key: 'woof', label: '汪！（嚇人、引開廟公）', cost: 0, needed: false, spot: body, special: 'woof' }
+          : body === 'gecko'
+            ? { key: 'chirp', label: '嘖嘖叫（讓人抬頭）', cost: 0, needed: false, spot: body, special: 'chirp' }
+            : { key: 'meow', label: '喵一聲（引開注意）', cost: 0, needed: false, spot: body, special: 'meow' }
+      const name = { cat: '阿咪', dog: '小黑', gecko: '壁虎' }[body]
+      const opts: PromptOpt[] = [act, { key: 'unpossess', label: `離開${name}`, cost: 0, needed: false, spot: body, special: 'unpossess' }]
+      prompt = { opts, i: s.prompt?.key === body ? s.prompt.i : 0, key: body }
     } else if (promptOpen) {
       const opts: PromptOpt[] = []
       if (s.phase === 'night' && s.scene === 'home' && night.sim) {
-        for (const o of nightOptions({ sim: night.sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time }, player.x, player.z)) {
+        for (const o of nightOptions({ sim: night.sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time, pantry: s.meta.pantry }, player.x, player.z)) {
           opts.push({ key: `${o.spot}:${o.action}`, label: o.label, cost: o.cost, needed: o.needed, spot: o.spot, option: o })
         }
       }

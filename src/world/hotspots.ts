@@ -1,11 +1,26 @@
 import { useStore, type GameState } from '../store'
 import { FORTUNES } from './night/items'
 import type { JiaobeiResult } from '../ui/minigames/types'
-import { DRESSER, HAN_SWEEP, SEWING, SINK, STOVE, TEA_SEAT } from '../scene/layout'
+import { DIJIZHU, DRESSER, HAN_SWEEP, SEWING, SINK, STOVE, TEA_SEAT } from '../scene/layout'
 import { SPOTS, TEMPLE, type SceneId } from './scenes'
 import { VILLAGE_HOTSPOTS } from './sceneVillage'
 import { GARDEN_HOTSPOTS } from './sceneGarden'
 import { MARKET_HOTSPOTS } from './sceneMarket'
+import { RIVER_HOTSPOTS } from './sceneRiver'
+import { SCHOOL_HOTSPOTS } from './sceneSchool'
+import { HILL_HOTSPOTS } from './sceneHill'
+import { STAGE_HOTSPOTS } from './sceneStage'
+import { MEMORY_HOTSPOTS } from './memories'
+import { festivalOf } from './night/plan'
+import { night, yinMax } from './night/director'
+import { NEED_INFO } from './night/guests'
+
+/** 22.5 → 22:30、25.25 → 01:15 */
+function clockText(h: number) {
+  const hh = Math.floor(h) % 24
+  const mm = Math.floor((h % 1) * 4) * 15
+  return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`
+}
 
 // 可以互動的地點（DESIGN §6：動作是空間的，走到床邊才能蓋被子）。
 // 靠近時動作鍵顯示 label；label 回傳 null 表示現在不能用。
@@ -96,6 +111,35 @@ const BASE_HOTSPOTS: Hotspot[] = [
     run: (s) => s.bark('gm.sewing'),
   },
 
+  {
+    // 地基主（陰陽眼才看得到）：提示今晚接下來的需求，每晚給一次陰氣
+    id: 'dijizhu',
+    scene: 'home',
+    x: DIJIZHU.x + 0.8,
+    z: DIJIZHU.z - 0.3,
+    r: 1.3,
+    icon: { x: DIJIZHU.x, z: DIJIZHU.z },
+    iconY: 1.6,
+    label: (s) => (s.vision ? '跟地基主說話' : null),
+    run: (s) => {
+      if (s.phase !== 'night' || !night.sim) {
+        s.bark('dijizhu.day')
+        return
+      }
+      const up = night.sim.upcoming(3)
+      if (!up.length) s.bark('dijizhu.none')
+      else {
+        s.bark('dijizhu.hint')
+        const text = up.map((u) => `${clockText(u.at)} ${u.who}（${u.room === 'r1' ? '客房一' : '客房二'}）${NEED_INFO[u.kind].label}`).join('、')
+        window.setTimeout(() => useStore.getState().say(`地基主：${text}`), 3200)
+      }
+      if (!s.flags.dijizhu_bless_today) {
+        useStore.setState((x) => ({ flags: { ...x.flags, dijizhu_bless_today: true }, yin: Math.min(yinMax(x.meta), x.yin + 10) }))
+        window.setTimeout(() => useStore.getState().bark('dijizhu.bless'), 7000)
+      }
+    },
+  },
+
   // ---------- 土地公廟 ----------
   {
     id: 'temple_burner',
@@ -148,7 +192,17 @@ const BASE_HOTSPOTS: Hotspot[] = [
 ]
 
 /** 所有場景的熱點：新場景的熱點寫在各自的 scene<Name>.ts */
-export const HOTSPOTS: Hotspot[] = [...BASE_HOTSPOTS, ...VILLAGE_HOTSPOTS, ...GARDEN_HOTSPOTS, ...MARKET_HOTSPOTS]
+export const HOTSPOTS: Hotspot[] = [
+  ...BASE_HOTSPOTS,
+  ...VILLAGE_HOTSPOTS,
+  ...GARDEN_HOTSPOTS,
+  ...MARKET_HOTSPOTS,
+  ...RIVER_HOTSPOTS,
+  ...SCHOOL_HOTSPOTS,
+  ...HILL_HOTSPOTS,
+  ...STAGE_HOTSPOTS,
+  ...MEMORY_HOTSPOTS,
+]
 
 /** 目前最近、可以用的熱點 */
 export function nearestHotspot(s: GameState, x: number, z: number): { h: Hotspot; label: string; cost: number } | null {
@@ -169,9 +223,12 @@ export function nearestHotspot(s: GameState, x: number, z: number): { h: Hotspot
 /** 目標（HUD 左上角）。第二行是提示。深夜的挑戰另外顯示。 */
 export function objectives(s: GameState): { main: string | null; extra: string | null } {
   const n = s.meta.night
+  const fest = festivalOf(n)
   if (s.phase === 'dusk') {
     const p = s.meta.pantry
-    const extra = !s.flags.ayi_met
+    const extra = fest
+      ? { tudigong: '今天土地公生：土地公廟前有野台戲，班主好像需要幫忙', qingming: '今天清明：小翰去山上掃墓了', zhongyuan: '今天中元普渡：廟埕有戲、溪邊可以放水燈' }[fest]
+      : !s.flags.ayi_met
       ? '可選：出大門沿著路往東，經過村子到土地公廟看看'
       : (p.coil ?? 0) === 0
         ? '蚊香用完了：去村子的柑仔店找阿嬌買'

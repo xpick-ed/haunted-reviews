@@ -1827,3 +1827,50 @@ body,
   padding: 3px 12px;
   pointer-events: none !important;
 }
+
+/* ---------- 陰陽眼、念力 ---------- */
+.vision-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none !important;
+  background:
+    radial-gradient(ellipse at center, transparent 45%, rgba(0, 20, 26, 0.55) 100%),
+    rgba(40, 170, 170, 0.22);
+  mix-blend-mode: color;
+  animation: fade 0.35s ease-out;
+}
+.status-row.power {
+  flex-wrap: wrap;
+  max-width: 230px;
+}
+.chip.on-vision {
+  border-color: #8ff4ff;
+  color: #8ff4ff;
+  box-shadow: 0 0 12px rgba(143, 244, 255, 0.5);
+}
+.chip.on-tk {
+  border-color: #c9a8ff;
+  color: #c9a8ff;
+  box-shadow: 0 0 12px rgba(201, 168, 255, 0.5);
+}
+.tk-overlay {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: #d9c4ff;
+  background: rgba(30, 16, 50, 0.6);
+  border: 1px solid rgba(201, 168, 255, 0.4);
+  border-radius: 999px;
+  padding: 3px 12px;
+  pointer-events: none !important;
+  white-space: nowrap;
+}
+.event-box.festival {
+  background: rgba(242, 180, 91, 0.12);
+  border-color: rgba(242, 180, 91, 0.5);
+}
+.event-box.festival b {
+  color: var(--gold-2);
+}

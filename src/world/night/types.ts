@@ -59,6 +59,7 @@ export type ActionId =
   | 'hide' // 躲起來
   | 'retrieve' // 把掉的東西撿回床頭
   | 'ouija' // 碟仙：推碟子回答阿凱的問題
+  | 'gift' // 把夾娃娃機夾到的小玩具送給小宇
 
 /** 客人會講的話的種類（src/data/barks.ts 依這些 key 列出台詞 id） */
 export type BarkKind =

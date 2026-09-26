@@ -15,6 +15,8 @@ import { MinigameHost } from './minigames'
 import { ShopPanel } from './Shop'
 import { RelicPanel } from './Relics'
 import { DreamHud } from './DreamHud'
+import { AlbumPanel } from './Album'
+import { MEMORIES } from '../world/memories'
 
 const PHASE_NAME = { dusk: '傍晚', night: '深夜', dawn: '清晨' } as const
 
@@ -36,6 +38,7 @@ export function Hud() {
   const modal = !!summary || !!month || intro || !!panel || minigame
   return (
     <div className="hud">
+      <VisionOverlay />
       <HideView />
       <PossessBadge />
       <Watched />
@@ -56,6 +59,7 @@ export function Hud() {
       {panel === 'skills' && <SkillTree />}
       {panel === 'shop' && <ShopPanel />}
       {panel === 'relics' && <RelicPanel />}
+      {panel === 'album' && <AlbumPanel />}
       <DreamHud />
       {summary && <NightSummaryCard />}
       {month && <MonthSummary />}
@@ -135,6 +139,7 @@ function Status() {
           ❤️ {heart}
         </span>
       </div>
+      {!modal && <PowerButtons />}
       <div className="status-row">
         {phase === 'dusk' && !modal && (
           <button className={`chip ${pts > 0 ? 'glow' : ''}`} onClick={() => openPanel('skills')}>
@@ -301,7 +306,45 @@ function ActionButton() {
   )
 }
 
-const HOLD_HINT = new Set(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver'])
+const HOLD_HINT = new Set(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver', 'retrieve'])
+
+/** 陰陽眼、念力、回憶相簿 */
+function PowerButtons() {
+  const vision = useStore((s) => s.vision)
+  const tk = useStore((s) => s.tk)
+  const canTK = useStore((s) => s.meta.skills.includes('telekinesis') && s.phase === 'night' && s.scene === 'home')
+  const mem = useStore((s) => s.meta.memories.length)
+  const toggleVision = useStore((s) => s.toggleVision)
+  const toggleTK = useStore((s) => s.toggleTK)
+  const openPanel = useStore((s) => s.openPanel)
+  return (
+    <div className="status-row power">
+      <button className={`chip ${vision ? 'on-vision' : ''}`} onClick={toggleVision} title="陰陽眼（V）">
+        👁 陰陽眼
+      </button>
+      {canTK && (
+        <button className={`chip ${tk ? 'on-tk' : ''}`} onClick={toggleTK} title="念力（T）">
+          ✋ 念力
+        </button>
+      )}
+      <button className="chip" onClick={() => openPanel('album')} title="回憶相簿">
+        📖 {mem}/{MEMORIES.length}
+      </button>
+    </div>
+  )
+}
+
+/** 陰陽眼開著：畫面變青、四周暗下來 */
+function VisionOverlay() {
+  const vision = useStore((s) => s.vision)
+  const tk = useStore((s) => s.tk)
+  return (
+    <>
+      {vision && <div className="vision-overlay" />}
+      {tk && <div className="tk-overlay">念力：直接拖發光的東西（拖太快會有聲音）</div>}
+    </>
+  )
+}
 
 /** 躲起來的時候：畫面只剩一條縫 */
 function HideView() {

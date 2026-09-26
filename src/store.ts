@@ -13,6 +13,7 @@ import type { GuestId, ObjectState, RoomId } from './world/night/types'
 import type { MinigameId } from './ui/minigames/types'
 import { START_META, createNightSlice, night, planFor, preloadNightVoices, yinMax, type NightSlice, type PromptOpt } from './world/night/director'
 import { HAN_BARKS } from './data/barks'
+import { MEMORIES, MEMORY_BONUS_AT } from './world/memories'
 
 export type Phase = 'dusk' | 'night' | 'dawn'
 export type Quality = 'high' | 'low'
@@ -102,7 +103,7 @@ export interface GameState extends NightSlice {
   setQuality: (q: Quality) => void
   resetNight: () => void
   closeIntro: () => void
-  openPanel: (p: 'skills' | 'shop' | 'relics' | null) => void
+  openPanel: (p: 'skills' | 'shop' | 'relics' | 'album' | null) => void
   /** 開始小遊戲；玩完（或取消）會呼叫 onDone(result) */
   startMinigame: (id: MinigameId, params: unknown, onDone: (result: unknown) => void) => void
   finishMinigame: (result: unknown) => void
@@ -110,6 +111,8 @@ export interface GameState extends NightSlice {
   enterDream: (guest: GuestId) => void
   /** 夢結束（成功或失敗），回到客人床邊 */
   endDream: (ok: boolean) => void
+  /** 撿起一片回憶（src/world/memories.ts） */
+  collectMemory: (id: string) => void
   save: () => void
 }
 
@@ -296,6 +299,8 @@ export const useStore = create<GameState>()((set, get) => ({
     if (o.special === 'unhide') s.exitHide()
     else if (o.special === 'unpossess') s.exitPossess()
     else if (o.special === 'meow') s.meow()
+    else if (o.special === 'woof') s.woof()
+    else if (o.special === 'chirp') s.chirp()
     else if (o.hotspot) {
       const h = HOTSPOTS.find((x) => x.id === o.hotspot)
       if (h) h.run(get())
@@ -568,6 +573,21 @@ export const useStore = create<GameState>()((set, get) => ({
       set({ scene: 'home', room: null, building: null, faded: '', dream: null })
     })
     later(1300, () => set({ blackout: false, transitioning: false }))
+  },
+
+  collectMemory: (id) => {
+    const s = get()
+    if (s.meta.memories.includes(id)) return
+    const m = MEMORIES.find((x) => x.id === id)
+    if (!m) return
+    const memories = [...s.meta.memories, id]
+    // 撿到一定數量多一個技能點；全部撿齊有最後一句話
+    const bonus = memories.length === MEMORY_BONUS_AT ? 1 : 0
+    set({ meta: { ...s.meta, memories, merit: s.meta.merit + 1, skillPts: s.meta.skillPts + bonus }, warm: 1 })
+    audio.chime()
+    get().bark(m.line)
+    if (memories.length === MEMORIES.length) later(4500, () => get().bark('mem.all'))
+    else if (bonus) later(3500, () => get().say('回憶找回一半了：技能點 +1'))
   },
 
   openPanel: (p) => {

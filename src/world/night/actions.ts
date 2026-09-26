@@ -46,6 +46,7 @@ export const ACTION_DEFS: Record<ActionId, ActionDef> = {
   hide: { id: 'hide', name: '躲起來', yin: 0, noise: 0.02, type: 'misc', busy: 0.4 },
   retrieve: { id: 'retrieve', name: '把東西撿回床頭', yin: 3, noise: 0.08, type: 'kind', busy: 1.2, satisfies: 'lost', comfort: 12 },
   ouija: { id: 'ouija', name: '推碟子（碟仙）', yin: 8, noise: 0, type: 'scare', busy: 0.5 },
+  gift: { id: 'gift', name: '送小玩具', yin: 0, noise: 0.03, type: 'social', busy: 0.6, satisfies: 'play', comfort: 20 },
 }
 
 export interface Option {
@@ -94,6 +95,8 @@ export interface NightCtx {
   carrying: boolean
   hour: number
   yinCost: (a: ActionId) => number
+  /** 食材與雜貨（送玩具要有小玩具） */
+  pantry?: Partial<Record<string, number>>
 }
 
 const has = (ctx: NightCtx, skill?: string) => !skill || ctx.skills.includes(skill)
@@ -130,6 +133,14 @@ export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[
         if (kid) o.push(opt('play', bed, { room, needed: true }))
         const elders = gs.filter((g) => g.def.type === 'elder' && g.awake && g.needs.some((n) => n.kind === 'chat'))
         if (elders.length) o.push(opt('chat', bed, { room, needed: true }))
+        // 東西掉到床底下：撿回床頭（念力可以遠遠撿）
+        if (needs(gs, 'lost')) o.push(opt('retrieve', bed, { room, needed: true }))
+        // 夾娃娃機夾到的小玩具送給小宇
+        const child = gs.find((g) => g.def.type === 'child' && g.awake)
+        if (child && (ctx.pantry?.toy ?? 0) > 0) o.push(opt('gift', bed, { room, label: `送小玩具給${child.def.name}`, needed: needs([child], 'play') }))
+        // 碟仙：阿凱半夜開直播玩碟仙
+        const thrill = gs.find((g) => g.def.type === 'thrill' && g.awake && g.mode === 'bed')
+        if (thrill && ctx.hour >= 23 && ctx.hour < 25.5 && !ctx.sim.ouijaDone) o.push(opt('ouija', bed, { room, guest: thrill.id, needed: true }))
         // 打蚊子：不花陰氣，但要玩小遊戲、拍空會有聲音
         if (needs(gs, 'mosquito')) o.push(opt('swat', bed, { room, needed: true }))
         // 托夢：對睡著的客人
@@ -183,6 +194,14 @@ export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[
   if (has(ctx, 'possess')) {
     const c: Spot = { id: 'cat', x: cat.x, z: cat.z, r: 1.2, icon: [cat.x, 0.9, cat.z] }
     out.push({ ...c, options: () => [opt('possess', c)] })
+    const d = ctx.sim.dog
+    if (d) {
+      const ds: Spot = { id: 'dog', x: d.x, z: d.z - 0.7, r: 1.3, icon: [d.x, 1.0, d.z] }
+      out.push({ ...ds, options: () => [opt('possess', ds, { label: '附身小黑' })] })
+    }
+    const g = ctx.sim.gecko
+    const gs: Spot = { id: 'gecko', x: g.x, z: g.z + 0.5, r: 1.0, icon: [g.x, 2.3, g.z] }
+    out.push({ ...gs, options: () => [opt('possess', gs, { label: '附身壁虎' })] })
   }
   for (const h of HIDE_SPOTS) {
     const sp: Spot = { id: h.id, x: h.outX, z: h.outZ, r: 0.9, icon: [h.x, h.iconY, h.z] }

@@ -729,10 +729,13 @@ useStore.subscribe((s, prev) => {
 const lastChore = { t: -1e9, scene: '' }
 
 // 今天的事（DESIGN §28.2）：做到了就打勾、給獎勵
+// 已經排進去、還沒發獎勵的（同一瞬間狀態連續變好幾次，不能重複發）
+const rewarding = new Set<string>()
 useStore.subscribe((s) => {
   if (!s.started || !s.meta.requests.length) return
-  const todo = s.meta.requests.filter((r) => !r.done && requestById(r.id)?.done(s))
+  const todo = s.meta.requests.filter((r) => !r.done && !rewarding.has(r.id) && requestById(r.id)?.done(s))
   if (!todo.length) return
+  for (const t of todo) rewarding.add(t.id)
   queueMicrotask(() => {
     const st = useStore.getState()
     let meta = { ...st.meta, requests: st.meta.requests.map((r) => (todo.some((t) => t.id === r.id) ? { ...r, done: true } : r)) }
@@ -750,6 +753,7 @@ useStore.subscribe((s) => {
       st.say(`✓ ${def.who}的事做好了（${parts.join('、')}）`)
     }
     useStore.setState({ meta })
+    for (const t of todo) rewarding.delete(t.id)
     sfx.play('ui_confirm', { volume: 0.5 })
   })
 })

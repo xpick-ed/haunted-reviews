@@ -74,7 +74,8 @@ src/
   audio/            語音（voice.ts）、音效（sfx.ts）
   chars/            3D Q 版角色（長相、臉、姿勢、卡通材質）、阿咪（Cat）、小黑（Dog）、壁虎（Gecko）
   ui/minigames/     小遊戲（index.tsx 登記）：煮宵夜、打蚊子、擲筊、撈金魚、射氣球、釣溪哥、放水燈、
-                    歌仔戲鑼鼓、包粽子、跳房子、夾娃娃機、彈珠台、碟仙
+                    歌仔戲鑼鼓、包粽子、跳房子、夾娃娃機、彈珠台、碟仙、五分車、剉冰、老戲院、
+                    照相館、抓螃蟹、修保險絲
   art/              對話頭像與 SVG 插畫、客家花布
   data/             台詞（*.lines.json）、角色聲線（cast.json）
   world/            遊戲規則：輸入、碰撞、玩家移動、場景定義（scenes.ts ＋ scene<Name>.ts）、熱點、對話、存檔、夢境（dream.ts）
@@ -101,6 +102,13 @@ src/
     Stage.tsx       廟埕野台戲（StageShow、StageTex；掛在 Temple.tsx 裡，節日才開演）
     Vision.tsx      陰陽眼才看得到的東西：回憶碎片、腳印、地基主
     Telekinesis.tsx 念力：拖被子、滾球、推窗、撿東西（world/night/tk.ts）
+    Station.tsx     小火車站（StationProps、StationTrain；家這頭的路口在 StationPath.tsx）
+    OldStreet.tsx   老街（OldStreetFacades、OldStreetShops、OldStreetFader）
+    Harbor.tsx      海邊漁港＋燈塔（HarborSea、HarborProps；漲退潮在 world/tide.ts）
+    Past.tsx        回到 1958（關卡規則在 world/past.ts）
+    Decor.tsx       裝修民宿的擺設（DecorModels；目錄與效果在 world/decorCatalog.ts）
+    Incidents.tsx   半夜突發事件（規則在 world/night/incidents.ts）
+    Encounters.tsx  客人之間的故事（規則在 world/night/encounters.ts）
     Temple.tsx      土地公廟場景
     World.tsx       每幀的遊戲邏輯（移動、房間判定、淡出、熱點、出口）
     Markers.tsx     熱點光點、出口路牌

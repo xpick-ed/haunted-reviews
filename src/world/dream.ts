@@ -425,7 +425,23 @@ const PALETTES: Record<DreamTheme, DreamPalette> = {
   studio: { skyTop: '#050508', skyBottom: '#2a0d14', fog: '#12070b', fogNear: 24, fogFar: 55, ground: '#2a2626', groundEdge: '#141212', accent: '#ff3b3b', light: '#fff0d0', fill: '#7a2a4a', particles: '#ff9a9a', bright: 0.3 },
 }
 
-const NAMES: Record<GuestId, string> = { xiaomei: '小美', akai: '阿凱', zhang: '張經理', ahao: '阿豪', xiaoyu: '小宇', linmom: '林太太', agui: '阿桂', atu: '阿土伯' }
+const NAMES: Record<GuestId, string> = {
+  xiaomei: '小美',
+  akai: '阿凱',
+  zhang: '張經理',
+  ahao: '阿豪',
+  xiaoyu: '小宇',
+  linmom: '林太太',
+  agui: '阿桂',
+  atu: '阿土伯',
+  ajie: '阿傑',
+  xiaohui: '小惠',
+  mrwang: '王先生',
+  mrswang: '王太太',
+  zhiming: '志明',
+  fubo: '福伯',
+  zhiwei: '志偉',
+}
 
 /** 某位客人的夢（easy：學了「好夢」） */
 export function dreamFor(guest: GuestId, easy = false): DreamDef {
@@ -505,6 +521,17 @@ export function dreamFor(guest: GuestId, easy = false): DreamDef {
         palette: PALETTES.studio,
         layout: studioLayout(),
         lines: { ...gm, start: 'dream.akai.start', win: 'dream.akai.win', hint: ['dream.akai.hint.1', 'dream.akai.hint.2'], wrong: 'dream.akai.wrong' },
+      }
+    default:
+      // 大人的客人（DESIGN §29）：在大霧裡陪他走一段（台詞 dream.<id>.start／win／follow／lost／scared 由各自的模組補）
+      return {
+        ...base,
+        mode: 'escort',
+        theme: 'fog',
+        objective: `陪${NAMES[guest]}走出大霧`,
+        palette: PALETTES.fog,
+        layout: fogLayout(),
+        lines: { ...gm, start: `dream.${guest}.start`, win: `dream.${guest}.win`, follow: `dream.${guest}.follow`, lost: `dream.${guest}.lost`, scared: `dream.${guest}.scared` },
       }
   }
 }

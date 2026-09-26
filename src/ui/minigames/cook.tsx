@@ -11,6 +11,10 @@ import './cook.css'
 // 品質 0..1 = 熱油 25% + 下料 35% + 翻面 40%。E／空白鍵／點畫面都算「按」，ESC 或 ✕ 取消。
 
 const LIKE_LABEL: Record<GuestType, string> = {
+  couple: '情侶',
+  caregiver: '照顧家人的人',
+  wanderer: '失智的老人',
+  lonely: '一個人來的客人',
   timid: '一般旅客',
   thrill: 'YouTuber',
   business: '商務客',

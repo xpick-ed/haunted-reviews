@@ -14,6 +14,10 @@ import { rateGuest } from './rating'
 import { STORY, endingAtDawn, endingAtMonthEnd, type EndingId } from '../story'
 import { createIncidents, incidentState, INCIDENT_EVENTS } from './incidents'
 import { createEncounters, ENCOUNTER_EVENTS } from './encounters'
+import { createCouples, COUPLE_EVENTS } from './couples'
+import { createFamily, FAMILY_EVENTS } from './family'
+import { createHorror, HORROR_EVENTS } from './horror'
+import { adultOn } from '../../settings'
 import { RECIPES, START_PANTRY, canCook, type Fortune, type Ingredient, type RecipeId, type RelicId } from './items'
 import { HIDE_SPOTS } from './actions'
 import { input } from '../input'
@@ -190,7 +194,7 @@ export interface NightSlice {
   /** 傍晚顯示「今晚入住」卡片 */
   intro: boolean
   /** 開著的面板：技能樹、柑仔店、鬼夜市法器攤、回憶相簿 */
-  panel: 'skills' | 'shop' | 'relics' | 'album' | null
+  panel: 'skills' | 'shop' | 'relics' | 'album' | 'settings' | null
   /** 慢動作（被看到的瞬間） */
   timeScale: number
   flickerUntil: Record<RoomId, number>
@@ -287,7 +291,7 @@ export function preloadNightVoices(plan: NightPlan, meta?: Meta) {
 }
 
 /** 某晚的住客組合（傍晚的入住卡片就要知道） */
-export const planFor = (m: Meta) => planNight(m.night, m.warm, m.spooky, m.pressure)
+export const planFor = (m: Meta) => planNight(m.night, m.warm, m.spooky, m.pressure, { adult: adultOn() })
 
 export const EMPTY_STATS = (): NightStats => ({ seen: 0, captures: 0, nearmiss: 0, woken: 0, mgCatches: 0, dashed: false, dogCalmed: false })
 
@@ -298,10 +302,10 @@ const HOLD_ACTIONS = new Set<ActionId>(['tuck', 'temp', 'water', 'coil', 'nightl
  * NightSim 的外掛登記表（DESIGN §27.2）：每晚開始時呼叫，回傳 null 表示今晚沒有。
  * 突發事件（night/incidents.ts）、客人之間的故事（night/encounters.ts）在自己的模組裡 push 進來。
  */
-export const SIM_PLUGINS: ((sim: NightSim, plan: NightPlan, meta: Meta) => SimPlugin | null)[] = [createIncidents, createEncounters]
+export const SIM_PLUGINS: ((sim: NightSim, plan: NightPlan, meta: Meta) => SimPlugin | null)[] = [createIncidents, createEncounters, createCouples, createFamily, createHorror]
 
 /** 外掛發出的自訂事件（SimEvent 的 t: 'custom'）的處理函式：kind → handler */
-export const CUSTOM_EVENTS: Record<string, (data: unknown) => void> = { ...INCIDENT_EVENTS, ...ENCOUNTER_EVENTS }
+export const CUSTOM_EVENTS: Record<string, (data: unknown) => void> = { ...INCIDENT_EVENTS, ...ENCOUNTER_EVENTS, ...COUPLE_EVENTS, ...FAMILY_EVENTS, ...HORROR_EVENTS }
 
 /** 擺設換算成模擬用的加成（src/world/decor.ts 登記進來；還沒登記就沒有加成） */
 export const decorHooks: { bonus: (decor: DecorPlacement[]) => DecorBonus | undefined } = { bonus: () => undefined }

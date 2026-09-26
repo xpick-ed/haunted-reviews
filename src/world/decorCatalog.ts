@@ -238,6 +238,10 @@ export function decorBonus(decor: DecorPlacement[]): DecorBonus {
 }
 
 const TYPE_NAME: Record<GuestType, string> = {
+  couple: '情侶',
+  caregiver: '照顧家人的人',
+  wanderer: '失智的老人',
+  lonely: '一個人來的客人',
   timid: '膽小的客人',
   thrill: 'YouTuber',
   business: '商務客',

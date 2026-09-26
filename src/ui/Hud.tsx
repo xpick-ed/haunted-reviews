@@ -22,6 +22,9 @@ import { EncounterPanel } from './EncounterPanel'
 import { GiftPanel } from './GiftPanel'
 import { PastHud } from './PastHud'
 import { EndingScreen } from './EndingScreen'
+import { SettingsPanel } from './Settings'
+import { HorrorHud } from './HorrorHud'
+import { PORTRAIT_IDS } from '../art/portraits'
 import { GOAL, goalShown } from '../world/story'
 import { MEMORIES } from '../world/memories'
 import { requestById } from '../world/requests'
@@ -72,6 +75,8 @@ export function Hud() {
       {panel === 'shop' && <ShopPanel />}
       {panel === 'relics' && <RelicPanel />}
       {panel === 'album' && <AlbumPanel />}
+      {panel === 'settings' && <SettingsPanel />}
+      <HorrorHud />
       <DreamHud />
       <PastHud />
       <DecorHud />
@@ -173,6 +178,9 @@ function Status() {
         <button className="chip icon" onClick={toggleVoice} aria-label="語音開關">
           {voice ? '🔊' : '🔇'}
         </button>
+        <button className="chip icon" onClick={() => openPanel('settings')} aria-label="設定">
+          ⚙
+        </button>
       </div>
     </div>
   )
@@ -202,7 +210,11 @@ function GuestRow({ g }: { g: GuestView }) {
   return (
     <div className={`guest-row ${g.suspicion > 0.5 && !g.seesGhost ? 'alert' : ''}`}>
       <div className="guest-face">
-        <img src={portraitDataUrl(g.id as PortraitId, g.fear > 55 ? 'surprised' : g.comfort > 70 ? 'happy' : 'normal')} alt="" draggable={false} />
+        {(PORTRAIT_IDS as readonly string[]).includes(g.id) ? (
+          <img src={portraitDataUrl(g.id as PortraitId, g.fear > 55 ? 'surprised' : g.comfort > 70 ? 'happy' : 'normal')} alt="" draggable={false} />
+        ) : (
+          <span className="face-initial">{g.name.slice(0, 1)}</span>
+        )}
         <span className="room-tag">{g.room === 'r1' ? '一' : '二'}</span>
       </div>
       <div className="guest-info">

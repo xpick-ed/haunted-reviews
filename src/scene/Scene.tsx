@@ -33,6 +33,9 @@ import { DecorLayer } from './Decor'
 import { IncidentsLayer } from './Incidents'
 import { EncounterLayer } from './Encounters'
 import { StoryScene } from './StoryScene'
+import { HorrorLayer } from './HorrorLayer'
+import { CouplesLayer } from './CouplesLayer'
+import { FamilyLayer } from './FamilyLayer'
 import { hanAtHome } from '../world/storyBeats'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { VisionLayer } from './Vision'
@@ -145,6 +148,9 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
       <IncidentsLayer />
       <EncounterLayer />
       <StoryScene />
+      <HorrorLayer />
+      <CouplesLayer />
+      <FamilyLayer />
       {!hanAway && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )

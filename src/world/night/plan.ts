@@ -28,7 +28,9 @@ const MONTH1: NightPlan[] = [
   { parties: [{ room: 'r1', members: ['agui', 'atu'] }, { room: 'r2', members: ['xiaomei'] }], event: 'blackout' },
 ]
 
-const WARM_POOL: GuestId[][] = [['xiaomei'], ['zhang'], ['linmom', 'xiaoyu'], ['agui', 'atu']]
+const WARM_POOL: GuestId[][] = [['xiaomei'], ['zhang'], ['linmom', 'xiaoyu'], ['agui', 'atu'], ['zhiming', 'fubo']]
+/** 成人內容開著時才會來的客人（DESIGN §29） */
+const ADULT_POOL: GuestId[][] = [['ajie', 'xiaohui'], ['mrwang', 'mrswang'], ['zhiwei']]
 const SPOOKY_POOL: GuestId[][] = [['akai'], ['ahao']]
 const EVENTS: NightEvent[] = ['none', 'none', 'dog', 'mosquitoes', 'coldsnap', 'blackout']
 
@@ -36,11 +38,13 @@ const EVENTS: NightEvent[] = ['none', 'none', 'dog', 'mosquitoes', 'coldsnap', '
  * 第 night 晚（從 1 開始）的安排。第一個月照劇本；之後依名聲決定客人比例：
  * 溫馨名聲高 → 一般客、家庭、商務客多；靈異名聲高 → YouTuber、背包客多。
  */
-export function planNight(night: number, warm: number, spooky: number, pressure: number): NightPlan {
+export function planNight(night: number, warm: number, spooky: number, pressure: number, opts: { adult?: boolean } = {}): NightPlan {
   if (night <= MONTH1.length) return MONTH1[night - 1]
   const r = seeded(night * 7919)
   const pick = (): GuestId[] => {
     const spookyChance = 0.15 + (spooky / 100) * 0.6 - (warm / 100) * 0.2
+    // 成人內容開著：三成的機會來大人的客人
+    if (opts.adult && r() < 0.3) return ADULT_POOL[Math.floor(r() * ADULT_POOL.length)]
     const pool = r() < spookyChance ? SPOOKY_POOL : WARM_POOL
     return pool[Math.floor(r() * pool.length)]
   }

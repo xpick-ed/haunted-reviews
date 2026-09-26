@@ -19,6 +19,8 @@ import { BOND_HOTSPOTS } from './bonds'
 import { DECOR_HOTSPOTS } from './decor'
 import { INCIDENT_HOTSPOTS } from './night/incidents'
 import { STORY_HOTSPOTS, hanAtHome } from './storyBeats'
+import { NIGHTLIFE_HOTSPOTS } from './nightlife'
+import { ADULT_STORY_HOTSPOTS } from './adultStory'
 import { festivalOf } from './night/plan'
 import { requestById } from './requests'
 import { night, yinMax } from './night/director'
@@ -237,6 +239,8 @@ export const HOTSPOTS: Hotspot[] = [
   ...DECOR_HOTSPOTS,
   ...INCIDENT_HOTSPOTS,
   ...STORY_HOTSPOTS,
+  ...NIGHTLIFE_HOTSPOTS,
+  ...ADULT_STORY_HOTSPOTS,
 ]
 
 /** 範圍內所有能用的熱點（近的排前面）：同一個地方有好幾件事可以做時（跟 NPC 說話、送禮……），按 Q 切換 */

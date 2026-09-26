@@ -1,0 +1,62 @@
+.sheet.settings {
+  width: min(100%, 460px);
+}
+.setting-row {
+  font: inherit;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+.setting-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.setting-text small {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.switch {
+  flex-shrink: 0;
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  position: relative;
+  transition: background 0.2s;
+}
+.switch i {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.setting-row.on .switch {
+  background: linear-gradient(135deg, var(--gold), #d98a2e);
+}
+.setting-row.on .switch i {
+  transform: translateX(18px);
+}
+.age-check {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 90, 90, 0.12);
+  border: 1px solid rgba(255, 90, 90, 0.4);
+  font-size: 13px;
+}

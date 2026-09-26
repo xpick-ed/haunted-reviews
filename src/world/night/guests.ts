@@ -1,4 +1,6 @@
 import type { GuestId, GuestType, NeedKind } from './types'
+import { COUPLE_GUESTS } from './guests.couples'
+import { FAMILY_GUESTS } from './guests.family'
 
 // 客人資料（DESIGN §5）。數值都在這裡調。
 // 時間用「小時」：22 = 晚上十點、24 = 午夜、26 = 凌晨兩點、30 = 早上六點。
@@ -44,7 +46,7 @@ export interface GuestDef {
   shock: number
 }
 
-export const GUESTS: Record<GuestId, GuestDef> = {
+const BASE_GUESTS = {
   xiaomei: {
     id: 'xiaomei',
     name: '小美',
@@ -203,7 +205,10 @@ export const GUESTS: Record<GuestId, GuestDef> = {
     clues: ['阿桂的老伴，話不多', '走路很慢', '說「阿春的菜脯蛋最好吃」'],
     shock: 0,
   },
-}
+} satisfies Partial<Record<GuestId, GuestDef>>
+
+/** 所有客人（大人的客人在 guests.couples.ts、guests.family.ts） */
+export const GUESTS = { ...BASE_GUESTS, ...COUPLE_GUESTS, ...FAMILY_GUESTS } as Record<GuestId, GuestDef>
 
 export const NEED_INFO: Record<NeedKind, { icon: string; label: string }> = {
   cold: { icon: '❄️', label: '好冷' },

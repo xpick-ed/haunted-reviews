@@ -6,6 +6,14 @@ import type { ActionId, BarkKind, GuestId } from '../world/night/types'
 
 /** 客人在各種情況下會講的話 */
 export const BARKS: Record<GuestId, Partial<Record<BarkKind, string[]>>> = {
+  // 大人的客人（DESIGN §29）：各自的模組（night/couples.ts、night/family.ts）載入時把台詞補進來
+  ajie: {},
+  xiaohui: {},
+  mrwang: {},
+  mrswang: {},
+  zhiming: {},
+  fubo: {},
+  zhiwei: {},
   "xiaomei": {
     "arrive": [
       "xiaomei.arrive.1"

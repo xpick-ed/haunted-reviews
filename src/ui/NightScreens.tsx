@@ -2,7 +2,8 @@ import { useStore } from '../store'
 import { GUESTS } from '../world/night/guests'
 import { FESTIVAL_NAME, NIGHTS_PER_MONTH, SKILLS, festivalOf, type SkillDef } from '../world/night/plan'
 import { line } from '../world/lines'
-import { portraitDataUrl, type PortraitId } from '../art/portraits'
+import { PORTRAIT_IDS, portraitDataUrl, type PortraitId } from '../art/portraits'
+import { nameOf } from '../world/lines'
 import type { NightEvent } from '../world/night/types'
 
 // 深夜前後的畫面：入住卡片（傍晚）、技能樹、天亮結算、月底報告（DESIGN §9–§13）。
@@ -35,6 +36,8 @@ function Stars({ n, delay = 0 }: { n: number; delay?: number }) {
 }
 
 function Face({ id, mood = 'normal' }: { id: string; mood?: 'normal' | 'happy' | 'surprised' }) {
+  // 還沒有頭像的角色（大人的客人等）：顯示名字的第一個字
+  if (!(PORTRAIT_IDS as readonly string[]).includes(id)) return <span className="face face-initial">{nameOf(id).slice(0, 1)}</span>
   return <img className="face" src={portraitDataUrl(id as PortraitId, mood)} alt="" draggable={false} />
 }
 

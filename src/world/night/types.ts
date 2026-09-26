@@ -2,7 +2,23 @@
 // 客人、需求、動作、台詞種類、房間與物件的 id 都在這裡定義，畫面、聲音、規則三邊共用。
 
 /** 會入住的客人（每個 id 對應 src/chars/specs.ts 的長相與 src/data/cast.json 的聲線） */
-export type GuestId = 'xiaomei' | 'akai' | 'zhang' | 'ahao' | 'xiaoyu' | 'linmom' | 'agui' | 'atu'
+export type GuestId =
+  | 'xiaomei'
+  | 'akai'
+  | 'zhang'
+  | 'ahao'
+  | 'xiaoyu'
+  | 'linmom'
+  | 'agui'
+  | 'atu'
+  // 大人的內容（DESIGN §29）：新婚夫妻、外遇情侶（假名）、帶失智爸爸出遊的兒子、剛被裁員的上班族
+  | 'ajie'
+  | 'xiaohui'
+  | 'mrwang'
+  | 'mrswang'
+  | 'zhiming'
+  | 'fubo'
+  | 'zhiwei'
 
 /** 客人類型：決定作息、怕不怕鬼、在意什麼 */
 export type GuestType =
@@ -13,6 +29,10 @@ export type GuestType =
   | 'child' // 小孩：看得到阿嬤、想跟她玩
   | 'parent' // 帶小孩的家長：怕鬼，看到小孩對空氣講話會怕
   | 'elder' // 老夫妻：阿嬤生前的朋友，不怕她，想跟她聊天
+  | 'couple' // 情侶：要私人空間，別打擾
+  | 'caregiver' // 照顧家人的人：累壞了、睡不著
+  | 'wanderer' // 失智的老人：半夜到處走，看得到阿嬤（把她認成別人）
+  | 'lonely' // 一個人來的：半夜睡不著，需要人陪
 
 /** 客人的需求（頭上的想法泡泡） */
 export type NeedKind =

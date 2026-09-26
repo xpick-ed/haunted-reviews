@@ -25,6 +25,9 @@ export type MinigameId =
   | 'photo'
   | 'crab'
   | 'fuse'
+  // 大人的夜生活（DESIGN §29）
+  | 'drinking'
+  | 'mahjong'
 
 export interface MinigameProps<P = unknown, R = unknown> {
   params: P
@@ -143,4 +146,20 @@ export interface CrabResult {
 export interface FuseResult {
   fixed: boolean
   seconds: number
+}
+
+// ---------------------------------------------------------------------------
+// 大人的夜生活（DESIGN §29）
+// ---------------------------------------------------------------------------
+
+/** 划酒拳：贏了幾拳、阿義喝了幾杯（喝多了他會講真心話） */
+export interface DrinkingResult {
+  wins: number
+  cups: number
+}
+
+/** 簡化版麻將：胡了沒、贏了多少功德 */
+export interface MahjongResult {
+  won: boolean
+  merit: number
 }

@@ -1938,3 +1938,17 @@ body,
   color: #ffd9a0;
   font-variant-numeric: tabular-nums;
 }
+.face-initial {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--gold-2);
+}
+span.face.face-initial {
+  width: 52px;
+  height: 52px;
+  font-size: 22px;
+}

@@ -115,7 +115,7 @@ export interface GameState extends NightSlice {
   setQuality: (q: Quality) => void
   resetNight: () => void
   closeIntro: () => void
-  openPanel: (p: 'skills' | 'shop' | 'relics' | 'album' | null) => void
+  openPanel: (p: 'skills' | 'shop' | 'relics' | 'album' | 'settings' | null) => void
   /** 開始小遊戲；玩完（或取消）會呼叫 onDone(result) */
   startMinigame: (id: MinigameId, params: unknown, onDone: (result: unknown) => void) => void
   finishMinigame: (result: unknown) => void

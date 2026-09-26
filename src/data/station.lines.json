@@ -1,0 +1,32 @@
+{
+  "station.observe.1": { "who": "grandma", "text": "好，阿嬤記起來了，晚上就知道要準備什麼。" },
+  "station.observe.2": { "who": "grandma", "text": "看人要看仔細，客人的心事都寫在臉上。" },
+  "station.observe.3": { "who": "grandma", "text": "這個人仔，今暗應該會好睏……吧。" },
+
+  "station.train.go": { "who": "grandma", "text": "嘿，好久沒坐五分車了！小時候偷抽甘蔗，被糖廠的人追。" },
+  "station.train.win": { "who": "grandma", "text": "風吹起來真爽快！甘蔗田的火金姑都跟著阿嬤跑。" },
+  "station.train.ok": { "who": "grandma", "text": "老骨頭還跳得動，不錯不錯。" },
+  "station.train.lose": { "who": "grandma", "text": "哎喲，頭撞到電線了……鬼也會暈車喔。" },
+  "station.train.done.1": { "who": "grandma", "text": "今天坐過了，明天再來。" },
+  "station.train.done.2": { "who": "grandma", "text": "五分車也要休息，火車頭在打瞌睡。" },
+
+  "station.clock": { "who": "grandma", "text": "這個鐘走了幾十年，比我還準時。" },
+  "station.clock.night": { "who": "grandma", "text": "咦？鐘停在十二點……末班車要來了。" },
+  "station.ticket.1": { "who": "grandma", "text": "「本站無人售票，請上車補票。」售票的阿伯早就退休了。" },
+  "station.ticket.2": { "who": "grandma", "text": "以前在這裡買一張去嘉義的票，要排好久的隊。" },
+  "station.timetable.1": { "who": "grandma", "text": "最後一行紅字……24:00 末班，不收票？誰寫的？" },
+  "station.timetable.2": { "who": "grandma", "text": "車掌說，末班車每天都準時。準得有一點恐怖。" },
+  "station.name": { "who": "grandma", "text": "後壁厝站。往東是我們阿春厝，往西是老街口。" },
+  "station.tower": { "who": "grandma", "text": "以前蒸汽火車要在這裡加水，現在只剩鳥仔來喝水。" },
+
+  "conductor.1": { "who": "conductor", "text": "末班車，後壁厝站到了。請上車的旅客……咦，妳也是這邊的人？" },
+  "conductor.2": { "who": "conductor", "text": "我開這班車開了五十幾年了。車上的人都要去一個地方，只是都還沒到。" },
+  "conductor.3": { "who": "conductor", "text": "妳要上車嗎？不用票，這班車不收票。" },
+  "conductor.4": { "who": "grandma", "text": "不行啦，我家裡還有客人要顧，還有一個憨孫。" },
+  "conductor.5": { "who": "conductor", "text": "……這樣啊。那妳還不是搭這班車的時候。" },
+  "conductor.6": { "who": "conductor", "text": "每天半夜十二點，我都會在這裡停一下。要聊天的話，歡迎。" },
+  "conductor.again.1": { "who": "conductor", "text": "旅客請注意，本列車即將開往……嗯，還沒決定。" },
+  "conductor.again.2": { "who": "conductor", "text": "那個學生每天都坐過站，我也不忍心叫醒他。" },
+  "conductor.again.3": { "who": "conductor", "text": "妳家的客人今晚睡得好嗎？睡得好，就是福氣。" },
+  "conductor.again.4": { "who": "conductor", "text": "車要開了，請站在黃線後面。……對，鬼也要。" }
+}

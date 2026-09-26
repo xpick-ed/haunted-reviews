@@ -184,6 +184,78 @@ export const DIALOGUES: Record<string, Dialogue> = {
       { line: 'school.meet.7', set: 'school_kids_met' },
     ],
   },
+  // 海邊：燈塔的守燈人（src/data/harbor.lines.json）
+  keeper_1: {
+    steps: [
+      { line: 'keeper.1' },
+      { line: 'keeper.2' },
+      { line: 'keeper.3' },
+      {
+        line: 'keeper.4',
+        choices: [
+          { line: 'harbor.gm.help', goto: 'help' },
+          { line: 'harbor.gm.why', goto: 'why' },
+        ],
+      },
+      { label: 'why', line: 'harbor.gm.why' },
+      { line: 'keeper.why' },
+      { line: 'harbor.gm.help', goto: 'ask' },
+      { label: 'help', line: 'harbor.gm.help' },
+      { label: 'ask', line: 'keeper.5' },
+      { line: 'keeper.6', set: 'keeper_met' },
+    ],
+  },
+  // 回到 1958（src/world/past.ts、src/data/past.lines.json）
+  past_stones_agong: {
+    steps: ['past.stones.a1', 'past.stones.a2', 'past.stones.a3', 'past.stones.a4', 'past.stones.a5', 'past.stones.a6', 'past.stones.a7'].map((line) => ({ line })),
+  },
+  past_wed_shugong: { steps: ['past.wed.sg1', 'past.wed.sg2', 'past.wed.sg3', 'past.wed.sg4', 'past.wed.sg5'].map((line) => ({ line })) },
+  past_wed_shenpo: { steps: ['past.wed.sp1', 'past.wed.sp2', 'past.wed.sp3'].map((line) => ({ line })) },
+  past_wed_popo: {
+    steps: ['past.wed.pp1', 'past.wed.pp2', 'past.wed.pp3', 'past.wed.pp4', 'past.wed.pp5', 'past.wed.pp6', 'past.wed.pp7'].map((line) => ({ line })),
+  },
+  past_wed_mirror: { steps: ['past.wed.m1', 'past.wed.m2', 'past.wed.m3', 'past.wed.m4', 'past.wed.m5', 'past.wed.m6'].map((line) => ({ line })) },
+  past_kit_agong: {
+    steps: ['past.kit.a1', 'past.kit.a2', 'past.kit.a3', 'past.kit.a4', 'past.kit.a5', 'past.kit.a6', 'past.kit.a7', 'past.kit.a8'].map((line) => ({ line })),
+  },
+  // 小火車站：末班鬼火車的車掌（src/world/sceneStation.ts、src/data/station.lines.json）
+  conductor_1: {
+    steps: [{ line: 'conductor.1' }, { line: 'conductor.2' }, { line: 'conductor.3' }, { line: 'conductor.4' }, { line: 'conductor.5' }, { line: 'conductor.6', set: 'conductor_met' }],
+  },
+  // 老街（src/data/oldstreet.lines.json）
+  bingmom_first: {
+    steps: [
+      { line: 'bingmom.first.1' },
+      { line: 'oldstreet.gm.ice.1' },
+      { line: 'bingmom.first.2' },
+      {
+        line: 'bingmom.first.3',
+        choices: [
+          { line: 'oldstreet.gm.ice.help', goto: 'help' },
+          { line: 'oldstreet.gm.ice.eat', goto: 'eat' },
+        ],
+      },
+      { label: 'eat', line: 'oldstreet.gm.ice.eat' },
+      { line: 'bingmom.first.eat', goto: 'go' },
+      { label: 'help', line: 'oldstreet.gm.ice.help' },
+      { label: 'go', line: 'bingmom.first.4', set: 'bingmom_met' },
+    ],
+  },
+  projectionist_first: {
+    steps: [
+      { line: 'projectionist.first.1' },
+      { line: 'oldstreet.gm.proj.1' },
+      { line: 'projectionist.first.2' },
+      { line: 'oldstreet.gm.proj.2' },
+      { line: 'projectionist.first.3' },
+      { line: 'projectionist.first.4', set: 'projectionist_met' },
+    ],
+  },
+  // 照相館老闆看不到阿嬤，也聽不到
+  photographer_first: {
+    unseen: true,
+    steps: [{ line: 'photographer.first.1' }, { line: 'photographer.first.2' }, { line: 'oldstreet.gm.photo.1' }, { line: 'photographer.first.3', set: 'photographer_met' }],
+  },
 }
 
 export function indexOfLabel(d: Dialogue, label: string) {

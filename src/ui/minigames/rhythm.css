@@ -1,0 +1,145 @@
+/* 歌仔戲・後場鑼鼓：紅幕金邊的戲台色調 */
+
+.rg-card {
+  position: relative;
+  width: min(94vw, 520px);
+  max-height: calc(100vh - 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(58, 16, 14, 0.97), rgba(26, 8, 8, 0.97));
+  border: 1.5px solid rgba(242, 180, 91, 0.55);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(255, 120, 60, 0.18);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+}
+.rg-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+}
+.rg-title {
+  flex: 1;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--gold-2);
+  white-space: nowrap;
+}
+.rg-stat {
+  font-size: 13px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rg-stat b {
+  font-size: 18px;
+  color: var(--gold-2);
+}
+.rg-stage {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 220, 160, 0.12);
+}
+.rg-canvas {
+  display: block;
+  touch-action: none;
+  cursor: pointer;
+}
+.rg-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px;
+  text-align: center;
+  background: rgba(20, 6, 6, 0.74);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: fade 0.25s ease-out;
+}
+.rg-overlay p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #f3efe6;
+}
+.rg-overlay p b {
+  color: var(--gold-2);
+}
+.rg-story {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 17px !important;
+  color: #ffe2b0 !important;
+}
+.rg-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin: 4px 6px 0;
+  border-radius: 50%;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2a0a04;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+}
+.rg-chip.gong {
+  background: radial-gradient(circle at 35% 30%, #fff8e0, #f2c14e 45%, #8a5a12);
+}
+.rg-chip.drum {
+  background: radial-gradient(circle at 35% 30%, #fff8e0, #e8563a 45%, #6e1a10);
+}
+.rg-chip.cym {
+  background: radial-gradient(circle at 35% 30%, #fff8e0, #8fd6e8 45%, #1c5a6a);
+}
+.rg-grade {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: var(--gold-2);
+  text-shadow: 0 0 18px rgba(255, 180, 80, 0.7);
+  animation: pop-in 0.3s ease-out;
+}
+.rg-result {
+  font-size: 16px;
+  color: #f3efe6;
+}
+.rg-result b {
+  font-size: 24px;
+  color: var(--gold-2);
+}
+.rg-merit {
+  font-size: 20px;
+  font-weight: 700;
+  color: #bff8ee;
+  text-shadow: 0 0 16px rgba(79, 224, 200, 0.7);
+}
+.rg-leave {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  z-index: 2;
+  font: inherit;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(22, 10, 10, 0.92);
+  color: var(--muted);
+  cursor: pointer;
+}

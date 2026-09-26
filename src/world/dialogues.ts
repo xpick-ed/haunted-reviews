@@ -87,6 +87,103 @@ export const DIALOGUES: Record<string, Dialogue> = {
     ],
   },
   jinyubo_1: { steps: [{ line: 'jinyubo.1' }, { line: 'market.gm.3' }, { line: 'jinyubo.2', set: 'jinyubo_met' }] },
+  // 溪邊玩水的小鬼（src/data/river.lines.json）
+  guikids_river: {
+    steps: [
+      { line: 'guikid1.hi.1' },
+      { line: 'river.kids.gm.1' },
+      { line: 'guikid2.hi.1' },
+      { line: 'guikid1.hi.2' },
+      { line: 'river.kids.gm.2' },
+      { line: 'guikid2.hi.2' },
+      { line: 'river.kids.gm.3', set: 'guikids_met' },
+    ],
+  },
+  // 廟埕野台戲（src/data/stage.lines.json）
+  banzhu_1: {
+    unseen: true,
+    steps: [{ line: 'banzhu.1' }, { line: 'stage.gm.1' }, { line: 'banzhu.2' }, { line: 'banzhu.3' }, { line: 'stage.gm.2' }, { line: 'banzhu.4', set: 'banzhu_met' }],
+  },
+
+  // 山上墓仔埔（src/data/hill.lines.json，DESIGN §26）
+  hill_agong_first: {
+    steps: [{ line: 'hill.agong.first.1' }, { line: 'hill.agong.first.2' }, { line: 'hill.agong.first.3' }, { line: 'hill.agong.first.4', set: 'hill_agong_first' }],
+  },
+  hill_qingming: {
+    unseen: true,
+    steps: [
+      { line: 'hill.qm.1' },
+      { line: 'hill.qm.2' },
+      { line: 'hill.qm.3' },
+      { line: 'hill.qm.4' },
+      { line: 'hill.qm.5' },
+      { line: 'hill.qm.6' },
+      { line: 'hill.qm.7' },
+      { line: 'hill.qm.8' },
+      { line: 'hill.qm.9', set: 'qingming_seen' },
+    ],
+  },
+  huobo_1: {
+    steps: [{ line: 'huobo.1.1' }, { line: 'hill.gm.intro' }, { line: 'huobo.1.2' }, { line: 'huobo.1.3' }, { line: 'huobo.1.4', set: 'huobo_met' }],
+  },
+  huobo_2: {
+    steps: [{ line: 'huobo.2.1' }, { line: 'huobo.2.2' }, { line: 'huobo.2.3' }, { line: 'huobo.2.4', set: 'huobo_ask_opera' }],
+  },
+  huobo_3: {
+    steps: [
+      { line: 'hill.gm.opera' },
+      {
+        line: 'huobo.3.1',
+        choices: [
+          { line: 'hill.gm.opera.tell', goto: 'tell' },
+          { line: 'hill.gm.opera.sing', goto: 'sing' },
+        ],
+      },
+      { label: 'tell', line: 'hill.gm.opera.tell' },
+      { line: 'huobo.3.tell', goto: 'end' },
+      { label: 'sing', line: 'hill.gm.opera.sing' },
+      { line: 'huobo.3.sing' },
+      { label: 'end', line: 'huobo.3.2' },
+      { line: 'huobo.3.3', set: 'huobo_done' },
+    ],
+  },
+  yuyi_1: {
+    steps: [{ line: 'yuyi.1.1' }, { line: 'hill.gm.yuyi' }, { line: 'yuyi.1.2' }, { line: 'yuyi.1.3' }, { line: 'yuyi.1.4', set: 'yuyi_met' }],
+  },
+  yuyi_2: {
+    steps: [
+      { line: 'hill.gm.gossip' },
+      { line: 'yuyi.2.1' },
+      {
+        line: 'yuyi.2.ask',
+        choices: [
+          { line: 'hill.gm.gossip.fridge', goto: 'fridge' },
+          { line: 'hill.gm.gossip.miss', goto: 'miss' },
+        ],
+      },
+      { label: 'fridge', line: 'hill.gm.gossip.fridge' },
+      { line: 'yuyi.2.fridge', goto: 'secret' },
+      { label: 'miss', line: 'hill.gm.gossip.miss' },
+      { line: 'yuyi.2.miss1' },
+      { line: 'yuyi.2.miss2' },
+      { label: 'secret', line: 'yuyi.2.2' },
+      { line: 'yuyi.2.3' },
+      { line: 'hill.gm.really' },
+      { line: 'yuyi.2.4', set: 'yuyi_done' },
+    ],
+  },
+  // 廢棄國小：第一次遇到小孩鬼（src/data/school.lines.json）
+  school_kids_1: {
+    steps: [
+      { line: 'school.meet.1' },
+      { line: 'school.meet.2' },
+      { line: 'school.meet.3' },
+      { line: 'school.meet.4' },
+      { line: 'school.meet.5' },
+      { line: 'school.meet.6' },
+      { line: 'school.meet.7', set: 'school_kids_met' },
+    ],
+  },
 }
 
 export function indexOfLabel(d: Dialogue, label: string) {

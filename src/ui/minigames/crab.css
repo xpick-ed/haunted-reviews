@@ -1,0 +1,155 @@
+/* 抓螃蟹：退潮後的潮間帶，沙色配海藍 */
+
+.cb-card {
+  position: relative;
+  width: min(94vw, 460px);
+  max-height: calc(100vh - 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(18, 36, 46, 0.97), rgba(10, 20, 26, 0.97));
+  border: 1.5px solid rgba(230, 170, 120, 0.4);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(255, 140, 90, 0.1);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+}
+.cb-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+}
+.cb-title {
+  flex: 1;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #ffd9c4;
+}
+.cb-stat {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.cb-stat b {
+  font-size: 18px;
+  color: var(--gold-2);
+}
+.cb-stage {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  touch-action: none;
+}
+.cb-canvas {
+  display: block;
+  touch-action: none;
+}
+.cb-msg {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  white-space: nowrap;
+  pointer-events: none;
+  background: rgba(10, 16, 18, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  animation: pop-in 0.2s ease-out;
+}
+.cb-msg.hint {
+  color: #ffe6d4;
+}
+.cb-msg.good {
+  color: var(--gold-2);
+  border-color: rgba(242, 180, 91, 0.6);
+}
+.cb-msg.bad {
+  color: #ffb0a8;
+  border-color: rgba(255, 90, 90, 0.5);
+}
+.cb-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px;
+  text-align: center;
+  background: rgba(10, 16, 20, 0.72);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: fade 0.25s ease-out;
+  cursor: default;
+}
+.cb-overlay p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #f3efe6;
+}
+.cb-overlay p b {
+  color: var(--gold-2);
+}
+.cb-result {
+  font-size: 20px;
+  color: #f3efe6;
+}
+.cb-result b {
+  font-size: 34px;
+  color: var(--gold-2);
+}
+.cb-sub {
+  font-size: 15px;
+  color: #ffd2bc;
+}
+.cb-tide {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.cb-tide-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.cb-tide-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #3a7a90, #8fd8f0);
+  box-shadow: 0 0 8px rgba(143, 216, 240, 0.5);
+  transition: width 0.4s linear;
+}
+.cb-leave {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  font: inherit;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(12, 16, 22, 0.9);
+  color: var(--muted);
+  cursor: pointer;
+}

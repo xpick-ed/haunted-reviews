@@ -1,0 +1,53 @@
+{
+  "harbor.enter": { "who": "grandma", "text": "海風……好久沒聞到鹹鹹的味道了。" },
+  "harbor.enter.night": { "who": "grandma", "text": "暗暝的港邊，只剩船仔在搖。" },
+
+  "keeper.1": { "who": "keeper", "text": "……妳看得到我？妳也是……啊，原來是同款的。" },
+  "keeper.2": { "who": "keeper", "text": "我顧這座燈塔顧了四十年。燈，一暝都沒熄過。" },
+  "keeper.3": { "who": "keeper", "text": "去年颱風以後，電燈壞了，也沒人來修。燈一熄，我就睏袂去。" },
+  "keeper.4": { "who": "keeper", "text": "我的手摸不到東西了……妳敢會？" },
+  "harbor.gm.help": { "who": "grandma", "text": "我來幫你。我這雙手，蓋被子、倒茶都還會。" },
+  "harbor.gm.why": { "who": "grandma", "text": "現在船仔都有導航了，還需要燈塔嗎？" },
+  "keeper.why": { "who": "keeper", "text": "要啦。海上的人，看到燈才知道——有人在等他回家。" },
+  "keeper.5": { "who": "keeper", "text": "燈油用完了。船仔上可能還有一罐，不然……一枝蠟燭也好。" },
+  "keeper.6": { "who": "keeper", "text": "暗暝才點，燈要照給晚上的人看。" },
+
+  "keeper.hint.oil": { "who": "keeper", "text": "「新漁興」那隻船的船尾，以前都放一罐燈油。" },
+  "keeper.hint.candle": { "who": "keeper", "text": "沒燈油，一枝蠟燭也行。柑仔店有在賣。" },
+  "keeper.ready": { "who": "keeper", "text": "有燈油了？好，燈塔的門沒鎖，上去點吧。" },
+  "keeper.wait.night": { "who": "keeper", "text": "天還沒暗，等暗暝再點。" },
+  "keeper.lit.1": { "who": "keeper", "text": "……亮了。亮了啦。" },
+  "keeper.lit.2": { "who": "keeper", "text": "多謝妳。今暗，我總算睏會去了。" },
+  "keeper.idle.1": { "who": "keeper", "text": "妳看，那道光一直轉，外海的船都看得到。" },
+  "keeper.idle.2": { "who": "keeper", "text": "有燈，海就不會那麼黑。" },
+  "keeper.idle.3": { "who": "keeper", "text": "我老伴以前每暗都站在堤防上等我。現在換我等。" },
+
+  "harbor.lighthouse": { "who": "grandma", "text": "燈塔的燈沒亮……門口好像有人。" },
+  "harbor.lighthouse.lit.1": { "who": "grandma", "text": "光一圈一圈照出去，真好看。" },
+  "harbor.lighthouse.lit.2": { "who": "grandma", "text": "守燈人阿伯，今暗睡得好吧。" },
+  "harbor.door.nooil": { "who": "grandma", "text": "沒有燈油……船上找找看，不然去柑仔店買一枝蠟燭。" },
+  "harbor.door.light": { "who": "grandma", "text": "來，慢慢來……點起來囉！" },
+  "harbor.oil.take": { "who": "grandma", "text": "找到了，燈油罐！還有半罐。" },
+  "harbor.boat.1": { "who": "grandma", "text": "船仔靠在碼頭邊，一搖一搖，像在睏。" },
+  "harbor.boat.2": { "who": "grandma", "text": "船名寫得真大字，出海的人最怕人家叫不出他的船。" },
+
+  "harbor.crab.start": { "who": "grandma", "text": "水退了，石頭底下攏是蟳仔，來抓看覓。" },
+  "harbor.crab.good": { "who": "grandma", "text": "抓這麼多！明天煮螃蟹粥。" },
+  "harbor.crab.one": { "who": "grandma", "text": "有抓到就好，一隻也是一隻。" },
+  "harbor.crab.none": { "who": "grandma", "text": "唉唷，攏跑去躲了……" },
+  "harbor.crab.done": { "who": "grandma", "text": "今天抓過了，留一些給明天。" },
+
+  "harbor.tide.dusk": { "who": "grandma", "text": "現在是滿潮，潮間帶都在水裡。半暝過後才會退。" },
+  "harbor.tide.high": { "who": "grandma", "text": "水還很滿。等到一點左右，潮水就會退了。" },
+  "harbor.tide.mid": { "who": "grandma", "text": "水開始退了，石頭一顆一顆冒出來。" },
+  "harbor.tide.low": { "who": "grandma", "text": "乾潮了！潮池裡應該有螃蟹。" },
+
+  "harbor.tetrapod.1": { "who": "grandma", "text": "消波塊一個疊一個，囡仔最愛在上面跳，真危險。" },
+  "harbor.tetrapod.2": { "who": "grandma", "text": "浪打過來，都被擋住了。" },
+  "harbor.market.1": { "who": "grandma", "text": "魚市暗暝關了，天光前那些魚販就會來了。" },
+  "harbor.market.2": { "who": "grandma", "text": "保麗龍箱疊得跟人一樣高，臭臊味還在。" },
+  "harbor.market.dusk": { "who": "grandma", "text": "早上的魚市最熱鬧，現在只剩洗地的水。" },
+  "harbor.fisher.1": { "who": "grandma", "text": "那兩位阿伯，每暗都坐在這裡釣魚，一條都沒釣到。" },
+  "harbor.fisher.2": { "who": "grandma", "text": "補網的阿伯說，網要補，心也要補。" },
+  "harbor.fisher.3": { "who": "grandma", "text": "他們在等潮水……等了幾十年了。" }
+}

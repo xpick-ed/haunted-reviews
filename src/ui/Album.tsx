@@ -15,6 +15,9 @@ const SCENE_HINT: Record<string, string> = {
   school: '國小',
   hill: '山上',
   market: '鬼夜市',
+  station: '火車站',
+  oldstreet: '老街',
+  harbor: '海邊',
 }
 
 export function AlbumPanel() {

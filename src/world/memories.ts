@@ -123,6 +123,18 @@ export const MEMORIES: Memory[] = [
     line: 'mem.stool',
   },
   {
+    id: 'harbor',
+    title: '堤防上揮手',
+    year: 1965,
+    icon: '⚓',
+    scene: 'harbor',
+    x: -14,
+    z: -6.5,
+    y: 0.6,
+    text: '那年稻子遇到颱風，全泡在水裡。阿公去海口跑船賺錢，一出去就是半個月。每次船要開，我就站在堤防尾揮手，揮到看不見了還在揮。他回來說：「我有看到，妳的手帕是紅的。」',
+    line: 'mem.harbor',
+  },
+  {
     id: 'sewing',
     title: '一台裁縫車',
     year: 1968,

@@ -10,6 +10,8 @@ import { HILL_GHOSTS, hillGate } from './sceneHill'
 import { STAGE, stageMode } from './sceneStage'
 import { RIVER, riverKids } from './sceneRiver'
 import { kidsGate } from './tag'
+import { STATION, ghostTrain } from './sceneStation'
+import { keeperSpot } from './sceneHarbor'
 import { HAN_BED, HAN_SWEEP, KITCHEN_TABLE } from '../scene/layout'
 
 // 好感度＋送禮（DESIGN §27.2）：村民與鬼鄰居的好感度、喜歡的東西、每顆心的故事與回禮。
@@ -18,7 +20,7 @@ import { HAN_BED, HAN_SWEEP, KITCHEN_TABLE } from '../scene/layout'
 //   2♥、4♥：一段故事（對話）；3♥：回禮；5♥：技能點 +1
 // 這個檔案會被 hotspots.ts 載入，不能在最上面 import store／audio（改 store 都經過呼叫的人傳進來的 api，或動態 import）。
 
-export type BondId = 'ajiao' | 'ayi' | 'hongyi' | 'jinyubo' | 'huobo' | 'yuyi' | 'banzhu' | 'dijizhu' | 'guikids' | 'xiaohan'
+export type BondId = 'ajiao' | 'ayi' | 'hongyi' | 'jinyubo' | 'huobo' | 'yuyi' | 'banzhu' | 'dijizhu' | 'guikids' | 'xiaohan' | 'conductor' | 'keeper'
 
 /** 可以送的東西：食材／雜貨，或燒金紙（花 1 點功德，只有鬼收） */
 export type GiftId = Ingredient | 'joss'
@@ -49,6 +51,9 @@ export const BONDS: Record<BondId, BondDef> = {
   dijizhu: { id: 'dijizhu', name: '地基主', icon: '地', ghost: true, likes: ['joss', 'egg', 'sweetpotato'], dislike: 'toy', reward: '陰氣 +20' },
   guikids: { id: 'guikids', name: '小孩鬼', icon: '囝', ghost: true, likes: ['toy', 'sweetpotato', 'zongzi'], dislike: 'ginger', reward: '寶貝彈珠（功德 +1、小玩具 ×1）' },
   xiaohan: { id: 'xiaohan', name: '小翰', icon: '翰', ghost: false, likes: ['egg', 'radish', 'sweetpotato'], dislike: 'ginger', reward: '小翰的心 +5', unseen: true },
+  // 第三批（DESIGN §27）
+  conductor: { id: 'conductor', name: '鬼車掌', icon: '車', ghost: true, likes: ['egg', 'joss', 'noodle'], dislike: 'crab', reward: '功德 +2' },
+  keeper: { id: 'keeper', name: '守燈人', icon: '燈', ghost: true, likes: ['candle', 'fish', 'ginger'], dislike: 'toy', reward: '溪哥 ×2、功德 +1' },
 }
 
 export const BOND_ORDER = Object.keys(BONDS) as BondId[]
@@ -89,6 +94,8 @@ const STORY_LEN: Record<BondId, [number, number]> = {
   dijizhu: [5, 5],
   guikids: [5, 7],
   xiaohan: [5, 6],
+  conductor: [5, 6],
+  keeper: [5, 6],
 }
 
 export const storyId = (npc: BondId, n: 2 | 4) => `bond_${npc}_${n}`
@@ -270,6 +277,13 @@ async function applyReward(api: Api, npc: BondId) {
     case 'xiaohan':
       set((x) => ({ meta: { ...x.meta, heart: Math.min(100, x.meta.heart + 5) } }))
       break
+    case 'conductor':
+      merit(2)
+      break
+    case 'keeper':
+      bump('fish', 2)
+      merit(1)
+      break
   }
 }
 
@@ -325,6 +339,14 @@ const marketOpen = () => true // 鬼夜市的場景本身只在開市時間進�
 const festivalStage = (s: GameState) => stageMode(s.meta.night, s.phase) !== 'bare'
 
 export const BOND_HOTSPOTS: Hotspot[] = [
+  // 第三批：末班鬼火車的車掌（火車停著的時候才在）、燈塔的守燈人
+  bondHotspot('conductor', 'station', STATION.conductor.x + 1.4, STATION.conductor.z - 0.6, {
+    r: 1.2,
+    icon: { x: STATION.conductor.x + 0.4, z: STATION.conductor.z },
+    iconY: 2.5,
+    present: (s) => !!ghostTrain(s.time, s.phase)?.stopped,
+  }),
+  bondHotspot('keeper', 'harbor', keeperSpot.x + 0.3, keeperSpot.z + 1.1, { r: 1.5, icon: { x: keeperSpot.x + 0.4, z: keeperSpot.z }, iconY: 2.4 }),
   bondHotspot('ajiao', 'village', 1.9, -2.55, { icon: { x: VILLAGE.ajiao.x + 0.6, z: VILLAGE.ajiao.z }, iconY: 2.5 }),
   bondHotspot('ayi', 'temple', -3.1, 1.2, { icon: { x: NPC_SPOTS.ayi.x + 0.5, z: NPC_SPOTS.ayi.z }, iconY: 2.4 }),
   bondHotspot('hongyi', 'market', 2.2, -7.2, { icon: { x: MARKET_NPCS.hongyi.x + 0.6, z: MARKET_NPCS.hongyi.z }, iconY: 2.9, present: marketOpen }),

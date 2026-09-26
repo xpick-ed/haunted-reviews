@@ -13,7 +13,8 @@ import { buildGrass } from './Landscape'
 import { Ground } from './VillageKit'
 import { Bell, FlagPole, HopscotchChalk, Playground, SchoolStage, SchoolWalls, StatueBase, Trough } from './SchoolProps'
 import { SchoolKids } from './SchoolKids'
-import { RoomsInside, RoomsLive } from './SchoolRooms'
+import { RoomsInside, RoomsLive, RoomsOutside } from './SchoolRooms'
+import { InteriorCull } from './OldStreetFader'
 import '../chars/specs.school'
 
 // 廢棄國小（DESIGN §26.1）：阿嬤小時候讀的「後壁厝國民學校」，廢校很多年了。
@@ -41,7 +42,7 @@ export function SchoolScene() {
         <BlockStatic />
         <Corridor />
         <ClassroomInside />
-        <RoomsInside />
+        <RoomsOutside />
         <SchoolStage />
         <FlagPole />
         <StatueBase />
@@ -49,14 +50,25 @@ export function SchoolScene() {
         <Trough />
       </MergeStatic>
       {/* 鏡頭在東南邊：走進哪一間，東邊隔壁那一間也一起淡出（不然它的屋頂會擋住一半） */}
+      {/* 外殼也合併（一間的牆、窗框、屋頂幾十塊，不合併的話四間加起來多一百多個 draw call） */}
       <Fader id={['school_room', 'school_office']}>
-        <ClassroomShell />
+        <MergeStatic>
+          <ClassroomShell />
+        </MergeStatic>
       </Fader>
       {ROOMS.map((r, i) => (
         <Fader key={r.id} id={i > 0 ? [r.id, ROOMS[i - 1].id] : [r.id]}>
-          <RoomShell i={i} />
+          <MergeStatic>
+            <RoomShell i={i} />
+          </MergeStatic>
         </Fader>
       ))}
+      {/* 三間教室裡面（低畫質時阿嬤不在裡面、門口附近就不畫） */}
+      <InteriorCull ids={['school_lib', 'school_nurse', 'school_office']} doors={[S.library.door, S.nurse.door, S.office.door].map((x) => ({ x, z: S.block.z1 }))}>
+        <MergeStatic>
+          <RoomsInside />
+        </MergeStatic>
+      </InteriorCull>
       <RoomsLive outline={quality === 'high'} />
       <HopscotchChalk />
       <Bell />

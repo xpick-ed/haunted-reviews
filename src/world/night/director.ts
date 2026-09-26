@@ -1176,6 +1176,8 @@ export function nightOptions(ctx: Omit<NightCtx, 'yinCost'>, px: number, pz: num
   for (const spot of nightSpots(full)) {
     const d = Math.hypot(spot.x - px, spot.z - pz)
     if (d > spot.r) continue
+    const a = spot.inside
+    if (a && (px < a.x0 || px > a.x1 || pz < a.z0 || pz > a.z1)) continue
     for (const o of spot.options()) out.push({ ...o, d })
   }
   out.sort((a, b) => Number(b.needed) - Number(a.needed) || a.d - b.d)

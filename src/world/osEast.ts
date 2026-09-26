@@ -49,6 +49,8 @@ export const ICE_IN = {
   /** 東牆的點唱機 */
   jukebox: { x: 4.95, z: -9.3, w: 0.7, d: 0.8 },
   fan: { x: 2.35, z: -7.7 },
+  /** 亭仔腳的兩張小圓桌（x）：往櫃台靠，留出兩側進店的走道（原本在 0.6／4.0，擋住門口只剩 0.16 公尺） */
+  arcadeTables: [1.25, 3.35],
   /** 晚上的好兄弟：學生坐在一號桌、小姐坐在二號桌 */
   student: { x: 0.2, z: -7.95 },
   lady: { x: 4.5, z: -7.95 },
@@ -226,7 +228,7 @@ export const OS_EAST: ShopInterior = {
   ],
   circles: [
     // 亭仔腳的兩張小圓桌、照相館門口的老相機
-    ...O.ice.tables.map((x) => ({ x, z: O.ice.tableZ, r: 0.42 })),
+    ...ICE_IN.arcadeTables.map((x) => ({ x, z: O.ice.tableZ, r: 0.42 })),
     { x: O.tripod.x, z: O.tripod.z, r: 0.34 },
     ...ICE_IN.tables.map((t) => ({ x: t.x, z: t.z, r: 0.42 })),
     { x: PHOTO_IN.camera.x, z: PHOTO_IN.camera.z, r: 0.36 },

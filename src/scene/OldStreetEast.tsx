@@ -6,6 +6,7 @@ import { player } from '../world/player'
 import { OLDSTREET } from '../world/sceneOldStreet'
 import { lanternAt } from './daylight'
 import { MergeStatic } from './MergeStatic'
+import { InteriorCull } from './OldStreetFader'
 import { ArcadeColumn, Lot } from './OldStreetFacades'
 import { STYLES, useWindowGlowMat } from './oldStreetStyles'
 import { ShopFader } from './OldStreetEastKit'
@@ -65,12 +66,17 @@ export function OldStreetEast({ outline }: { outline: boolean }) {
       </ShopFader>
       <MergeStatic>
         <IceInterior />
-        <PhotoInterior />
         <ClothInterior />
       </MergeStatic>
+      {/* 照相館關著門：低畫質時阿嬤不在附近就不畫裡面（冰果室、布莊的店面整片打開，從街上看得到，一直畫） */}
+      <InteriorCull ids={['os_photo']} doors={[{ x: O.photo.doorX, z: A.frontZ }]}>
+        <MergeStatic>
+          <PhotoInterior />
+        </MergeStatic>
+        <PhotoLive outline={outline} />
+      </InteriorCull>
       <IceNeon />
       <IceLive outline={outline} />
-      <PhotoLive outline={outline} />
       <ClothLive outline={outline} />
       <ShopLight />
     </group>
@@ -78,30 +84,42 @@ export function OldStreetEast({ outline }: { outline: boolean }) {
 }
 
 /**
- * 三間店共用一盞點光源（光源數量不變，著色器才不用重新編譯）：
+ * 老街五間店共用一盞點光源（DESIGN §30；光源多一盞，每個像素都要多算一次，手機很吃力）：
  * 阿嬤在哪間店裡就移到那間；在街上時跟著最近的一間，晚上從店面透出暖暖的光。
+ * 西邊兩間（理髮廳、中藥行）本來各有一盞整晚亮著的燈，併到這裡。
  */
+const SHOP_LIGHTS = [
+  { x0: -21.5, x1: -15.2, pos: [-18.3, 2.6, -5.9], color: '#ffdcae' },
+  { x0: -15.2, x1: -9.2, pos: [-12.0, 2.5, -6.1], color: '#ffd49a' },
+  ...(['ice', 'photo', 'cloth'] as const).map((id) => {
+    const l = lot(id)
+    return { x0: l.x0, x1: l.x1, pos: [(l.x0 + l.x1) / 2, 2.75, -7.3], color: '#ffe0b0' }
+  }),
+]
 function ShopLight() {
   const ref = useRef<THREE.PointLight>(null)
-  const shops = [lot('ice'), lot('photo'), lot('cloth')]
-  useFrame(() => {
+  const want = useRef(new THREE.Color())
+  useFrame((_, dt) => {
     const l = ref.current
     if (!l) return
     const lan = lanternAt(useStore.getState().time)
-    let best = shops[0]
+    let best = SHOP_LIGHTS[0]
     let bd = Infinity
-    for (const s of shops) {
+    for (const s of SHOP_LIGHTS) {
       const d = Math.abs((s.x0 + s.x1) / 2 - player.x)
       if (d < bd) {
         bd = d
         best = s
       }
     }
-    const inside = player.z < A.frontZ - 0.1 && player.x > shops[0].x0 && player.x < shops[2].x1
-    const tx = (best.x0 + best.x1) / 2
-    l.position.x += (tx - l.position.x) * 0.12
-    const target = inside ? 2.0 + lan * 1.2 : bd < 9 ? lan * 1.8 : 0
-    l.intensity += (target - l.intensity) * 0.1
+    const inside = player.z < A.frontZ - 0.1 && player.x > best.x0 && player.x < best.x1
+    // 換店的時候先暗下來、移過去再亮（不要看到光在牆後面滑過去）
+    const far = Math.hypot(best.pos[0] - l.position.x, best.pos[2] - l.position.z) > 0.3
+    const k = 1 - Math.exp(-Math.min(dt, 0.1) * 8)
+    const target = far ? 0 : inside ? 2.0 + lan * 1.4 : bd < 9 ? lan * 1.8 : 0
+    l.intensity += (target - l.intensity) * k
+    if (far && l.intensity < 0.08) l.position.set(best.pos[0], best.pos[1], best.pos[2])
+    l.color.lerp(want.current.set(best.color), k)
   })
-  return <pointLight ref={ref} position={[2.3, 2.75, -7.3]} color="#ffe0b0" intensity={0} distance={7.5} decay={2} />
+  return <pointLight ref={ref} position={[2.3, 2.75, -7.3]} color="#ffe0b0" intensity={0} distance={8} decay={1.8} />
 }

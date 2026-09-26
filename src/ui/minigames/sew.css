@@ -50,6 +50,13 @@
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
   cursor: pointer;
+  position: relative;
+}
+/* 看起來 34px，手指按得到 44px（手機觸控目標；inset 從邊框裡面算，所以是 -6） */
+.sew-x::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
 }
 .sew-bar {
   height: 6px;
@@ -69,6 +76,9 @@
   font-size: 13px;
   color: rgba(255, 240, 220, 0.8);
   font-variant-numeric: tabular-nums;
+}
+.sew-stats .low {
+  color: #ff9c8a;
 }
 .sew-cloth {
   position: relative;
@@ -100,7 +110,8 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
   animation: slideup 0.3s ease-out;
 }
-.sew-end.late {
+.sew-end.late,
+.sew-end.crooked {
   color: #ffc8b8;
 }
 .sew-foot {

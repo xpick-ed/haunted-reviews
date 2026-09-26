@@ -48,6 +48,13 @@
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
   cursor: pointer;
+  position: relative;
+}
+/* 看起來 34px，手指按得到 44px（手機觸控目標；inset 從邊框裡面算，所以是 -6） */
+.dk-x::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
 }
 
 /* 阿義：喝越多晃越大、臉越紅 */

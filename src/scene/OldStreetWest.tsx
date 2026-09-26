@@ -4,6 +4,7 @@ import { MergeStatic } from './MergeStatic'
 import { OLDSTREET } from '../world/sceneOldStreet'
 import { Lot } from './OldStreetFacades'
 import { ShopFader } from './OldStreetWestFader'
+import { InteriorCull } from './OldStreetFader'
 import { BarberPole } from './OldStreetShops'
 import { STYLES, useWindowGlowMat } from './oldStreetStyles'
 import { BarberShell, HERB_EAST_X, HerbShell, PARTY_X, SideWall } from './OldStreetWestShell'
@@ -53,22 +54,25 @@ export function OldStreetWest({ outline }: { outline: boolean }) {
           <BarberShell />
         </MergeStatic>
       </ShopFader>
-      <ShopFader id="os_herb_in">
+      {/* 在理髮廳裡時，東邊的中藥行（招牌、二樓）剛好擋在鏡頭前面：一起藏起來 */}
+      <ShopFader id={['os_herb_in', 'os_barber_in']}>
         <MergeStatic>
           <Lot x0={herb.x0} x1={herb.x1} top={herb.top} style={{ ...STYLES.herb, glow: glowHerb }} />
           <HerbShell />
         </MergeStatic>
       </ShopFader>
-      {/* 店裡 */}
-      <MergeStatic>
-        <BarberInterior />
-        <HerbInterior />
-        {/* 側牆的下半（切開的矮牆，一直都在） */}
-        <SideWall x={PARTY_X} z0={OSW.backZ} z1={OSW.frontZ0} color="#e3ead9" skirt="#5a7a62" part="lower" />
-        <SideWall x={HERB_EAST_X} z0={OSW.backZ} z1={OSW.frontZ0} color="#e8dcc2" part="lower" />
-      </MergeStatic>
-      <BarberLive outline={outline} />
-      <HerbLive outline={outline} />
+      {/* 店裡（低畫質時，阿嬤不在店裡、門口附近就不畫） */}
+      <InteriorCull ids={['os_barber_in', 'os_herb_in']} doors={[{ x: OSW.barber.door.c, z: O.arcade.frontZ }, { x: (OSW.herb.door.x0 + OSW.herb.door.x1) / 2, z: O.arcade.frontZ }]}>
+        <MergeStatic>
+          <BarberInterior />
+          <HerbInterior />
+          {/* 側牆的下半（切開的矮牆，一直都在） */}
+          <SideWall x={PARTY_X} z0={OSW.backZ} z1={OSW.frontZ0} color="#e3ead9" skirt="#5a7a62" part="lower" />
+          <SideWall x={HERB_EAST_X} z0={OSW.backZ} z1={OSW.frontZ0} color="#e8dcc2" part="lower" />
+        </MergeStatic>
+        <BarberLive outline={outline} />
+        <HerbLive outline={outline} />
+      </InteriorCull>
       <BarberPole />
     </group>
   )

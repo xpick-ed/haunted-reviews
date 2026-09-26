@@ -1,4 +1,4 @@
-import { CUPBOARD, GUEST_ROOMS, KITCHEN_JAR, MAIN, ROCKER, SINK, STOVE, WING_R } from '../../scene/layout'
+import { CUPBOARD, GUEST_ROOMS, KITCHEN_JAR, MAIN, ROCKER, ROOMS, SINK, STOVE, WING_R } from '../../scene/layout'
 import { GOODS, GOOD_IDS, INGREDIENTS, type GoodId } from './items'
 import type { GuestRT, NightSim } from './sim'
 import type { ActionId, GuestId, NeedKind, ObjectState, RoomId } from './types'
@@ -94,6 +94,8 @@ export interface Spot {
   r: number
   /** 光點位置 */
   icon: [number, number, number]
+  /** 要站在這個範圍裡才算（床頭櫃：不能隔著牆從外面放東西） */
+  inside?: { x0: number; z0: number; x1: number; z1: number }
 }
 
 export interface NightCtx {
@@ -161,7 +163,7 @@ export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[
         return o
       },
     })
-    const stand: Spot = { id: `${room}.stand`, x: R.nightstand[0], z: R.nightstand[1], r: 1.5, icon: [R.nightstand[0], 1.3, R.nightstand[1]] }
+    const stand: Spot = { id: `${room}.stand`, x: R.nightstand[0], z: R.nightstand[1], r: 1.5, icon: [R.nightstand[0], 1.3, R.nightstand[1]], inside: ROOMS[room === 'r1' ? 'guest' : 'storage'].area }
     out.push({
       ...stand,
       options: () => {

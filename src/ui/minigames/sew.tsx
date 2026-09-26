@@ -4,8 +4,13 @@ import type { MinigameProps } from './types'
 import './sew.css'
 
 // 踩裁縫車（DESIGN §30，錦繡布莊）：幫錦繡姨把孫女的旗袍做完。
-// 按住「踩」布就往前走（越踩越快）；左右移動布，讓針一直走在粉土線上。踩滿 target 針就完成；40 秒內。
+// 按住「踩」布就往上走（越踩越快）；左右移動布，讓針一直走在粉土線上。踩滿 target 針、而且七成在線上才算好；有時間限制。
+// 粉土線在針的下面（還沒車到的那一段），看得到前面怎麼彎；彎的地方少踩一點。
 // 鍵盤：空白鍵／↑／W 踩，←→／A D 移布，Esc 放棄。手機：按住下面的踏板，手指在布上左右拖。
+//
+// 手感測試（人類模型：手機拖布、反應 0.2 秒、手越快越不準）：原本整條線幾乎是直的、四秒就踩完、準不準都算成功；
+// 改成線一開始就彎、一針 18px、要七成在線上、時間只夠「平均踩到四成快」：拖布的新手約六成五、熟手幾乎都過。
+// 只用方向鍵比較難（新手約一成五），所以提示寫「滑鼠也可以拖」。
 
 export interface SewParams {
   /** 要踩幾針 */
@@ -20,14 +25,22 @@ export interface SewResult {
 const W = 320
 const H = 380
 const NEEDLE_Y = 118
-const STEP = 12
-const LIMIT = 40
+/** 一針走多遠（px）：原本 12，整條線太短、四秒就踩完 */
+const STEP = 18
 const MAX_SPEED = 150
+/** 離粉土線多近算「在線上」（px） */
 const GOOD = 9
+/** 在線上的針要幾成才算做好 */
+export const SEW_PASS = 0.7
+/** 時間：整條線用最快速度的四成踩得完，再多兩秒 */
+const limitFor = (target: number) => Math.ceil((target * STEP) / (MAX_SPEED * 0.4) + 2)
+/** 鍵盤移布的速度（px/s）與跟手的程度 */
+const KEY_SPEED = 130
+const KEY_GRIP = 12
 
-/** 粉土線：前面一段直的，後面慢慢彎（旗袍的弧線） */
+/** 粉土線：頭一小段直的，很快就彎起來（旗袍的弧線） */
 function lineX(s: number) {
-  const k = Math.min(1, Math.max(0, (s - 60) / 200))
+  const k = Math.min(1, Math.max(0, (s - 24) / 100))
   return k * (46 * Math.sin(s * 0.0105) + 18 * Math.sin(s * 0.027 + 1.3))
 }
 
@@ -50,6 +63,7 @@ function click(fast: boolean) {
 
 export default function SewGame({ params, done }: MinigameProps<SewParams, SewResult | null>) {
   const target = params?.target ?? 34
+  const LIMIT = limitFor(target)
   const canvas = useRef<HTMLCanvasElement>(null)
   const st = useRef({
     feed: 0,
@@ -66,7 +80,7 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
     drag: null as { id: number; x: number } | null,
   })
   const [hud, setHud] = useState({ n: 0, good: 0, left: LIMIT })
-  const [end, setEnd] = useState<null | 'ok' | 'late'>(null)
+  const [end, setEnd] = useState<null | 'ok' | 'late' | 'crooked'>(null)
   const finished = useRef(false)
   const finish = (r: SewResult | null) => {
     if (finished.current) return
@@ -100,6 +114,8 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
 
   // 主迴圈
   useEffect(() => {
+    // 手感測試（dev）：機器人讀布走到哪裡
+    if (import.meta.env.DEV) (window as unknown as Record<string, unknown>).__sew = st.current
     const cv = canvas.current!
     const dpr = Math.min(2, window.devicePixelRatio || 1)
     cv.width = W * dpr
@@ -121,30 +137,30 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
       ctx.fillRect(0, 0, W, H)
       ctx.fillStyle = 'rgba(255,210,140,0.08)'
       for (let i = -2; i < 12; i++) {
-        const y = ((i * 44 + s.feed) % 440) - 20
+        const y = ((((i * 44 - s.feed) % 440) + 440) % 440) - 20
         for (let j = 0; j < 6; j++) {
           ctx.beginPath()
           ctx.arc(((j * 61 + i * 23 + s.off) % (W + 40)) - 20, y, 9, 0, Math.PI * 2)
           ctx.fill()
         }
       }
-      // 粉土線（針前面的一段）
+      // 粉土線：針下面是還沒車到的（看得到前面怎麼彎），布往上走
       ctx.strokeStyle = 'rgba(255,255,255,0.85)'
       ctx.setLineDash([7, 6])
       ctx.lineWidth = 2.2
       ctx.beginPath()
-      for (let y = NEEDLE_Y + 12; y >= -10; y -= 6) {
-        const fs = s.feed + (NEEDLE_Y - y)
+      for (let y = NEEDLE_Y - 12; y <= H + 10; y += 6) {
+        const fs = s.feed + (y - NEEDLE_Y)
         const x = cx + lineX(fs) + s.off
-        if (y === NEEDLE_Y + 12) ctx.moveTo(x, y)
+        if (y === NEEDLE_Y - 12) ctx.moveTo(x, y)
         else ctx.lineTo(x, y)
       }
       ctx.stroke()
-      // 已經過去的粉土線（淡淡的）
+      // 已經車過的粉土線（淡淡的，往上走到機頭下面）
       ctx.strokeStyle = 'rgba(255,255,255,0.25)'
       ctx.beginPath()
-      for (let y = NEEDLE_Y; y <= H + 10; y += 6) {
-        const fs = s.feed - (y - NEEDLE_Y)
+      for (let y = NEEDLE_Y; y >= -10; y -= 6) {
+        const fs = s.feed - (NEEDLE_Y - y)
         const x = cx + lineX(fs) + s.off
         if (y === NEEDLE_Y) ctx.moveTo(x, y)
         else ctx.lineTo(x, y)
@@ -156,8 +172,8 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
       ctx.lineCap = 'round'
       for (let i = s.stitches.length - 1; i >= 0; i--) {
         const k = s.stitches[i]
-        const y = NEEDLE_Y + (s.feed - k.s)
-        if (y > H + 10) break
+        const y = NEEDLE_Y - (s.feed - k.s)
+        if (y < -10) break
         const x = cx + k.x + s.off
         ctx.strokeStyle = k.good ? '#f6d57a' : '#2a1010'
         ctx.beginPath()
@@ -184,7 +200,8 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
       void t
     }
     const tick = (now: number) => {
-      const dt = Math.min(0.05, (now - last) / 1000)
+      // 第一幀的 rAF 時間可能比 performance.now() 早一點：不要讓 dt 變負的
+      const dt = Math.max(0, Math.min(0.05, (now - last) / 1000))
       last = now
       const s = st.current
       if (!s.over) {
@@ -192,7 +209,7 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
         s.speed += ((s.pedal ? MAX_SPEED : 0) - s.speed) * Math.min(1, dt * (s.pedal ? 2.2 : 5))
         // 移布（鍵盤）：有一點慣性
         const want = (s.right ? 1 : 0) - (s.left ? 1 : 0)
-        s.vel += (want * 170 - s.vel) * Math.min(1, dt * 10)
+        s.vel += (want * KEY_SPEED - s.vel) * Math.min(1, dt * KEY_GRIP)
         s.off = Math.max(-150, Math.min(150, s.off + s.vel * dt))
         s.feed += s.speed * dt
         while (s.feed >= s.nextStitch) {
@@ -209,9 +226,11 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
         if (n >= target) {
           s.over = true
           s.speed = 0
-          setEnd('ok')
-          audio.chime()
-          window.setTimeout(() => finish({ done: true, accuracy: goodN / n }), 1300)
+          // 踩完了，但歪太多：拆掉重來
+          const ok = goodN / n >= SEW_PASS
+          setEnd(ok ? 'ok' : 'crooked')
+          if (ok) audio.chime()
+          window.setTimeout(() => finish({ done: ok, accuracy: goodN / n }), 1300)
         } else if (left <= 0) {
           s.over = true
           s.speed = 0
@@ -250,11 +269,12 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
 
   const pct = Math.min(1, hud.n / target)
   const acc = hud.n ? Math.round((hud.good / hud.n) * 100) : 100
+  const pass = Math.round(SEW_PASS * 100)
   return (
     <div className="sew-panel" role="dialog" aria-label="踩裁縫車">
       <div className="sew-head">
         <div className="sew-title">踩裁縫車</div>
-        <div className={`sew-time ${hud.left < 8 ? 'low' : ''}`}>{Math.ceil(hud.left)}</div>
+        <div className={`sew-time ${hud.left < Math.max(3, LIMIT * 0.3) ? 'low' : ''}`}>{Math.ceil(hud.left)}</div>
         <button className="sew-x" onClick={() => finish(null)} aria-label="不做了">
           ✕
         </button>
@@ -266,17 +286,19 @@ export default function SewGame({ params, done }: MinigameProps<SewParams, SewRe
         <span>
           {hud.n} / {target} 針
         </span>
-        <span>在線上 {acc}%</span>
+        <span className={acc < pass ? 'low' : ''}>
+          在線上 {acc}%（要 {pass}%）
+        </span>
       </div>
       <div className="sew-cloth">
         <canvas ref={canvas} className="sew-canvas" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} />
-        {end && <div className={`sew-end ${end}`}>{end === 'ok' ? '好了！' : '來不及了……'}</div>}
+        {end && <div className={`sew-end ${end}`}>{end === 'ok' ? '好了！' : end === 'crooked' ? '歪掉了……拆掉重來' : '來不及了……'}</div>}
       </div>
       <div className="sew-foot">
         <button className="sew-pedal" onPointerDown={pedal(true)} onPointerUp={pedal(false)} onPointerLeave={pedal(false)} onPointerCancel={pedal(false)}>
           踩
         </button>
-        <div className="sew-hint">按住「踩」（空白鍵）車布，左右拖布（←→）讓針走在粉土線上</div>
+        <div className="sew-hint">按住「踩」（空白鍵）車布；手指或滑鼠在布上左右拖（或 ←→），讓針走在粉土線上。彎的地方少踩一點。</div>
       </div>
     </div>
   )

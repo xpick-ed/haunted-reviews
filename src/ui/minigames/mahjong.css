@@ -49,6 +49,13 @@
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
   cursor: pointer;
+  position: relative;
+}
+/* 看起來 34px，手指按得到 44px（手機觸控目標；inset 從邊框裡面算，所以是 -6） */
+.mj-x::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
 }
 
 /* 三個鬼鄰居 */

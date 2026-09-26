@@ -2,6 +2,7 @@ import { useRef, type ReactNode } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useStore } from '../store'
+import { player } from '../world/player'
 
 // ---------------------------------------------------------------------------
 // 淡出（跟三合院、夜市的一樣：子樹裡的網格換成自己的材質複本，才能單獨調透明度）
@@ -55,6 +56,26 @@ export function Fader({ id, hide, children }: { id: string | string[]; hide?: st
       c.depthWrite = !c.userData.baseTransparent && o > 0.5
       if (wasT !== c.transparent) c.needsUpdate = true
     }
+  })
+  return (
+    <group ref={group} userData={{ noMerge: true }}>
+      {children}
+    </group>
+  )
+}
+
+/**
+ * 關起門來的室內（DESIGN §30）：畫質降成低的時候（手機跑不動會自動降），阿嬤不在裡面、也不在門口附近，家具就先不畫。
+ * 高畫質一直畫。從外面只看得到一點點門窗裡面，暗暗的看不出來；每間店省下幾十個 draw call。
+ * 裡面不要放光源：光源數量一變，所有材質都要重新編譯（會卡一下）。
+ */
+export function InteriorCull({ ids, doors, near = 4.5, children }: { ids: string[]; doors: { x: number; z: number }[]; near?: number; children: ReactNode }) {
+  const group = useRef<THREE.Group>(null)
+  useFrame(() => {
+    const g = group.current
+    if (!g) return
+    const s = useStore.getState()
+    g.visible = s.quality === 'high' || (!!s.building && ids.includes(s.building)) || doors.some((d) => Math.hypot(player.x - d.x, player.z - d.z) < near)
   })
   return (
     <group ref={group} userData={{ noMerge: true }}>

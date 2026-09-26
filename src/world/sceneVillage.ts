@@ -33,7 +33,7 @@ export const VILLAGE = {
   houseA: { x0: -14.5, x1: -7.0, z0: -11, z1: -4.8, wallTop: 3.0 },
   houseB: { x0: 6.8, x1: 12.2, z0: -11, z1: -4.8, floor2: 3.2, top: 6.3 },
   betel: { x: -17.4, z: -3.9 },
-  bike: { x: -9.4, z: -3.55 },
+  bike: { x: -8.8, z: -3.55 },
   banyan: { x: 16.2, z: -5.0 },
   stoneTable: { x: 14.3, z: -3.4 },
   tablet: { x: 18.3, z: -3.7 },

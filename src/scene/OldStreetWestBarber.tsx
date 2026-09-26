@@ -446,7 +446,6 @@ export function BarberLive({ outline }: { outline: boolean }) {
   const phase = useStore((s) => s.phase)
   const night = phase === 'night'
   const fan = useRef<THREE.Group>(null)
-  const lamp = useRef<THREE.PointLight>(null)
   const bulb = useMemo(() => new THREE.MeshBasicMaterial({ color: '#fff0c8', toneMapped: false }), [])
   const noteTex = useMemo(noteTexture, [])
   const notes = useRef<(THREE.Sprite | null)[]>([])
@@ -459,7 +458,6 @@ export function BarberLive({ outline }: { outline: boolean }) {
     const t = clock.elapsedTime
     const l = lanternAt(useStore.getState().time)
     if (fan.current) fan.current.rotation.y += Math.min(dt, 0.1) * 3.2
-    if (lamp.current) lamp.current.intensity = 1.2 + 4.0 * l
     bulb.color.setRGB(0.6 + 0.5 * l, 0.55 + 0.45 * l, 0.4 + 0.35 * l)
     // 收音機：剛轉過台的十二秒，刻度盤亮、唱歌台飄音符
     const since = (performance.now() - radioState.at) / 1000
@@ -519,7 +517,7 @@ export function BarberLive({ outline }: { outline: boolean }) {
         <coneGeometry args={[0.2, 0.14, 14, 1, true]} />
         <meshStandardMaterial color="#f0ead8" roughness={0.5} side={THREE.DoubleSide} />
       </mesh>
-      <pointLight ref={lamp} position={[-18.3, 2.6, -5.9]} color="#ffdcae" intensity={1.2} distance={9} decay={1.6} />
+      {/* 店裡的燈光：老街五間店共用一盞（OldStreetEast.tsx 的 ShopLight） */}
       {/* 收音機的刻度盤 */}
       <mesh material={dial} position={[B.radio.x + 0.152, FLOOR + B.cabinet.h + 0.07, B.radio.z - 0.1]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[0.2, 0.05]} />

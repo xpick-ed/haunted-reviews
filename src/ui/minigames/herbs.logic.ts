@@ -77,9 +77,12 @@ export function herbsResult(scores: (number | null)[]): HerbsResult {
   return { herbs, accuracy: Math.round(accuracy * 100) / 100, merit }
 }
 
-/** 秤錘來回擺的位置（0..SCALE_MAX），t 秒；越後面的藥擺越快 */
+/**
+ * 秤錘來回擺的位置（0..SCALE_MAX），t 秒；越後面的藥擺越快。
+ * 手感測試（人的按鍵時間誤差：新手約 ±75 毫秒、熟手 ±40 毫秒）：0.55＋0.12 時新手只有四成多抓得好，放慢到 0.45＋0.10 約六成、熟手九成五。
+ */
 export function swing(t: number, round: number): number {
-  const speed = 0.55 + round * 0.12
+  const speed = 0.45 + round * 0.1
   const p = (t * speed) % 2
   const u = p < 1 ? p : 2 - p
   // 兩端慢、中間快一點（像手在推秤錘）

@@ -7,6 +7,7 @@ import { LIBRARY, NURSE_ROOM, OFFICE, SCHOOL, nurseHere, schoolFx } from '../wor
 import { lanternAt } from './daylight'
 import { BRUSH_FONT, WBox, canvasTexture, seeded, useMats } from './kit'
 import { ChibiNpc } from '../chars/Chibi'
+import { player } from '../world/player'
 import '../chars/specs.school2'
 
 // 廢棄國小另外三間的室內（DESIGN §30）：圖書室、保健室、教師辦公室。規則與座標在 src/world/sceneSchool.ts。
@@ -32,9 +33,13 @@ export function RoomsInside() {
       <LibraryInside />
       <NurseInside />
       <OfficeInside />
-      <Loudspeaker />
     </group>
   )
+}
+
+/** 走廊柱子上的喇叭（在外面，一直畫） */
+export function RoomsOutside() {
+  return <Loudspeaker />
 }
 
 // ---------------------------------------------------------------------------
@@ -925,9 +930,9 @@ function Loudspeaker() {
 // ---------------------------------------------------------------------------
 
 export function RoomsLive({ outline }: { outline: boolean }) {
-  const libLight = useRef<THREE.PointLight>(null)
-  const nurseLight = useRef<THREE.PointLight>(null)
-  const ampLight = useRef<THREE.PointLight>(null)
+  // 三間共用一盞點光源（光源多一盞，整個場景每個像素都要多算；手機很吃力）：跟著阿嬤最近的那一間
+  const light = useRef<THREE.PointLight>(null)
+  const lightColor = useRef(new THREE.Color())
   const curtain = useRef<THREE.Group>(null)
   const nurse = useRef<THREE.Group>(null)
   const seen = useRef({ chime: schoolFx.chimeAt })
@@ -945,9 +950,22 @@ export function RoomsLive({ outline }: { outline: boolean }) {
     const on = t - chimeT.current < 7 ? 1 : 0
     tubeMat.emissiveIntensity = 0.35 + l * 0.6 + on * (1.4 + Math.sin(t * 9) * 0.2)
     lampMat.emissiveIntensity = 0.1 + l * 1.4
-    if (libLight.current) libLight.current.intensity = 2.2 * l
-    if (nurseLight.current) nurseLight.current.intensity = 2.4 * l * (0.92 + Math.sin(t * 2.3) * 0.04)
-    if (ampLight.current) ampLight.current.intensity = 0.6 * l + on * 1.6
+    const lt = light.current
+    if (lt) {
+      // 廣播的時候優先照辦公室的真空管
+      const spots = [
+        { x: (LIBRARY.x0 + LIBRARY.x1) / 2, y: 2.6, z: (LIBRARY.z0 + LIBRARY.z1) / 2, color: '#9fb8e8', i: 2.2 * l, d: 6 },
+        { x: N.desk.x - 0.32, y: Y0 + 1.25, z: N.desk.z - 0.1, color: '#ffcf8a', i: 2.4 * l * (0.92 + Math.sin(t * 2.3) * 0.04), d: 5 },
+        { x: F.broadcast.x - 0.3, y: Y0 + 1.3, z: F.broadcast.z - 0.3, color: '#ffb060', i: 0.6 * l + on * 1.6, d: 4.5 },
+      ]
+      const best = on ? spots[2] : spots.reduce((a, b) => (Math.abs(b.x - player.x) < Math.abs(a.x - player.x) ? b : a))
+      // 換房間：先暗下來、移過去再亮
+      const far = Math.hypot(best.x - lt.position.x, best.z - lt.position.z) > 0.3
+      lt.intensity += ((far ? 0 : best.i) - lt.intensity) * 0.12
+      if (far && lt.intensity < 0.06) lt.position.set(best.x, best.y, best.z)
+      lt.distance = best.d
+      lt.color.lerp(lightColor.current.set(best.color), 0.12)
+    }
     // 布簾：晚上輕輕飄（像有人剛走過）
     const c = curtain.current
     if (c) {
@@ -970,9 +988,7 @@ export function RoomsLive({ outline }: { outline: boolean }) {
   const bed = N.bed
   return (
     <group userData={{ noMerge: true }}>
-      <pointLight ref={libLight} position={[(LIBRARY.x0 + LIBRARY.x1) / 2, 2.6, (LIBRARY.z0 + LIBRARY.z1) / 2]} color="#9fb8e8" intensity={0} distance={6} decay={2} />
-      <pointLight ref={nurseLight} position={[N.desk.x - 0.32, Y0 + 1.25, N.desk.z - 0.1]} color="#ffcf8a" intensity={0} distance={5} decay={2} />
-      <pointLight ref={ampLight} position={[F.broadcast.x - 0.3, Y0 + 1.3, F.broadcast.z - 0.3]} color="#ffb060" intensity={0} distance={4.5} decay={2} />
+      <pointLight ref={light} position={[N.desk.x - 0.32, Y0 + 1.25, N.desk.z - 0.1]} color="#ffcf8a" intensity={0} distance={5} decay={2} />
       {/* 病床的白布簾：東邊拉了一半、南邊一小片 */}
       <group ref={curtain}>
         <CurtainPanel position={[bed.x1 + 0.17, Y0 + 2.08, bed.z0 + 0.5]} width={0.95} rotation={HALF_PI} />

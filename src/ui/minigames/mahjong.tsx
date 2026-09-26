@@ -92,7 +92,13 @@ interface Game {
   msg: string
 }
 
-const ASSIST = 0.25
+/**
+ * 摸牌偷偷幫忙的機率（見 mahjong.logic drawTile）。手感測試（第一次玩、照提示打）：
+ * 0.25＋鬼最早第 3 巡自摸時，新手只胡四成、熟手八成；0.35＋鬼最早第 4 巡：新手五成多、熟手九成。
+ */
+const ASSIST = 0.35
+/** 鬼最早第幾巡自摸（之後隨機 10 巡內；超過十巡就是鬼都胡不了） */
+const GHOST_FIRST = 4
 const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)]
 
 export default function Mahjong({ done }: MinigameProps<unknown, MahjongResult | null>) {
@@ -112,7 +118,7 @@ export default function Mahjong({ done }: MinigameProps<unknown, MahjongResult |
       claim: null,
       sel: null,
       ghostWin: {
-        turn: 3 + Math.floor(Math.random() * 10),
+        turn: GHOST_FIRST + Math.floor(Math.random() * 10),
         who: Math.floor(Math.random() * 3),
       },
       end: null,

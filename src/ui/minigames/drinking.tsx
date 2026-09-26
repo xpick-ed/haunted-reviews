@@ -7,11 +7,16 @@ import './drinking.css'
 // 划酒拳（DESIGN §29）：跟土地公廟的阿義，台灣式的划拳。
 // 兩邊同時出 0–5 根手指，同時喊「兩個人加起來」的數；喊中的贏，輸的喝（阿嬤喝茶）。
 // 要跟著拍子出拳：「來喔～、划～、出！」出的那拍還沒喊就算慢了、罰一杯。先贏四拳的贏（七戰四勝）。
-// 阿義喝越多越晃、講話越含糊，還會喊出不可能的數。鍵盤：0–5 出幾根、←→ 也可以；↑↓ 選要喊的、Enter／E 出拳，Esc 不玩了。
+// 阿義喝越多越晃、講話越含糊，還會喊出不可能的數；喝茫了拳頭也藏不住（偷看得到他要出幾根）；連三拳沒人喊中他就自己先乾一杯。
+// 清醒的阿義會猜「妳上一拳出幾根」，一直出一樣的會被抓到。鍵盤：0–5 出幾根、←→ 也可以；↑↓ 選要喊的、Enter／E 出拳，Esc 不玩了。
 
 const CALLS = ['寶一對', '一定發', '兩隻好', '三星照', '四季發財', '五魁首', '六六順', '七巧', '八仙過海', '九長久', '十全美']
 const WIN_AT = 4
 const CHANT = ['來喔～', '划～', '出！']
+/** 阿義猜「妳上一拳出幾根」的機率（手感測試：0.5 時新手只贏兩成，太兇） */
+const READ = 0.3
+/** 連續幾拳都沒人喊中，阿義就先乾一杯（不然清醒的時候一局會拖到一分半以上） */
+const TIE_DRINK = 3
 
 type Phase = 'intro' | 'chant' | 'reveal' | 'end'
 interface Throw {
@@ -36,6 +41,16 @@ interface Game {
   tea: number
   /** 阿嬤出過的手指（阿義會猜） */
   hist: number[]
+  /** 這一拳阿義是照「妳上一拳」猜的 */
+  read: boolean
+  /** 這一拳阿義的拳頭會鬆開一下（喝茫了） */
+  tell: boolean
+  /** 現在看得到阿義的手指 */
+  peek: boolean
+  /** 講過「手藏不住」了 */
+  told: boolean
+  /** 連續幾拳都沒人喊中 */
+  ties: number
   bubble: string
   msg: string
 }
@@ -53,15 +68,19 @@ function slur(text: string, cups: number) {
 }
 
 /** 阿義要出什麼：清醒的時候會猜阿嬤；醉了愛出五根，偶爾喊出根本不可能的數 */
-function ayiThrow(cups: number, hist: number[]): { t: Throw; oops: boolean } {
+function ayiThrow(cups: number, hist: number[]): { t: Throw; oops: boolean; read: boolean } {
   const f = cups >= 3 && Math.random() < 0.45 ? 5 : rint(0, 5)
-  const guess = hist.length && Math.random() < 0.5 ? hist[hist.length - 1] : rint(0, 5)
+  const read = hist.length > 0 && Math.random() < READ
+  const guess = read ? hist[hist.length - 1] : rint(0, 5)
   const oops = cups >= 2 && Math.random() < 0.1 + 0.05 * Math.min(cups, 6)
-  if (oops) return { t: { f, c: f > 0 ? rint(0, f - 1) : rint(6, 10) }, oops }
-  return { t: { f, c: f + guess }, oops }
+  if (oops) return { t: { f, c: f > 0 ? rint(0, f - 1) : rint(6, 10) }, oops, read: false }
+  return { t: { f, c: f + guess }, oops, read }
 }
 
-const beatMs = (cups: number) => 1050 + 80 * Math.min(cups, 5)
+/** 一拍多長：喝越多拍子越拖 */
+const beatMs = (cups: number) => 1000 + 70 * Math.min(cups, 5)
+/** 喝茫了拳頭鬆開一下的機率（兩杯以後，越醉越常）。手感測試：0.35 起跳時熟手每局都贏，調低一點 */
+const tellChance = (cups: number) => (cups < 2 ? 0 : Math.min(0.65, 0.25 + 0.12 * (cups - 2)))
 
 export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult | null>) {
   const g = useRef<Game>({
@@ -78,6 +97,11 @@ export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult
     cups: 0,
     tea: 0,
     hist: [],
+    read: false,
+    tell: false,
+    peek: false,
+    told: false,
+    ties: 0,
     bubble: '阿春姐！來，划兩拳！嗝。',
     msg: '',
   })
@@ -101,12 +125,16 @@ export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult
   const startRound = () => {
     const s = g.current
     const a = ayiThrow(s.cups, s.hist)
+    const tell = Math.random() < tellChance(s.cups)
     Object.assign(s, {
       phase: 'chant',
       beat: 0,
       mine: null,
       ayi: a.t,
       oops: a.oops,
+      read: a.read,
+      tell,
+      peek: false,
       outcome: null,
       msg: '',
       bubble: slur(CHANT[0], s.cups),
@@ -114,6 +142,23 @@ export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult
     nightSfx.beat()
     render()
     const b = beatMs(s.cups)
+    // 喝茫了：搖拳頭的時候手指鬆開一下（半秒），看得到他要出幾根
+    if (tell) {
+      const at = 350 + Math.random() * 350
+      later(at, () => {
+        if (s.phase !== 'chant') return
+        s.peek = true
+        if (!s.told) {
+          s.told = true
+          s.msg = '阿義醉到拳頭都握不緊了——看他的手！'
+        }
+        render()
+      })
+      later(at + 500, () => {
+        s.peek = false
+        render()
+      })
+    }
     later(b, () => {
       s.beat = 1
       s.bubble = slur(CHANT[1], s.cups)
@@ -147,6 +192,7 @@ export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult
     }
     s.outcome = outcome
     s.phase = 'reveal'
+    s.peek = false
     const call = CALLS[a.c] ?? `${a.c}`
     s.bubble = slur(`${call}！`, s.cups)
     if (outcome === 'me') {
@@ -161,7 +207,9 @@ export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult
     } else if (outcome === 'ayi' || outcome === 'late') {
       s.them++
       s.tea++
-      s.msg = outcome === 'late' ? '慢了一拍！阿嬤罰茶一杯。' : '被阿義喊中了！阿嬤喝一杯茶。'
+      // 被猜中「上一拳」：講出來，玩的人才知道要換
+      const readHit = outcome === 'ayi' && s.read
+      s.msg = outcome === 'late' ? '慢了一拍！阿嬤罰茶一杯。' : readHit ? `被阿義喊中了！他猜妳又出 ${s.mine!.f} 根——換一換吧。` : '被阿義喊中了！阿嬤喝一杯茶。'
       later(500, () => {
         nightSfx.clink()
         // 喝茫了：贏了也要喝一杯慶祝
@@ -169,15 +217,28 @@ export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult
           s.cups++
           s.bubble = slur('贏了也要喝一杯慶祝！', s.cups)
           s.msg += ' 阿義也跟著乾了一杯……'
-        } else s.bubble = slur(outcome === 'late' ? '哈哈！阿春姐，要跟上拍子啦！' : '哈！妳臉上都寫著啦！', s.cups)
+        } else s.bubble = slur(outcome === 'late' ? '哈哈！阿春姐，要跟上拍子啦！' : readHit ? `又是 ${s.mine!.f} 根！我就知道～` : '哈！妳臉上都寫著啦！', s.cups)
         render()
       })
     } else {
+      s.ties++
       s.msg = '都沒喊中——再來！'
+      // 一直沒人喊中：阿義嫌悶，自己先乾一杯
+      if (s.ties >= TIE_DRINK) {
+        s.ties = 0
+        s.cups++
+        s.msg = '一直沒人喊中……阿義嫌悶，自己先乾一杯。'
+        later(400, () => {
+          nightSfx.gulp()
+          s.bubble = slur('悶啦！我先乾，再來！', s.cups)
+          render()
+        })
+      }
     }
+    if (outcome !== 'again') s.ties = 0
     render()
     const over = s.me >= WIN_AT || s.them >= WIN_AT
-    later(outcome === 'again' ? 1100 : 1900, () => {
+    later(outcome === 'again' ? (s.ties === 0 ? 1300 : 750) : 1600, () => {
       if (over) {
         s.phase = 'end'
         s.bubble = slur(s.me >= WIN_AT ? '嗝……輸了輸了，今晚妳最大。' : '哈哈！阿春姐，下次再來報仇！', s.cups)
@@ -277,8 +338,8 @@ export default function Drinking({ done }: MinigameProps<unknown, DrinkingResult
       </div>
 
       <div className="dk-table">
-        <div className="dk-side top">
-          <Hand n={shown ? s.ayi.f : 0} flip shaking={s.phase === 'chant'} skin="#f1bf9c" />
+        <div className="dk-side top" data-peek={s.peek ? s.ayi.f : undefined}>
+          <Hand n={shown || s.peek ? s.ayi.f : 0} flip shaking={s.phase === 'chant' && !s.peek} skin="#f1bf9c" />
           {shown && <span className={`dk-call ${s.outcome === 'ayi' ? 'hit' : ''}`}>{CALLS[s.ayi.c] ?? s.ayi.c}</span>}
         </div>
         <div className="dk-beats">

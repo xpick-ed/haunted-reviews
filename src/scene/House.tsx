@@ -959,8 +959,20 @@ function Wing({ side }: { side: 1 | -1 }) {
     <group>
       {/* 遠側 */}
       {isGuest ? innerWall : outerWall}
-      <GableWall plane="xy" at={W.z0} pts={gablePts} />
-      <WBox mat="stone" size={[W.x1 - W.x0, SKIRT_H, 0.36]} position={[ridgeX, FLOOR_Y + SKIRT_H / 2, W.z0]} />
+      {isGuest ? (
+        // 客房這邊的北山牆會擋住正身東邊（小翰的房間）：擋到時淡掉
+        <Fader id="wingR_gable">
+          <MergeStatic>
+            <GableWall plane="xy" at={W.z0} pts={gablePts} />
+            <WBox mat="stone" size={[W.x1 - W.x0, SKIRT_H, 0.36]} position={[ridgeX, FLOOR_Y + SKIRT_H / 2, W.z0]} />
+          </MergeStatic>
+        </Fader>
+      ) : (
+        <>
+          <GableWall plane="xy" at={W.z0} pts={gablePts} />
+          <WBox mat="stone" size={[W.x1 - W.x0, SKIRT_H, 0.36]} position={[ridgeX, FLOOR_Y + SKIRT_H / 2, W.z0]} />
+        </>
+      )}
 
       {/* 近側：擋鏡頭的牆、前山牆、隔間、屋頂 */}
       <Fader id={id}>

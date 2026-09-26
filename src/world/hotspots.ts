@@ -29,6 +29,7 @@ import { COUPLE_HOTSPOTS } from './couplesStory'
 import { festivalOf } from './night/plan'
 import { requestById } from './requests'
 import { night, yinMax } from './night/director'
+import { typhoonNow } from './night/special'
 import { NEED_INFO } from './night/guests'
 
 /** 22.5 → 22:30、25.25 → 01:15 */
@@ -64,7 +65,8 @@ const BASE_HOTSPOTS: Hotspot[] = [
     ...SPOTS.altar,
     r: 1.35,
     icon: { x: 0, z: SPOTS.altar.z - 2.2 }, iconY: 2.0,
-    label: (s) => (s.flags.incense_today ? '上香（今天拜過了）' : '上香（陰氣 +10）'),
+    // 颱風夜大家躲在神明廳時讓給「點蠟燭」（拜過了的上香就不顯示）
+    label: (s) => (s.flags.incense_today ? (typhoonNow()?.sheltering ? null : '上香（今天拜過了）') : '上香（陰氣 +10）'),
     run: (s) => s.incense('home'),
   },
   {

@@ -356,7 +356,7 @@ export function IceInterior() {
       {ICE_IN.tables.map((t, i) => (
         <Table key={i} x={t.x} z={t.z} bowls={i === 2 ? 0 : 1} />
       ))}
-      {I.tables.map((x) => (
+      {ICE_IN.arcadeTables.map((x) => (
         <Table key={x} x={x} z={I.tableZ} bowls={1} />
       ))}
       {/* 西北角：一疊紅色塑膠椅、掃把 */}

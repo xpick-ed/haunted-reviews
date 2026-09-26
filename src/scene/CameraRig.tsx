@@ -45,7 +45,8 @@ export function CameraRig() {
     lastScene.current = s.scene
     followTarget(follow.current, player.x, y, player.z, player.vx, player.vz, dt, LOOK_AHEAD, snap)
     target.set(follow.current.x, follow.current.y, follow.current.z)
-    const kd = snap ? 1 : 1 - Math.exp(-2.2 * dt)
+    // 進出屋子的拉近拉遠：約 0.75 秒到位（原本 2.2 要一秒多，走進小店時外殼都淡完了鏡頭還在慢慢推）
+    const kd = snap ? 1 : 1 - Math.exp(-3.0 * dt)
     dist.current += (wantDist - dist.current) * kd
 
     tmp.pos.set(VIEW.x, VIEW.y, VIEW.z).multiplyScalar(dist.current).add(target)

@@ -39,7 +39,8 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
 /** 客房一朝埕那面牆上的窗（颱風夜被吹得一直拍的窗板）；阿嬤站在埕裡扣 */
 export const SHUTTER = { x: WING_R.x0, z: GUEST_WINDOW_IN_Z, stand: [WING_R.x0 - 0.7, GUEST_WINDOW_IN_Z] as XZ }
 /** 神明廳八仙桌上的兩根紅蠟燭（颱風夜大家躲進來時小翰點的） */
-export const CANDLES = { x: 0, z: MAIN.z0 + 1.87, y: 1.28, stand: [0, MAIN.z0 + 2.75] as XZ }
+// stand：貼著八仙桌前緣站的地方（比神明廳「上香」的點更靠桌子，走到桌前時選項第一個就是點蠟燭，不用在慌亂中按 Q 換）
+export const CANDLES = { x: 0, z: MAIN.z0 + 1.87, y: 1.28, stand: [0, MAIN.z0 + 2.7] as XZ }
 /** 躲在阿嬤房間的側門後面哼歌（隔著門，大家聽得到、看不太到） */
 export const HUM_SPOT: XZ = [NODES.gm_door[0] - 0.15, NODES.gm_door[1]]
 /** 大家擠在神明廳站的位置：偶數號面向門外看風雨，奇數號面向神明拜拜 */
@@ -221,6 +222,9 @@ export class Typhoon extends SpecialRT {
   private gathered = new Map<GuestId, number>()
   private placed = new Set<GuestId>()
   private blowT = 12
+  /** 風把大門吹得嘎嘎響：面向神明的人也會轉頭看門外（秒）——那幾秒點蠟燭才不會被看到 */
+  private rattleT = 5
+  rattling = 0
   private humCD = 0
   /** 打雷：第幾聲、下一聲還有幾秒（畫面讀 thunderN 的變化來閃電、打雷） */
   thunderN = 0
@@ -365,6 +369,24 @@ export class Typhoon extends SpecialRT {
         sim.emitCustom('special.typhoon.candle', { lit: this.litCount })
         if (this.litCount === 0) this.say('sp.gm.candles.out')
       }
+      // 大門被風吹得嘎嘎響（7–11 秒一次）：大家轉頭看門外 3.5 秒。
+      // 面向神明拜拜的人一直看著神明桌，沒有這個空檔的話，點蠟燭一定會被看到（實測：五次點了四次被看到）
+      this.rattleT -= dt
+      if (this.rattleT <= 0) {
+        this.rattleT = 7 + this.rnd() * 4
+        this.rattling = 3.5
+        sim.emitCustom('special.typhoon.rattle')
+      }
+      const glance = this.rattling > 0
+      this.rattling = Math.max(0, this.rattling - dt)
+      for (const g of sim.guests) {
+        const i = this.gathered.get(g.id)
+        if (i === undefined || g.mode !== 'stand' || !this.placed.has(g.id) || g.scaredT > 0) continue
+        const look = glance || i % 2 === 0 ? LOOK_OUT : LOOK_ALTAR
+        const step = g.steps[0]
+        if (step) step.look = look
+        g.heading = Math.atan2(look[0] - g.x, look[1] - g.z)
+      }
       for (const g of sim.guests) {
         if (!this.gathered.has(g.id) || g.mode !== 'stand' || isGhostGuest(g.id)) continue
         if (this.litCount === 0) {
@@ -457,8 +479,8 @@ export class Typhoon extends SpecialRT {
 
   hint(hour: number) {
     if (this.gather === 'on') {
-      if (this.litCount === 0) return '神明桌的蠟燭全被風吹熄了，大家很怕：趁沒人看神明桌的時候重新點亮'
-      if (this.litCount === 1) return '一根蠟燭被吹熄了：趁大家不注意重新點亮（面向神明拜拜的人會看到）'
+      if (this.litCount === 0) return this.rattling > 0 ? '大門被風吹得嘎嘎響，大家都轉頭看門外——現在點蠟燭！' : '神明桌的蠟燭全被風吹熄了，大家很怕：等大門嘎嘎響、大家轉頭看門外的時候重新點亮'
+      if (this.litCount === 1) return this.rattling > 0 ? '大門嘎嘎響，大家轉頭看門外——現在點蠟燭！' : '一根蠟燭被吹熄了：等大門嘎嘎響、大家轉頭看門外的時候重新點亮（面向神明拜拜的人會看到）'
       const hall = this.leaks.find((l) => l.room === 'hall' && l.active && !l.bucket)
       if (hall) return '神明廳也漏水了：放個水桶接著'
       return '大家擠在神明廳躲颱風：躲在阿嬤房間的門後哼歌，可以安撫大家'
@@ -744,6 +766,8 @@ export const SPECIAL_EVENTS: Record<string, (data: unknown) => void> = {
     })
   },
   'special.typhoon.candle': () => void sfx().then((a) => a.whoosh()),
+  // 大門被風吹得嘎嘎響（大家轉頭看門外的提示音）
+  'special.typhoon.rattle': () => void sfx().then((a) => a.whoosh()),
   /** 風停了：溫馨名聲、字幕 */
   'special.typhoon.dawn': (data) => {
     const { good, caught, total, warm } = data as { good: boolean; caught: number; total: number; warm: number }

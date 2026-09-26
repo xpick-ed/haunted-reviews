@@ -7,7 +7,8 @@ import { useStore } from '../store'
 // 店面小、鏡頭低，半透明的二樓、招牌、屋頂疊在一起還是會擋住店裡。
 // 阿嬤在店裡、或在西邊隔壁的店裡（這棟擋到鏡頭）才會淡；走在街上、騎樓都不會（遮擋盒子只算亭仔腳頂以上）。
 
-export function ShopFader({ id, children }: { id: string; children: ReactNode }) {
+/** id 可以給好幾個：例如中藥行的外殼，阿嬤在中藥行裡、或在西邊隔壁的理髮廳裡（中藥行的招牌、二樓擋住鏡頭）都藏起來 */
+export function ShopFader({ id, children }: { id: string | string[]; children: ReactNode }) {
   const group = useRef<THREE.Group>(null)
   const clones = useRef(new Map<THREE.Material, THREE.Material>())
   const seen = useRef(new WeakSet<THREE.Object3D>())
@@ -34,7 +35,9 @@ export function ShopFader({ id, children }: { id: string; children: ReactNode })
         m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material)
       })
     const s = useStore.getState()
-    const target = s.building === id || s.faded.split(',').includes(id) ? 0 : 1
+    const ids = typeof id === 'string' ? [id] : id
+    const faded = s.faded.split(',')
+    const target = ids.some((x) => s.building === x || faded.includes(x)) ? 0 : 1
     const prev = opacity.current
     // 跟幀率無關（60fps 大約 0.4 秒淡完）
     opacity.current += (target - opacity.current) * (1 - Math.exp(-Math.min(dt, 1) * 9))

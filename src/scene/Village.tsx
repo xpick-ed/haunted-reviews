@@ -14,7 +14,7 @@ import { Tree } from './Tree'
 import { buildGrass } from './Landscape'
 import { ChibiNpc } from '../chars/Chibi'
 import { Corrugated, Crates, Ground, IronGrille, Paddies, Pole, PoleLine, corrugatedTexture, useWindowGlow } from './VillageKit'
-import { Fader } from './OldStreetFader'
+import { Fader, InteriorCull } from './OldStreetFader'
 import { ShopInterior, ShopTV } from './VillageShopInterior'
 import { HouseADoors, HouseAInterior, HouseBDoor, HouseBInterior, VillageHousesLive } from './VillageHouses'
 
@@ -43,11 +43,16 @@ export function VillageScene() {
         <BanyanCorner />
         {/* 走得進去的房子裡面（DESIGN §30） */}
         <ShopInterior />
-        <HouseAInterior />
         <HouseADoors />
         <HouseBInterior />
         <HouseBDoor />
       </MergeStatic>
+      {/* 紅磚厝只有一扇門：低畫質時阿嬤不在裡面、門口附近就不畫裡面（柑仔店、透天厝的正面打開，一直畫） */}
+      <InteriorCull ids={['village_house_a']} doors={[{ x: V.houseAIn.door.x, z: V.houseA.z1 }]}>
+        <MergeStatic>
+          <HouseAInterior />
+        </MergeStatic>
+      </InteriorCull>
       {/* 房子的外殼（正面、東牆、屋頂……）：阿嬤走進去、或房子擋住鏡頭時淡出 */}
       <Fader id="village_shop">
         <MergeStatic>

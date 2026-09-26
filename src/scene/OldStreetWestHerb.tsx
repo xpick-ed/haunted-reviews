@@ -332,12 +332,10 @@ export function HerbInterior() {
 export function HerbLive({ outline }: { outline: boolean }) {
   const phase = useStore((s) => s.phase)
   const night = phase === 'night'
-  const lamp = useRef<THREE.PointLight>(null)
   const bulb = useMemo(() => new THREE.MeshBasicMaterial({ color: '#ffe0a8', toneMapped: false }), [])
   const altar = useMemo(() => new THREE.MeshBasicMaterial({ color: '#ff5a3a', toneMapped: false }), [])
   useFrame(({ clock }) => {
     const l = lanternAt(useStore.getState().time)
-    if (lamp.current) lamp.current.intensity = 1.1 + 3.6 * l
     bulb.color.setRGB(0.6 + 0.5 * l, 0.5 + 0.4 * l, 0.3 + 0.25 * l)
     const f = 0.75 + 0.25 * Math.sin(clock.elapsedTime * 2.3)
     altar.color.setRGB(1.0 * f, 0.3 * f, 0.18 * f)
@@ -357,7 +355,7 @@ export function HerbLive({ outline }: { outline: boolean }) {
       <mesh material={bulb} position={[cx, A.ceilY - 0.6, -8.0]}>
         <sphereGeometry args={[0.07, 10, 8]} />
       </mesh>
-      <pointLight ref={lamp} position={[cx + 0.4, 2.5, -6.1]} color="#ffd49a" intensity={1.0} distance={9} decay={1.6} />
+      {/* 店裡的燈光：老街五間店共用一盞（OldStreetEast.tsx 的 ShopLight） */}
       {/* 神龕的小紅燈 */}
       <mesh material={altar} position={[H.in.x0 + 0.26, FLOOR + 2.47, H.shennong.z]}>
         <sphereGeometry args={[0.04, 8, 6]} />

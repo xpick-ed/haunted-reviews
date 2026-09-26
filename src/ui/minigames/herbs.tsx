@@ -215,8 +215,10 @@ export default function HerbsGame({ params, done }: MinigameProps<HerbsParams, H
     if (phase !== 'weigh' || !open) return
     const i = rx.items.findIndex((it) => it.herb === open)
     const target = rx.items[i].qian
-    // 秤錘停在最近的半錢
-    const got = Math.round(pos * 2) / 2
+    // 秤錘停在最近的半錢。用按下去那一刻的真正位置（不是上一幀畫出來的）：手機掉幀時才不會吃虧
+    const round = scores.filter((x) => x !== null).length
+    const now = swing((performance.now() - swingT0.current) / 1000, round)
+    const got = Math.round(now * 2) / 2
     const sc = weighScore(target, got)
     herbSfx.tick(sc >= 0.75)
     const next = scores.map((x, j) => (j === i ? sc : x))

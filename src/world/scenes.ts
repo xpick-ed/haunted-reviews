@@ -225,6 +225,13 @@ export const HOME: SceneDef = {
       min: [WING_R.x0 - WING_PORCH, 0, WING_R.z0 - 0.2],
       max: [WING_R.x1 + 0.5, WING_R.ridgeY + 0.4, WING_R.z1 + 0.5],
     },
+    // 右護龍北邊的山牆：阿嬤在正身東邊（小翰的房間）時會擋住鏡頭，只在擋到的時候淡掉
+    {
+      id: 'wingR_gable',
+      inside: rect(1e3, 1e3, 1e3 + 0.1, 1e3 + 0.1),
+      min: [WING_R.x0, 0, WING_R.z0 - 0.3],
+      max: [WING_R.x1, WING_R.ridgeY + 0.3, WING_R.z0 + 0.3],
+    },
     {
       id: 'wingL',
       inside: rect(WING_L.x0, WING_L.z0, WING_L.x1 + WING_PORCH, WING_L.z1),

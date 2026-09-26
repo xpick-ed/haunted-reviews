@@ -198,6 +198,9 @@ async def main() -> None:
 
     todo, manifest = [], {}
     for k, v in lines.items():
+        # 只有標點的台詞（「……」沉默）念不出來，也不需要聲音：字幕照樣顯示
+        if not any(ch.isalnum() for ch in v["text"]):
+            continue
         h = line_hash(profile_for(v, cast))
         prev = old.get(k)
         stale = args.force or (args.only and v["who"] == args.only)

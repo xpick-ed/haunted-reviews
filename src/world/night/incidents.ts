@@ -940,7 +940,8 @@ export const incidentState: { current: IncidentRT | null; blackout: boolean } = 
 
 /** 今晚適合夢遊的客人（有夢話的優先；不選小孩、老朋友） */
 function sleepwalker(sim: NightSim): GuestId | null {
-  const ok = sim.guests.filter((g) => g.def.type !== 'child' && g.def.type !== 'elder')
+  // 福伯、志明、志偉今晚各有自己的故事（night/family.ts），不夢遊
+  const ok = sim.guests.filter((g) => !['child', 'elder', 'wanderer', 'caregiver', 'lonely'].includes(g.def.type))
   const talk = ok.find((g) => SLEEPTALKERS.includes(g.id))
   return (talk ?? ok[0])?.id ?? null
 }

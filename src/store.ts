@@ -16,6 +16,7 @@ import { HAN_BARKS } from './data/barks'
 import { MEMORIES, MEMORY_BONUS_AT } from './world/memories'
 import { requestById, todayRequests } from './world/requests'
 import { encounterState } from './world/night/encounters'
+import { familyState } from './world/night/family'
 import { giftUI } from './world/bonds'
 
 export type Phase = 'dusk' | 'night' | 'dawn'
@@ -465,6 +466,10 @@ export const useStore = create<GameState>()((set, get) => ({
         get().say('客人正在聊天，阿嬤先別打盹，過去聽聽看。')
         return
       }
+      if (familyState.current?.fuboOut) {
+        get().say('福伯還在外面找阿玉，阿嬤先別打盹。')
+        return
+      }
       get().bark('gm.nap')
       set({ transitioning: true })
       later(700, () => set({ blackout: true }))
@@ -708,7 +713,7 @@ function runStep(id: string, i: number) {
 
 // 傍晚做了一件事（DESIGN §28.1）：新的「今天做過了」旗標、或家裡的東西變多（採收、買東西）→ 花 10 分鐘。
 // 系統自己設的旗標（提醒、到訪紀錄）不算；剛玩完小遊戲的也不算（小遊戲已經算過）。
-const FREE_FLAGS = /^(dusk_warned|.*_visit|handream.*|dijizhu_bless)_today$/
+const FREE_FLAGS = /^(dusk_warned|.*_visit|handream.*|dijizhu_bless|ajiao_joke)_today$/
 useStore.subscribe((s, prev) => {
   if (s.phase !== 'dusk' || !s.started || s.transitioning || performance.now() - lastMinigameEnd < 2500) return
   let chore = false

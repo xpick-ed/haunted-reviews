@@ -3,6 +3,7 @@ import type { Hotspot } from './hotspots'
 import { festivalOf } from './night/plan'
 import { FENCE } from '../scene/layout'
 import { STORY } from './story'
+import { inheritanceBeat } from './adultStory'
 
 // 主線劇情的互動點（DESIGN §28.3）：第 6 晚傍晚在大門口偷聽陳董跟小翰說話……
 // 這個檔案不能在最上面 import store（用 s.* 或 import('../store')）。
@@ -42,4 +43,4 @@ export const STORY_HOTSPOTS: Hotspot[] = [
 ]
 
 /** 小翰傍晚在埕裡掃地嗎（清明去山上掃墓、陳董來的那天在大門口就不在） */
-export const hanAtHome = (s: Pick<GameState, 'meta' | 'phase'>) => s.phase === 'dusk' && festivalOf(s.meta.night) !== 'qingming' && !chendongBeat(s)
+export const hanAtHome = (s: Pick<GameState, 'meta' | 'phase'>) => s.phase === 'dusk' && festivalOf(s.meta.night) !== 'qingming' && !chendongBeat(s) && !inheritanceBeat(s)

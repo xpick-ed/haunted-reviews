@@ -1,0 +1,352 @@
+/* 划酒拳：廟埕的夜晚，紅色塑膠桌 */
+.dk-panel {
+  width: min(96vw, 460px);
+  max-height: calc(100vh - 16px);
+  max-height: calc(100dvh - 16px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 10px;
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(120, 40, 30, 0.35), transparent 60%), linear-gradient(180deg, rgba(28, 20, 24, 0.97), rgba(14, 10, 14, 0.97));
+  border: 1.5px solid rgba(242, 180, 91, 0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: slideup 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  touch-action: manipulation;
+}
+.dk-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dk-title {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--gold-2);
+}
+.dk-score {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--muted);
+}
+.dk-score b {
+  color: var(--gold-2);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  margin: 0 2px;
+}
+.dk-x {
+  font: inherit;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* 阿義：喝越多晃越大、臉越紅 */
+.dk-ayi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 76px;
+}
+.dk-face {
+  position: relative;
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #3a2a2a;
+  border: 2px solid rgba(255, 213, 138, 0.5);
+  transform-origin: 50% 100%;
+  animation: dk-sway 2.4s ease-in-out infinite;
+}
+.dk-face img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.dk-flush {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(40% 22% at 34% 62%, rgba(255, 60, 60, 0.7), transparent 70%), radial-gradient(40% 22% at 66% 62%, rgba(255, 60, 60, 0.7), transparent 70%);
+  opacity: var(--flush, 0);
+  pointer-events: none;
+}
+@keyframes dk-sway {
+  0%,
+  100% {
+    transform: rotate(calc(var(--sway, 0deg) * -1));
+  }
+  50% {
+    transform: rotate(var(--sway, 0deg));
+  }
+}
+.dk-bubble {
+  position: relative;
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: #fbf3e2;
+  color: #3b2414;
+  font-size: 16px;
+  line-height: 1.4;
+  animation: dk-pop 0.18s ease-out;
+}
+.dk-bubble::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 50%;
+  margin-top: -7px;
+  border: 7px solid transparent;
+  border-left: 0;
+  border-right-color: #fbf3e2;
+}
+.tipsy-4 .dk-bubble,
+.tipsy-5 .dk-bubble,
+.tipsy-6 .dk-bubble {
+  transform: rotate(-1.5deg);
+  font-style: italic;
+}
+@keyframes dk-pop {
+  from {
+    transform: scale(0.94);
+    opacity: 0.4;
+  }
+}
+
+/* 桌子：兩隻手面對面 */
+.dk-table {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #b3261e, #8e1c16);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+}
+.dk-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 78px;
+}
+.dk-hand {
+  width: 64px;
+  height: 76px;
+  overflow: visible;
+}
+.dk-hand.flip {
+  transform: scaleY(-1);
+}
+.dk-hand.shake {
+  animation: dk-shake 0.5s ease-in-out infinite;
+}
+.dk-hand.flip.shake {
+  animation-name: dk-shake-flip;
+}
+.dk-hand.mini {
+  width: 26px;
+  height: 30px;
+}
+@keyframes dk-shake {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes dk-shake-flip {
+  0%,
+  100% {
+    transform: scaleY(-1);
+  }
+  50% {
+    transform: scaleY(-1) translateY(-6px);
+  }
+}
+.dk-call {
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff3dc;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 18px;
+}
+.dk-call.hit {
+  background: var(--gold-2);
+  color: #3b2414;
+  box-shadow: 0 0 16px rgba(255, 213, 138, 0.7);
+}
+.dk-beats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.dk-beat {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.2);
+  transition:
+    background 0.1s,
+    color 0.1s,
+    transform 0.1s;
+}
+.dk-beat.on {
+  color: #3b2414;
+  background: #ffe7b0;
+  transform: scale(1.08);
+}
+.dk-beat.go.on {
+  background: #ffd24a;
+  font-weight: 700;
+}
+
+.dk-cups {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.dk-cup {
+  display: inline-block;
+  width: 10px;
+  height: 12px;
+  margin: 0 1px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(180deg, #fff 0 30%, #e9e2d2 30%);
+  vertical-align: -1px;
+}
+
+.dk-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.dk-fingers {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+}
+.dk-f,
+.dk-c {
+  font: inherit;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.dk-f {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 5px 0 3px;
+  min-height: 52px;
+  font-size: 13px;
+}
+.dk-f.sel {
+  background: rgba(255, 213, 138, 0.2);
+  border-color: var(--gold-2);
+}
+.dk-calls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.dk-c {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 2px;
+  min-height: 52px;
+}
+.dk-c b {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 17px;
+  font-weight: 600;
+}
+.dk-c small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.dk-c.cur {
+  border-color: rgba(255, 213, 138, 0.55);
+}
+.dk-c.sel {
+  background: var(--gold-2);
+  color: #3b2414;
+}
+.dk-c.sel small {
+  color: #6b4a24;
+}
+.dk-c:disabled:not(.sel),
+.dk-f:disabled:not(.sel) {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.dk-intro,
+.dk-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.dk-intro p {
+  margin: 0;
+}
+.dk-intro strong {
+  color: var(--gold-2);
+}
+.dk-small {
+  font-size: 13px;
+  color: var(--muted);
+}
+.dk-result {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 26px;
+  color: var(--gold-2);
+}
+.dk-msg {
+  min-height: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: #ffe7b0;
+}
+.dk-foot {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(243, 239, 230, 0.4);
+  letter-spacing: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-face,
+  .dk-hand.shake,
+  .dk-bubble {
+    animation: none;
+  }
+  .dk-hand.flip.shake {
+    transform: scaleY(-1);
+  }
+}

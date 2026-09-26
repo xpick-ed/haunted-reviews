@@ -23,6 +23,7 @@ import { Dog, newDogDrive, type DogDrive } from '../chars/Dog'
 import { Gecko, newGeckoDrive, type GeckoDrive } from '../chars/Gecko'
 import { turnToward, type TurnState } from '../world/motion'
 import { incidentState, Sleepwalk } from '../world/night/incidents'
+import { familyState } from '../world/night/family'
 import type { RoomId } from '../world/night/types'
 
 // 深夜的客人（DESIGN §5、§21）：床上坐著／睡著、下床走動；視線扇形、懷疑的「？」、需求泡泡、zzz。
@@ -207,7 +208,9 @@ function GuestFigure({ g, room, count, outline }: { g: GuestRT; room: GuestRoomD
     } else {
       // 夢遊（突發事件）：手往前伸
       const sleepwalking = incidentState.current instanceof Sleepwalk && incidentState.current.guestId === g.id
-      d.pose = g.scaredT > 0 ? 'scared' : sleepwalking ? 'reach' : g.filming || g.def.patrol ? 'film' : 'idle'
+      // 志偉半夜在茶桌前盯著手機（night/family.ts）
+      const onPhone = g.id === 'zhiwei' && (familyState.current?.wei === 'sit' || familyState.current?.wei === 'send')
+      d.pose = g.scaredT > 0 ? 'scared' : sleepwalking ? 'reach' : g.filming || g.def.patrol ? 'film' : onPhone ? 'phone' : 'idle'
       d.speed = g.speed
       d.heading = g.heading
       walking.current?.position.set(g.x, HOME.floorAt(g.x, g.z), g.z)

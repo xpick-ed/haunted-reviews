@@ -15,7 +15,10 @@
     "test:encounters": "tsx scripts/sim-encounters.ts",
     "test:decor": "tsx scripts/sim-decor.ts",
     "test:incidents": "tsx scripts/sim-incidents.ts",
-    "test:story": "tsx scripts/sim-story.ts"
+    "test:story": "tsx scripts/sim-story.ts",
+    "test:couples": "tsx scripts/sim-couples.ts",
+    "test:family": "tsx scripts/sim-family.ts",
+    "test:horror": "tsx scripts/sim-horror.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

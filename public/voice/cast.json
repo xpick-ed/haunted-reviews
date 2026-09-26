@@ -802,5 +802,260 @@
    "wave": "triangle",
    "jitter": 0.1
   }
+ },
+ {
+  "id": "ajie",
+  "name": "阿傑",
+  "desc": "新婚的丈夫，憨厚、很愛老婆。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "+2%",
+   "pitch": "+2Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "xiaohui",
+  "name": "小惠",
+  "desc": "新婚的妻子，愛笑、有點害羞。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "+4%",
+   "pitch": "+8Hz",
+   "fx": [
+    "bright"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "mrwang",
+  "name": "王先生",
+  "desc": "用假名登記的中年男人，緊張、嘴巴很甜。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "+4%",
+   "pitch": "-4Hz",
+   "fx": [
+    "smooth"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "mrswang",
+  "name": "王太太",
+  "desc": "用假名登記的女人，漂亮、疑心很重。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-XiaoxiaoNeural",
+   "rate": "+2%",
+   "pitch": "+2Hz",
+   "fx": [
+    "warm"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "zhiming",
+  "name": "志明",
+  "desc": "五十幾歲，一個人照顧失智的爸爸，累壞了。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-8%",
+   "pitch": "-10Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "fubo",
+  "name": "福伯",
+  "desc": "八十幾歲，失智，常常以為太太還在。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-24%",
+   "pitch": "-24Hz",
+   "fx": [
+    "elder",
+    "raspy"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "zhiwei",
+  "name": "志偉",
+  "desc": "四十歲，剛被裁員，還沒跟家人說。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-6%",
+   "pitch": "-6Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "ghostbride",
+  "name": "鬼新娘",
+  "desc": "穿著褪色紅嫁衣的女鬼，等了幾十年的婚禮。",
+  "ghost": true,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-XiaoyiNeural",
+   "rate": "-18%",
+   "pitch": "-16Hz",
+   "fx": [
+    "mystic",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "jibaoling",
+  "name": "地縛靈",
+  "desc": "客房二以前的房客，一直困在那個房間。",
+  "ghost": true,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-20%",
+   "pitch": "-18Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "uncle",
+  "name": "叔叔",
+  "desc": "小翰的叔叔，在台北做生意，急著要錢。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "+4%",
+   "pitch": "-8Hz",
+   "fx": [
+    "gruff"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "aunt",
+  "name": "姑姑",
+  "desc": "小翰的姑姑，嘴巴很利，其實也捨不得老家。",
+  "ghost": false,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "+2%",
+   "pitch": "-6Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "nakashi",
+  "name": "那卡西歌手",
+  "desc": "老街鬼那卡西樂團的主唱，嗓子沙啞、很會搏感情。",
+  "ghost": true,
+  "color": "#b0a0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-10%",
+   "pitch": "-12Hz",
+   "fx": [
+    "hearty",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
  }
 ]

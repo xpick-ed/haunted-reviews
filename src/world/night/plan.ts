@@ -32,6 +32,10 @@ const WARM_POOL: GuestId[][] = [['xiaomei'], ['zhang'], ['linmom', 'xiaoyu'], ['
 /** 成人內容開著時才會來的客人（DESIGN §29） */
 const ADULT_POOL: GuestId[][] = [['ajie', 'xiaohui'], ['mrwang', 'mrswang'], ['zhiwei']]
 const SPOOKY_POOL: GuestId[][] = [['akai'], ['ahao']]
+/** 情侶和小孩不排在同一晚（成人內容的界線：有小孩的地方不放成人內容） */
+const COUPLES: GuestId[] = ['ajie', 'xiaohui', 'mrwang', 'mrswang']
+const clash = (a: GuestId[], b: GuestId[]) =>
+  b.some((id) => a.includes(id)) || (a.some((id) => COUPLES.includes(id)) && b.includes('xiaoyu')) || (b.some((id) => COUPLES.includes(id)) && a.includes('xiaoyu'))
 const EVENTS: NightEvent[] = ['none', 'none', 'dog', 'mosquitoes', 'coldsnap', 'blackout']
 
 /**
@@ -50,9 +54,9 @@ export function planNight(night: number, warm: number, spooky: number, pressure:
   }
   const a = pick()
   let b = pick()
-  for (let i = 0; i < 4 && b.some((id) => a.includes(id)); i++) b = pick()
+  for (let i = 0; i < 4 && clash(a, b); i++) b = pick()
   const parties: Party[] = [{ room: 'r1', members: a }]
-  if (!b.some((id) => a.includes(id))) parties.push({ room: 'r2', members: b })
+  if (!clash(a, b)) parties.push({ room: 'r2', members: b })
   const event: NightEvent = pressure >= 3 ? 'miaogong' : EVENTS[Math.floor(r() * EVENTS.length)]
   return { parties, event }
 }

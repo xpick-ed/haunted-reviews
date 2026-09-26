@@ -1,0 +1,151 @@
+/* 大人的恐怖的橫幅：跟突發事件的橫幅同一個位置（兩個都在時往下排一格），顏色偏暗紅紫 */
+.horror-hud {
+  position: absolute;
+  left: 50%;
+  bottom: calc(178px + var(--safe-b));
+  transform: translateX(-50%);
+  width: min(92vw, 440px);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 14px 9px 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(44, 16, 30, 0.92), rgba(20, 8, 16, 0.92));
+  border: 1.5px solid rgba(220, 90, 120, 0.55);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.55);
+  pointer-events: none !important;
+  animation: horror-in 0.4s ease-out;
+}
+.horror-hud.stacked {
+  bottom: calc(248px + var(--safe-b));
+}
+.horror-hud.on {
+  animation:
+    horror-in 0.4s ease-out,
+    horror-pulse 2.4s ease-in-out 0.4s infinite;
+}
+.horror-hud.ok {
+  border-color: rgba(140, 210, 190, 0.6);
+  background: linear-gradient(180deg, rgba(16, 36, 34, 0.92), rgba(8, 20, 20, 0.92));
+}
+.horror-hud.bad {
+  border-color: rgba(160, 150, 170, 0.5);
+  background: linear-gradient(180deg, rgba(30, 28, 36, 0.92), rgba(18, 16, 22, 0.92));
+}
+.horror-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.horror-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.horror-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffd0dc;
+}
+.horror-hud.ok .horror-title {
+  color: #bff0e0;
+}
+.horror-hint {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 236, 242, 0.85);
+}
+.horror-help {
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(220, 240, 235, 0.8);
+}
+@media (min-aspect-ratio: 1/1) and (min-width: 760px) {
+  .horror-hud {
+    bottom: auto;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    width: min(36vw, 420px);
+  }
+  .horror-hud.stacked {
+    bottom: auto;
+    top: calc(84px + env(safe-area-inset-top, 0px));
+  }
+}
+@keyframes horror-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes horror-pulse {
+  50% {
+    box-shadow:
+      0 8px 26px rgba(0, 0, 0, 0.55),
+      0 0 18px rgba(200, 60, 100, 0.4);
+  }
+}
+
+/* 恐怖加強：被看到的一瞬間。只閃一次、0.38 秒（跟 HorrorHud.tsx 的 FLASH_MS 一樣） */
+.horror-scare {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(40, 0, 6, 0.25) 0%, rgba(20, 0, 4, 0.75) 55%, rgba(0, 0, 0, 0.95) 100%);
+  opacity: 0;
+  animation: horror-flash 0.38s ease-out forwards;
+}
+.horror-face {
+  height: min(70vh, 90vw);
+  width: auto;
+  filter: drop-shadow(0 0 24px rgba(0, 0, 0, 0.9));
+  animation: horror-lunge 0.38s ease-out forwards;
+}
+@keyframes horror-flash {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes horror-lunge {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+/* 減少動態：沒有鬼臉，只有畫面慢慢暗一下再亮回來 */
+.horror-scare.calm {
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 40%, rgba(10, 0, 4, 0.6) 100%);
+  animation: horror-dim 0.38s ease-in-out forwards;
+}
+@keyframes horror-dim {
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .horror-hud,
+  .horror-hud.on {
+    animation: none;
+  }
+  .horror-face {
+    animation: none;
+  }
+}

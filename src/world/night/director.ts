@@ -345,6 +345,7 @@ function reviewText(id: GuestId, stars: number, seen: number, captures: number):
     return '整晚什麼都沒有，房東說有東西根本騙人。一星。'
   }
   if (g.type === 'child') return stars >= 4 ? '（媽媽代寫）小宇說有一個阿嬤陪他玩，他從來沒睡得這麼好。' : '（媽媽代寫）小宇一直說要找阿嬤，我們有點擔心。'
+  if (g.type === 'wanderer') return stars >= 4 ? '（志明代寫）爸說這裡跟他以前的家好像。' : '（志明代寫）爸半夜睡不太安穩。'
   if (g.type === 'elder') return stars >= 4 ? '阿春的家還是一樣舒服。半夜好像聞到菜脯蛋的味道。' : '人老了，睡不太好。不過這裡還是有家的感覺。'
   if (seen > 0) {
     if (stars <= 2) return '房間很乾淨，但半夜我看到一個阿嬤在房間裡……而且老闆說這裡只有他一個人。'
@@ -734,7 +735,8 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
 
     nightBegin: () => {
       const s = get()
-      const plan = planFor(s.meta)
+      // 傍晚就排好的客人（成人內容開關傍晚才切，不會換掉已經在車站看過的客人）
+      const plan = s.plan
       // 傍晚在小火車站觀察過的客人（旗標 observed_<id>_today）：需求一出現就看得到
       const observed = Object.keys(s.flags).filter((k) => s.flags[k] && k.startsWith('observed_') && k.endsWith('_today')).map((k) => k.slice(9, -6))
       night.sim = new NightSim(plan, { seed: s.meta.night * 131 + 7, upgrades: s.meta.upgrades, items: s.meta.items, fortune: s.meta.fortune, decor: decorBonusFor(s.meta.decor), observed })
@@ -999,7 +1001,8 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         const base = g.dreamt && stars >= 4 && !d.seesGhost ? '昨晚做了一個好溫暖的夢，夢裡有個阿嬤陪著我。起來精神超好，好久沒睡這麼熟了。' : reviewText(g.id, stars, g.seen, g.captures)
         // 外掛（突發事件、客人之間的故事）寫的附註接在後面
         const note = sim.reviewNotes[g.id]
-        const text = note ? `${base}${note}` : base
+        // 福伯的評論是志明代寫的：外掛寫了就只用外掛的
+        const text = note ? (d.type === 'wanderer' ? note : `${base}${note}`) : base
         reviews.push({ id: g.id, name: d.name, stars, text, pay })
       }
       const challenges = s.challenges.map((c) => {

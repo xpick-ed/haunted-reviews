@@ -11,6 +11,7 @@ import { buildGrass } from './Landscape'
 import { PORTRAIT_SIZE, portraitSvg } from '../art/portraits'
 import { Acacia, GhostWisps, HillGhosts, HuoboBowl, IncenseSmoke, QingmingScene, Silvergrass, Valley } from './HillProps'
 import '../chars/specs.hill'
+import { NightlifeProps } from './NightlifeProps'
 
 // 山上墓仔埔（DESIGN §26.1）：三層台地的公墓，溫暖又有點寂寞，不是恐怖片。
 // 下層是入口和長滿草的老墳，中層住著鬼鄰居（火伯、玉姨），上層是阿公阿嬤並排的墳，
@@ -47,6 +48,7 @@ export function HillScene() {
       <IncenseSmoke />
       <TombLamps />
       <HillGhosts outline={quality === 'high'} />
+      <NightlifeProps outline={quality === 'high'} />
       <QingmingScene outline={quality === 'high'} />
       <GhostWisps />
       <group visible={isNight}>

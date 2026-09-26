@@ -1,0 +1,320 @@
+/* 跟鬼鄰居打麻將：綠色的桌布，象牙色的牌 */
+.mj-panel {
+  width: min(96vw, 500px);
+  max-height: calc(100vh - 16px);
+  max-height: calc(100dvh - 16px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 10px 12px;
+  border-radius: 20px;
+  background:
+    radial-gradient(90% 60% at 50% 40%, rgba(40, 110, 80, 0.55), transparent 75%), linear-gradient(180deg, rgba(16, 32, 28, 0.97), rgba(8, 16, 16, 0.97));
+  border: 1.5px solid rgba(143, 244, 255, 0.3);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(143, 244, 255, 0.08);
+  animation: slideup 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  touch-action: manipulation;
+}
+.mj-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mj-title {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--gold-2);
+}
+.mj-turn {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--muted);
+}
+.mj-turn b {
+  color: var(--gold-2);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.mj-x {
+  font: inherit;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* 三個鬼鄰居 */
+.mj-ghosts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.mj-ghost {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px 6px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(143, 244, 255, 0.12);
+  min-height: 104px;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.mj-ghost.acting {
+  border-color: rgba(143, 244, 255, 0.55);
+  background: rgba(143, 244, 255, 0.08);
+}
+.mj-ghost.winner {
+  border-color: #ff9a7a;
+  background: rgba(255, 120, 90, 0.14);
+}
+.mj-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 20px;
+  color: #10181a;
+  opacity: 0.85;
+  box-shadow: 0 0 14px rgba(143, 244, 255, 0.35);
+  animation: mj-float 3s ease-in-out infinite;
+}
+.mj-ghost:nth-child(2) .mj-avatar {
+  animation-delay: -1s;
+}
+.mj-ghost:nth-child(3) .mj-avatar {
+  animation-delay: -2s;
+}
+@keyframes mj-float {
+  50% {
+    transform: translateY(-3px);
+  }
+}
+.mj-name {
+  font-size: 13px;
+  color: var(--text);
+}
+.mj-pond {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  min-height: 26px;
+}
+.mj-chat {
+  min-height: 48px;
+}
+.mj-bubble {
+  position: relative;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #eafcff;
+  color: #173038;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  animation: mj-pop 0.2s ease-out;
+}
+.mj-bubble b {
+  color: #2a6a7a;
+}
+.mj-bubble::before {
+  content: '';
+  position: absolute;
+  left: var(--at, 50%);
+  top: -6px;
+  margin-left: -6px;
+  border: 6px solid transparent;
+  border-top: 0;
+  border-bottom-color: #eafcff;
+}
+@keyframes mj-pop {
+  from {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+}
+
+.mj-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+}
+.mj-msg {
+  font-size: 15px;
+  color: #ffe7b0;
+}
+.mj-claim {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mj-hu {
+  font-size: 18px;
+  padding: 8px 22px;
+  animation: mj-pulse 0.9s ease-in-out infinite;
+}
+@keyframes mj-pulse {
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.mj-hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  min-height: 18px;
+}
+.mj-hint.ready {
+  color: var(--ghost);
+  font-weight: 600;
+}
+
+/* 手牌：一排七張，兩排；點一下選起來，再點一下打出 */
+.mj-hand {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px 4px;
+  padding: 8px 4px 6px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.mj-slot {
+  font: inherit;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  transition: transform 0.12s;
+  touch-action: manipulation;
+}
+.mj-slot:disabled {
+  cursor: default;
+}
+.mj-slot.sel {
+  transform: translateY(-9px);
+}
+.mj-slot.sel .mj-tile {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 1px;
+}
+.mj-slot.drawn .mj-tile {
+  box-shadow:
+    0 4px 0 #2f7a5a,
+    0 0 0 2px rgba(255, 213, 138, 0.8),
+    0 6px 10px rgba(0, 0, 0, 0.45);
+}
+.mj-slot.glow .mj-tile::after,
+.mj-slot.lonely .mj-tile::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--ghost);
+  box-shadow: 0 0 8px var(--ghost);
+}
+.mj-slot.lonely .mj-tile::after {
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: none;
+}
+.mj-slot.glow .mj-tile {
+  background: linear-gradient(180deg, #ffffff, #e6f7f4);
+}
+
+.mj-tile {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 50px;
+  aspect-ratio: 40 / 54;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #fffdf6, #efe6cf);
+  box-shadow:
+    0 4px 0 #2f7a5a,
+    0 6px 8px rgba(0, 0, 0, 0.45);
+}
+.mj-tile svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.mj-tile.mini {
+  width: 17px;
+  max-width: none;
+  border-radius: 3px;
+  box-shadow: 0 2px 0 #2f7a5a;
+}
+.mj-claim .mj-tile {
+  width: 40px;
+}
+
+.mj-mypond {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 26px;
+}
+
+.mj-intro,
+.mj-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.mj-intro p {
+  margin: 0;
+}
+.mj-intro strong {
+  color: var(--gold-2);
+}
+.mj-small {
+  font-size: 13px;
+  color: var(--muted);
+}
+.mj-result {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 26px;
+  color: var(--gold-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mj-avatar,
+  .mj-hu,
+  .mj-bubble {
+    animation: none;
+  }
+  .mj-slot {
+    transition: none;
+  }
+}

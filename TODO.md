@@ -2,14 +2,14 @@
 
 ## Current
 
-**Doing:** 遊戲性：傍晚的時間壓力（17:30→22:00，做事花時間，22:00 自動天黑）＋「今天的事」（小翰的紙條＋鄰居委託）；主線（第 7 晚陳董來、第 8 晚月底小翰給期限）與四個結局（末班車、一起回家、守著老家、賣掉了）＋製作名單。八個自動測試全過。
+**Doing:** 大人的內容（DESIGN §29）：設定選單（⚙）的成人內容開關（預設關、18+ 確認）＋恐怖加強。冥婚、凶宅夜、情侶客人（請勿打擾）、福伯＆志明（所有人）、志偉（1925 安心專線）、第 10 晚分遺產（所有人）、老街那卡西、跟阿義划酒拳、山上麻將、阿嬌和玉姨的葷笑話。十一個自動測試全過（新增 test:couples、test:family、test:horror）。
 
 **Next:**
-1. 真機調：傍晚的時間夠不夠（DUSK_HOURS_PER_SEC、DUSK_COST 在 store.ts）、委託的難度與獎勵、結局條件（GOAL 在 story.ts）
-2. 逐步解鎖：第一個月只開家、村子、菜園、廟，其他隨劇情開（避免一開始太多）
-3. 背景音樂、設定選單、存檔欄位
-4. 新角色的對話頭像；場景用到才載入
-5. 更難的客人（道士、美食評論家、考生、孕婦）
+1. 真機玩一輪成人內容：划拳的節奏（1.05 秒＋每杯 0.08）、麻將的難度（隱藏 25% 好牌）、冥婚的紅包夠不夠顯眼（目前沒有 HUD 提示）
+2. 新角色的對話頭像（阿傑、小惠、王先生、王太太、志明、福伯、志偉、叔叔、姑姑、鬼新娘、地縛靈、那卡西）：現在顯示名字第一個字
+3. 分遺產那晚的 +5／−8 沒算進晚結算畫面的「心」變化（只有字幕）
+4. 真機調：傍晚的時間夠不夠、委託的難度與獎勵、結局條件（GOAL 在 story.ts）
+5. 逐步解鎖：第一個月只開家、村子、菜園、廟，其他隨劇情開
 
 **Blockers:** 無
 
@@ -28,7 +28,7 @@
 - `?zoom=0.4`（dev 模式）：鏡頭拉近看角色
 - `window.__player`（dev 模式）：阿嬤的位置，測試時可以直接 `__player.x = 7.5` 瞬移
 - `window.__store`（dev 模式）可以直接操作遊戲狀態，例如 `__store.getState().sit()`、`__store.setState({ time: 23 })`；`window.__night.sim` 是深夜模擬（客人在 `.guests`）
-- 夢境：`npm run test:dream`；國小：`npm run test:tag`；客人之間的故事：`npm run test:encounters`；裝修：`npm run test:decor`；突發事件：`npm run test:incidents`；結局判定：`npm run test:story`
+- 夢境：`npm run test:dream`；國小：`npm run test:tag`；客人之間的故事：`npm run test:encounters`；裝修：`npm run test:decor`；突發事件：`npm run test:incidents`；結局判定：`npm run test:story`；成人內容：`test:couples`、`test:family`、`test:horror`（截圖時開成人內容：`(await import('/src/settings.ts')).useSettings.getState().update({ adult: true, adultConfirmed: true })`）
 - 截圖（不佔用共用瀏覽器）：scratchpad 的 `pw/shot.mjs <port> <out.png> <setup.js>`；5173 常被別的專案佔用，dev server 用別的 port
 - 深夜平衡：`npm run test:night`（`ONLY=M1-N2 TRACE=zhang TRACE_SEED=102` 印出某位客人整晚的狀態）
 - `window.__three`（dev 模式）：`gl.info.render.calls` 量 draw call

@@ -12,6 +12,7 @@ import { Paddies } from './VillageKit'
 import { Arcade, ArcadeColumn, FZ, Lot, signTexture, type LotStyle } from './OldStreetFacades'
 import { BarberFront, BarberPole, CinemaLobby, CinemaShell, ClothFront, EndFront, HerbFront, IceShop, Marquee, PhotoStudio } from './OldStreetShops'
 import '../chars/specs.oldstreet'
+import { Nakashi } from './Nakashi'
 
 // 老街的畫面（DESIGN §27.1）：規則與座標在 src/world/sceneOldStreet.ts。
 // 北邊（鏡頭對面）是一整排 1930 年代的牌樓厝，一樓亭仔腳；南邊（鏡頭這一側）只放矮的東西：攤車、路燈、長椅、圳溝，
@@ -142,6 +143,7 @@ export function OldStreetScene() {
       </Fader>
       <Vespa />
       <StreetLights />
+      <Nakashi outline={outline} />
       <group visible={isNight}>
         {/* 路燈下的小飛蟲 */}
         {O.lampXs.map((x) => (

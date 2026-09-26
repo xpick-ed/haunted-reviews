@@ -4,6 +4,7 @@ import { FESTIVAL_NAME, NIGHTS_PER_MONTH, SKILLS, festivalOf, type SkillDef } fr
 import { line } from '../world/lines'
 import { PORTRAIT_IDS, portraitDataUrl, type PortraitId } from '../art/portraits'
 import { nameOf } from '../world/lines'
+import { ShareButton } from './ShareCard'
 import type { NightEvent } from '../world/night/types'
 
 // 深夜前後的畫面：入住卡片（傍晚）、技能樹、天亮結算、月底報告（DESIGN §9–§13）。
@@ -239,6 +240,7 @@ export function NightSummaryCard() {
           {sum.merit > 0 && <span className="merit-c">功德 +{sum.merit}</span>}
         </div>
         {sum.pressureDelta > 0 && <p className="warn">差評傳到廟公那裡了……（壓力 {delta(sum.pressureDelta)}）</p>}
+        <ShareButton />
         <button className="btn primary big" onClick={close}>
           {sum.monthEnd ? '看這個月的帳' : '下一晚'}
         </button>

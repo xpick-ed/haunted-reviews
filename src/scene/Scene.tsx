@@ -36,6 +36,9 @@ import { StoryScene } from './StoryScene'
 import { HorrorLayer } from './HorrorLayer'
 import { CouplesLayer } from './CouplesLayer'
 import { FamilyLayer } from './FamilyLayer'
+import { SpecialLayer } from './SpecialLayer'
+import { HanLayer } from './HanLayer'
+import { Snapshot } from './Snapshot'
 import { hanAtHome } from '../world/storyBeats'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { VisionLayer } from './Vision'
@@ -80,6 +83,7 @@ export function Scene() {
         <WorldController />
         <CameraRig />
         <Ticker />
+        <Snapshot />
         <ReadyGate />
         {import.meta.env.DEV && <DevHooks />}
         {!NO_FX && <Effects quality={quality} />}
@@ -151,6 +155,8 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
       <HorrorLayer />
       <CouplesLayer />
       <FamilyLayer />
+      <SpecialLayer />
+      <HanLayer />
       {!hanAway && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )

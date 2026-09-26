@@ -25,6 +25,7 @@ import { EndingScreen } from './EndingScreen'
 import { SettingsPanel } from './Settings'
 import { HorrorHud } from './HorrorHud'
 import { FamilyHud } from './FamilyHud'
+import { SpecialHud } from './SpecialHud'
 import { PORTRAIT_IDS } from '../art/portraits'
 import { GOAL, goalShown } from '../world/story'
 import { MEMORIES } from '../world/memories'
@@ -83,6 +84,7 @@ export function Hud() {
       <DecorHud />
       <IncidentHud />
       <FamilyHud />
+      <SpecialHud />
       <EncounterPanel />
       <GiftPanel />
       <EndingScreen />

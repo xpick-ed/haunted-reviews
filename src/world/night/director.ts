@@ -17,6 +17,7 @@ import { createEncounters, ENCOUNTER_EVENTS } from './encounters'
 import { createCouples, COUPLE_EVENTS } from './couples'
 import { createFamily, FAMILY_EVENTS } from './family'
 import { createHorror, HORROR_EVENTS } from './horror'
+import { createSpecialNight, SPECIAL_EVENTS } from './special'
 import { adultOn } from '../../settings'
 import { RECIPES, START_PANTRY, canCook, type Fortune, type Ingredient, type RecipeId, type RelicId } from './items'
 import { HIDE_SPOTS } from './actions'
@@ -70,6 +71,12 @@ export interface Meta {
   story: string[]
   /** 連續幾個月底存款是負的 */
   debtMonths: number
+  /** 小翰感覺得到阿嬤還在的程度 0..100（src/world/han.ts，DESIGN §31.2） */
+  hanSense: number
+  /** 阿嬤給過小翰的「訊號」（已經做過的，id） */
+  hanSigns: string[]
+  /** 今天用在客人身上的店裡東西（DESIGN §31.1；天亮清掉） */
+  specials: string[]
 }
 
 /** 一件擺好的家具擺飾 */
@@ -267,6 +274,9 @@ export const START_META = (): Meta => ({
   requests: [],
   story: [],
   debtMonths: 0,
+  hanSense: 0,
+  hanSigns: [],
+  specials: [],
 })
 
 /** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
@@ -302,10 +312,10 @@ const HOLD_ACTIONS = new Set<ActionId>(['tuck', 'temp', 'water', 'coil', 'nightl
  * NightSim 的外掛登記表（DESIGN §27.2）：每晚開始時呼叫，回傳 null 表示今晚沒有。
  * 突發事件（night/incidents.ts）、客人之間的故事（night/encounters.ts）在自己的模組裡 push 進來。
  */
-export const SIM_PLUGINS: ((sim: NightSim, plan: NightPlan, meta: Meta) => SimPlugin | null)[] = [createIncidents, createEncounters, createCouples, createFamily, createHorror]
+export const SIM_PLUGINS: ((sim: NightSim, plan: NightPlan, meta: Meta) => SimPlugin | null)[] = [createIncidents, createEncounters, createCouples, createFamily, createHorror, createSpecialNight]
 
 /** 外掛發出的自訂事件（SimEvent 的 t: 'custom'）的處理函式：kind → handler */
-export const CUSTOM_EVENTS: Record<string, (data: unknown) => void> = { ...INCIDENT_EVENTS, ...ENCOUNTER_EVENTS, ...COUPLE_EVENTS, ...FAMILY_EVENTS, ...HORROR_EVENTS }
+export const CUSTOM_EVENTS: Record<string, (data: unknown) => void> = { ...INCIDENT_EVENTS, ...ENCOUNTER_EVENTS, ...COUPLE_EVENTS, ...FAMILY_EVENTS, ...HORROR_EVENTS, ...SPECIAL_EVENTS }
 
 /** 擺設換算成模擬用的加成（src/world/decor.ts 登記進來；還沒登記就沒有加成） */
 export const decorHooks: { bonus: (decor: DecorPlacement[]) => DecorBonus | undefined } = { bonus: () => undefined }

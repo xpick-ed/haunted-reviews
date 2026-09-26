@@ -21,7 +21,7 @@ const LIKE_LABEL: Record<GuestType, string> = {
 }
 
 /** 用煮的（粥、湯、麵線）：沒有「翻面」，改成「起鍋」 */
-const BOIL = new Set<RecipeId>(['porridge', 'sweetporridge', 'gingersoup', 'misua'])
+const BOIL = new Set<RecipeId>(['porridge', 'sweetporridge', 'gingersoup', 'misua', 'fishsoup', 'zongzi'])
 
 interface Look {
   /** 鍋裡的湯底（煎的是 null：只有一層油） */
@@ -33,6 +33,29 @@ interface Look {
 }
 
 const LOOK: Record<RecipeId, Look> = {
+  fishsoup: {
+    liquid: '#e8e4d4',
+    raw: '#d8d4c4',
+    gold: '#c9b98a',
+    burnt: '#6a5a3a',
+    drops: [
+      { name: '薑絲', color: '#e9c46a' },
+      { name: '溪哥', color: '#b8c4c8' },
+      { name: '蔥花', color: '#6fb04a' },
+    ],
+  },
+  // 粽子：用蒸的（鍋裡放水、放粽子）
+  zongzi: {
+    liquid: '#cfe3e8',
+    raw: '#7fa65a',
+    gold: '#5c8a3a',
+    burnt: '#2a3a1a',
+    drops: [
+      { name: '水', color: '#bfe3ff' },
+      { name: '粽子', color: '#6f9a4a' },
+      { name: '蒸籠蓋', color: '#c8a064' },
+    ],
+  },
   omelette: {
     liquid: null,
     raw: '#f7e38c',

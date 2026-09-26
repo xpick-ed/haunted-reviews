@@ -49,6 +49,8 @@ export interface Meta {
   fortune: Fortune | null
   /** 今天擲了幾次筊（一天三次） */
   jiaobei: number
+  /** 收集到的回憶碎片（src/world/memories.ts 的 id） */
+  memories: string[]
 }
 
 export interface GuestView {
@@ -156,16 +158,20 @@ export interface NightSlice {
   month: MonthReport | null
   /** 傍晚顯示「今晚入住」卡片 */
   intro: boolean
-  /** 開著的面板：技能樹、柑仔店、鬼夜市法器攤 */
-  panel: 'skills' | 'shop' | 'relics' | null
+  /** 開著的面板：技能樹、柑仔店、鬼夜市法器攤、回憶相簿 */
+  panel: 'skills' | 'shop' | 'relics' | 'album' | null
   /** 慢動作（被看到的瞬間） */
   timeScale: number
   flickerUntil: Record<RoomId, number>
   /** 被看著（懷疑值最高的那個人）0..1，HUD 顯示 */
   watched: number
   hold: HoldState | null
-  /** 附身在貓身上 */
-  possess: 'cat' | null
+  /** 附身在誰身上：阿咪（貓）、小黑（狗）、壁虎 */
+  possess: 'cat' | 'dog' | 'gecko' | null
+  /** 陰陽眼（鬼的視角）開著 */
+  vision: boolean
+  /** 念力模式：用手指拖房間裡的東西 */
+  tk: boolean
   /** 躲在哪個躲藏點 */
   hidden: string | null
   /** 端著的宵夜（煮好的食譜與品質） */
@@ -182,7 +188,17 @@ export interface NightSlice {
   exitPossess: () => void
   exitHide: () => void
   meow: () => void
+  toggleVision: () => void
+  toggleTK: () => void
+  /**
+   * 念力拖完一個東西（src/scene/Telekinesis.tsx 呼叫）：
+   * kind 是拖的東西，room 是哪間客房（沒有就 null），speed 是拖的最快速度（公尺／秒，太快會有聲音）
+   */
+  tkApply: (kind: TKKind, room: RoomId | null, speed: number, at: [number, number]) => void
 }
+
+/** 念力可以拖的東西 */
+export type TKKind = 'blanket' | 'ball' | 'window' | 'door' | 'item'
 
 export const START_META = (): Meta => ({
   night: 1,
@@ -201,6 +217,7 @@ export const START_META = (): Meta => ({
   pantry: { ...START_PANTRY },
   fortune: null,
   jiaobei: 0,
+  memories: [],
 })
 
 /** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
@@ -631,6 +648,8 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     possess: null,
     hidden: null,
     dish: null,
+    vision: false,
+    tk: false,
 
     setObject: (id, on) => set((s) => ({ objects: { ...s.objects, [id]: { on, at: performance.now() } } })),
 
@@ -787,6 +806,54 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     meow: () => {
       night.sim?.meow()
       sfx.play('pickup', { volume: 0.25 })
+    },
+
+    toggleVision: () => {
+      const on = !get().vision
+      set({ vision: on } as Partial<NightSlice>)
+      sfx.play(on ? 'whoosh' : 'ui_select', { volume: 0.3 })
+    },
+
+    toggleTK: () => {
+      const s = get()
+      if (!s.tk && !s.meta.skills.includes('telekinesis')) return
+      set({ tk: !s.tk } as Partial<NightSlice>)
+      sfx.play('ui_select', { volume: 0.4 })
+    },
+
+    tkApply: (kind, room, speed, at) => {
+      const sim = night.sim
+      if (!sim) return
+      // 拖太快：東西刮地板、撞到東西的聲音
+      if (speed > 1.2) sim.noise(at[0], at[1], Math.min(0.6, (speed - 1.2) * 0.25))
+      switch (kind) {
+        case 'blanket':
+          if (room) {
+            sim.tuck(room)
+            sim.satisfy(room, 'cold', ACTION_DEFS.tuck.comfort!)
+          }
+          break
+        case 'ball':
+          if (room) sim.satisfy(room, 'play', ACTION_DEFS.play.comfort! * 0.8)
+          break
+        case 'window':
+          if (room) {
+            get().setObject(`${room}.window`, true)
+            sim.satisfy(room, 'cold', ACTION_DEFS.window.comfort!)
+          }
+          break
+        case 'item':
+          if (room) sim.satisfy(room, 'lost', ACTION_DEFS.retrieve.comfort!)
+          break
+        case 'door':
+          break
+      }
+      // 醒著的人看到東西自己在動：膽小的人會怕（看得到鬼的人覺得好玩）
+      for (const g of sim.guests) {
+        if (!g.awake || g.room !== room || g.def.seesGhost || g.def.type === 'thrill') continue
+        if (sim.sees(g, at[0], at[1], room)) g.fear += g.def.type === 'timid' ? 10 : 5
+      }
+      refreshView()
     },
 
     finishNight: () => {

@@ -409,5 +409,139 @@
    "wave": "sawtooth",
    "jitter": 0.05
   }
+ },
+ {
+  "id": "guikid1",
+  "name": "阿弟仔",
+  "desc": "在溪邊、國小玩的小男孩鬼，皮、愛玩鬼抓人。",
+  "ghost": true,
+  "color": "#9fd3ff",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiaNeural",
+   "rate": "+8%",
+   "pitch": "+10Hz",
+   "fx": [
+    "child",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 520,
+   "wave": "square",
+   "jitter": 0.15
+  }
+ },
+ {
+  "id": "guikid2",
+  "name": "阿妹仔",
+  "desc": "綁兩條辮子的小女孩鬼，害羞、愛跳房子。",
+  "ghost": true,
+  "color": "#ffc2e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-XiaoyiNeural",
+   "rate": "+4%",
+   "pitch": "+16Hz",
+   "fx": [
+    "child",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 600,
+   "wave": "sine",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "huobo",
+  "name": "火伯",
+  "desc": "墓仔埔的老兵鬼，嘴硬心軟，愛講當年。",
+  "ghost": true,
+  "color": "#c9b27c",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-10%",
+   "pitch": "-22Hz",
+   "fx": [
+    "elder",
+    "gruff",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 170,
+   "wave": "sawtooth",
+   "jitter": 0.08
+  }
+ },
+ {
+  "id": "yuyi",
+  "name": "玉姨",
+  "desc": "墓仔埔的八卦女鬼，什麼都知道，最愛聊天。",
+  "ghost": true,
+  "color": "#d8a7e8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-6%",
+   "pitch": "-18Hz",
+   "fx": [
+    "elder",
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 360,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "dijizhu",
+  "name": "地基主",
+  "desc": "住在老房子地基裡的守護靈，話很少，陰陽眼才看得到。",
+  "ghost": true,
+  "color": "#8fb8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-22%",
+   "pitch": "-26Hz",
+   "fx": [
+    "mystic",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 140,
+   "wave": "sine",
+   "jitter": 0.04
+  }
+ },
+ {
+  "id": "banzhu",
+  "name": "班主",
+  "desc": "歌仔戲班的老班主，走江湖一輩子，感覺得到鬼。",
+  "ghost": false,
+  "color": "#e0a050",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-14%",
+   "pitch": "-20Hz",
+   "fx": [
+    "elder",
+    "raspy"
+   ]
+  },
+  "blip": {
+   "freq": 210,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
  }
 ]

@@ -41,11 +41,15 @@ import { VILLAGE_SCENE } from './sceneVillage'
 import { GARDEN_SCENE } from './sceneGarden'
 import { MARKET_CLOSE, MARKET_OPEN, MARKET_SCENE } from './sceneMarket'
 import { DREAM_SCENE } from './sceneDream'
+import { RIVER_SCENE } from './sceneRiver'
+import { SCHOOL_SCENE } from './sceneSchool'
+import { HILL_SCENE } from './sceneHill'
+import { STAGE_CIRCLES, STAGE_RECTS } from './sceneStage'
 
 // 場景定義：碰撞、出生點、出口、建築（淡出與室內鏡頭用）、地板高度。
 // 視覺在 scene/ 底下，這裡只有「規則」需要的資料。
 
-export type SceneId = 'home' | 'temple' | 'village' | 'garden' | 'market' | 'dream'
+export type SceneId = 'home' | 'temple' | 'village' | 'garden' | 'market' | 'dream' | 'river' | 'school' | 'hill'
 
 export interface Building {
   id: string
@@ -266,6 +270,9 @@ function templeColliders(): Colliders {
     { x: 1.4, z: t.hall.z1 + 0.2, r: 0.18 },
     { x: t.banyan.x, z: t.banyan.z, r: 1.1 },
   ]
+  // 野台戲的戲台（src/world/sceneStage.ts）
+  rects.push(...STAGE_RECTS)
+  circles.push(...STAGE_CIRCLES)
   return { rects, circles, bounds: rect(-17, -9, 17, 10.5) }
 }
 
@@ -277,9 +284,11 @@ export const TEMPLE_SCENE: SceneDef = {
     road_west: [-12, TEMPLE.roadZ],
     front: [0, 4.2],
     market_gate: [12.8, -5.2],
+    hill_path: [-12.8, -5.2],
   },
   exits: [
     { area: rect(-17, TEMPLE.roadZ - 3.2, -14.4, TEMPLE.roadZ + 3.2), to: 'village', spawn: 'east', label: '← 村子', sign: [-12.6, TEMPLE.roadZ - 2.1] },
+    { area: rect(-17, -9, -12.5, -6.5), to: 'hill', spawn: 'path', label: '山上 ↑', sign: [-12.2, -5.6] },
     {
       area: rect(12.5, -9, 17, -6.5),
       to: 'market',
@@ -308,6 +317,9 @@ export const SCENES: Record<SceneId, SceneDef> = {
   garden: GARDEN_SCENE,
   market: MARKET_SCENE,
   dream: DREAM_SCENE,
+  river: RIVER_SCENE,
+  school: SCHOOL_SCENE,
+  hill: HILL_SCENE,
 }
 
 /** NPC 站的位置（畫面與碰撞共用） */

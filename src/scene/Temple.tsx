@@ -1,3 +1,5 @@
+import { FestivalStage } from './Stage'
+import { TempleHillPath } from './HillPath'
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Sparkles } from '@react-three/drei'
@@ -28,6 +30,8 @@ export function TempleScene() {
   const quality = useStore((s) => s.quality)
   return (
     <group>
+      <FestivalStage />
+      <TempleHillPath />
       <Grounds />
       <Greenery quality={quality} />
       <MergeStatic>

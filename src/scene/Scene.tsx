@@ -20,6 +20,9 @@ import { VillageScene } from './Village'
 import { GardenScene } from './Garden'
 import { MarketScene } from './Market'
 import { DreamScene } from './Dream'
+import { RiverScene } from './River'
+import { SchoolScene } from './School'
+import { HillScene } from './Hill'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { ChibiNpc } from '../chars/Chibi'
 import { HAN_SWEEP } from './layout'
@@ -106,6 +109,9 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
   if (scene === 'garden') return <GardenScene />
   if (scene === 'market') return <MarketScene />
   if (scene === 'dream') return <DreamScene />
+  if (scene === 'river') return <RiverScene />
+  if (scene === 'school') return <SchoolScene />
+  if (scene === 'hill') return <HillScene />
   return (
     <group>
       <Landscape quality={quality} />

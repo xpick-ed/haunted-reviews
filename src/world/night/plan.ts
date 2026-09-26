@@ -84,7 +84,8 @@ export const SKILLS: SkillDef[] = [
   { id: 'ghoststep', line: 'ghost', name: '鬼步', desc: '走路時被發現的速度慢 35%', cost: 2, requires: 'freeze' },
   { id: 'swift', line: 'ghost', name: '快飄省力', desc: '快飄的陰氣減半，而且沒有聲音', cost: 2, requires: 'ghoststep' },
   { id: 'yinmax', line: 'ghost', name: '陰氣上限 +30', desc: '最多可以存 130 陰氣', cost: 3, requires: 'swift' },
-  { id: 'possess', line: 'spirit', name: '附身', desc: '附身在貓（阿咪）身上：客人看到貓不會起疑，還會摸牠', cost: 1, action: 'possess' },
+  { id: 'possess', line: 'spirit', name: '附身', desc: '附身在阿咪（貓）、小黑（狗）、壁虎身上，各有本事', cost: 1, action: 'possess' },
+  { id: 'telekinesis', line: 'spirit', name: '念力', desc: '用手指直接拖房間裡的東西：拉被子、滾球、撿東西（拖太快會有聲音）', cost: 2, requires: 'possess' },
   { id: 'dream', line: 'spirit', name: '托夢', desc: '進入睡著客人的夢，幫他解決心事，他會睡得很沉', cost: 2, action: 'dream', requires: 'possess' },
   { id: 'radio', line: 'spirit', name: '收音機', desc: '附身神明廳的收音機，遠遠放老歌哄睡（膽小的人會怕）', cost: 2, action: 'radio', requires: 'dream' },
   { id: 'deepdream', line: 'spirit', name: '好夢', desc: '夢境的時間 +15 秒，夢裡的東西也比較好找', cost: 3, requires: 'radio' },
@@ -110,3 +111,19 @@ export const UPGRADES: UpgradeDef[] = [
   { id: 'shrine', name: '神明廳修復', desc: '家裡上香的陰氣 +10 → +30', cost: 15000 },
   { id: 'cctv', name: '監視器', desc: 'YouTuber 會看監視器畫面：任何地方的嚇人動作都算拍到', cost: 8000 },
 ]
+
+// ---------------------------------------------------------------------------
+// 節日（DESIGN §26.1）：第 4 晚土地公生、第 6 晚清明、第 8 晚中元普渡，之後每 4 晚輪一次
+// ---------------------------------------------------------------------------
+
+export type Festival = 'tudigong' | 'qingming' | 'zhongyuan'
+
+export const FESTIVAL_NAME: Record<Festival, string> = { tudigong: '土地公生', qingming: '清明', zhongyuan: '中元普渡' }
+
+export function festivalOf(night: number): Festival | null {
+  if (night === 4) return 'tudigong'
+  if (night === 6) return 'qingming'
+  if (night === 8) return 'zhongyuan'
+  if (night > 8 && night % 4 === 0) return (['tudigong', 'qingming', 'zhongyuan'] as Festival[])[(night / 4) % 3]
+  return null
+}

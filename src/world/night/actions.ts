@@ -44,6 +44,8 @@ export const ACTION_DEFS: Record<ActionId, ActionDef> = {
   radio: { id: 'radio', name: '附身收音機', yin: 12, noise: 0.2, type: 'misc', busy: 1.0, satisfies: 'insomnia', comfort: 8, skill: 'radio' },
   possess: { id: 'possess', name: '附身阿咪', yin: 5, noise: 0, type: 'misc', busy: 0.6, skill: 'possess' },
   hide: { id: 'hide', name: '躲起來', yin: 0, noise: 0.02, type: 'misc', busy: 0.4 },
+  retrieve: { id: 'retrieve', name: '把東西撿回床頭', yin: 3, noise: 0.08, type: 'kind', busy: 1.2, satisfies: 'lost', comfort: 12 },
+  ouija: { id: 'ouija', name: '推碟子（碟仙）', yin: 8, noise: 0, type: 'scare', busy: 0.5 },
 }
 
 export interface Option {

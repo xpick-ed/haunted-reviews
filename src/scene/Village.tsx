@@ -1,3 +1,5 @@
+import { VillageRiverPath } from './RiverPath'
+import { VillageSchoolPath } from './SchoolPath'
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { RoundedBox, Sparkles } from '@react-three/drei'
@@ -24,6 +26,8 @@ export function VillageScene() {
   const isNight = useStore((s) => s.isNight)
   return (
     <group>
+      <VillageRiverPath />
+      <VillageSchoolPath />
       <Grounds />
       <Greenery quality={quality} />
       <MergeStatic>

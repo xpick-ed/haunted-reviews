@@ -6,7 +6,7 @@ import type { GuestType } from './types'
 // 食材（meta.pantry 裡的數量）
 // ---------------------------------------------------------------------------
 
-export type Ingredient = 'egg' | 'leaf' | 'sweetpotato' | 'radish' | 'noodle' | 'ginger' | 'coil' | 'candle'
+export type Ingredient = 'egg' | 'leaf' | 'sweetpotato' | 'radish' | 'noodle' | 'ginger' | 'coil' | 'candle' | 'fish' | 'zongzi' | 'toy'
 
 export const INGREDIENTS: Record<Ingredient, { name: string; icon: string; desc: string }> = {
   egg: { name: '雞蛋', icon: '🥚', desc: '後院雞舍撿的' },
@@ -17,6 +17,9 @@ export const INGREDIENTS: Record<Ingredient, { name: string; icon: string; desc:
   ginger: { name: '薑', icon: '🫚', desc: '柑仔店買的' },
   coil: { name: '蚊香', icon: '🌀', desc: '點蚊香要用' },
   candle: { name: '蠟燭', icon: '🕯️', desc: '停電時小夜燈改點蠟燭' },
+  fish: { name: '溪哥', icon: '🐟', desc: '溪邊釣的' },
+  zongzi: { name: '粽子', icon: '🍙', desc: '節日包的' },
+  toy: { name: '小玩具', icon: '🧸', desc: '柑仔店夾娃娃機夾到的，可以送小宇' },
 }
 
 /** 新遊戲一開始家裡有的東西 */
@@ -26,7 +29,7 @@ export const START_PANTRY: Partial<Record<Ingredient, number>> = { egg: 2, radis
 // 宵夜食譜（在灶腳煮：選食譜 → 小遊戲 → 端過去）
 // ---------------------------------------------------------------------------
 
-export type RecipeId = 'porridge' | 'omelette' | 'leaves' | 'sweetporridge' | 'misua' | 'gingersoup'
+export type RecipeId = 'porridge' | 'omelette' | 'leaves' | 'sweetporridge' | 'misua' | 'gingersoup' | 'fishsoup' | 'zongzi'
 
 export interface Recipe {
   id: RecipeId
@@ -47,6 +50,8 @@ export const RECIPES: Recipe[] = [
   { id: 'sweetporridge', name: '地瓜粥', icon: '🍠', needs: { sweetpotato: 1 }, comfort: 25, likes: ['child', 'parent', 'timid'] },
   { id: 'leaves', name: '炒地瓜葉', icon: '🥬', needs: { leaf: 1 }, comfort: 20, likes: ['elder'] },
   { id: 'gingersoup', name: '薑湯', icon: '🍵', needs: { ginger: 1 }, comfort: 15, likes: ['timid', 'business'], alsoCold: true },
+  { id: 'fishsoup', name: '溪哥湯', icon: '🐟', needs: { fish: 1, ginger: 1 }, comfort: 32, likes: ['elder', 'business', 'parent'], alsoCold: true },
+  { id: 'zongzi', name: '粽子', icon: '🍙', needs: { zongzi: 1 }, comfort: 34, likes: ['backpacker', 'elder', 'child', 'thrill'] },
   // 什麼都沒有：白粥
   { id: 'porridge', name: '白粥', icon: '🍚', needs: {}, comfort: 12, likes: [] },
 ]

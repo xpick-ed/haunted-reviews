@@ -6,6 +6,14 @@ import Swat from './swat'
 import Jiaobei from './jiaobei'
 import Goldfish from './goldfish'
 import Balloon from './balloon'
+import Fishing from './fishing'
+import Lantern from './lantern'
+import Rhythm from './rhythm'
+import Claw from './claw'
+import Pachinko from './pachinko'
+import Zongzi from './zongzi'
+import Hopscotch from './hopscotch'
+import Ouija from './ouija'
 
 // 小遊戲登記表：id → 元件。新增小遊戲：在這裡加一行、在 types.ts 加 id。
 
@@ -16,6 +24,14 @@ export const MINIGAMES: Record<MinigameId, ComponentType<MinigameProps<any, any>
   jiaobei: Jiaobei,
   goldfish: Goldfish,
   balloon: Balloon,
+  fishing: Fishing,
+  lantern: Lantern,
+  rhythm: Rhythm,
+  claw: Claw,
+  pachinko: Pachinko,
+  zongzi: Zongzi,
+  hopscotch: Hopscotch,
+  ouija: Ouija,
 }
 
 /** HUD 上的覆蓋層 */

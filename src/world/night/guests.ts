@@ -57,6 +57,7 @@ export const GUESTS: Record<GuestId, GuestDef> = {
     lightSleeper: 0.5,
     trips: [26.2],
     needs: [
+      { kind: 'lost', at: 25.4, chance: 0.4 }, // 手機滑到床底下
       { kind: 'thirsty', at: 23.0, chance: 0.7 },
       { kind: 'mosquito', at: 23.5, chance: 0.5 },
       { kind: 'dark', at: 24.0, chance: 0.6 },
@@ -97,6 +98,7 @@ export const GUESTS: Record<GuestId, GuestDef> = {
     lightSleeper: 0.9,
     trips: [27.0],
     needs: [
+      { kind: 'lost', at: 24.6, chance: 0.5 }, // 眼鏡掉到床底下
       { kind: 'thirsty', at: 22.6, chance: 0.8 },
       { kind: 'insomnia', at: 23.4, chance: 0.7 },
       { kind: 'cold', at: 26.0, chance: 0.6 },
@@ -194,6 +196,7 @@ export const GUESTS: Record<GuestId, GuestDef> = {
     lightSleeper: 0.2,
     trips: [24.6, 27.2],
     needs: [
+      { kind: 'lost', at: 23.6, chance: 0.4 }, // 假牙杯打翻
       { kind: 'thirsty', at: 23.0, chance: 0.6 },
       { kind: 'cold', at: 24.4, chance: 0.7 },
     ],
@@ -213,6 +216,7 @@ export const NEED_INFO: Record<NeedKind, { icon: string; label: string }> = {
   scare: { icon: '🎥', label: '想拍到靈異畫面' },
   play: { icon: '🧸', label: '想找阿嬤玩' },
   chat: { icon: '💬', label: '想跟阿春聊天' },
+  lost: { icon: '👓', label: '東西掉了' },
 }
 
 /** 這些需求沒解決就睡不著 */

@@ -26,6 +26,7 @@ export type NeedKind =
   | 'scare' // 想被嚇（YouTuber）→ 任何嚇人的動作
   | 'play' // 想玩（小孩）→ 陪他玩
   | 'chat' // 想聊天（老夫妻）→ 跟他們說話
+  | 'lost' // 東西掉到床底下（眼鏡、手機）→ 撿回床頭（念力可以遠遠撿）
 
 /** 阿嬤可以做的動作 */
 export type ActionId =
@@ -56,6 +57,8 @@ export type ActionId =
   | 'radio' // 附身收音機放老歌
   | 'possess' // 附身貓
   | 'hide' // 躲起來
+  | 'retrieve' // 把掉的東西撿回床頭
+  | 'ouija' // 碟仙：推碟子回答阿凱的問題
 
 /** 客人會講的話的種類（src/data/barks.ts 依這些 key 列出台詞 id） */
 export type BarkKind =
@@ -72,6 +75,7 @@ export type BarkKind =
   | 'need_scare'
   | 'need_play'
   | 'need_chat'
+  | 'need_lost'
   | 'thanks' // 需求被滿足時的喃喃自語（「好暖……」）
   | 'hear' // 聽到聲音（「什麼聲音？」）
   | 'suspect' // 好像看到什麼（「嗯？」）

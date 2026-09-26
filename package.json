@@ -13,7 +13,8 @@
     "test:dream": "tsx scripts/sim-dream.ts",
     "test:tag": "tsx scripts/sim-tag.ts",
     "test:encounters": "tsx scripts/sim-encounters.ts",
-    "test:decor": "tsx scripts/sim-decor.ts"
+    "test:decor": "tsx scripts/sim-decor.ts",
+    "test:incidents": "tsx scripts/sim-incidents.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

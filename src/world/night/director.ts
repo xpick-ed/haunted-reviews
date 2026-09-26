@@ -11,7 +11,7 @@ import { GUESTS } from './guests'
 import { MONTHLY_COST, NIGHTS_PER_MONTH, SKILLS, UPGRADES, planNight, type NightPlan, type UpgradeDef } from './plan'
 import { NightSim, type DecorBonus, type SimEvent, type SimPlugin } from './sim'
 import { rateGuest } from './rating'
-import { createIncidents, INCIDENT_EVENTS } from './incidents'
+import { createIncidents, incidentState, INCIDENT_EVENTS } from './incidents'
 import { createEncounters, ENCOUNTER_EVENTS } from './encounters'
 import { RECIPES, START_PANTRY, canCook, type Fortune, type Ingredient, type RecipeId, type RelicId } from './items'
 import { HIDE_SPOTS } from './actions'
@@ -764,6 +764,8 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
       const now = performance.now()
       const lit = { ...base }
       for (const r of ['r1', 'r2'] as RoomId[]) if (now < s.flickerUntil[r]) lit[r] = Math.random() < 0.5 ? 0.05 : 1
+      // 突發事件：保險絲燒掉，兩間客房都暗了
+      if (incidentState.blackout) lit.r1 = lit.r2 = 0.05
       set({ roomLit: lit })
       viewT -= dt
       if (viewT <= 0) {

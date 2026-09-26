@@ -17,6 +17,7 @@ import { HARBOR_HOTSPOTS } from './sceneHarbor'
 import { PAST_HOTSPOTS } from './past'
 import { BOND_HOTSPOTS } from './bonds'
 import { DECOR_HOTSPOTS } from './decor'
+import { INCIDENT_HOTSPOTS } from './night/incidents'
 import { festivalOf } from './night/plan'
 import { night, yinMax } from './night/director'
 import { NEED_INFO } from './night/guests'
@@ -214,6 +215,7 @@ export const HOTSPOTS: Hotspot[] = [
   ...PAST_HOTSPOTS,
   ...BOND_HOTSPOTS,
   ...DECOR_HOTSPOTS,
+  ...INCIDENT_HOTSPOTS,
 ]
 
 /** 範圍內所有能用的熱點（近的排前面）：同一個地方有好幾件事可以做時（跟 NPC 說話、送禮……），按 Q 切換 */

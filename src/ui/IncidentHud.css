@@ -1,0 +1,83 @@
+/* 半夜突發事件的橫幅：畫面下方中間，字幕上面 */
+.incident-hud {
+  position: absolute;
+  left: 50%;
+  bottom: calc(178px + var(--safe-b));
+  transform: translateX(-50%);
+  width: min(92vw, 440px);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 14px 9px 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(48, 22, 18, 0.9), rgba(26, 12, 10, 0.9));
+  border: 1.5px solid rgba(255, 120, 90, 0.55);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.5);
+  pointer-events: none !important;
+  animation: incident-in 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.incident-hud.on {
+  animation:
+    incident-in 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2),
+    incident-pulse 1.6s ease-in-out 0.3s infinite;
+}
+.incident-hud.ok {
+  border-color: rgba(120, 220, 140, 0.6);
+  background: linear-gradient(180deg, rgba(18, 40, 26, 0.9), rgba(10, 24, 16, 0.9));
+}
+.incident-hud.bad {
+  border-color: rgba(160, 160, 170, 0.5);
+  background: linear-gradient(180deg, rgba(30, 30, 36, 0.9), rgba(18, 18, 22, 0.9));
+}
+.incident-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.incident-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.incident-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffd6c8;
+}
+.incident-hud.ok .incident-title {
+  color: #b8f0c4;
+}
+.incident-hint {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 240, 230, 0.85);
+}
+/* 寬螢幕：上方中間是空的，放那裡比較不擋畫面 */
+@media (min-aspect-ratio: 1/1) and (min-width: 760px) {
+  .incident-hud {
+    bottom: auto;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    width: min(36vw, 420px);
+  }
+}
+@keyframes incident-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+@keyframes incident-pulse {
+  50% {
+    box-shadow:
+      0 8px 26px rgba(0, 0, 0, 0.5),
+      0 0 18px rgba(255, 110, 80, 0.45);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .incident-hud,
+  .incident-hud.on {
+    animation: none;
+  }
+}

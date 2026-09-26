@@ -1,0 +1,40 @@
+{
+  "inc.thief.enter": { "who": "thief", "text": "噓……這間民宿，應該都睡了吧……" },
+  "inc.thief.door": { "who": "thief", "text": "喀……喀……門沒鎖？嘿嘿。" },
+  "inc.thief.caught": { "who": "thief", "text": "哇！有、有人醒著！對不起對不起——" },
+  "inc.thief.steal": { "who": "thief", "text": "手機、錢包……好，走人。" },
+  "inc.thief.scream": { "who": "thief", "text": "有、有鬼啊——！媽媽啊——！" },
+  "inc.thief.dog": { "who": "thief", "text": "哇啊！狗！好大一隻黑狗！" },
+  "inc.gm.bag": { "who": "grandma", "text": "東西還你，放在床頭喔。下次出門要收好。" },
+
+  "inc.sleep.zhang": { "who": "zhang", "text": "……報告……下一頁……預算還沒過……" },
+  "inc.sleep.ahao": { "who": "ahao", "text": "……再一碗……滷肉飯……加蛋……" },
+  "inc.sleep.akai": { "who": "akai", "text": "……記得……訂閱……按讚……開小鈴鐺……" },
+  "inc.sleep.xiaomei": { "who": "xiaomei", "text": "……媽……我不要一個人……" },
+  "inc.sleep.linmom": { "who": "linmom", "text": "……小宇……外套穿好……" },
+  "inc.gm.sleepwalk": { "who": "grandma", "text": "哎喲，這個人在夢遊……來，這邊，跟阿嬤走。" },
+  "inc.gm.sleepwalk.back": { "who": "grandma", "text": "好了好了，回去睏。被子蓋好，莫著涼。" },
+  "inc.gm.sleepwalk.woke": { "who": "grandma", "text": "唉，醒了……沒關係，自己走回去就好。" },
+
+  "inc.xiaoyu.go": { "who": "xiaoyu", "text": "阿咪……阿咪你在哪裡……" },
+  "inc.xiaoyu.giggle.1": { "who": "xiaoyu", "text": "嘻嘻……阿嬤找不到我……" },
+  "inc.xiaoyu.giggle.2": { "who": "xiaoyu", "text": "噓——我躲得很好喔。" },
+  "inc.xiaoyu.found": { "who": "xiaoyu", "text": "被找到了！阿嬤好厲害！" },
+  "inc.xiaoyu.bed": { "who": "xiaoyu", "text": "阿嬤晚安……明天再玩捉迷藏喔。" },
+  "inc.linmom.wake": { "who": "linmom", "text": "小宇？小宇呢？！小宇你在哪裡！" },
+
+  "inc.drunk.arrive": { "who": "drunk", "text": "嗝……這……這是誰家……燈都關了……" },
+  "inc.drunk.sing.1": { "who": "drunk", "text": "月娘啊——照阮行過田岸路——" },
+  "inc.drunk.sing.2": { "who": "drunk", "text": "一杯敬阿母——兩杯敬故鄉——嗝——" },
+  "inc.drunk.sing.3": { "who": "drunk", "text": "火車啊——你慢慢仔駛——阮欲轉去——" },
+  "inc.drunk.talk.1": { "who": "drunk", "text": "……你是誰？……算了，陪我坐一下。" },
+  "inc.drunk.talk.2": { "who": "drunk", "text": "我在台北做工十幾年，過年都沒回來……" },
+  "inc.drunk.talk.3": { "who": "drunk", "text": "阮阿母上個月走了。我連最後一面都沒見到……" },
+  "inc.drunk.talk.4": { "who": "drunk", "text": "……你這樣聽我講，好像阮阿母喔。好，我回去睏了。" },
+  "inc.drunk.scared": { "who": "drunk", "text": "哇！狗！我、我走、我走就是了！" },
+  "inc.gm.drunk": { "who": "grandma", "text": "少年仔，喝這麼醉，心內有代誌喔？" },
+  "inc.gm.drunk.done": { "who": "grandma", "text": "回去睏，明仔載去給你阿母上香，她會聽到的。" },
+
+  "inc.gm.fuse": { "who": "grandma", "text": "哎喲，停電了？電箱在左邊護龍外面。" },
+  "inc.gm.fuse.done": { "who": "grandma", "text": "好啦，燈亮了。這個電箱比我還老。" }
+}

@@ -1,0 +1,421 @@
+/* 修保險絲：老電箱 */
+.fuse-panel {
+  width: min(94vw, 520px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(26, 24, 30, 0.97), rgba(12, 11, 16, 0.97));
+  border: 1.5px solid rgba(242, 180, 91, 0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: slideup 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  touch-action: manipulation;
+}
+.fuse-panel.lit {
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(255, 214, 120, 0.35);
+}
+.fuse-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fuse-title {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--gold-2);
+}
+.fuse-time {
+  margin-left: auto;
+  min-width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: var(--gold-2);
+  color: #2b1a05;
+}
+.fuse-time.low {
+  background: #ff7a6a;
+  color: #fff;
+}
+.fuse-x {
+  font: inherit;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+.fuse-bar {
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.fuse-bar > i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ff7a6a, var(--gold-2));
+  transition: width 0.1s linear;
+}
+
+/* 鐵箱：灰綠色、邊角生鏽、四個鉚釘 */
+.fuse-box {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 14px 18px;
+  padding: 18px 16px 16px;
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 8px 8px, #9aa39c 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) 8px, #9aa39c 3px, transparent 4px),
+    radial-gradient(circle at 8px calc(100% - 8px), #9aa39c 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), #9aa39c 3px, transparent 4px),
+    radial-gradient(ellipse at 90% 100%, rgba(140, 80, 40, 0.45), transparent 40%),
+    radial-gradient(ellipse at 0% 10%, rgba(140, 80, 40, 0.35), transparent 35%),
+    linear-gradient(160deg, #6d7a72, #4b5650);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.4);
+}
+.fuse-box.zapped {
+  animation: fuse-shake 0.35s ease-out;
+}
+.fuse-box.zapped::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: rgba(200, 230, 255, 0.55);
+  animation: fuse-flash 0.35s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes fuse-shake {
+  20% {
+    transform: translate(-5px, 2px);
+  }
+  40% {
+    transform: translate(5px, -2px);
+  }
+  60% {
+    transform: translate(-3px, 1px);
+  }
+  80% {
+    transform: translate(2px, 0);
+  }
+}
+@keyframes fuse-flash {
+  to {
+    opacity: 0;
+  }
+}
+.fuse-panel.lit .fuse-box {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 230, 150, 0.35), transparent 60%),
+    linear-gradient(160deg, #7a877f, #57635c);
+}
+
+/* 阿公的字條（貼在門內側） */
+.fuse-note {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  transform: rotate(4deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 10px 5px;
+  background: #efe3c4;
+  color: #3a2a18;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 15px;
+  line-height: 1.25;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+.fuse-note small {
+  font-size: 11px;
+  opacity: 0.7;
+}
+.fuse-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #e8efe9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* 主開關：大拉桿 */
+.fuse-main {
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.fuse-lever {
+  position: relative;
+  width: 58px;
+  height: 108px;
+  border-radius: 8px;
+  border: 2px solid #2d3430;
+  background: linear-gradient(180deg, #3a3f3c, #242826);
+  cursor: pointer;
+  padding: 0;
+}
+.fuse-lever:focus-visible,
+.holder:focus-visible,
+.wire:focus-visible {
+  outline: 3px solid var(--gold-2);
+  outline-offset: 2px;
+}
+.lever-on,
+.lever-off {
+  position: absolute;
+  left: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.45);
+}
+.lever-on {
+  top: 6px;
+}
+.lever-off {
+  bottom: 6px;
+}
+.fuse-lever.up .lever-on,
+.fuse-lever.down .lever-off {
+  color: #ffd86a;
+}
+.lever-handle {
+  position: absolute;
+  left: 50%;
+  width: 16px;
+  height: 38px;
+  margin-left: 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #b22a22, #e0463a, #b22a22);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45);
+  transition:
+    top 0.18s cubic-bezier(0.3, 1.6, 0.5, 1),
+    transform 0.18s;
+}
+.fuse-lever.up .lever-handle {
+  top: 6px;
+}
+.fuse-lever.down .lever-handle {
+  top: calc(100% - 44px);
+}
+.fuse-lamp {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #3a2a1a;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+.fuse-lamp.on {
+  background: #ffd86a;
+  box-shadow: 0 0 14px #ffd86a;
+}
+
+/* 陶瓷保險絲座 */
+.fuse-holders {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  padding-right: 70px;
+}
+.holder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+}
+button.holder {
+  cursor: pointer;
+}
+.holder-body {
+  position: relative;
+  width: 46px;
+  height: 66px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #faf6ec, #d8d2c2);
+  box-shadow:
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s;
+}
+.holder-body::before,
+.holder-body::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 7px;
+  margin-left: -6px;
+  border-radius: 2px;
+  background: #b8a060;
+}
+.holder-body::before {
+  top: 8px;
+}
+.holder-body::after {
+  bottom: 8px;
+}
+.holder.burnt .holder-body {
+  background: radial-gradient(ellipse at 50% 55%, #1c1410 25%, #6b5a48 60%, #cfc7b4);
+}
+.holder.out .holder-body {
+  transform: translateY(-22px) rotate(-8deg);
+  background: linear-gradient(180deg, #faf6ec, #d8d2c2);
+}
+.holder-wire {
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  margin-left: -1px;
+  background: #d08a4a;
+}
+.holder.next .holder-body,
+.wire.next {
+  animation: fuse-hint 1.2s ease-in-out infinite;
+}
+@keyframes fuse-hint {
+  50% {
+    box-shadow:
+      0 0 0 3px rgba(255, 214, 120, 0.55),
+      0 2px 4px rgba(0, 0, 0, 0.35);
+  }
+}
+.smoke {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: rgba(200, 200, 200, 0.45);
+  filter: blur(4px);
+  animation: fuse-smoke 1.6s ease-out infinite;
+}
+@keyframes fuse-smoke {
+  from {
+    transform: translateY(0) scale(0.6);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateY(-26px) scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* 備用的保險絲線 */
+.fuse-wires {
+  grid-column: 2;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.wire {
+  font: inherit;
+  font-size: 12px;
+  color: #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px 5px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background: #e8e2d2;
+  cursor: pointer;
+}
+.wire:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.wire svg {
+  width: 64px;
+  height: 20px;
+  fill: none;
+  stroke-linecap: round;
+}
+.wire-thin path {
+  stroke: #c47a3a;
+  stroke-width: 1.6;
+}
+.wire-thick path {
+  stroke: #b8652a;
+  stroke-width: 5;
+}
+.wire-iron path {
+  stroke: #707478;
+  stroke-width: 3;
+}
+
+.fuse-step {
+  min-height: 1.6em;
+  text-align: center;
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 16px;
+  color: #fbf3e4;
+}
+.fuse-panel.lit .fuse-step {
+  color: var(--gold-2);
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+@media (max-width: 420px) {
+  .fuse-box {
+    grid-template-columns: 1fr;
+  }
+  .fuse-main {
+    grid-row: auto;
+    flex-direction: row;
+  }
+  .fuse-lever {
+    width: 48px;
+    height: 88px;
+  }
+  .lever-handle {
+    height: 30px;
+  }
+  .fuse-holders {
+    padding-right: 0;
+    justify-content: center;
+  }
+  .fuse-wires {
+    grid-column: 1;
+    justify-content: center;
+  }
+  .fuse-note {
+    top: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fuse-box.zapped,
+  .holder.next .holder-body,
+  .wire.next,
+  .smoke {
+    animation: none;
+  }
+}

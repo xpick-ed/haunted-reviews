@@ -83,6 +83,8 @@ export interface GuestRT {
   dreamt: boolean
   /** 最近走過的腳印（陰陽眼看得到）：[x, z, 小時, 左右腳] */
   trail: [number, number, number, number][]
+  /** 看得到鬼的人上一次因為看到阿嬤而開心的時間（小時） */
+  happyAt: number
   /** 已經講過入睡台詞 */
   sleptOnce: boolean
 }
@@ -344,6 +346,7 @@ export class NightSim {
           deepUntil: 0,
           dreamt: false,
           trail: [],
+          happyAt: -99,
         }
         this.guests.push(g)
         for (const n of def.needs) {
@@ -749,7 +752,11 @@ export class NightSim {
     g.peak = 0
     g.seen++
     if (g.def.seesGhost) {
-      g.comfort += 8
+      // 看到阿嬤很開心，但同一個人一小時內只算一次（不然站在小宇旁邊就能一直刷舒適）
+      if (this.hour - g.happyAt >= 1) {
+        g.comfort += 8
+        g.happyAt = this.hour
+      }
       this.emit({ t: 'happySeen', who: g.id })
       this.bark(g, 'seen', 3)
       // 媽媽看到小孩對空氣講話

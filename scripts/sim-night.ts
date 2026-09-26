@@ -34,6 +34,7 @@ const FIX: Partial<Record<NeedKind, { action: keyof typeof ACTION_DEFS; at: 'bed
   insomnia: { action: 'pat', at: 'bedside' },
   play: { action: 'play', at: 'bedside' },
   chat: { action: 'chat', at: 'bedside' },
+  lost: { action: 'retrieve', at: 'bedside' },
 }
 
 interface Result {

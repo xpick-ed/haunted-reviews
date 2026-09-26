@@ -42,7 +42,7 @@ export const VILLAGE = {
   /** 柑仔店門口東邊的夾娃娃機 */
   claw: { x: 4.75, z: -4.3 },
   /** 往溪邊的小路（北）、往國小的小橋（南） */
-  riverLane: { x: 13.7 },
+  riverLane: { x: -20 },
   schoolBridge: { x: -6.5 },
 }
 
@@ -91,14 +91,14 @@ export const VILLAGE_SCENE: SceneDef = {
     west: [-19, VILLAGE.roadZ],
     east: [19, VILLAGE.roadZ],
     shop: [0, -1.9],
-    // 從溪邊回來（透天厝和老榕樹中間的小路）、從國小回來（水溝上的小橋）
-    north: [13.7, -7.6],
+    // 從溪邊回來（村子西頭的小路）、從國小回來（水溝上的小橋）
+    north: [-20, -7.6],
     south: [-6.5, 0.9],
   },
   exits: [
     { area: rect(-24, VILLAGE.roadZ - 3, -21.5, VILLAGE.roadZ + 3), to: 'home', spawn: 'road_east', label: '← 阿春民宿', sign: [-20, VILLAGE.roadZ - 2.2] },
     { area: rect(21.5, VILLAGE.roadZ - 3, 24, VILLAGE.roadZ + 3), to: 'temple', spawn: 'road_west', label: '土地公廟 →', sign: [20, VILLAGE.roadZ - 2.2] },
-    { area: rect(12.7, -9.5, 14.8, -8.9), to: 'river', spawn: 'path', label: '溪邊 ↑', sign: [12.4, -7.9] },
+    { area: rect(-21.05, -9.5, -18.95, -8.9), to: 'river', spawn: 'path', label: '溪邊 ↑', sign: [-18.4, -7.9] },
     { area: rect(-7.4, 1.5, -5.6, 1.97), to: 'school', spawn: 'gate', label: '國小 ↓', sign: [-4.9, 1.3] },
   ],
   buildings: [],

@@ -1,0 +1,150 @@
+/* 放水燈：夜裡的溪，暖暖的燈光配深藍 */
+
+.ln-card {
+  position: relative;
+  width: min(94vw, 460px);
+  max-height: calc(100vh - 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(16, 26, 38, 0.97), rgba(8, 14, 20, 0.97));
+  border: 1.5px solid rgba(255, 190, 150, 0.4);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(255, 170, 110, 0.12);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+}
+.ln-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+  min-height: 28px;
+}
+.ln-title {
+  flex: 1;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #ffe2d2;
+}
+.ln-stat {
+  display: flex;
+  gap: 5px;
+}
+.ln-flame {
+  width: 10px;
+  height: 16px;
+  border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
+  background: rgba(255, 255, 255, 0.12);
+}
+.ln-flame.on {
+  background: radial-gradient(circle at 50% 70%, #fff4c8, #ffb45a 60%, #e8602a);
+  box-shadow: 0 0 10px rgba(255, 180, 90, 0.8);
+}
+.ln-stage {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+.ln-canvas {
+  display: block;
+  touch-action: none;
+}
+.ln-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+  color: #ffe2d2;
+  background: rgba(8, 12, 18, 0.72);
+  border: 1px solid rgba(255, 190, 150, 0.35);
+}
+.ln-hint.small {
+  top: 10px;
+  bottom: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+.ln-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 22px 18px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(6, 10, 16, 0) 30%, rgba(6, 10, 16, 0.75));
+  animation: fade 0.6s ease-out;
+  cursor: default;
+}
+.ln-poem {
+  margin: 0;
+  line-height: 1.6;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 19px;
+  letter-spacing: 3px;
+  color: #fff4e0;
+  text-shadow: 0 0 18px rgba(255, 180, 110, 0.8);
+}
+.ln-sub {
+  font-size: 14px;
+  color: #f3dccf;
+}
+.ln-merit {
+  font-size: 20px;
+  font-weight: 700;
+  color: #bff8ee;
+  text-shadow: 0 0 16px rgba(79, 224, 200, 0.7);
+  animation: pop-in 0.3s ease-out;
+}
+.ln-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.ln-progress .meter {
+  height: 8px;
+}
+.ln-leave {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  font: inherit;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(12, 16, 22, 0.9);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.ln-poem span {
+  display: inline-block;
+}
+@media (max-width: 420px) {
+  .ln-poem {
+    font-size: 17px;
+    letter-spacing: 2px;
+  }
+}

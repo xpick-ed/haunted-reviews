@@ -1,0 +1,308 @@
+{
+ "v2.shop.tv.dusk.1": {
+  "who": "grandma",
+  "text": "布袋戲……小翰小時候放學就蹲在這台電視前面，蹲到腳麻。"
+ },
+ "v2.shop.tv.dusk.2": {
+  "who": "ajiao",
+  "text": "阿春，要看就坐下來看，不要擋到我的電視啦！"
+ },
+ "v2.shop.tv.dusk.3": {
+  "who": "grandma",
+  "text": "這台黑白電視還會動喔？比我還勇。"
+ },
+ "v2.shop.tv.dusk.4": {
+  "who": "ajiao",
+  "text": "拍兩下就好了。跟我們家那個一樣，要用拍的。"
+ },
+ "v2.shop.tv.night.1": {
+  "who": "grandma",
+  "text": "……收播了，只剩下雪花。沙沙沙，像在下雨。"
+ },
+ "v2.shop.tv.night.2": {
+  "who": "ajiao",
+  "text": "半夜的電視比較老實，沒人演戲。"
+ },
+ "v2.candy.1": {
+  "who": "grandma",
+  "text": "（偷偷把手伸進糖果罐）",
+  "tts": "嘿嘿……一顆就好……"
+ },
+ "v2.candy.2": {
+  "who": "ajiao",
+  "text": "阿春！七十幾年了，妳還是改不掉！"
+ },
+ "v2.candy.3": {
+  "who": "grandma",
+  "text": "一顆就好啦。以前我們蹲在板凳後面，一人一顆。"
+ },
+ "v2.candy.4": {
+  "who": "ajiao",
+  "text": "含到下課鐘響都捨不得咬……我記得啦。"
+ },
+ "v2.candy.5": {
+  "who": "ajiao",
+  "text": "好啦好啦，拿去。……我也要一顆。"
+ },
+ "v2.candy.again.1": {
+  "who": "ajiao",
+  "text": "又來了！手伸那麼長。"
+ },
+ "v2.candy.again.2": {
+  "who": "grandma",
+  "text": "記在小翰的帳上。"
+ },
+ "v2.candy.again.3": {
+  "who": "ajiao",
+  "text": "妳孫仔的帳，比我的貨架還長了。"
+ },
+ "v2.candy.done": {
+  "who": "ajiao",
+  "text": "一天一顆！妳現在沒有牙齒，吃那麼多要做什麼？"
+ },
+ "v2.shop.back.dusk": {
+  "who": "grandma",
+  "text": "門簾後面是阿嬌家的灶腳……聞到滷肉的味道了。冰糖又放太多。"
+ },
+ "v2.shop.back.night": {
+  "who": "grandma",
+  "text": "門簾後面有人在打呼……打了五十年，阿嬌也聽了五十年。"
+ },
+ "v2.ahao.altar.1": {
+  "who": "grandma",
+  "text": "阿好去台北以後，這張神明桌就沒人點香了……菩薩、祖先，歹勢，我幫她點一炷。"
+ },
+ "v2.ahao.altar.2": {
+  "who": "grandma",
+  "text": "阿好，妳的厝我有在顧喔。妳在台北要吃飽一點。"
+ },
+ "v2.ahao.altar.3": {
+  "who": "grandma",
+  "text": "祖先有保庇，阿好在台北才會好吃好睡。……她那個兒子，要對她好一點。"
+ },
+ "v2.ahao.altar.done": {
+  "who": "grandma",
+  "text": "今天點過了，香還在燒。"
+ },
+ "v2.ahao.calendar": {
+  "who": "grandma",
+  "text": "日曆停在十二月廿二，冬至。阿好就是那天走的……那天，沒人陪她吃湯圓。"
+ },
+ "v2.ahao.photo": {
+  "who": "grandma",
+  "text": "全家福……阿好笑到嘴都合不起來。她兒子結婚那年拍的，我也在場。"
+ },
+ "v2.cat.first.1": {
+  "who": "grandma",
+  "text": "……小花？妳怎麼還睡在這張床上？"
+ },
+ "v2.cat.first.2": {
+  "who": "grandma",
+  "text": "阿好去台北跟她兒子住了，冬至那天走的。沒人跟妳說喔？"
+ },
+ "v2.cat.first.3": {
+  "who": "grandma",
+  "text": "妳去年就先走了，她一個人顧這間厝，顧到受不了。不是不要妳啦。"
+ },
+ "v2.cat.first.4": {
+  "who": "grandma",
+  "text": "……我知道。每天晚上在同一個地方等人，那個滋味，阿嬤也知道。"
+ },
+ "v2.cat.first.5": {
+  "who": "grandma",
+  "text": "好啦，阿嬤有空就來陪妳坐。清明她會回來的。"
+ },
+ "v2.cat.again.1": {
+  "who": "grandma",
+  "text": "小花，今天有乖否？……好，有乖。"
+ },
+ "v2.cat.again.2": {
+  "who": "grandma",
+  "text": "呼嚕呼嚕……好啦好啦，阿嬤在這。"
+ },
+ "v2.cat.again.3": {
+  "who": "grandma",
+  "text": "阿好清明會回來啦，妳再等一下。我們都在等。"
+ },
+ "v2.acai.first.1": {
+  "who": "acaibo",
+  "text": "……阿春姐？"
+ },
+ "v2.acai.first.2": {
+  "who": "grandma",
+  "text": "阿財，你看得到我喔？"
+ },
+ "v2.acai.first.3": {
+  "who": "acaibo",
+  "text": "看得到啦。我辦桌辦了五十年，好兄弟的桌也辦過，什麼沒看過。"
+ },
+ "v2.acai.first.4": {
+  "who": "acaibo",
+  "text": "妳兒子結婚那年，是我辦的桌。妳躲在灶腳後面，一直叫我魯肉飯多放一點。"
+ },
+ "v2.acai.first.5": {
+  "who": "grandma",
+  "text": "……"
+ },
+ "v2.acai.first.c1": {
+  "who": "grandma",
+  "text": "那是要給囡仔吃的！你每一桌都算得剛剛好。"
+ },
+ "v2.acai.first.r1": {
+  "who": "acaibo",
+  "text": "剛剛好才是功夫啦。結果那天，妳自己都沒吃到。"
+ },
+ "v2.acai.first.r2": {
+  "who": "grandma",
+  "text": "新娘有吃到就好了。"
+ },
+ "v2.acai.first.c2": {
+  "who": "grandma",
+  "text": "你在餵魚喔？都這麼晚了。"
+ },
+ "v2.acai.first.t1": {
+  "who": "acaibo",
+  "text": "牠跟我一樣，老了，一天吃三頓也不夠。"
+ },
+ "v2.acai.first.end": {
+  "who": "acaibo",
+  "text": "八點檔八點開始，來看啦。我媳婦看不到妳，妳坐我旁邊就好。"
+ },
+ "v2.acai.feed.1": {
+  "who": "acaibo",
+  "text": "阿春姐，八點檔還沒開始，等一下再來。"
+ },
+ "v2.acai.feed.2": {
+  "who": "acaibo",
+  "text": "這尾紅龍啊，比我孫子還會挑食。"
+ },
+ "v2.acai.tvintro.1": {
+  "who": "acaibo",
+  "text": "阿春姐？妳也來看八點檔喔？來來來，坐我旁邊。"
+ },
+ "v2.acai.tvintro.2": {
+  "who": "grandma",
+  "text": "阿財，你看得到我？"
+ },
+ "v2.acai.tvintro.3": {
+  "who": "acaibo",
+  "text": "辦桌辦了五十年，好兄弟的桌也辦過啦。噓——開始了。"
+ },
+ "v2.acai.tv.done": {
+  "who": "acaibo",
+  "text": "今天這集演完了，明天再來。明天才精彩！"
+ },
+ "v2.tv.a.1": {
+  "who": "acaibo",
+  "text": "妳看，這個婆婆又把媳婦煮的湯倒掉了。太壞了。"
+ },
+ "v2.tv.a.2": {
+  "who": "grandma",
+  "text": "我以前從來沒有這樣對我媳婦。"
+ },
+ "v2.tv.a.3": {
+  "who": "acaibo",
+  "text": "妳是沒有倒掉啦，妳是喝完了才跟她說太鹹。"
+ },
+ "v2.tv.a.4": {
+  "who": "grandma",
+  "text": "……那是真的太鹹。"
+ },
+ "v2.tv.a.5": {
+  "who": "acaibo",
+  "text": "哈哈哈！我媳婦也說我的菜太鹹。辦桌的人，口味都重啦。"
+ },
+ "v2.tv.b.1": {
+  "who": "acaibo",
+  "text": "又車禍，又失憶。這個男的一年撞三次車了。"
+ },
+ "v2.tv.b.2": {
+  "who": "grandma",
+  "text": "上禮拜不是才恢復記憶？"
+ },
+ "v2.tv.b.3": {
+  "who": "acaibo",
+  "text": "這禮拜又撞了。我看編劇也失憶了。"
+ },
+ "v2.tv.b.4": {
+  "who": "grandma",
+  "text": "……我倒是想忘記一些事，都忘不掉。"
+ },
+ "v2.tv.c.1": {
+  "who": "acaibo",
+  "text": "雙胞胎。等一下一定會有人說：「其實，我才是你親生的！」"
+ },
+ "v2.tv.c.2": {
+  "who": "acaibo",
+  "text": "……妳看！說了吧！"
+ },
+ "v2.tv.c.3": {
+  "who": "grandma",
+  "text": "……"
+ },
+ "v2.tv.c.c1": {
+  "who": "grandma",
+  "text": "阿財，你怎麼知道？"
+ },
+ "v2.tv.c.h1": {
+  "who": "acaibo",
+  "text": "看了四十年了啦。八點檔跟辦桌一樣，菜色都差不多，看的是火候。"
+ },
+ "v2.tv.c.c2": {
+  "who": "grandma",
+  "text": "明天那個壞人會不會被抓？"
+ },
+ "v2.tv.c.b1": {
+  "who": "acaibo",
+  "text": "賭一碗魯肉飯，不會。還要再演三個月。"
+ },
+ "v2.tv.c.end": {
+  "who": "grandma",
+  "text": "……明天我還要來看。"
+ },
+ "v2.acai.sleeptalk": {
+  "who": "acaibo",
+  "text": "……佛跳牆……五十桌……魚翅要先發……"
+ },
+ "v2.acai.blanket": {
+  "who": "grandma",
+  "text": "辦桌辦到夢裡去了。……被子蓋好，會著涼。"
+ },
+ "v2.acai.snore.1": {
+  "who": "acaibo",
+  "text": "（呼……呼……）……紅燒蹄膀……",
+  "tts": "呼……呼……紅燒蹄膀……"
+ },
+ "v2.acai.snore.2": {
+  "who": "grandma",
+  "text": "睡得跟小孩子一樣。電視還開著，重播的也在演。"
+ },
+ "v2.tank.acai": {
+  "who": "acaibo",
+  "text": "紅龍啊，養十五年了。牠一看到我就游過來，知道要吃了。"
+ },
+ "v2.tank.dusk": {
+  "who": "grandma",
+  "text": "好大一個魚缸……紅龍在裡面游來游去，像在巡房間。"
+ },
+ "v2.tank.night": {
+  "who": "grandma",
+  "text": "魚都睡了，只有那尾紅龍還睜著眼睛看我。"
+ },
+ "v2.tank.vision": {
+  "who": "grandma",
+  "text": "喔？魚看得到我？……游過來了，憨魚仔，我沒有飼料啦。"
+ },
+ "v2.piano.1": {
+  "who": "grandma",
+  "text": "叮、叮、咚……一根手指頭而已。他孫女彈的比較好聽。"
+ },
+ "v2.piano.2": {
+  "who": "grandma",
+  "text": "我這輩子摸過的琴，只有這台。……還有裁縫車啦，那也是用腳踩的。"
+ },
+ "v2.piano.night": {
+  "who": "grandma",
+  "text": "噓……小聲一點，阿財睡著了。"
+ }
+}

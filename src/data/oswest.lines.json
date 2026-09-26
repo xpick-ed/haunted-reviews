@@ -1,0 +1,290 @@
+{
+  "osw.pole.night": {
+    "who": "grandma",
+    "text": "燈柱還在轉。裡面……有人在磨剃刀？這麼晚了。"
+  },
+  "osw.enter.barber.dusk": {
+    "who": "akun",
+    "text": "歡迎……咦，門自己開了？風吧。"
+  },
+  "osw.enter.barber.night": {
+    "who": "ashui",
+    "text": "來來來，進來坐。晚上的理髮廳，只招待同款的。"
+  },
+  "osw.enter.herb.dusk": {
+    "who": "herbalist",
+    "text": "歡迎光臨……咦？沒人？這陣子常常這樣。"
+  },
+  "osw.enter.herb.night": {
+    "who": "grandma",
+    "text": "門板沒關好……和春伯在藤椅上睡著了，口水都流下來了。"
+  },
+  "osw.mirror.none.1": {
+    "who": "grandma",
+    "text": "鏡子照不到我。做鬼就是這樣，連白頭髮都不用煩惱。"
+  },
+  "osw.mirror.none.2": {
+    "who": "grandma",
+    "text": "椅子還是這麼好坐……鏡子裡只有一張空椅子。"
+  },
+  "osw.mirror.young.1": {
+    "who": "grandma",
+    "text": "咦……鏡子裡那個是誰？"
+  },
+  "osw.mirror.young.2": {
+    "who": "grandma",
+    "text": "是我。十八歲，要嫁過來那年的我。頭髮黑到發亮，阿公說像溪水。"
+  },
+  "osw.mirror.young.3": {
+    "who": "grandma",
+    "text": "那時候怎麼會嫌自己不夠漂亮……明明笑起來就很好看。"
+  },
+  "osw.mirror.again.1": {
+    "who": "grandma",
+    "text": "十八歲的阿春，妳好。……她對我笑了。"
+  },
+  "osw.mirror.again.2": {
+    "who": "grandma",
+    "text": "鏡子裡的我在綁辮子。那天要去溪邊洗衫。"
+  },
+  "osw.mirror.again.3": {
+    "who": "grandma",
+    "text": "看久了會捨不得走。好啦，阿嬤還有客人要顧。"
+  },
+  "osw.radio.song": {
+    "who": "grandma",
+    "text": "（收音機）〈溪邊等你轉來〉……「溪水慢慢流，你怎麼還沒轉來～」哎喲，這首我會唱。"
+  },
+  "osw.radio.news": {
+    "who": "grandma",
+    "text": "（收音機）「中廣新聞。颱風今晚轉向，本省各地請嚴防豪雨……」那年的颱風，稻子全泡在水裡。"
+  },
+  "osw.radio.drama": {
+    "who": "grandma",
+    "text": "（收音機）「欲知後事如何，請聽下回分解！」……布袋戲又停在最精彩的地方。"
+  },
+  "osw.akun.radio": {
+    "who": "akun",
+    "text": "咦？收音機自己轉台了……這首好，留著。我阿爸最愛這首。"
+  },
+  "osw.akun.1": {
+    "who": "akun",
+    "text": "磨刀皮帶要拉直……拉直……唉，手沒以前穩了。"
+  },
+  "osw.akun.2": {
+    "who": "akun",
+    "text": "今天又沒客人。老街的人都去市區剪十分鐘的了。"
+  },
+  "osw.akun.3": {
+    "who": "akun",
+    "text": "阿爸那把剃刀，我用了四十年，還是沒有他刮得那麼乾淨。"
+  },
+  "osw.ashui.first.1": {
+    "who": "ashui",
+    "text": "喔？一個阿桑……不對，是同款的。歡迎歡迎，要修面嗎？免錢的。"
+  },
+  "osw.ashui.first.2": {
+    "who": "grandma",
+    "text": "我是阿春，後壁厝林家的。你……是這間店的頭家？"
+  },
+  "osw.ashui.first.3": {
+    "who": "ashui",
+    "text": "阿水師，新美理髮廳開店的那個。店現在給我兒子阿坤顧，晚上換我來。好兄弟也是要剃頭的。"
+  },
+  "osw.ashui.first.4": {
+    "who": "ashui",
+    "text": "林家……添福仔？妳是添福仔的某？哈哈，他每次來都說「剪短一點，較涼」，剪完又怕回家被某笑。"
+  },
+  "osw.ashui.first.5": {
+    "who": "grandma",
+    "text": "就是被我笑啦！剪得跟剛出世的鴨仔一樣。"
+  },
+  "osw.ashui.first.6": {
+    "who": "ashui",
+    "text": "那是他自己要的！……好啦，坐一下。等一下幫我遞毛巾，我這手，晚上會抖。"
+  },
+  "osw.towel.ask": {
+    "who": "ashui",
+    "text": "阿春，毛巾蒸籠裡那條，幫我拿過來。要蓋臉的，溫度要對喔。"
+  },
+  "osw.towel.q.hot": {
+    "who": "grandma",
+    "text": "拿最燙的，燙才會開毛孔。"
+  },
+  "osw.towel.q.warm": {
+    "who": "grandma",
+    "text": "先在手腕上試一下，溫溫的就好。"
+  },
+  "osw.towel.q.cold": {
+    "who": "grandma",
+    "text": "拿涼的，比較清爽。"
+  },
+  "osw.towel.hot": {
+    "who": "ashui",
+    "text": "哇——！客人跳起來了！做鬼也會燙啦！"
+  },
+  "osw.towel.cold": {
+    "who": "ashui",
+    "text": "冷冰冰的……客人以為自己又死一次。"
+  },
+  "osw.towel.warm.1": {
+    "who": "ashui",
+    "text": "對對對，就是這樣。妳手腕試溫度的樣子，跟我阿母一模一樣。"
+  },
+  "osw.towel.warm.2": {
+    "who": "ashui",
+    "text": "你看，客人睡著了。好兄弟難得睡得這麼甜。"
+  },
+  "osw.towel.end": {
+    "who": "ashui",
+    "text": "好啦，多謝。明天再來坐。"
+  },
+  "osw.ashui.razor.1": {
+    "who": "ashui",
+    "text": "阿春，我跟妳講一件事，妳不要笑。"
+  },
+  "osw.ashui.razor.2": {
+    "who": "ashui",
+    "text": "阿坤磨剃刀，每次都只拉十下。我教過他，要拉三十下，刀才會利、客人才不會痛。"
+  },
+  "osw.ashui.razor.3": {
+    "who": "ashui",
+    "text": "我講他聽不到啊。我站在他後面喊了十幾年……"
+  },
+  "osw.ashui.razor.4": {
+    "who": "grandma",
+    "text": "好啦，我傍晚來看看。活人聽不到，手總摸得到吧。"
+  },
+  "osw.ashui.wait.1": {
+    "who": "ashui",
+    "text": "阿坤今天還是拉十下。唉。"
+  },
+  "osw.ashui.wait.2": {
+    "who": "ashui",
+    "text": "傍晚阿坤在的時候，妳幫我看看他的磨刀皮帶。"
+  },
+  "osw.ashui.after.1": {
+    "who": "ashui",
+    "text": "阿坤現在拉三十下了！客人都說不痛。……妳怎麼辦到的？"
+  },
+  "osw.ashui.after.2": {
+    "who": "ashui",
+    "text": "妳尪添福要是還在，我一定幫他剪得漂漂亮亮的，不給妳笑。"
+  },
+  "osw.akun.razor.1": {
+    "who": "grandma",
+    "text": "（把掛在牆上的磨刀皮帶，輕輕推到他手邊。）"
+  },
+  "osw.akun.razor.2": {
+    "who": "akun",
+    "text": "咦……皮帶怎麼自己掉下來？"
+  },
+  "osw.akun.razor.3": {
+    "who": "akun",
+    "text": "……「三十下，一下都不能少。刀利，客人才不痛。」阿爸以前都這樣唸。"
+  },
+  "osw.akun.razor.4": {
+    "who": "akun",
+    "text": "十、十一、十二……好啦好啦，拉三十下。阿爸，你在看喔？"
+  },
+  "osw.akun.razor.5": {
+    "who": "grandma",
+    "text": "（他在看。晚上站在你後面，笑得跟什麼一樣。）"
+  },
+  "osw.akun.razor.6": {
+    "who": "akun",
+    "text": "……二十九、三十。嗯，利多了。"
+  },
+  "osw.herb.first.1": {
+    "who": "herbalist",
+    "text": "嗯……這張藥單寫什麼……字這麼小。老花眼鏡呢？"
+  },
+  "osw.herb.first.2": {
+    "who": "grandma",
+    "text": "和春伯，你眼鏡掛在頭上啦。……唉，他聽不到。"
+  },
+  "osw.herb.first.3": {
+    "who": "herbalist",
+    "text": "算了，憑感覺抓。抓了六十年了，閉著眼睛也會……吧。"
+  },
+  "osw.herb.first.4": {
+    "who": "grandma",
+    "text": "不行不行，藥不能亂抓。阿嬤偷偷幫你。"
+  },
+  "osw.herb.ask.1": {
+    "who": "herbalist",
+    "text": "誰的藥單？……喔，阿土伯的。咳了一個月了。"
+  },
+  "osw.herb.ask.2": {
+    "who": "herbalist",
+    "text": "四物湯……阿嬌的。當歸、川芎……還有兩味是什麼？"
+  },
+  "osw.herb.win": {
+    "who": "grandma",
+    "text": "好了，包好了。和春伯還以為是自己抓的，一直點頭。"
+  },
+  "osw.herb.meh": {
+    "who": "grandma",
+    "text": "秤得有點歪……下次再小心一點。"
+  },
+  "osw.herb.done": {
+    "who": "grandma",
+    "text": "今天的藥抓好了。和春伯在打算盤，算錯三次了。"
+  },
+  "osw.herb.night.ask": {
+    "who": "grandma",
+    "text": "這位好兄弟說他四十年都睡不著……來，阿嬤幫你抓一帖安神湯。"
+  },
+  "osw.herb.night.win": {
+    "who": "grandma",
+    "text": "好了。回去三碗水煎成一碗，睡前喝。……鬼也要好好睡。"
+  },
+  "osw.herb.night.meh": {
+    "who": "grandma",
+    "text": "秤得不太準……喝了大概只能睡半暝。"
+  },
+  "osw.herb.done.night": {
+    "who": "grandma",
+    "text": "今天的藥抓過了。和春伯打呼打得藥櫃都在震。"
+  },
+  "osw.shennong.1": {
+    "who": "grandma",
+    "text": "神農大帝，保佑客人都好睡、好吃、不要生病。"
+  },
+  "osw.shennong.2": {
+    "who": "grandma",
+    "text": "嚐百草的神明……我以前煮的青草茶，您應該也會喜歡。"
+  },
+  "osw.shennong.3": {
+    "who": "grandma",
+    "text": "阿公生病那年，我天天在這裡拜。……謝謝您讓他多陪我兩年。"
+  },
+  "osw.drawer.1": {
+    "who": "grandma",
+    "text": "當歸……這個味道。坐月子的時候，婆婆燉了一個月的當歸雞。"
+  },
+  "osw.drawer.2": {
+    "who": "grandma",
+    "text": "甘草。阿公年輕時愛含一片在嘴裡，說這樣講話比較甜。……明明就沒有。"
+  },
+  "osw.drawer.3": {
+    "who": "grandma",
+    "text": "枸杞。小翰小時候不吃，我都騙他是紅色的糖。"
+  },
+  "osw.drawer.4": {
+    "who": "grandma",
+    "text": "這格空的……標籤寫「人參」。和春伯是不是自己偷吃了？"
+  },
+  "osw.drawer.5": {
+    "who": "grandma",
+    "text": "菊花。泡茶顧眼睛……和春伯你自己要多喝一點啦。"
+  },
+  "osw.herbalist.snore.1": {
+    "who": "herbalist",
+    "text": "呼……嘶……當歸三錢……呼……"
+  },
+  "osw.herbalist.snore.2": {
+    "who": "herbalist",
+    "text": "嗯……阿英……藥煎好了沒……呼……"
+  }
+}

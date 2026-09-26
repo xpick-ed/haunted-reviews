@@ -1,98 +1,107 @@
-import { useMemo } from 'react'
+import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useStore } from '../store'
+import { player } from '../world/player'
 import { OLDSTREET } from '../world/sceneOldStreet'
 import { lanternAt } from './daylight'
-import { BRUSH_FONT, boxGeo, canvasTexture } from './kit'
 import { MergeStatic } from './MergeStatic'
-import { Fader } from './OldStreetFader'
-import { ArcadeColumn, FZ, Lot } from './OldStreetFacades'
-import { ClothFront, IceShop, PhotoStudio } from './OldStreetShops'
+import { ArcadeColumn, Lot } from './OldStreetFacades'
 import { STYLES, useWindowGlowMat } from './oldStreetStyles'
+import { ShopFader } from './OldStreetEastKit'
+import { IceInterior, IceLive, IceNeon, ShellIce } from './OldStreetEastIce'
+import { PhotoInterior, PhotoLive, PhotoWall, ShellPhoto } from './OldStreetEastPhoto'
+import { ClothInterior, ClothLive, ShellCloth } from './OldStreetEastCloth'
+import '../chars/specs.oseast'
 
-// 老街東邊的三間店（DESIGN §30）：阿桃冰果室、光明照相館、錦繡布莊。規則在 src/world/osEast.ts。
+// 老街東邊的三間店（DESIGN §30）：阿桃冰果室、光明照相館、錦繡布莊，都可以走進去。規則在 src/world/osEast.ts。
+// 每間店的外殼（立面、二樓、屋頂、店面牆、東邊的隔間牆）包在 ShopFader 裡：走進店裡、或在隔壁店裡擋到鏡頭時淡出；
+// 店裡的東西一直看得到。最後一間（沒有室內）也在這裡畫，才能在布莊裡面時淡出。
 
 const O = OLDSTREET
+const A = O.arcade
 /** 這個檔案畫的店（OldStreet.tsx 就不畫） */
-export const EAST_LOTS = ['ice', 'photo', 'cloth']
+export const EAST_LOTS = ['ice', 'photo', 'cloth', 'end']
+const lot = (id: string) => O.lots.find((l) => l.id === id)!
 
 export function OldStreetEast({ outline }: { outline: boolean }) {
   const glowPhoto = useWindowGlowMat('#ffe8c0', 1)
   const glowIce = useWindowGlowMat('#ffe4ec', 0.9)
-  const iceLot = O.lots.find((l) => l.id === 'ice')!
-  const lots = O.lots.filter((l) => l.id === 'photo' || l.id === 'cloth')
+  // 窗光在淡出的外殼裡：標成 live，ShopFader 才會把顏色抄給材質複本
+  glowPhoto.userData.live = true
+  glowIce.userData.live = true
+  const ice = lot('ice')
+  const photo = lot('photo')
+  const cloth = lot('cloth')
+  const end = lot('end')
   return (
     <group>
-      <MergeStatic>
-        {lots.map((l) => (
-          <Lot key={l.id} x0={l.x0} x1={l.x1} top={l.top} style={{ ...STYLES[l.id], glow: l.id === 'photo' ? glowPhoto : undefined }} />
-        ))}
-        <ClothFront />
-      </MergeStatic>
-      {/* 冰果室的二樓立面＋轉角柱：阿嬤在戲院大廳東邊時會擋到鏡頭 */}
-      <Fader id="os_ice_front">
+      {/* 冰果室的外殼：走進店裡（os_ice），或阿嬤在戲院大廳東邊時擋到鏡頭（os_ice_front） */}
+      <ShopFader id={['os_ice_front', 'os_ice']}>
         <MergeStatic>
-          <Lot x0={iceLot.x0} x1={iceLot.x1} top={iceLot.top} style={{ ...STYLES.ice, glow: glowIce }} />
-          <ArcadeColumn x={iceLot.x0} />
+          <Lot x0={ice.x0} x1={ice.x1} top={ice.top} style={{ ...STYLES.ice, glow: glowIce }} />
+          <ArcadeColumn x={ice.x0} />
+          <ShellIce />
         </MergeStatic>
-      </Fader>
-      <IceShop outline={outline} />
-      <PhotoStudio outline={outline} />
+        {/* 隔間牆另一面是照相館的照片牆，跟著牆一起淡出 */}
+        <PhotoWall />
+      </ShopFader>
+      <ShopFader id="os_photo">
+        <MergeStatic>
+          <Lot x0={photo.x0} x1={photo.x1} top={photo.top} style={{ ...STYLES.photo, glow: glowPhoto }} />
+          <ShellPhoto />
+        </MergeStatic>
+      </ShopFader>
+      <ShopFader id="os_cloth">
+        <MergeStatic>
+          <Lot x0={cloth.x0} x1={cloth.x1} top={cloth.top} style={STYLES.cloth} />
+          <ShellCloth />
+        </MergeStatic>
+      </ShopFader>
+      <ShopFader id="os_end_front">
+        <MergeStatic>
+          <Lot x0={end.x0} x1={end.x1} top={end.top} endWall style={STYLES.end} />
+        </MergeStatic>
+      </ShopFader>
+      <MergeStatic>
+        <IceInterior />
+        <PhotoInterior />
+        <ClothInterior />
+      </MergeStatic>
       <IceNeon />
+      <IceLive outline={outline} />
+      <PhotoLive outline={outline} />
+      <ClothLive outline={outline} />
+      <ShopLight />
     </group>
   )
 }
 
-/** 冰果室門口的霓虹招牌（直立、從立面伸出來，晚上亮粉紅色） */
-function IceNeon() {
-  const tex = useMemo(
-    () =>
-      canvasTexture(
-        96,
-        300,
-        (ctx, w, h) => {
-          ctx.fillStyle = '#1a0e14'
-          ctx.fillRect(0, 0, w, h)
-          ctx.strokeStyle = '#ff7ab8'
-          ctx.lineWidth = 4
-          ctx.strokeRect(8, 8, w - 16, h - 16)
-          ctx.fillStyle = '#ffd0e8'
-          ctx.shadowColor = '#ff4fa0'
-          ctx.shadowBlur = 12
-          ctx.font = `900 64px ${BRUSH_FONT}`
-          ctx.textAlign = 'center'
-          ctx.textBaseline = 'middle'
-          ;['冰', '果', '室'].forEach((ch, i) => ctx.fillText(ch, w / 2, 58 + i * 92))
-        },
-        [{ spec: `900 64px ${BRUSH_FONT}`, text: '冰果室' }],
-      ),
-    [],
-  )
-  const mat = useMemo(() => new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, color: '#555555' }), [tex])
-  useFrame(({ clock }) => {
-    const l = lanternAt(useStore.getState().time)
-    const t = clock.elapsedTime
-    // 老霓虹管：偶爾閃爍
-    const f = Math.sin(t * 1.7) > 0.96 && Math.sin(t * 41) > 0 ? 0.35 : 1
-    const k = (0.35 + 1.1 * l) * f
-    mat.color.setRGB(k, k, k)
+/**
+ * 三間店共用一盞點光源（光源數量不變，著色器才不用重新編譯）：
+ * 阿嬤在哪間店裡就移到那間；在街上時跟著最近的一間，晚上從店面透出暖暖的光。
+ */
+function ShopLight() {
+  const ref = useRef<THREE.PointLight>(null)
+  const shops = [lot('ice'), lot('photo'), lot('cloth')]
+  useFrame(() => {
+    const l = ref.current
+    if (!l) return
+    const lan = lanternAt(useStore.getState().time)
+    let best = shops[0]
+    let bd = Infinity
+    for (const s of shops) {
+      const d = Math.abs((s.x0 + s.x1) / 2 - player.x)
+      if (d < bd) {
+        bd = d
+        best = s
+      }
+    }
+    const inside = player.z < A.frontZ - 0.1 && player.x > shops[0].x0 && player.x < shops[2].x1
+    const tx = (best.x0 + best.x1) / 2
+    l.position.x += (tx - l.position.x) * 0.12
+    const target = inside ? 2.0 + lan * 1.2 : bd < 9 ? lan * 1.8 : 0
+    l.intensity += (target - l.intensity) * 0.1
   })
-  const x = O.lots[3].x1 - 0.55
-  return (
-    <group position={[x, 5.0, FZ + 0.45]} userData={{ noMerge: true }}>
-      <mesh geometry={boxGeo(0.05, 0.05, 0.6, 1)} position={[0, 1.0, -0.2]}>
-        <meshStandardMaterial color="#5b5f66" metalness={0.6} roughness={0.4} />
-      </mesh>
-      <mesh geometry={boxGeo(0.08, 1.9, 0.62, 1)}>
-        <meshStandardMaterial color="#1a1418" roughness={0.6} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <mesh key={s} material={mat} position={[s * 0.045, 0, 0]} rotation={[0, (s * Math.PI) / 2, 0]}>
-          <planeGeometry args={[0.58, 1.82]} />
-        </mesh>
-      ))}
-    </group>
-  )
+  return <pointLight ref={ref} position={[2.3, 2.75, -7.3]} color="#ffe0b0" intensity={0} distance={7.5} decay={2} />
 }
-

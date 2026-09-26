@@ -53,19 +53,24 @@ export function OldStreetScene() {
           .map((l) => (
             <Lot key={l.id} x0={l.x0} x1={l.x1} top={l.top} endWall={l.id === 'end'} style={STYLES[l.id]} />
           ))}
-        <EndFront />
         <Canal />
         <Benches />
         <Mailboxes />
         <Pots />
       </MergeStatic>
-      {/* 戲院：走進大廳時外殼整個淡出，大廳裡面照樣看得到 */}
-      <Fader id="os_cinema">
+      {/* 戲院：走進大廳時外殼整個淡出，大廳裡面照樣看得到；在隔壁中藥行裡時整個藏起來（不然擋住鏡頭） */}
+      <Fader id="os_cinema" hide={['os_herb_in']}>
         <MergeStatic>
           <Lot x0={cinemaLot.x0} x1={cinemaLot.x1} top={cinemaLot.top} style={STYLES.cinema} />
           <CinemaShell />
         </MergeStatic>
         <Marquee />
+      </Fader>
+      {/* 最東邊那間的店面：在布莊裡時擋住鏡頭 */}
+      <Fader id="os_end_front">
+        <MergeStatic>
+          <EndFront />
+        </MergeStatic>
       </Fader>
       <CinemaLobby outline={outline} />
       <OldStreetWest outline={outline} />

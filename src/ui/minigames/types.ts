@@ -28,6 +28,9 @@ export type MinigameId =
   // 大人的夜生活（DESIGN §29）
   | 'drinking'
   | 'mahjong'
+  // 老街的店（DESIGN §30）
+  | 'herbs'
+  | 'sew'
 
 export interface MinigameProps<P = unknown, R = unknown> {
   params: P

@@ -1,0 +1,274 @@
+{
+ "oseast.jb.bingmom": {
+  "who": "bingmom",
+  "text": "那台點唱機是我尪留下來的。壞了三十年，晚上卻自己會唱，妳說奇怪否？"
+ },
+ "oseast.jb.1": {
+  "who": "grandma",
+  "text": "〈雨夜的冰果室〉……以前年輕人約會就點這首，一首歌的時間，剛好吃完一碗冰。"
+ },
+ "oseast.jb.2": {
+  "who": "grandma",
+  "text": "〈港口的紅手帕〉。恁阿公每次聽到就跟著哼，哼到都走音，還以為自己唱得很好。"
+ },
+ "oseast.jb.3": {
+  "who": "grandma",
+  "text": "〈等妳一碗冰〉，慢慢的，像夏天的下午。聽到這首，就想要睡午覺。"
+ },
+ "oseast.soda.1": {
+  "who": "grandma",
+  "text": "彈珠汽水！手指頭一壓——啵！小時候一瓶要存好幾天的錢。"
+ },
+ "oseast.soda.2": {
+  "who": "grandma",
+  "text": "彈珠卡在瓶口，喝一口要轉一下。以前的囡仔，每一個都想把彈珠拿出來。"
+ },
+ "oseast.soda.3": {
+  "who": "grandma",
+  "text": "冰冰涼涼，嘴巴裡都是泡泡……鬼喝汽水，也是會打嗝的喔。"
+ },
+ "oseast.student.1": {
+  "who": "os_ghost_student",
+  "text": "阿桑，妳也看得到我喔？我每天晚上都來這裡坐。"
+ },
+ "oseast.gm.student.1": {
+  "who": "grandma",
+  "text": "請你喝一瓶彈珠汽水，好否？"
+ },
+ "oseast.student.2": {
+  "who": "os_ghost_student",
+  "text": "……好久沒喝了。那年夏天我考上高中，阿爸帶我來這裡，一人一瓶。他說：「以後讀冊，就靠你自己了。」"
+ },
+ "oseast.student.3": {
+  "who": "os_ghost_student",
+  "text": "後來放暑假，我跟同學去溪邊玩水……就沒有回家了。"
+ },
+ "oseast.gm.student.2": {
+  "who": "grandma",
+  "text": "你阿爸一定每一年夏天都在想你。來，趁冰喝。"
+ },
+ "oseast.student.4": {
+  "who": "os_ghost_student",
+  "text": "啵——哈！還是一樣冰。謝謝阿桑，明天我也要來。"
+ },
+ "oseast.student.hi": {
+  "who": "os_ghost_student",
+  "text": "阿桑來了！啵——今天的也一樣冰。"
+ },
+ "oseast.student.again.1": {
+  "who": "os_ghost_student",
+  "text": "阿桑，我剛剛算過了，這瓶汽水裡有兩百三十一個泡泡。"
+ },
+ "oseast.student.again.2": {
+  "who": "os_ghost_student",
+  "text": "我以前的數學都考很爛，現在有時間了，每天都在算泡泡。"
+ },
+ "oseast.lady.1": {
+  "who": "os_ghost_lady",
+  "text": "這張桌子是我們的。他說好七點來，要請我吃紅豆牛奶冰。"
+ },
+ "oseast.gm.lady.1": {
+  "who": "grandma",
+  "text": "他……沒有來？"
+ },
+ "oseast.lady.2": {
+  "who": "os_ghost_lady",
+  "text": "一九六六年，他去金門當兵，說回來就去我家提親。後來的信，一封比一封短，最後就沒有了。"
+ },
+ "oseast.lady.3": {
+  "who": "os_ghost_lady",
+  "text": "那天我等到打烊。阿桃她婆婆請我吃一碗，說：「小姐，冰會融，人會變，自己要吃飽。」"
+ },
+ "oseast.gm.lady.stay": {
+  "who": "grandma",
+  "text": "我陪妳吃完這一碗。"
+ },
+ "oseast.lady.stay": {
+  "who": "os_ghost_lady",
+  "text": "好啊。兩個人吃，冰融得比較慢。"
+ },
+ "oseast.gm.lady.wait": {
+  "who": "grandma",
+  "text": "妳等的人，說不定也在某個地方等妳。"
+ },
+ "oseast.lady.wait": {
+  "who": "os_ghost_lady",
+  "text": "……阿桑，妳這樣講，我會想要再等一下下。"
+ },
+ "oseast.lady.end": {
+  "who": "os_ghost_lady",
+  "text": "紅豆都沉在碗底，最甜的。以前我都留到最後，捨不得吃……今天，我先吃最甜的。"
+ },
+ "oseast.lady.hi.1": {
+  "who": "os_ghost_lady",
+  "text": "阿桑，坐。今天的紅豆煮得很爛，阿桃的手藝還是一樣好。"
+ },
+ "oseast.lady.hi.2": {
+  "who": "os_ghost_lady",
+  "text": "妳來啦。我今天先吃紅豆，再吃冰，照妳教的。"
+ },
+ "oseast.lady.again.1": {
+  "who": "os_ghost_lady",
+  "text": "點唱機在唱我們那首歌。他跳舞都會踩到我的腳。"
+ },
+ "oseast.lady.again.2": {
+  "who": "os_ghost_lady",
+  "text": "冰融了也沒關係，我現在有的是時間。"
+ },
+ "oseast.wedding.1": {
+  "who": "grandma",
+  "text": "咦……這張……"
+ },
+ "oseast.wedding.2": {
+  "who": "grandma",
+  "text": "一九五八年，我跟恁阿公。他穿借來的西裝，袖子長到蓋住手；我穿借來的鞋，腳痛到笑不出來。"
+ },
+ "oseast.wedding.3": {
+  "who": "grandma",
+  "text": "老闆一直喊「新娘笑一個」……你看，我還是沒笑。"
+ },
+ "oseast.wedding.4": {
+  "who": "grandma",
+  "text": "他倒是笑得像撿到錢一樣。……原來這張，一直掛在這裡。"
+ },
+ "oseast.wedding.again": {
+  "who": "grandma",
+  "text": "每次看，他的袖子都還是太長。"
+ },
+ "oseast.wall.1": {
+  "who": "grandma",
+  "text": "一整面牆的人：結婚的、做滿月的、畢業的……有的人，一輩子只拍過這一張。"
+ },
+ "oseast.wall.2": {
+  "who": "grandma",
+  "text": "這個是賣豆花的阿清，年輕時候這麼緣投？難怪那時候豆花賣那麼好。"
+ },
+ "oseast.wall.vision.1": {
+  "who": "grandma",
+  "text": "……照片裡的人在跟我點頭。都是老街的老鄰居啊，大家還在這裡。"
+ },
+ "oseast.wall.vision.2": {
+  "who": "grandma",
+  "text": "那個滿月的囡仔在對我揮手……唉唷，你現在應該也當阿公了吧。"
+ },
+ "oseast.dark.1": {
+  "who": "grandma",
+  "text": "紅紅的燈，藥水的酸味。以前拍完照要等三天才拿得到，等得心都癢了。"
+ },
+ "oseast.dark.2": {
+  "who": "grandma",
+  "text": "底片掛在繩子上，一張一張，像曬衫一樣。"
+ },
+ "oseast.dark.vision": {
+  "who": "grandma",
+  "text": "藥水盆裡慢慢浮出一張照片……照相館開幕那天，大家站在門口。後排那個戴帽子的，現在還站在牆上看我。"
+ },
+ "oseast.sew.dusk.1": {
+  "who": "grandma",
+  "text": "跟我那台一樣，腳一踩，針就噠噠噠噠。一九六八年，三個孩子的學費，就是這樣一針一針踩出來的。"
+ },
+ "oseast.sew.dusk.2": {
+  "who": "grandma",
+  "text": "錦繡姨的裁縫車，踏板都磨出一個腳印了。"
+ },
+ "oseast.sew.dusk.3": {
+  "who": "grandma",
+  "text": "鐵門拉一半，燈也不開……錦繡姨走了以後，這間店就一直這樣。"
+ },
+ "oseast.jx.first.1": {
+  "who": "jinxiu",
+  "text": "阿春？哎呀，妳也來了。來來來，幫我穿一下針，我的手冷到拿不住。"
+ },
+ "oseast.gm.jx.1": {
+  "who": "grandma",
+  "text": "錦繡姨，妳怎麼還在做衫？"
+ },
+ "oseast.jx.first.2": {
+  "who": "jinxiu",
+  "text": "我孫女小綾下個月要結婚，旗袍是我答應她的。做到一半，我就……走了。"
+ },
+ "oseast.jx.first.3": {
+  "who": "jinxiu",
+  "text": "妳結婚那件紅衫，也是我做的，記得否？妳一個月還我五塊，還了一整年。現在換妳還我人情啦。"
+ },
+ "oseast.gm.jx.2": {
+  "who": "grandma",
+  "text": "好，我年輕的時候，踩得比妳還快。"
+ },
+ "oseast.jx.first.4": {
+  "who": "jinxiu",
+  "text": "我的腳踩不動了。妳踩車，我幫妳看線——粉筆線畫在布上，針要一直走在線上。"
+ },
+ "oseast.jx.retry": {
+  "who": "jinxiu",
+  "text": "來，再踩一次。這次慢慢來，布要順著推。"
+ },
+ "oseast.jx.again": {
+  "who": "jinxiu",
+  "text": "小綾穿那件旗袍，好看得不得了。今天幫我做一件給我自己，好否？"
+ },
+ "oseast.jx.fail": {
+  "who": "jinxiu",
+  "text": "線歪了……沒關係，拆掉重來。我們以前一件衫拆三次也是有的。"
+ },
+ "oseast.jx.later": {
+  "who": "jinxiu",
+  "text": "累了喔？那先休息，布放著不會跑。"
+ },
+ "oseast.jx.done.1": {
+  "who": "jinxiu",
+  "text": "好了……好了！妳看這個滾邊，多漂亮。"
+ },
+ "oseast.jx.done.2": {
+  "who": "jinxiu",
+  "text": "我把它摺好放在櫃台上，明天一早，小綾她阿母開門就會看到。"
+ },
+ "oseast.gm.jx.done": {
+  "who": "grandma",
+  "text": "妳就跟她說，是阿嬤托夢做好的。"
+ },
+ "oseast.jx.done.3": {
+  "who": "jinxiu",
+  "text": "呵呵，那也不算騙人。阿春，多謝妳。"
+ },
+ "oseast.jx.good": {
+  "who": "jinxiu",
+  "text": "針腳又細又直，跟我年輕的時候一樣。"
+ },
+ "oseast.jx.ok": {
+  "who": "jinxiu",
+  "text": "還可以啦，穿在裡面的，沒人看得到。"
+ },
+ "oseast.jx.chat.1": {
+  "who": "jinxiu",
+  "text": "以前過年前一個月，整條老街的衫都是我做的。做到半夜，眼睛都花了。"
+ },
+ "oseast.jx.chat.2": {
+  "who": "jinxiu",
+  "text": "妳阿公來訂那件紅衫的時候，錢不夠，一直跟我說：「她穿起來一定很好看。」"
+ },
+ "oseast.jx.chat.3": {
+  "who": "jinxiu",
+  "text": "做衫跟做人一樣，線要直，但是不能拉太緊。"
+ },
+ "oseast.mirror.1": {
+  "who": "grandma",
+  "text": "鏡子裡什麼都沒有……對喔，我是鬼。"
+ },
+ "oseast.mirror.vision": {
+  "who": "grandma",
+  "text": "……那是十八歲的我？穿著錦繡姨做的紅衫，好瘦喔。那時候怎麼都不知道自己好看。"
+ },
+ "oseast.bolt.1": {
+  "who": "grandma",
+  "text": "這匹是陰丹士林布，以前的學生制服都用這種，洗越多次越好看。"
+ },
+ "oseast.bolt.2": {
+  "who": "grandma",
+  "text": "花布一尺三塊……那時候一件新衫，要穿到過年。"
+ },
+ "oseast.bolt.3": {
+  "who": "grandma",
+  "text": "摸起來涼涼的，是府綢。夏天做一件，阿公說我穿起來像電影明星。"
+ }
+}

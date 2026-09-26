@@ -13,7 +13,10 @@ import { MergeStatic } from './MergeStatic'
 import { Tree } from './Tree'
 import { buildGrass } from './Landscape'
 import { ChibiNpc } from '../chars/Chibi'
-import { Corrugated, Crates, Ground, IronGrille, Paddies, PoleLine, corrugatedTexture, useWindowGlow } from './VillageKit'
+import { Corrugated, Crates, Ground, IronGrille, Paddies, Pole, PoleLine, corrugatedTexture, useWindowGlow } from './VillageKit'
+import { Fader } from './OldStreetFader'
+import { ShopInterior, ShopTV } from './VillageShopInterior'
+import { HouseADoors, HouseAInterior, HouseBDoor, HouseBInterior, VillageHousesLive } from './VillageHouses'
 
 // 村路＋柑仔店（DESIGN §25.1）：一條東西向的鄉間小路。北邊（鏡頭對面）是紅磚厝、柑仔店、透天厝、老榕樹，
 // 南邊（鏡頭這一側）只放矮的東西：水溝、水田，才不會擋住阿嬤。規則與座標在 src/world/sceneVillage.ts。
@@ -31,18 +34,51 @@ export function VillageScene() {
       <Grounds />
       <Greenery quality={quality} />
       <MergeStatic>
-        <ShopBuilding />
-        <HouseA />
-        <HouseB />
+        <ShopBase />
+        <HouseABase />
+        <HouseBBase />
         <LowWalls />
         <Betel />
         <Wolf position={[V.bike.x, 0.02, V.bike.z]} />
         <BanyanCorner />
+        {/* 走得進去的房子裡面（DESIGN §30） */}
+        <ShopInterior />
+        <HouseAInterior />
+        <HouseADoors />
+        <HouseBInterior />
+        <HouseBDoor />
       </MergeStatic>
+      {/* 房子的外殼（正面、東牆、屋頂……）：阿嬤走進去、或房子擋住鏡頭時淡出 */}
+      <Fader id="village_shop">
+        <MergeStatic>
+          <ShopShell />
+        </MergeStatic>
+        <ShopAwning />
+      </Fader>
+      <Fader id="village_house_a">
+        <MergeStatic>
+          <HouseAShell />
+        </MergeStatic>
+      </Fader>
+      <Fader id="village_house_b">
+        <MergeStatic>
+          <HouseBShell />
+        </MergeStatic>
+      </Fader>
       <ShopFront />
-      <ClawMachine />
-      <PoleLine xs={V.poleXs} z={V.poleZ} lamps={V.lampXs} lampZ={-1.25} />
-      <Tree position={[V.banyan.x, 0, V.banyan.z]} scale={1.05} />
+      <ShopTV />
+      <VillageHousesLive outline={quality === 'high'} />
+      {/* 夾娃娃機就在店門口東邊：走進店裡時跟外殼一起淡出 */}
+      <Fader id="village_shop">
+        <ClawMachine />
+      </Fader>
+      <PoleLine xs={V.poleXs} z={V.poleZ} lamps={V.lampXs} lampZ={-1.25} skip={V.fadePoles} />
+      {V.fadePoles.map((x) => (
+        <Fader key={x} id={`village_pole_${x}`}>
+          <Pole x={x} z={V.poleZ} />
+        </Fader>
+      ))}
+      <Tree position={[V.banyan.x, 0, V.banyan.z]} scale={1.05} fadeId="village_banyan" />
       <Tree position={[-27, 0, -12]} scale={0.7} />
       <ChibiNpc id="ajiao" pose="fan" position={[V.ajiao.x, 0.14, V.ajiao.z]} heading={0} seesGhosts outline={quality === 'high'} />
       <VillageLights />
@@ -144,7 +180,9 @@ function Greenery({ quality }: { quality: Quality }) {
 const S = V.shop
 const RIDGE_Z = (S.z0 + S.z1) / 2
 const RIDGE_Y = S.wallTop + ((S.z1 - S.z0) / 2) * SLOPE
-const SHOP_DOOR = [{ c: 0, w: 5.4, y0: 0, y1: 2.6 }]
+const SHOP_DOOR = [{ c: 0, w: V.shopIn.openHalf * 2, y0: 0, y1: 2.6 }]
+/** 後牆右邊的後門（掛門簾，通阿嬌家） */
+const SHOP_BACKDOOR = [{ c: V.shopIn.backDoor.x, w: V.shopIn.backDoor.w, y0: 0, y1: 2.3 }]
 
 /** 兩側的三角山牆（擠出的多邊形） */
 function GableEnd({ x, z0, z1, wallTop, ridgeY, mat }: { x: number; z0: number; z1: number; wallTop: number; ridgeY: number; mat: 'plaster' | 'brick' }) {
@@ -221,9 +259,9 @@ function verticalSignTexture(text: string, bg: string, fg: string) {
   )
 }
 
-function ShopBuilding() {
+/** 柑仔店不會淡出的部分：亭仔腳的地、店裡的磁磚地、後牆（右邊開後門）、西牆和西邊山牆、亭仔腳的木柱與橫樑、柱子上的直式小招牌 */
+function ShopBase() {
   const mats = useMats()
-  const sign = useMemo(shopSignTexture, [])
   const side = useMemo(() => verticalSignTexture('冷飲雜貨', '#f4efe2', '#1d4f8a'), [])
   const slab = useMemo(() => {
     const m = mats.yard.clone()
@@ -236,15 +274,32 @@ function ShopBuilding() {
       <mesh geometry={planeGeo(S.x1 - S.x0 + 0.2, S.z1 - V.awning.z1 + 0.1, TILE.yard)} material={slab} rotation-x={-Math.PI / 2} position={[0, 0.14, (S.z1 + V.awning.z1) / 2]} receiveShadow />
       <WBox mat="stone" size={[S.x1 - S.x0 + 0.2, 0.14, S.z1 - V.awning.z1 + 0.1]} position={[0, 0.07, (S.z1 + V.awning.z1) / 2]} castShadow={false} />
       <mesh geometry={planeGeo(S.x1 - S.x0, S.z1 - S.z0, TILE.tile)} material={mats.tile} rotation-x={-Math.PI / 2} position={[0, 0.141, RIDGE_Z]} receiveShadow />
-      {/* 牆：灰泥＋石砌牆裙；正面整片打開 */}
-      <Wall axis="x" from={S.x0} to={S.x1} at={S.z1} base={0} top={S.wallTop} mat="plaster" openings={SHOP_DOOR} skirtH={0.5} />
-      <Wall axis="x" from={S.x0} to={S.x1} at={S.z0} base={0} top={S.wallTop} mat="plaster" skirtH={0.5} />
-      {[S.x0, S.x1].map((x) => (
-        <group key={x}>
-          <Wall axis="z" from={S.z0} to={S.z1} at={x} base={0} top={S.wallTop} mat="plaster" skirtH={0.5} />
-          <GableEnd x={x} z0={S.z0} z1={S.z1} wallTop={S.wallTop} ridgeY={RIDGE_Y} mat="plaster" />
-        </group>
+      <WBox mat="stone" size={[S.x1 - S.x0, 0.14, S.z1 - S.z0]} position={[0, 0.07, RIDGE_Z]} castShadow={false} />
+      <Wall axis="x" from={S.x0} to={S.x1} at={S.z0} base={0} top={S.wallTop} mat="plaster" skirtH={0.5} openings={SHOP_BACKDOOR} />
+      <Wall axis="z" from={S.z0} to={S.z1} at={S.x0} base={0} top={S.wallTop} mat="plaster" skirtH={0.5} />
+      <GableEnd x={S.x0} z0={S.z0} z1={S.z1} wallTop={S.wallTop} ridgeY={RIDGE_Y} mat="plaster" />
+      {/* 右邊柱子上的直式小招牌 */}
+      <mesh position={[V.awning.postX - 0.02, 1.7, V.awning.postZ + 0.09]}>
+        <planeGeometry args={[0.24, 1.1]} />
+        <meshStandardMaterial map={side} roughness={0.6} />
+      </mesh>
+      {/* 亭仔腳：木柱、橫樑 */}
+      {[-1, 1].map((s) => (
+        <WBox key={s} mat="darkWood" size={[0.14, 2.45, 0.14]} position={[s * V.awning.postX, 0.14 + 1.225, V.awning.postZ]} />
       ))}
+      <WBox mat="darkWood" size={[S.x1 - S.x0 + 0.1, 0.12, 0.12]} position={[0, 2.52, V.awning.postZ]} />
+    </group>
+  )
+}
+
+/** 柑仔店會淡出的外殼：正面（整片打開）、東牆和東邊山牆、屋頂、招牌 */
+function ShopShell() {
+  const sign = useMemo(shopSignTexture, [])
+  return (
+    <group>
+      <Wall axis="x" from={S.x0} to={S.x1} at={S.z1} base={0} top={S.wallTop} mat="plaster" openings={SHOP_DOOR} skirtH={0.5} />
+      <Wall axis="z" from={S.z0} to={S.z1} at={S.x1} base={0} top={S.wallTop} mat="plaster" skirtH={0.5} />
+      <GableEnd x={S.x1} z0={S.z0} z1={S.z1} wallTop={S.wallTop} ridgeY={RIDGE_Y} mat="plaster" />
       <GableRoof axis="x" ridge={RIDGE_Z} ridgeY={RIDGE_Y} from={S.x0 - 0.45} to={S.x1 + 0.45} edges={[S.z0 - 0.45, S.z1 + 0.35]} style="horseback" />
       {/* 招牌（在亭仔腳上面、屋簷下面） */}
       <mesh position={[0, 3.26, S.z1 + 0.185]}>
@@ -252,84 +307,17 @@ function ShopBuilding() {
         <meshStandardMaterial map={sign} roughness={0.55} />
       </mesh>
       <WBox mat="darkWood" size={[5.4, 1.12, 0.05]} position={[0, 3.26, S.z1 + 0.15]} castShadow={false} />
-      {/* 右邊柱子上的直式小招牌 */}
-      <mesh position={[V.awning.postX - 0.02, 1.7, V.awning.postZ + 0.09]}>
-        <planeGeometry args={[0.24, 1.1]} />
-        <meshStandardMaterial map={side} roughness={0.6} />
-      </mesh>
-      {/* 亭仔腳：木柱、橫樑、鐵皮浪板 */}
-      {[-1, 1].map((s) => (
-        <WBox key={s} mat="darkWood" size={[0.14, 2.45, 0.14]} position={[s * V.awning.postX, 0.14 + 1.225, V.awning.postZ]} />
-      ))}
-      <WBox mat="darkWood" size={[S.x1 - S.x0 + 0.1, 0.12, 0.12]} position={[0, 2.52, V.awning.postZ]} />
-      {/* 店裡：後牆的三層貨架、兩側貨架 */}
-      <Shelves />
     </group>
   )
 }
 
-/** 店裡的貨架與貨（顏色很多的小盒子） */
-function Shelves() {
-  const mats = useMats()
-  const goods = useMemo(() => {
-    const r = seeded(2024)
-    const COLORS = ['#d8342b', '#f2c230', '#2e6fb5', '#3e9a52', '#f4efe2', '#e87a2a', '#8a4fb5', '#e05a8a']
-    const items: { p: [number, number, number]; s: [number, number, number]; c: string }[] = []
-    const row = (x0: number, x1: number, z: number, y: number, along: 'x' | 'z') => {
-      let u = x0
-      while (u < x1 - 0.12) {
-        const w = 0.1 + r() * 0.18
-        const h = 0.12 + r() * 0.24
-        const d = 0.12 + r() * 0.16
-        const c = COLORS[Math.floor(r() * COLORS.length)]
-        const p: [number, number, number] = along === 'x' ? [u + w / 2, y + h / 2, z] : [z, y + h / 2, u + w / 2]
-        items.push({ p, s: along === 'x' ? [w, h, d] : [d, h, w], c })
-        u += w + 0.02
-      }
-    }
-    for (const y of [0.62, 1.22, 1.82]) {
-      row(S.x0 + 0.4, S.x1 - 0.4, S.z0 + 0.4, y, 'x')
-      row(S.z0 + 0.8, S.z1 - 0.8, S.x0 + 0.42, y, 'z')
-      row(S.z0 + 0.8, S.z1 - 0.8, S.x1 - 0.42, y, 'z')
-    }
-    return items
-  }, [])
-  const goodMats = useMemo(() => {
-    const m = new Map<string, THREE.MeshStandardMaterial>()
-    for (const g of goods) if (!m.has(g.c)) m.set(g.c, new THREE.MeshStandardMaterial({ color: g.c, roughness: 0.6 }))
-    return m
-  }, [goods])
-  return (
-    <group>
-      {/* 貨架板 */}
-      {[0.6, 1.2, 1.8, 2.4].map((y) => (
-        <group key={y}>
-          <WBox mat="darkWood" size={[S.x1 - S.x0 - 0.6, 0.04, 0.5]} position={[0, y, S.z0 + 0.42]} castShadow={false} />
-          {[S.x0 + 0.42, S.x1 - 0.42].map((x) => (
-            <WBox key={x} mat="darkWood" size={[0.5, 0.04, S.z1 - S.z0 - 1.4]} position={[x, y, RIDGE_Z]} castShadow={false} />
-          ))}
-        </group>
-      ))}
-      {goods.map((g, i) => (
-        <mesh key={i} material={goodMats.get(g.c)} position={g.p}>
-          <boxGeometry args={g.s} />
-        </mesh>
-      ))}
-      {/* 中間一張擺米、醬油的矮桌 */}
-      <WBox mat="wood" size={[1.6, 0.06, 0.8]} position={[0, 0.72, -7.0]} />
-      {[-0.7, 0.7].map((x) => (
-        <WBox key={x} mat="wood" size={[0.06, 0.58, 0.7]} position={[x, 0.43, -7.0]} />
-      ))}
-      {[-0.5, -0.1, 0.3].map((x, i) => (
-        <mesh key={x} material={mats.ceramic} position={[x, 0.9, -7.0 + (i - 1) * 0.12]} castShadow>
-          <cylinderGeometry args={[0.06, 0.07, 0.3, 10]} />
-        </mesh>
-      ))}
-      <mesh material={mats.cloth} position={[0.55, 0.88, -7.0]} castShadow>
-        <boxGeometry args={[0.4, 0.26, 0.3]} />
-      </mesh>
-    </group>
-  )
+/** 亭仔腳的鐵皮浪板（走進店裡時擋住鏡頭，跟外殼一起淡出）。尺寸是常數：Corrugated 依 size 建材質，每次重畫都換新的會跳過淡出 */
+const AW_LEN = Math.hypot(S.z1 - V.awning.z1, V.awning.y0 - V.awning.y1)
+const AW_SIZE: [number, number] = [S.x1 - S.x0 + 0.5, AW_LEN + 0.1]
+const AW_POS: [number, number, number] = [0, (V.awning.y0 + V.awning.y1) / 2 + 0.02, (S.z1 + V.awning.z1) / 2]
+const AW_TILT = Math.atan2(V.awning.y0 - V.awning.y1, S.z1 - V.awning.z1)
+function ShopAwning() {
+  return <Corrugated position={AW_POS} size={AW_SIZE} tilt={AW_TILT} color="#6d9a96" />
 }
 
 // ---------------------------------------------------------------------------
@@ -345,12 +333,8 @@ function ShopFront() {
   const top = 0.14 + C.h
   const candy = useMemo(() => ['#e8423a', '#f2c230', '#58b36a', '#f08a2a', '#e46aa4'].map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.35 })), [])
   const snackMats = useMemo(() => ['#e8423a', '#f2c230', '#2e6fb5', '#f4efe2', '#58b36a'].map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.5, side: THREE.DoubleSide })), [])
-  const aw = V.awning
-  const awLen = Math.hypot(S.z1 - aw.z1, aw.y0 - aw.y1)
-  const awTilt = Math.atan2(aw.y0 - aw.y1, S.z1 - aw.z1)
   return (
     <group userData={{ noMerge: true }}>
-      <Corrugated position={[0, (aw.y0 + aw.y1) / 2 + 0.02, (S.z1 + aw.z1) / 2]} size={[S.x1 - S.x0 + 0.5, awLen + 0.1]} tilt={awTilt} color="#6d9a96" />
       {/* 櫃台：木頭底座＋玻璃櫃（裡面擺小東西）＋桌面 */}
       <WBox mat="darkWood" size={[C.w, 0.42, C.d]} position={[C.x, 0.14 + 0.21, C.z]} />
       <mesh material={glassMat} position={[C.x, 0.14 + 0.42 + 0.17, C.z]}>
@@ -400,10 +384,19 @@ function ShopFront() {
           <WBox key={x} mat="wood" size={[0.05, 0.4, 0.26]} position={[x, 0.2, 0]} />
         ))}
       </group>
-      {/* 收起來的木板門：一片一片靠在牆邊 */}
+      {/* 收起來的木板門：一片一片靠在西邊的牆 */}
       {Array.from({ length: 6 }, (_, i) => (
-        <WBox key={i} mat="wood" size={[0.3, 2.4, 0.04]} position={[3.1, 1.36, S.z1 + 0.2 + i * 0.045]} rotation={[0.05, 0, 0]} />
+        <WBox key={i} mat="wood" size={[0.3, 2.4, 0.04]} position={[-3.22, 1.36, S.z1 + 0.2 + i * 0.045]} rotation={[0.05, 0, 0]} />
       ))}
+      {/* 櫃台上的算盤 */}
+      <group position={[C.x - 0.05, top + 0.02, C.z + 0.12]} rotation={[0, 0.1, 0]}>
+        <WBox mat="darkWood" size={[0.42, 0.03, 0.16]} castShadow={false} />
+        {Array.from({ length: 9 }, (_, i) => (
+          <mesh key={i} material={mats.black} position={[-0.18 + i * 0.045, 0.02, 0]}>
+            <boxGeometry args={[0.03, 0.025, 0.12]} />
+          </mesh>
+        ))}
+      </group>
       {/* 掛在門口的零食串 */}
       {[-2.2, -1.7, 1.6, 2.4].map((x, i) => (
         <group key={x} position={[x, 2.5, S.z1 + 0.05]}>
@@ -554,52 +547,21 @@ function Phone() {
 const HA = V.houseA
 const HA_RIDGE_Z = (HA.z0 + HA.z1) / 2
 const HA_RIDGE_Y = HA.wallTop + ((HA.z1 - HA.z0) / 2) * SLOPE
-const HA_DOOR_X = -10.8
+const HA_DOOR_X = V.houseAIn.door.x
 const HA_OPENINGS = [
-  { c: HA_DOOR_X, w: 1.1, y0: 0, y1: 2.2 },
+  { c: HA_DOOR_X, w: V.houseAIn.door.w, y0: 0, y1: 2.2 },
   { c: -13.2, w: 1.2, y0: 0.95, y1: 2.05 },
   { c: -8.4, w: 1.2, y0: 0.95, y1: 2.05 },
 ]
 
-function HouseA() {
+/** 紅磚厝不會淡出的部分：後牆、西牆和西邊山牆、門口的瓦斯桶和盆栽 */
+function HouseABase() {
   const mats = useMats()
-  const glow = useWindowGlow('#ffc47a', 1)
-  const left = useMemo(() => coupletTexture('歲歲平安'), [])
-  const right = useMemo(() => coupletTexture('年年有餘'), [])
   return (
     <group>
-      <Wall axis="x" from={HA.x0} to={HA.x1} at={HA.z1} base={0} top={HA.wallTop} openings={HA_OPENINGS} skirtH={0.55} />
       <Wall axis="x" from={HA.x0} to={HA.x1} at={HA.z0} base={0} top={HA.wallTop} skirtH={0.55} />
-      {[HA.x0, HA.x1].map((x) => (
-        <group key={x}>
-          <Wall axis="z" from={HA.z0} to={HA.z1} at={x} base={0} top={HA.wallTop} skirtH={0.55} />
-          <GableEnd x={x} z0={HA.z0} z1={HA.z1} wallTop={HA.wallTop} ridgeY={HA_RIDGE_Y} mat="brick" />
-        </group>
-      ))}
-      <GableRoof axis="x" ridge={HA_RIDGE_Z} ridgeY={HA_RIDGE_Y} from={HA.x0 - 0.45} to={HA.x1 + 0.45} edges={[HA.z0 - 0.45, HA.z1 + 0.45]} style="horseback" />
-      {/* 木門（關著）、春聯 */}
-      {[-1, 1].map((s) => (
-        <WBox key={s} mat="darkWood" size={[0.53, 2.18, 0.06]} position={[HA_DOOR_X + s * 0.275, 1.09, HA.z1 - 0.02]} />
-      ))}
-      {[
-        [-1, left],
-        [1, right],
-      ].map(([s, t]) => (
-        <mesh key={s as number} position={[HA_DOOR_X + (s as number) * 0.72, 1.35, HA.z1 + 0.16]}>
-          <planeGeometry args={[0.2, 1.1]} />
-          <meshStandardMaterial map={t as THREE.Texture} roughness={0.85} />
-        </mesh>
-      ))}
-      {/* 窗：玻璃（晚上亮）＋鐵窗 */}
-      {[-13.2, -8.4].map((x) => (
-        <group key={x}>
-          <mesh material={glow} position={[x, 1.5, HA.z1 - 0.05]}>
-            <planeGeometry args={[1.2, 1.1]} />
-          </mesh>
-          <WBox mat="darkWood" size={[1.3, 0.08, 0.36]} position={[x, 0.93, HA.z1]} />
-          <IronGrille position={[x, 1.5, HA.z1 + 0.22]} w={1.24} h={1.12} />
-        </group>
-      ))}
+      <Wall axis="z" from={HA.z0} to={HA.z1} at={HA.x0} base={0} top={HA.wallTop} skirtH={0.55} />
+      <GableEnd x={HA.x0} z0={HA.z0} z1={HA.z1} wallTop={HA.wallTop} ridgeY={HA_RIDGE_Y} mat="brick" />
       {/* 瓦斯桶、盆栽 */}
       <mesh position={[-12.1, 0.36, HA.z1 + 0.4]} castShadow>
         <capsuleGeometry args={[0.16, 0.36, 4, 12]} />
@@ -619,11 +581,47 @@ function HouseA() {
   )
 }
 
+/** 紅磚厝會淡出的外殼：正面（門開著、春聯、窗）、東牆和東邊山牆、屋頂 */
+function HouseAShell() {
+  // 沒人住了：窗裡只有神明燈紅紅的光
+  const glow = useWindowGlow('#ff8a5c', 0.45)
+  const left = useMemo(() => coupletTexture('歲歲平安'), [])
+  const right = useMemo(() => coupletTexture('年年有餘'), [])
+  return (
+    <group>
+      <Wall axis="x" from={HA.x0} to={HA.x1} at={HA.z1} base={0} top={HA.wallTop} openings={HA_OPENINGS} skirtH={0.55} />
+      <Wall axis="z" from={HA.z0} to={HA.z1} at={HA.x1} base={0} top={HA.wallTop} skirtH={0.55} />
+      <GableEnd x={HA.x1} z0={HA.z0} z1={HA.z1} wallTop={HA.wallTop} ridgeY={HA_RIDGE_Y} mat="brick" />
+      <GableRoof axis="x" ridge={HA_RIDGE_Z} ridgeY={HA_RIDGE_Y} from={HA.x0 - 0.45} to={HA.x1 + 0.45} edges={[HA.z0 - 0.45, HA.z1 + 0.45]} style="horseback" />
+      {/* 春聯 */}
+      {[
+        [-1, left],
+        [1, right],
+      ].map(([s, t]) => (
+        <mesh key={s as number} position={[HA_DOOR_X + (s as number) * 0.72, 1.35, HA.z1 + 0.16]}>
+          <planeGeometry args={[0.2, 1.1]} />
+          <meshStandardMaterial map={t as THREE.Texture} roughness={0.85} />
+        </mesh>
+      ))}
+      {/* 窗：玻璃（晚上泛紅光）＋鐵窗 */}
+      {[-13.2, -8.4].map((x) => (
+        <group key={x}>
+          <mesh material={glow} position={[x, 1.5, HA.z1 - 0.05]}>
+            <planeGeometry args={[1.2, 1.1]} />
+          </mesh>
+          <WBox mat="darkWood" size={[1.3, 0.08, 0.36]} position={[x, 0.93, HA.z1]} />
+          <IronGrille position={[x, 1.5, HA.z1 + 0.22]} w={1.24} h={1.12} />
+        </group>
+      ))}
+    </group>
+  )
+}
+
 const HB = V.houseB
-const HB_SHUTTER = { c: 10.0, w: 3.0 }
+const HB_SHUTTER = { c: V.houseBIn.shutter.x, w: V.houseBIn.shutter.w }
 const HB_OPENINGS_1F = [
   { c: HB_SHUTTER.c, w: HB_SHUTTER.w, y0: 0, y1: 2.6 },
-  { c: 7.65, w: 0.9, y0: 0, y1: 2.2 },
+  { c: V.houseBIn.door.x, w: V.houseBIn.door.w, y0: 0, y1: 2.2 },
 ]
 const HB_OPENINGS_2F = [{ c: 9.6, w: 2.2, y0: 0.9, y1: 2.2 }]
 
@@ -640,18 +638,40 @@ function shutterTexture() {
   return t
 }
 
-function HouseB() {
+/** 透天厝米色灰泥的材質（二樓） */
+function useCream() {
   const mats = useMats()
-  const tv = useWindowGlow('#8fb8ff', 0.9, true)
-  const door = useWindowGlow('#ffc47a', 0.6)
-  const cream = useMemo(() => {
+  return useMemo(() => {
     const m = mats.plaster.clone()
     m.color.set('#eadfcc')
     return m
   }, [mats])
+}
+
+/** 透天厝不會淡出的部分：一樓、二樓的後牆和西牆 */
+function HouseBBase() {
+  const cream = useCream()
+  const H1 = HB.floor2
+  const H2 = HB.top
+  return (
+    <group>
+      <Wall axis="x" from={HB.x0} to={HB.x1} at={HB.z0} base={0} top={H1} skirt={false} />
+      <Wall axis="z" from={HB.z0} to={HB.z1} at={HB.x0} base={0} top={H1} skirt={false} />
+      <WallCream axisX from={HB.x0} to={HB.x1} at={HB.z0} base={H1} top={H2 + 0.8} mat={cream} />
+      <WallCream axisX={false} from={HB.z0} to={HB.z1} at={HB.x0} base={H1} top={H2 + 0.8} mat={cream} />
+    </group>
+  )
+}
+
+/** 透天厝會淡出的外殼：正面（小門、拉起來的鐵捲門）、東牆、一樓天花板、二樓、頂樓 */
+function HouseBShell() {
+  const mats = useMats()
+  // 二樓：臥室的檯燈（電視搬到一樓客廳了）
+  const lamp = useWindowGlow('#ffc47a', 0.7)
+  const cream = useCream()
   const shutter = useMemo(() => {
     const t = shutterTexture()
-    t.repeat.set(1, 3)
+    t.repeat.set(1, 0.3)
     return new THREE.MeshStandardMaterial({ map: t, roughness: 0.5, metalness: 0.5 })
   }, [])
   const tankMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1e1f22', roughness: 0.45 }), [])
@@ -661,33 +681,21 @@ function HouseB() {
     <group>
       {/* 一樓：二丁掛（磚紋），二樓：米色灰泥 */}
       <Wall axis="x" from={HB.x0} to={HB.x1} at={HB.z1} base={0} top={H1} openings={HB_OPENINGS_1F} skirt={false} />
-      <Wall axis="x" from={HB.x0} to={HB.x1} at={HB.z0} base={0} top={H1} skirt={false} />
-      {[HB.x0, HB.x1].map((x) => (
-        <Wall key={x} axis="z" from={HB.z0} to={HB.z1} at={x} base={0} top={H1} skirt={false} />
-      ))}
-      <group>
-        {/* 二樓的牆用米色的材質：自己組 */}
-        <WallCream axisX from={HB.x0} to={HB.x1} at={HB.z1} base={H1} top={H2 + 0.8} openings={HB_OPENINGS_2F} mat={cream} />
-        <WallCream axisX from={HB.x0} to={HB.x1} at={HB.z0} base={H1} top={H2 + 0.8} mat={cream} />
-        {[HB.x0, HB.x1].map((x) => (
-          <WallCream key={x} axisX={false} from={HB.z0} to={HB.z1} at={x} base={H1} top={H2 + 0.8} mat={cream} />
-        ))}
-      </group>
-      {/* 樓板線、屋頂平台 */}
+      <Wall axis="z" from={HB.z0} to={HB.z1} at={HB.x1} base={0} top={H1} skirt={false} />
+      <WallCream axisX from={HB.x0} to={HB.x1} at={HB.z1} base={H1} top={H2 + 0.8} openings={HB_OPENINGS_2F} mat={cream} />
+      <WallCream axisX={false} from={HB.z0} to={HB.z1} at={HB.x1} base={H1} top={H2 + 0.8} mat={cream} />
+      {/* 一樓的天花板（二樓的地板）、樓板線、屋頂平台 */}
+      <WBox mat="trim" size={[HB.x1 - HB.x0 - 0.3, 0.12, HB.z1 - HB.z0 - 0.3]} position={[(HB.x0 + HB.x1) / 2, H1 - 0.06, (HB.z0 + HB.z1) / 2]} castShadow={false} />
       <WBox mat="trim" size={[HB.x1 - HB.x0 + 0.4, 0.18, 0.5]} position={[(HB.x0 + HB.x1) / 2, H1, HB.z1 + 0.05]} />
       <WBox mat="yard" size={[HB.x1 - HB.x0, 0.14, HB.z1 - HB.z0]} position={[(HB.x0 + HB.x1) / 2, H2, (HB.z0 + HB.z1) / 2]} />
       <WBox mat="trim" size={[HB.x1 - HB.x0 + 0.34, 0.08, 0.34]} position={[(HB.x0 + HB.x1) / 2, H2 + 0.84, HB.z1]} />
-      {/* 鐵捲門（關著）、小門（開一條縫，裡面亮著） */}
-      <mesh material={shutter} position={[HB_SHUTTER.c, 1.3, HB.z1 - 0.04]}>
-        <planeGeometry args={[HB_SHUTTER.w, 2.6]} />
+      {/* 鐵捲門拉起來了：只看得到捲軸箱和最下面一截 */}
+      <mesh material={shutter} position={[HB_SHUTTER.c, 2.5, HB.z1 - 0.04]}>
+        <planeGeometry args={[HB_SHUTTER.w, 0.2]} />
       </mesh>
       <WBox mat="metal" size={[HB_SHUTTER.w + 0.1, 0.32, 0.3]} position={[HB_SHUTTER.c, 2.74, HB.z1 + 0.05]} />
-      <mesh material={door} position={[7.65, 1.1, HB.z1 - 0.06]}>
-        <planeGeometry args={[0.9, 2.2]} />
-      </mesh>
-      <WBox mat="metal" size={[0.62, 2.14, 0.05]} position={[7.44, 1.08, HB.z1 + 0.03]} rotation={[0, 0.5, 0]} />
-      {/* 二樓窗（電視的光）＋鐵窗＋冷氣室外機 */}
-      <mesh material={tv} position={[9.6, H1 + 1.55, HB.z1 - 0.05]}>
+      {/* 二樓窗（檯燈的光）＋鐵窗＋冷氣室外機 */}
+      <mesh material={lamp} position={[9.6, H1 + 1.55, HB.z1 - 0.05]}>
         <planeGeometry args={[2.2, 1.3]} />
       </mesh>
       <IronGrille position={[9.6, H1 + 1.55, HB.z1 + 0.25]} w={2.3} h={1.36} />
@@ -708,7 +716,7 @@ function HouseB() {
         <planeGeometry args={[0.3, 0.14]} />
         <meshStandardMaterial color="#2a5a9a" roughness={0.5} />
       </mesh>
-      <mesh position={[8.35, 1.2, HB.z1 + 0.2]} castShadow>
+      <mesh position={[8.3, 1.2, HB.z1 + 0.2]} castShadow>
         <boxGeometry args={[0.28, 0.36, 0.14]} />
         <meshStandardMaterial color="#c62828" roughness={0.4} />
       </mesh>
@@ -1019,7 +1027,6 @@ function BanyanCorner() {
 function VillageLights() {
   const tube = useRef<THREE.PointLight>(null)
   const neon = useRef<THREE.PointLight>(null)
-  const porch = useRef<THREE.PointLight>(null)
   const tubeMat = useMemo(() => new THREE.MeshBasicMaterial({ color: new THREE.Color(1.4, 1.6, 1.5), toneMapped: false }), [])
   useFrame(({ clock }) => {
     const l = lanternAt(useStore.getState().time)
@@ -1032,7 +1039,6 @@ function VillageLights() {
     if (neon.current) neon.current.intensity = 2.6 * l * n
     neonPink.color.setRGB(0.5 + 1.1 * l * n, 0.15 + 0.2 * l, 0.35 + 0.65 * l * n)
     neonGreen.color.setRGB(0.1 + 0.2 * l, 0.5 + 1.1 * l * n, 0.3 + 0.5 * l)
-    if (porch.current) porch.current.intensity = 3.2 * l
   })
   return (
     <group>
@@ -1042,10 +1048,10 @@ function VillageLights() {
       </mesh>
       <pointLight ref={tube} position={[0, 2.9, -5.2]} color="#e6fff2" intensity={2} distance={9} decay={2} />
       <pointLight ref={neon} position={[V.betel.x, 2.0, V.betel.z + 1.0]} color="#ff5fb8" intensity={0} distance={6} decay={2} />
-      <pointLight ref={porch} position={[HA_DOOR_X, 2.5, HA.z1 + 0.6]} color="#ffb35c" intensity={0} distance={6} decay={2} />
+      {/* 紅磚厝門口的燈：阿好搬走以後就沒開了（屋裡的神明燈在 VillageHouses.tsx） */}
       <mesh position={[HA_DOOR_X, 2.45, HA.z1 + 0.25]}>
         <sphereGeometry args={[0.06, 10, 8]} />
-        <meshBasicMaterial color="#ffd9a0" toneMapped={false} />
+        <meshStandardMaterial color="#d8d2c0" roughness={0.3} />
       </mesh>
     </group>
   )

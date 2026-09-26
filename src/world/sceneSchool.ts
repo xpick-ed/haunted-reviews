@@ -3,7 +3,8 @@ import type { SceneDef } from './scenes'
 import type { GameState } from '../store'
 import type { Hotspot } from './hotspots'
 import type { HopscotchResult } from '../ui/minigames/types'
-import { configurePlay, kidsGate, schoolPlay, startHide, startTag, type HideSpot } from './tag'
+import { callKids, configurePlay, kidsGate, schoolPlay, startHide, startTag, type HideSpot } from './tag'
+import './schoolDialogues'
 
 // 廢棄國小（DESIGN §26.1）：從村子南邊的小橋、田埂過來。阿嬤小時候讀的「後壁厝國民學校」。
 // 一群小孩鬼：鬼抓人（3D 追逐）、跳房子（節奏小遊戲）、躲貓貓（找人）；教室裡有阿嬤的童年回憶。
@@ -12,7 +13,7 @@ import { configurePlay, kidsGate, schoolPlay, startHide, startTag, type HideSpot
 //
 //          z 負（北，校門這一側；村子在更北邊）
 //   ┌──────── 圍牆 ─────── 校門 ─────── 圍牆 ────────┐
-//   │ 教室 教室 教室 [教室]    銅像台座     司令台  升旗台 │
+//   │ 圖書 保健 辦公 [教室]    銅像台座     司令台  升旗台 │
 //   │ ════ 走廊（柱子）═══ 鐘  飲水台                    │
 //   │  跳房子（水泥地）                                  │
 //   │ 鳳凰木          操  場（跑道）                     │
@@ -25,7 +26,7 @@ export const SCHOOL = {
   gate: { x: 0, z: -13.3, w: 3.4 },
   /** 圍牆的線（四邊） */
   wall: { x0: -19.6, x1: 19.6, z0: -13.3, z1: 11.6 },
-  /** 一排四間教室（西北），最東邊那間可以進去 */
+  /** 一排四間（西北）：西邊起圖書室、保健室、教師辦公室、六年甲班，都可以進去（DESIGN §30） */
   block: { x0: -18.5, x1: -3.5, z0: -12.3, z1: -8.2, floorY: 0.3, wallTop: 3.2 },
   /** 教室之間的隔間牆（x） */
   splits: [-14.75, -11, -7.25],
@@ -62,28 +63,59 @@ export const SCHOOL = {
   deskZs: [-10.25, -9.45, -8.7],
   /** 阿嬤以前的座位（桌面刻了一個「春」） */
   myDesk: { x: -6.4, z: -9.45 },
+  /** 圖書室：西牆高書架、北牆窗下矮書架、中間閱覽桌＋兩條板凳、東牆的借書卡片櫃；門在南牆靠東 */
+  library: { door: -15.5, tallShelf: { x: -18.2, z0: -11.9, z1: -9.0 }, lowShelf: { x0: -18.0, x1: -15.1, z: -12.0 }, table: { x: -16.9, z: -10.3 }, catalog: { x: -15.1, z: -11.3 } },
+  /** 保健室：西牆鐵床（白布簾）、東牆藥櫃和視力表、東北角身高體重計、南邊護士阿姨的桌子 */
+  nurse: { door: -11.75, bed: { x0: -14.62, x1: -13.72, z0: -12.1, z1: -10.2 }, cabinet: { x: -11.3, z: -11.0 }, scale: { x: -11.45, z: -11.9 }, chart: { z: -9.7 }, tray: { x: -14.2, z: -9.75 }, desk: { x: -13.2, z: -8.8 }, ghost: { x: -12.3, z: -10.8 } },
+  /** 教師辦公室：中間兩張對拼的辦公桌、東牆廣播台（擴大機＋麥克風）、西牆行事曆黑板、西北角矮鐵櫃、西南角油印機 */
+  office: { door: -8.0, desks: { x: -9.9, z: -10.575 }, broadcast: { x: -7.62, z: -11.4 }, cabinet: { x: -10.6, z: -11.9 }, mimeo: { x: -10.55, z: -8.9 } },
 }
 
 const S = SCHOOL
 const B = S.block
+const L = S.library
+const N = S.nurse
+const F = S.office
 
 /** 教室的台基＋走廊（地板高度 floorY） */
 const PLATFORM = rect(B.x0 - 0.25, B.z0 - 0.25, B.x1 + 0.25, S.corridor.z1)
-/** 可以進去的那間教室 */
+/** 六年甲班（最東邊） */
 export const CLASSROOM = rect(S.splits[2], B.z0, B.x1, B.z1)
+/** 另外三間（DESIGN §30） */
+export const LIBRARY = rect(B.x0, B.z0, S.splits[0], B.z1)
+export const NURSE_ROOM = rect(S.splits[0], B.z0, S.splits[1], B.z1)
+export const OFFICE = rect(S.splits[1], B.z0, S.splits[2], B.z1)
+/** 四間的門（南牆，走廊這一側） */
+export const ROOM_DOORS = [S.library.door, S.nurse.door, S.office.door, S.door.c]
 
 function schoolColliders() {
   const rects: Rect[] = [
-    // 前三間教室是鎖著的：整塊擋住
-    rect(B.x0, B.z0, S.splits[2], B.z1),
-    // 可以進去的教室：北牆、東牆、西牆（跟隔壁共用）、南牆留門
-    ...wallRects('x', S.splits[2], B.x1, B.z0, 0.25),
+    // 一排四間：外牆、三道隔間牆、南牆每間一扇門
+    ...wallRects('x', B.x0, B.x1, B.z0, 0.25),
+    ...wallRects('z', B.z0, B.z1, B.x0, 0.25),
     ...wallRects('z', B.z0, B.z1, B.x1, 0.25),
-    ...wallRects('x', S.splits[2], B.x1, B.z1, 0.25, [{ c: S.door.c, w: S.door.w }]),
+    ...S.splits.flatMap((x) => wallRects('z', B.z0, B.z1, x, 0.2)),
+    ...wallRects('x', B.x0, B.x1, B.z1, 0.25, ROOM_DOORS.map((c) => ({ c, w: S.door.w }))),
     // 教室裡：講桌、風琴、六張桌子
     box(S.teacherDesk.x, S.teacherDesk.z, 1.1, 0.5),
     box(S.organ.x, S.organ.z, 0.5, 0.9),
     ...S.deskXs.flatMap((x) => S.deskZs.map((z) => box(x, z, 0.9, 0.42))),
+    // 圖書室：高書架、矮書架、閱覽桌＋板凳、卡片櫃
+    rect(B.x0, L.tallShelf.z0 - 0.05, L.tallShelf.x + 0.18, L.tallShelf.z1 + 0.05),
+    rect(L.lowShelf.x0 - 0.05, B.z0, L.lowShelf.x1 + 0.05, L.lowShelf.z + 0.17),
+    box(L.table.x, L.table.z, 1.5, 1.6),
+    box(L.catalog.x, L.catalog.z, 0.46, 0.82),
+    // 保健室：鐵床、藥櫃、身高體重計、紅藥水的小桌、護士阿姨的桌子
+    rect(N.bed.x0 - 0.05, N.bed.z0 - 0.05, N.bed.x1 + 0.04, N.bed.z1 + 0.02),
+    box(N.cabinet.x, N.cabinet.z, 0.4, 1.04),
+    box(N.scale.x, N.scale.z, 0.5, 0.5),
+    box(N.tray.x, N.tray.z, 0.45, 0.4),
+    box(N.desk.x, N.desk.z, 1.0, 0.56),
+    // 教師辦公室：對拼的辦公桌、廣播台、鐵櫃、油印機
+    box(F.desks.x, F.desks.z, 1.15, 1.35),
+    rect(F.broadcast.x - 0.28, F.broadcast.z - 0.62, S.splits[2], F.broadcast.z + 0.62),
+    box(F.cabinet.x, F.cabinet.z, 0.56, 0.46),
+    box(F.mimeo.x, F.mimeo.z, 0.6, 0.5),
     // 司令台（整塊，階梯另外畫）、升旗台、銅像台座
     rect(S.stage.x0, S.stage.z0, S.stage.x1, S.stage.z1),
     box(S.flag.x, S.flag.z, 1.4, 1.4),
@@ -117,15 +149,26 @@ export const SCHOOL_SCENE: SceneDef = {
   spawns: { gate: [0, -11.6] },
   exits: [{ area: rect(-S.gate.w / 2, -14, S.gate.w / 2, -13.45), to: 'village', spawn: 'south', label: '↑ 村子', sign: [2.4, -12.1] }],
   buildings: [
-    {
-      id: 'school_room',
-      inside: CLASSROOM,
-      min: [S.splits[2] - 0.2, 0, B.z0 - 0.3],
-      max: [B.x1 + 0.3, B.wallTop + 1.6, B.z1 + 0.2],
-    },
+    // 走進哪一間，那一間的南牆和屋頂就淡出、鏡頭拉近
+    ...(
+      [
+        ['school_room', CLASSROOM],
+        ['school_lib', LIBRARY],
+        ['school_nurse', NURSE_ROOM],
+        ['school_office', OFFICE],
+      ] as const
+    ).map(([id, r]) => ({
+      id,
+      inside: r,
+      min: [r.x0 - 0.2, 0, B.z0 - 0.3] as [number, number, number],
+      max: [r.x1 + 0.2, B.wallTop + 1.6, B.z1 + 0.2] as [number, number, number],
+    })),
   ],
   rooms: [
     { id: 'classroom', name: '六年甲班', area: CLASSROOM },
+    { id: 'library', name: '圖書室', area: LIBRARY },
+    { id: 'nurse', name: '保健室', area: NURSE_ROOM },
+    { id: 'office', name: '教師辦公室', area: OFFICE },
     { id: 'field', name: '操場', area: rect(S.field.x0, S.field.z0, S.field.x1, S.field.z1) },
   ],
   floorAt: (x, z) => (inside(PLATFORM, x, z) ? B.floorY : 0.02),
@@ -140,8 +183,11 @@ export const SCHOOL_SCENE: SceneDef = {
 /** 畫面那邊（School.tsx）掛上來的 store 寫入：這個檔案不能直接 import store */
 export const schoolStore: { set?: (fn: (s: GameState) => Partial<GameState>) => void } = {}
 
-/** 只有聲音的事件（風琴、鐘）：畫面那邊看時間戳播放 */
-export const schoolFx = { organAt: 0, bellAt: 0 }
+/** 只有聲音的事件（風琴、鐘、辦公室廣播的下課鐘）：畫面那邊看時間戳播放 */
+export const schoolFx = { organAt: 0, bellAt: 0, chimeAt: 0 }
+
+/** 保健室的護士阿姨：陰陽眼才看得到（天亮就走了） */
+export const nurseHere = (s: { vision?: boolean; phase: string }) => !!s.vision && s.phase !== 'dawn'
 
 const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)]
 
@@ -321,6 +367,163 @@ export const SCHOOL_HOTSPOTS: Hotspot[] = [
     iconY: 1.2,
     label: () => '飲水台',
     run: (s) => s.bark('school.trough'),
+  },
+  // ---------- 圖書室（DESIGN §30） ----------
+  {
+    id: 'school_card',
+    scene: 'school',
+    x: S.library.catalog.x - 0.75,
+    z: S.library.catalog.z + 0.2,
+    r: 1.0,
+    icon: { x: S.library.catalog.x, z: S.library.catalog.z },
+    iconY: B.floorY + 1.6,
+    label: (s) => (s.flags.school_card_seen ? '借書卡片櫃' : '翻翻借書卡片櫃'),
+    run: (s) => {
+      if (s.flags.school_card_seen) s.bark('school2.card.again')
+      else s.startDialogue('school_card')
+    },
+  },
+  {
+    id: 'school_read',
+    scene: 'school',
+    x: S.library.table.x + 1.05,
+    z: S.library.table.z + 0.5,
+    r: 1.1,
+    icon: { x: S.library.table.x, z: S.library.table.z },
+    iconY: B.floorY + 1.3,
+    label: (s) => {
+      if (schoolPlay.rt.kind) return null
+      if (!kidsHere(s)) return '翻翻桌上的書'
+      return s.flags.school_story_today ? '講故事（今天講過了）' : '唸故事給小孩鬼聽'
+    },
+    run: (s) => {
+      if (!kidsHere(s)) {
+        s.bark(pick(['school2.read.alone.1', 'school2.read.alone.2', 'school2.read.alone.3']))
+        return
+      }
+      if (s.flags.school_story_today) {
+        s.bark('school2.story.done')
+        return
+      }
+      // 小孩鬼跑到圖書室門口來聽
+      callKids(schoolPlay.rt, S.library.door, B.z1 + 1.0, 14)
+      meetFirst(s, () =>
+        s.startDialogue('school_story', () =>
+          schoolStore.set?.((x) => ({ flags: { ...x.flags, school_story_today: true }, meta: { ...x.meta, merit: x.meta.merit + 1 } })),
+        ),
+      )
+    },
+  },
+  // ---------- 保健室 ----------
+  {
+    id: 'school_nurse',
+    scene: 'school',
+    x: S.nurse.ghost.x + 0.2,
+    z: S.nurse.ghost.z + 0.9,
+    r: 1.2,
+    icon: { x: S.nurse.ghost.x, z: S.nurse.ghost.z },
+    iconY: B.floorY + 2.1,
+    label: (s) => (nurseHere(s) ? '跟護士阿姨說話' : null),
+    run: (s) => {
+      if (!s.flags.school_nurse_met) s.startDialogue('school_nurse_first')
+      else s.bark(pick(['school2.nurse.hi.1', 'school2.nurse.hi.2', 'school2.nurse.hi.3']))
+    },
+  },
+  {
+    id: 'school_redmed',
+    scene: 'school',
+    x: S.nurse.tray.x + 0.55,
+    z: S.nurse.tray.z + 0.35,
+    r: 0.95,
+    icon: { x: S.nurse.tray.x, z: S.nurse.tray.z },
+    iconY: B.floorY + 1.2,
+    label: (s) => {
+      if (schoolPlay.rt.kind) return null
+      if (!kidsHere(s)) return '紅藥水'
+      return s.flags.school_nurse_today ? '紅藥水（今天擦過了）' : '幫跌倒的阿弟仔擦紅藥水'
+    },
+    run: (s) => {
+      if (!kidsHere(s)) {
+        s.bark(s.flags.school_redmed_heard ? 'school2.redmed.alone' : 'school2.redmed.alone.2')
+        schoolStore.set?.((x) => ({ flags: { ...x.flags, school_redmed_heard: true } }))
+        return
+      }
+      if (s.flags.school_nurse_today) {
+        s.bark('school2.redmed.done')
+        return
+      }
+      callKids(schoolPlay.rt, S.nurse.door, B.z1 + 1.0, 12)
+      meetFirst(s, () =>
+        s.startDialogue('school_redmed', () =>
+          schoolStore.set?.((x) => ({ flags: { ...x.flags, school_nurse_today: true }, meta: { ...x.meta, merit: x.meta.merit + 1 } })),
+        ),
+      )
+    },
+  },
+  {
+    id: 'school_scale',
+    scene: 'school',
+    x: S.nurse.scale.x - 0.45,
+    z: S.nurse.scale.z + 0.8,
+    r: 0.95,
+    icon: { x: S.nurse.scale.x, z: S.nurse.scale.z },
+    iconY: B.floorY + 2.2,
+    label: () => '量身高、看視力表',
+    run: (s) => s.bark(kidsHere(s) && Math.random() < 0.4 ? 'school2.scale.kids' : pick(['school2.scale.1', 'school2.scale.2', 'school2.chart'])),
+  },
+  // ---------- 教師辦公室 ----------
+  {
+    id: 'school_roll',
+    scene: 'school',
+    x: S.office.desks.x + 0.95,
+    z: S.office.desks.z + 0.3,
+    r: 1.0,
+    icon: { x: S.office.desks.x, z: S.office.desks.z },
+    iconY: B.floorY + 1.3,
+    label: (s) => {
+      if (schoolPlay.rt.kind) return null
+      if (!s.flags.school_roll_seen) return '翻開點名簿'
+      if (!kidsHere(s)) return '點名簿'
+      return s.flags.school_roll_today ? '點名簿（今天點過了）' : '幫小孩鬼點名'
+    },
+    run: (s) => {
+      if (!s.flags.school_roll_seen) {
+        s.startDialogue('school_roll')
+        return
+      }
+      if (!kidsHere(s)) {
+        s.bark('school2.roll.again')
+        return
+      }
+      if (s.flags.school_roll_today) {
+        s.bark('school2.call.done')
+        return
+      }
+      callKids(schoolPlay.rt, S.office.door, B.z1 + 1.0, 14)
+      meetFirst(s, () =>
+        s.startDialogue('school_call', () =>
+          schoolStore.set?.((x) => ({ flags: { ...x.flags, school_roll_today: true }, meta: { ...x.meta, merit: x.meta.merit + 1 } })),
+        ),
+      )
+    },
+  },
+  {
+    id: 'school_broadcast',
+    scene: 'school',
+    x: S.office.broadcast.x - 0.8,
+    z: S.office.broadcast.z + 0.2,
+    r: 0.95,
+    icon: { x: S.office.broadcast.x, z: S.office.broadcast.z },
+    iconY: B.floorY + 1.55,
+    label: () => (schoolPlay.rt.kind ? null : '廣播：放下課鐘'),
+    run: (s) => {
+      schoolFx.chimeAt = performance.now()
+      if (kidsHere(s)) {
+        // 下課鐘一響，小孩鬼全部跑到走廊上
+        callKids(schoolPlay.rt, (S.office.door + S.door.c) / 2, S.corridor.z1 + 0.9, 13)
+        window.setTimeout(() => s.bark(pick(['school2.chime.kids.1', 'school2.chime.kids.2'])), 5200)
+      } else s.bark(s.phase === 'night' ? 'school2.chime.night' : 'school2.chime.gm')
+    },
   },
 ]
 

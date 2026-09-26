@@ -713,7 +713,7 @@ function runStep(id: string, i: number) {
 
 // 傍晚做了一件事（DESIGN §28.1）：新的「今天做過了」旗標、或家裡的東西變多（採收、買東西）→ 花 10 分鐘。
 // 系統自己設的旗標（提醒、到訪紀錄）不算；剛玩完小遊戲的也不算（小遊戲已經算過）。
-const FREE_FLAGS = /^(dusk_warned|.*_visit|handream.*|dijizhu_bless|ajiao_joke)_today$/
+const FREE_FLAGS = /^(dusk_warned|.*_visit|handream.*|dijizhu_bless|ajiao_joke|ajiao_candy)_today$/
 useStore.subscribe((s, prev) => {
   if (s.phase !== 'dusk' || !s.started || s.transitioning || performance.now() - lastMinigameEnd < 2500) return
   let chore = false

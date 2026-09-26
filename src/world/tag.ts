@@ -67,6 +67,8 @@ export interface PlayRT {
   hides: HideSpot[]
   plays: XZ[]
   rnd: () => number
+  /** 被叫過去（辦公室廣播下課鐘）：平常閒晃的小孩先跑到這裡，t 秒後再回去玩 */
+  call: { x: number; z: number; t: number } | null
 }
 
 export type PlayEvent =
@@ -87,6 +89,8 @@ export const FIND_R = 1.15
 const FLEE_FAST = 2.45
 const FLEE_SLOW = 1.9
 const WANDER = 0.9
+/** 被叫過去的時候用跑的 */
+const CALLED = 2.3
 const KID_R = 0.25
 
 const EMPTY: Colliders = { rects: [], circles: [], bounds: { x0: -20, z0: -14, x1: 20, z1: 12 } }
@@ -112,7 +116,14 @@ export function newPlay(seed = 7): PlayRT {
     hides: [],
     plays: [],
     rnd: lcg(seed),
+    call: null,
   }
+}
+
+/** 把閒晃中的小孩叫到 (x, z) 附近排一排（玩遊戲的時候不理） */
+export function callKids(rt: PlayRT, x: number, z: number, secs = 9) {
+  if (rt.kind) return
+  rt.call = { x, z, t: secs }
 }
 
 /** 場景（sceneSchool.ts）告訴這裡碰撞、躲藏點、閒晃點 */
@@ -237,11 +248,17 @@ function fleeDir(rt: PlayRT, k: Kid, gm: { x: number; z: number }): XZ {
 export function stepPlay(rt: PlayRT, dt: number, gm: { x: number; z: number }): PlayEvent[] {
   const out: PlayEvent[] = []
   if (rt.kind && !rt.over) rt.time += dt
-  for (const k of rt.kids) {
+  const call = rt.call && !rt.kind ? rt.call : null
+  if (call) {
+    call.t -= dt
+    if (call.t <= 0) rt.call = null
+  }
+  rt.kids.forEach((k, i) => {
     const d = Math.hypot(k.x - gm.x, k.z - gm.z)
     switch (k.mode) {
       case 'idle': {
-        const p = rt.plays[k.target]
+        // 被叫過去：在叫的地方排成一排（一人隔 0.7 公尺）
+        const p: XZ | undefined = call ? [call.x + (i - 1.5) * 0.7, call.z] : rt.plays[k.target]
         if (!p) break
         const dx = p[0] - k.x
         const dz = p[1] - k.z
@@ -250,11 +267,11 @@ export function stepPlay(rt: PlayRT, dt: number, gm: { x: number; z: number }): 
           k.wait -= dt
           // 阿嬤靠近：轉頭看她
           if (d < 3) k.heading = Math.atan2(gm.x - k.x, gm.z - k.z)
-          if (k.wait <= 0) {
+          if (k.wait <= 0 && !call) {
             k.target = Math.floor(rt.rnd() * rt.plays.length)
             k.wait = 1.5 + rt.rnd() * 4
           }
-        } else moveKid(rt, k, dx, dz, WANDER + (k.id === 'guikid1' ? 0.4 : 0), dt)
+        } else moveKid(rt, k, dx, dz, call ? CALLED : WANDER + (k.id === 'guikid1' ? 0.4 : 0), dt)
         break
       }
       case 'flee': {
@@ -308,7 +325,7 @@ export function stepPlay(rt: PlayRT, dt: number, gm: { x: number; z: number }): 
         if (d < 3) k.heading = Math.atan2(gm.x - k.x, gm.z - k.z)
         break
     }
-  }
+  })
   if (rt.kind && !rt.over) {
     const all = rt.count >= rt.kids.length
     if (all || rt.time >= rt.limit) {

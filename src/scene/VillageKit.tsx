@@ -150,8 +150,34 @@ const insulatorMat = new THREE.MeshStandardMaterial({ color: '#e9e6dc', roughnes
 const POLE_H = 8.6
 const ARM_Y = 7.9
 
-/** 一排電線桿（沿 x）＋電線；lamps 裡的 x 會加上一支伸到路上的路燈 */
-export function PoleLine({ xs, z, lamps = [], lampZ }: { xs: number[]; z: number; lamps?: number[]; lampZ: number }) {
+/** 一支電線桿：桿子、橫擔、礙子、小廣告牌（PoleLine 用它；也可以單獨包在淡出裡） */
+export function Pole({ x, z }: { x: number; z: number }) {
+  return (
+    <group position={[x, 0, z]}>
+      <mesh material={poleMat} position={[0, POLE_H / 2 - 0.1, 0]} castShadow>
+        <cylinderGeometry args={[0.11, 0.16, POLE_H, 9]} />
+      </mesh>
+      <mesh material={steelMat} position={[0, ARM_Y, 0]} castShadow>
+        <boxGeometry args={[0.1, 0.1, 1.6]} />
+      </mesh>
+      {[-0.6, 0, 0.6].map((o) => (
+        <mesh key={o} material={insulatorMat} position={[0, ARM_Y + 0.12, o]}>
+          <cylinderGeometry args={[0.045, 0.06, 0.16, 7]} />
+        </mesh>
+      ))}
+      {/* 桿上的小廣告牌（「通水溝」、「收購舊機車」這種） */}
+      <mesh material={insulatorMat} position={[0, 2.2, 0.15]}>
+        <boxGeometry args={[0.24, 0.5, 0.02]} />
+      </mesh>
+    </group>
+  )
+}
+
+/**
+ * 一排電線桿（沿 x）＋電線；lamps 裡的 x 會加上一支伸到路上的路燈。
+ * skip 裡的 x 只畫電線不畫桿子（那支桿子由呼叫的人自己畫，例如包在淡出裡）。
+ */
+export function PoleLine({ xs, z, lamps = [], lampZ, skip = [] }: { xs: number[]; z: number; lamps?: number[]; lampZ: number; skip?: number[] }) {
   const wires = useMemo(() => {
     const out: THREE.BufferGeometry[] = []
     const V = (x: number, y: number, zz: number) => new THREE.Vector3(x, y, zz)
@@ -165,25 +191,11 @@ export function PoleLine({ xs, z, lamps = [], lampZ }: { xs: number[]; z: number
   }, [xs, z, lamps, lampZ])
   return (
     <group>
-      {xs.map((x) => (
-        <group key={x} position={[x, 0, z]}>
-          <mesh material={poleMat} position={[0, POLE_H / 2 - 0.1, 0]} castShadow>
-            <cylinderGeometry args={[0.11, 0.16, POLE_H, 9]} />
-          </mesh>
-          <mesh material={steelMat} position={[0, ARM_Y, 0]} castShadow>
-            <boxGeometry args={[0.1, 0.1, 1.6]} />
-          </mesh>
-          {[-0.6, 0, 0.6].map((o) => (
-            <mesh key={o} material={insulatorMat} position={[0, ARM_Y + 0.12, o]}>
-              <cylinderGeometry args={[0.045, 0.06, 0.16, 7]} />
-            </mesh>
-          ))}
-          {/* 桿上的小廣告牌（「通水溝」、「收購舊機車」這種） */}
-          <mesh material={insulatorMat} position={[0, 2.2, 0.15]}>
-            <boxGeometry args={[0.24, 0.5, 0.02]} />
-          </mesh>
-        </group>
-      ))}
+      {xs
+        .filter((x) => !skip.includes(x))
+        .map((x) => (
+          <Pole key={x} x={x} z={z} />
+        ))}
       {wires.map((g, i) => (
         <mesh key={i} geometry={g} material={i >= wires.length - lamps.length ? steelMat : wireMat} />
       ))}

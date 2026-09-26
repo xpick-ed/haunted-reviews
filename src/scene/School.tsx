@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { Sparkles } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore, type Quality } from '../store'
-import { CLASSROOM, SCHOOL, schoolStore } from '../world/sceneSchool'
+import { CLASSROOM, LIBRARY, SCHOOL, schoolStore } from '../world/sceneSchool'
 import { lanternAt } from './daylight'
 import { BRUSH_FONT, TILE, WBox, canvasTexture, planeGeo, seeded, useMats } from './kit'
 import { GableRoof, Wall, type Opening } from './House'
@@ -13,10 +13,11 @@ import { buildGrass } from './Landscape'
 import { Ground } from './VillageKit'
 import { Bell, FlagPole, HopscotchChalk, Playground, SchoolStage, SchoolWalls, StatueBase, Trough } from './SchoolProps'
 import { SchoolKids } from './SchoolKids'
+import { RoomsInside, RoomsLive } from './SchoolRooms'
 import '../chars/specs.school'
 
 // 廢棄國小（DESIGN §26.1）：阿嬤小時候讀的「後壁厝國民學校」，廢校很多年了。
-// 西北是一排四間教室（最東邊那間可以進去，進去時屋頂和外牆淡出），東北是司令台與升旗台，
+// 西北是一排四間（圖書室、保健室、教師辦公室、六年甲班，都可以進去；進去時那一間的屋頂和南牆淡出），東北是司令台與升旗台，
 // 中間是沙地操場，南邊（鏡頭這一側）只放矮的遊樂器材。規則與座標在 src/world/sceneSchool.ts。
 
 const S = SCHOOL
@@ -37,24 +38,34 @@ export function SchoolScene() {
       <MergeStatic>
         <SchoolWalls />
         <Platform />
-        <LockedRooms />
+        <BlockStatic />
         <Corridor />
         <ClassroomInside />
+        <RoomsInside />
         <SchoolStage />
         <FlagPole />
         <StatueBase />
         <Playground />
         <Trough />
       </MergeStatic>
-      <Fader id="school_room">
+      {/* 鏡頭在東南邊：走進哪一間，東邊隔壁那一間也一起淡出（不然它的屋頂會擋住一半） */}
+      <Fader id={['school_room', 'school_office']}>
         <ClassroomShell />
       </Fader>
+      {ROOMS.map((r, i) => (
+        <Fader key={r.id} id={i > 0 ? [r.id, ROOMS[i - 1].id] : [r.id]}>
+          <RoomShell i={i} />
+        </Fader>
+      ))}
+      <RoomsLive outline={quality === 'high'} />
       <HopscotchChalk />
       <Bell />
       <FlameTree />
       <SchoolKids />
       <SchoolLights />
       <Sparkles count={24} scale={[3.4, 2.2, 3.6]} position={[(CLASSROOM.x0 + CLASSROOM.x1) / 2, 1.6, (CLASSROOM.z0 + CLASSROOM.z1) / 2]} size={2} speed={0.15} color="#fff4d8" opacity={0.45} />
+      {/* 圖書室的灰塵 */}
+      <Sparkles count={18} scale={[3.2, 2.0, 3.4]} position={[(LIBRARY.x0 + LIBRARY.x1) / 2, 1.5, (LIBRARY.z0 + LIBRARY.z1) / 2]} size={1.6} speed={0.1} color="#e8eeff" opacity={0.4} />
       <group visible={isNight}>
         <Sparkles count={40} scale={[34, 1.6, 18]} position={[0, 0.9, 1]} size={3.5} speed={0.3} color="#e8ff8a" opacity={0.9} noise={1.4} />
       </group>
@@ -148,7 +159,7 @@ function Greenery({ quality }: { quality: Quality }) {
 }
 
 // ---------------------------------------------------------------------------
-// 教室那一排：台基、鎖著的三間、走廊（平頂＋柱子）、可以進去的那間
+// 教室那一排：台基、四間的牆與屋頂、走廊（平頂＋柱子）；另外三間的室內在 SchoolRooms.tsx
 // ---------------------------------------------------------------------------
 
 function Platform() {
@@ -176,42 +187,61 @@ function roomWindows(x0: number, x1: number, skip?: { c: number; w: number }): O
   return skip ? out.filter((o) => Math.abs(o.c - skip.c) > (o.w + skip.w) / 2 + 0.1) : out
 }
 
-function LockedRooms() {
+/** 三間（圖書室、保健室、辦公室）的名字、門、淡出用的建築 id */
+const ROOMS = [
+  { id: 'school_lib', name: '圖書室', door: S.library.door, slogan: '說國語 講禮貌' },
+  { id: 'school_nurse', name: '保健室', door: S.nurse.door, slogan: '好學生 守秩序' },
+  { id: 'school_office', name: '教師辦公室', door: S.office.door, slogan: '' },
+]
+
+/** 不會淡出的部分：北牆（鏡頭對面）、最西邊的山牆下的西牆 */
+function BlockStatic() {
   const xs = [B.x0, ...S.splits]
   const x3 = S.splits[2]
-  // 鎖著的教室：南牆每間一扇門（關著）＋一扇窗；北牆兩扇窗
-  const southOpen = useMemo(() => {
-    const out: Opening[] = []
-    for (let i = 0; i < 3; i++) {
-      const a = xs[i]
-      const b = xs[i + 1]
-      out.push({ c: b - 0.75, w: 1.0, y0: 0, y1: 2.2 })
-      out.push({ c: a + 1.2, w: 1.45, y0: WIN_Y0, y1: WIN_Y1 })
-    }
-    return out
-  }, [])
   const northOpen = useMemo(() => [0, 1, 2].flatMap((i) => roomWindows(xs[i], xs[i + 1])), [])
   return (
     <group>
-      <Wall axis="x" from={B.x0} to={x3} at={B.z1} top={B.wallTop} base={B.floorY} thick={0.24} mat="plaster" openings={southOpen} />
       <Wall axis="x" from={B.x0} to={x3} at={B.z0} top={B.wallTop} base={B.floorY} thick={0.24} mat="plaster" openings={northOpen} />
       <Wall axis="z" from={B.z0} to={B.z1} at={B.x0} top={B.wallTop} base={B.floorY} thick={0.24} mat="plaster" />
-      {S.splits.map((x) => (
-        <Wall key={x} axis="z" from={B.z0} to={B.z1} at={x} top={B.wallTop} base={B.floorY} thick={0.2} mat="plaster" skirt={false} />
-      ))}
-      {/* 關著的拉門、窗框與破玻璃 */}
-      {southOpen.map((o, i) =>
-        o.y0 === 0 ? <Door key={i} x={o.c} z={B.z1} /> : <Window key={i} x={o.c} z={B.z1} w={o.w} seed={i} />,
-      )}
       {northOpen.map((o, i) => (
         <Window key={`n${i}`} x={o.c} z={B.z0} w={o.w} seed={i + 20} />
       ))}
-      <GableEnd x={B.x0} />
-      <GableRoof axis="x" ridge={RIDGE_Z} ridgeY={RIDGE_Y} from={B.x0 - 0.35} to={x3} edges={[B.z0 - 0.45, B.z1 + 0.4]} style="horseback" />
-      {/* 教室門口上方的班級牌 */}
-      {[0, 1, 2].map((i) => (
-        <ClassSign key={i} x={xs[i + 1] - 0.75} text={['一年甲班', '三年乙班', '五年甲班'][i]} />
-      ))}
+    </group>
+  )
+}
+
+/**
+ * 一間的南牆（門開著一半＋一扇窗）、東邊的隔間牆、班級牌、屋頂、門口那段走廊的平頂（最西邊那間多一面山牆）：走進去就淡出。
+ * 鏡頭從東南方低低地看過來，所以東邊的隔間牆也要淡掉，貼著東牆的東西才看得到。
+ */
+function RoomShell({ i }: { i: number }) {
+  const xs = [B.x0, ...S.splits]
+  const a = xs[i]
+  const b = xs[i + 1]
+  const room = ROOMS[i]
+  const south = useMemo<Opening[]>(
+    () => [
+      { c: room.door, w: S.door.w, y0: 0, y1: 2.2 },
+      { c: a + 1.2, w: 1.45, y0: WIN_Y0, y1: WIN_Y1 },
+    ],
+    [a, room.door],
+  )
+  return (
+    <group>
+      <Wall axis="x" from={a} to={b} at={B.z1} top={B.wallTop} base={B.floorY} thick={0.24} mat="plaster" openings={south} />
+      <Window x={a + 1.2} z={B.z1} w={1.45} seed={i * 3 + 1} />
+      {/* 拉門開著一半 */}
+      <mesh position={[room.door - S.door.w * 0.85, B.floorY + 1.1, B.z1 + 0.16]} castShadow>
+        <boxGeometry args={[S.door.w, 2.2, 0.05]} />
+        <meshStandardMaterial color="#6b4a30" roughness={0.85} />
+      </mesh>
+      {i === 0 && <GableEnd x={B.x0} />}
+      <GableRoof axis="x" ridge={RIDGE_Z} ridgeY={RIDGE_Y} from={i === 0 ? B.x0 - 0.35 : a} to={b} edges={[B.z0 - 0.45, B.z1 + 0.4]} style="horseback" />
+      <ClassSign x={room.door} text={room.name} />
+      <Canopy x0={i === 0 ? B.x0 - 0.3 : a} x1={b} />
+      {/* 走廊平頂前緣的標語（褪色） */}
+      {room.slogan && <Slogan x={(S.corridor.colXs[i] + S.corridor.colXs[i + 1]) / 2} text={room.slogan} />}
+      <Wall axis="z" from={B.z0} to={B.z1} at={b} top={B.wallTop} base={B.floorY} thick={0.2} mat="plaster" skirt={false} />
     </group>
   )
 }
@@ -242,6 +272,7 @@ function ClassroomShell() {
       <GableEnd x={B.x1} />
       <GableRoof axis="x" ridge={RIDGE_Z} ridgeY={RIDGE_Y} from={x3} to={B.x1 + 0.35} edges={[B.z0 - 0.45, B.z1 + 0.4]} style="horseback" />
       <ClassSign x={S.door.c} text="六年甲班" />
+      <Canopy x0={x3} x1={B.x1 + 0.3} />
     </group>
   )
 }
@@ -261,10 +292,11 @@ function GableEnd({ x }: { x: number }) {
 
 /** 教室門上面的班級牌（白底黑字） */
 function ClassSign({ x, text }: { x: number; text: string }) {
+  const wide = text.length > 4
   const tex = useMemo(
     () =>
       canvasTexture(
-        256,
+        wide ? 320 : 256,
         96,
         (ctx, w, h) => {
           ctx.fillStyle = '#ece6d6'
@@ -284,7 +316,7 @@ function ClassSign({ x, text }: { x: number; text: string }) {
   )
   return (
     <mesh position={[x, B.floorY + 2.55, B.z1 + 0.14]}>
-      <planeGeometry args={[0.8, 0.3]} />
+      <planeGeometry args={[wide ? 1.0 : 0.8, 0.3]} />
       <meshStandardMaterial map={tex} roughness={0.9} />
     </mesh>
   )
@@ -317,30 +349,25 @@ function Window({ x, z, w, seed, glass = true }: { x: number; z: number; w: numb
   )
 }
 
-/** 關著的木拉門（鎖著的教室） */
-function Door({ x, z }: { x: number; z: number }) {
+function Corridor() {
   return (
     <group>
-      <WBox mat="wood" size={[1.0, 2.2, 0.06]} position={[x, B.floorY + 1.1, z]} />
-      <WBox mat="darkWood" size={[0.7, 0.5, 0.07]} position={[x, B.floorY + 1.7, z]} />
+      {/* 平頂走廊（混凝土）在 Canopy：每一間門口那一段，走進那一間就跟著淡出（不然會擋住鏡頭） */}
+      {S.corridor.colXs.map((x) => (
+        <WBox key={x} mat="plaster" size={[0.24, CANOPY_Y - B.floorY, 0.24]} position={[x, (CANOPY_Y + B.floorY) / 2, S.corridor.colZ]} />
+      ))}
     </group>
   )
 }
 
-function Corridor() {
+/** 走廊的平頂（混凝土＋前緣的收邊）：x0～x1 那一段 */
+function Canopy({ x0, x1 }: { x0: number; x1: number }) {
   const z0 = B.z1
   const z1 = S.corridor.z1 + 0.2
   return (
     <group>
-      {/* 平頂走廊（混凝土），邊上有一道排水溝 */}
-      <WBox mat="yard" size={[B.x1 - B.x0 + 0.6, 0.16, z1 - z0]} position={[(B.x0 + B.x1) / 2, CANOPY_Y + 0.08, (z0 + z1) / 2]} />
-      <WBox mat="trim" size={[B.x1 - B.x0 + 0.6, 0.22, 0.08]} position={[(B.x0 + B.x1) / 2, CANOPY_Y + 0.06, z1]} />
-      {S.corridor.colXs.map((x) => (
-        <WBox key={x} mat="plaster" size={[0.24, CANOPY_Y - B.floorY, 0.24]} position={[x, (CANOPY_Y + B.floorY) / 2, S.corridor.colZ]} />
-      ))}
-      {/* 柱子上的標語（褪色） */}
-      <Slogan x={(S.corridor.colXs[1] + S.corridor.colXs[2]) / 2} text="好學生 守秩序" />
-      <Slogan x={(S.corridor.colXs[0] + S.corridor.colXs[1]) / 2} text="說國語 講禮貌" />
+      <WBox mat="yard" size={[x1 - x0, 0.16, z1 - z0]} position={[(x0 + x1) / 2, CANOPY_Y + 0.08, (z0 + z1) / 2]} />
+      <WBox mat="trim" size={[x1 - x0, 0.22, 0.08]} position={[(x0 + x1) / 2, CANOPY_Y + 0.06, z1]} />
     </group>
   )
 }
@@ -613,9 +640,14 @@ function SchoolLights() {
   const tubeMat = useRef<THREE.MeshStandardMaterial>(null)
   const gate = useRef<THREE.PointLight>(null)
   const room = useRef<THREE.PointLight>(null)
+  const tubeMesh = useRef<THREE.Mesh>(null)
   useFrame(({ clock }) => {
-    const l = lanternAt(useStore.getState().time)
+    const st = useStore.getState()
+    const l = lanternAt(st.time)
     const t = clock.elapsedTime
+    // 日光燈掛在保健室門口那段走廊的平頂下：平頂淡掉時燈也收起來
+    const f = st.faded
+    if (tubeMesh.current) tubeMesh.current.visible = !f.includes('school_nurse') && !f.includes('school_lib')
     // 日光燈：大多時候亮，偶爾閃兩下
     const blink = Math.sin(t * 0.7) > 0.93 ? (Math.sin(t * 60) > 0 ? 1 : 0.1) : 1
     const k = l * blink
@@ -627,7 +659,7 @@ function SchoolLights() {
   const tx = (S.corridor.colXs[1] + S.corridor.colXs[2]) / 2
   return (
     <group userData={{ noMerge: true }}>
-      <mesh position={[tx, CANOPY_Y - 0.06, (B.z1 + S.corridor.z1) / 2]}>
+      <mesh ref={tubeMesh} position={[tx, CANOPY_Y - 0.06, (B.z1 + S.corridor.z1) / 2]}>
         <boxGeometry args={[1.1, 0.05, 0.08]} />
         <meshStandardMaterial ref={tubeMat} color="#e8f4ff" emissive="#d8ecff" emissiveIntensity={0.2} toneMapped={false} />
       </mesh>
@@ -643,7 +675,7 @@ function SchoolLights() {
 // 淡出：跟三合院的 Fader 一樣（子樹換成自己的材質複本，才能單獨調透明度）
 // ---------------------------------------------------------------------------
 
-function Fader({ id, children }: { id: string; children: ReactNode }) {
+function Fader({ id, children }: { id: string[]; children: ReactNode }) {
   const group = useRef<THREE.Group>(null)
   const clones = useRef(new Map<THREE.Material, THREE.Material>())
   const seen = useRef(new WeakSet<THREE.Object3D>())
@@ -667,7 +699,8 @@ function Fader({ id, children }: { id: string; children: ReactNode }) {
         }
         m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material)
       })
-    const target = useStore.getState().faded.split(',').includes(id) ? 0 : 1
+    const faded = useStore.getState().faded.split(',')
+    const target = id.some((x) => faded.includes(x)) ? 0 : 1
     const prev = opacity.current
     opacity.current += (target - opacity.current) * 0.15
     if (Math.abs(opacity.current - target) < 0.01) opacity.current = target

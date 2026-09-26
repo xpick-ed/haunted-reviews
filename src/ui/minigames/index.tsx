@@ -22,6 +22,8 @@ import Crab from './crab'
 import Fuse from './fuse'
 import Drinking from './drinking'
 import Mahjong from './mahjong'
+import Herbs from './herbs'
+import Sew from './sew'
 
 // 小遊戲登記表：id → 元件。新增小遊戲：在這裡加一行、在 types.ts 加 id。
 
@@ -48,6 +50,8 @@ export const MINIGAMES: Record<MinigameId, ComponentType<MinigameProps<any, any>
   fuse: Fuse,
   drinking: Drinking,
   mahjong: Mahjong,
+  herbs: Herbs,
+  sew: Sew,
 }
 
 /** HUD 上的覆蓋層 */

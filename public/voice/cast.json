@@ -1057,5 +1057,180 @@
    "wave": "triangle",
    "jitter": 0.1
   }
+ },
+ {
+  "id": "nurse",
+  "name": "護士阿姨",
+  "desc": "廢棄國小保健室的護士鬼，溫柔，記得每個跌倒過的小孩。",
+  "ghost": true,
+  "color": "#e8f0f4",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-8%",
+   "pitch": "-4Hz",
+   "fx": [
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 380,
+   "wave": "sine",
+   "jitter": 0.08
+  }
+ },
+ {
+  "id": "acaibo",
+  "name": "阿財伯",
+  "desc": "村子透天厝的阿財伯，退休的辦桌總鋪師，看得到鬼，晚上都在客廳看八點檔。",
+  "ghost": false,
+  "color": "#ff9a52",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiNeural",
+   "rate": "-4%",
+   "pitch": "-26Hz",
+   "fx": [
+    "elder",
+    "hearty"
+   ]
+  },
+  "blip": {
+   "freq": 170,
+   "wave": "sawtooth",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "akun",
+  "name": "阿坤師",
+  "desc": "新美理髮廳的老師傅，七十五歲，累累的、講話含在嘴裡。",
+  "ghost": false,
+  "color": "#9ec8e8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-16%",
+   "pitch": "-18Hz",
+   "fx": [
+    "elder"
+   ]
+  },
+  "blip": {
+   "freq": 200,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "ashui",
+  "name": "阿水師",
+  "desc": "阿坤師的阿爸，理髮廳的鬼師傅，豪爽，半夜還在幫鬼客人刮鬍子。",
+  "ghost": true,
+  "color": "#b8e0f0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-6%",
+   "pitch": "-20Hz",
+   "fx": [
+    "elder",
+    "hearty",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 180,
+   "wave": "sawtooth",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "herbalist",
+  "name": "和春伯",
+  "desc": "和春中藥行的老闆，快九十歲，慢慢的、一半在打瞌睡。",
+  "ghost": false,
+  "color": "#c8a878",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-28%",
+   "pitch": "-24Hz",
+   "fx": [
+    "elder",
+    "raspy"
+   ]
+  },
+  "blip": {
+   "freq": 170,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "os_ghost_student",
+  "name": "冰果室的學生",
+  "desc": "1960 年代的高中生鬼，每天晚上坐在冰果室等一瓶彈珠汽水。",
+  "ghost": true,
+  "color": "#a8d8f0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "+4%",
+   "pitch": "+8Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "os_ghost_lady",
+  "name": "冰果室的小姐",
+  "desc": "從 1966 年等未婚夫等到現在的小姐，坐在冰果室最裡面那桌。",
+  "ghost": true,
+  "color": "#f0c8d8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-4%",
+   "pitch": "-4Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 420,
+   "wave": "sine",
+   "jitter": 0.08
+  }
+ },
+ {
+  "id": "jinxiu",
+  "name": "錦繡姨",
+  "desc": "錦繡布莊的老闆娘，鬼。半夜還坐在裁縫車前，想把孫女的旗袍做完。",
+  "ghost": true,
+  "color": "#d8a0a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-10%",
+   "pitch": "-22Hz",
+   "fx": [
+    "elder",
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
  }
 ]

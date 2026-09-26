@@ -303,6 +303,18 @@ export function MonthSummary() {
           </div>
           <p className="muted">溫馨名聲高，會來更多家庭和老人；靈異名聲高，會來更多 YouTuber。</p>
         </div>
+        {m.deadline && (
+          <div className="event-box festival">
+            <b>🏠 小翰的決定</b>
+            <span>第 12 晚的月底前：存款 30,000、小翰的心 60 以上，他就不賣三合院。</span>
+          </div>
+        )}
+        {(m.debtMonths ?? 0) >= 1 && (
+          <div className="event-box">
+            <b>⚠ 存款是負的</b>
+            <span>{m.debtMonths === 1 ? '下個月底再負債，小翰就撐不下去了。' : '連兩個月負債了……'}</span>
+          </div>
+        )}
         {han && (
           <div className="han-line">
             <Face id="xiaohan" />

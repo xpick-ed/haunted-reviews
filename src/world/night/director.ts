@@ -11,6 +11,7 @@ import { GUESTS } from './guests'
 import { MONTHLY_COST, NIGHTS_PER_MONTH, SKILLS, UPGRADES, planNight, type NightPlan, type UpgradeDef } from './plan'
 import { NightSim, type DecorBonus, type SimEvent, type SimPlugin } from './sim'
 import { rateGuest } from './rating'
+import { STORY, endingAtDawn, endingAtMonthEnd, type EndingId } from '../story'
 import { createIncidents, incidentState, INCIDENT_EVENTS } from './incidents'
 import { createEncounters, ENCOUNTER_EVENTS } from './encounters'
 import { RECIPES, START_PANTRY, canCook, type Fortune, type Ingredient, type RecipeId, type RelicId } from './items'
@@ -59,6 +60,12 @@ export interface Meta {
   bonds: Record<string, number>
   /** 玩過的 1958 關卡（src/world/past.ts） */
   pastDone: string[]
+  /** 今天的事（src/world/requests.ts）：每天傍晚重新產生 */
+  requests: { id: string; done: boolean }[]
+  /** 主線：已經發生過的劇情（src/world/story.ts） */
+  story: string[]
+  /** 連續幾個月底存款是負的 */
+  debtMonths: number
 }
 
 /** 一件擺好的家具擺飾 */
@@ -130,6 +137,10 @@ export interface MonthReport {
   pressure: number
   offers: UpgradeDef[]
   line: string
+  /** 這個月底小翰說出了期限（主線） */
+  deadline?: boolean
+  /** 連續幾個月負債 */
+  debtMonths?: number
 }
 
 export interface NightStats {
@@ -192,6 +203,8 @@ export interface NightSlice {
   vision: boolean
   /** 念力模式：用手指拖房間裡的東西 */
   tk: boolean
+  /** 正在看的結局（src/ui/EndingScreen.tsx） */
+  ending: EndingId | null
   /** 躲在哪個躲藏點 */
   hidden: string | null
   /** 端著的宵夜（煮好的食譜與品質） */
@@ -205,6 +218,8 @@ export interface NightSlice {
   closeMonth: (upgrade: string | null) => void
   learnSkill: (id: string) => void
   setObject: (id: string, on: boolean) => void
+  /** 結局看完：繼續經營（無盡模式）或重新開始 */
+  finishEnding: (choice: 'continue' | 'restart') => void
   exitPossess: () => void
   exitHide: () => void
   meow: () => void
@@ -245,6 +260,9 @@ export const START_META = (): Meta => ({
   decor: [],
   bonds: {},
   pastDone: [],
+  requests: [],
+  story: [],
+  debtMonths: 0,
 })
 
 /** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
@@ -366,6 +384,7 @@ interface HostState {
   enterDream: (guest: GuestId) => void
   save: () => void
   resetNight: () => void
+  newGame: () => void
 }
 
 let lastBark = 0
@@ -705,6 +724,7 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     dish: null,
     vision: false,
     tk: false,
+    ending: null,
 
     setObject: (id, on) => set((s) => ({ objects: { ...s.objects, [id]: { on, at: performance.now() } } })),
 
@@ -1034,13 +1054,23 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         const month = Math.floor((s.meta.night - 1) / NIGHTS_PER_MONTH)
         const money = s.meta.money - MONTHLY_COST
         const offers = UPGRADES.filter((u) => !s.meta.upgrades.includes(u.id))
-        const lineId = pick(money < 5000 ? HAN_BARKS.broke : s.meta.heart >= 60 ? HAN_BARKS.good : HAN_BARKS.monthEnd) ?? ''
+        // 主線（DESIGN §28.3）：第 8 晚月底小翰說出期限；連續負債記下來
+        const deadline = s.meta.night === STORY.deadline.night && !s.meta.story.includes('deadline')
+        const lineId = deadline ? 'story.deadline' : (pick(money < 5000 ? HAN_BARKS.broke : s.meta.heart >= 60 ? HAN_BARKS.good : HAN_BARKS.monthEnd) ?? '')
+        const debtMonths = money < 0 ? s.meta.debtMonths + 1 : 0
+        const story = deadline ? [...s.meta.story, 'deadline'] : s.meta.story
         set({
           summary: null,
-          month: { month, income: s.meta.monthIncome, cost: MONTHLY_COST, money, warm: s.meta.warm, spooky: s.meta.spooky, heart: s.meta.heart, pressure: s.meta.pressure, offers, line: lineId },
-          meta: { ...s.meta, money, monthIncome: 0 },
+          month: { month, income: s.meta.monthIncome, cost: MONTHLY_COST, money, warm: s.meta.warm, spooky: s.meta.spooky, heart: s.meta.heart, pressure: s.meta.pressure, offers, line: lineId, deadline, debtMonths },
+          meta: { ...s.meta, money, monthIncome: 0, debtMonths, story },
         })
         if (lineId) window.setTimeout(() => get().bark(lineId), 600)
+        return
+      }
+      // 小翰的心歸零：他撐不下去了
+      const end = endingAtDawn(s.meta)
+      if (end) {
+        set({ summary: null, ending: end } as Partial<NightSlice>)
         return
       }
       set({ summary: null, meta: { ...s.meta, night: s.meta.night + 1 } })
@@ -1055,8 +1085,24 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         meta.money -= u.cost
         meta.upgrades = [...meta.upgrades, u.id]
       }
+      // 連兩個月負債、或第 12 晚小翰做決定 → 結局
+      const end = endingAtMonthEnd({ ...meta, night: s.meta.night })
+      if (end) {
+        set({ month: null, meta, ending: end } as Partial<NightSlice>)
+        return
+      }
       set({ month: null, meta })
       get().resetNight()
+    },
+
+    finishEnding: (choice) => {
+      const s = get()
+      const end = s.ending
+      if (!end) return
+      const meta = { ...s.meta, story: [...s.meta.story, `ended_${end}`] }
+      set({ ending: null, meta } as Partial<NightSlice>)
+      if (choice === 'restart') get().newGame()
+      else get().resetNight()
     },
 
     learnSkill: (id) => {

@@ -32,6 +32,7 @@ import { HomeStationPath } from './StationPath'
 import { DecorLayer } from './Decor'
 import { IncidentsLayer } from './Incidents'
 import { EncounterLayer } from './Encounters'
+import { StoryScene } from './StoryScene'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { VisionLayer } from './Vision'
 import { ChibiNpc } from '../chars/Chibi'
@@ -141,6 +142,7 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
       <DecorLayer />
       <IncidentsLayer />
       <EncounterLayer />
+      <StoryScene />
       {phase === 'dusk' && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )

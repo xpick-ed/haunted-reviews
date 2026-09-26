@@ -1874,3 +1874,67 @@ body,
 .event-box.festival b {
   color: var(--gold-2);
 }
+
+/* ---------- 今天的事 ---------- */
+.today {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 5px 10px 7px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: rise 0.3s ease-out;
+}
+.today-head {
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--gold-2);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.today ul {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.today li {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.today li.done {
+  color: var(--muted);
+}
+.today li.done .tick {
+  color: #6fe07c;
+}
+.today .tick {
+  width: 16px;
+  flex-shrink: 0;
+}
+.today-text small {
+  display: block;
+  font-size: 10.5px;
+  color: var(--ghost);
+  opacity: 0.8;
+}
+@media (max-width: 560px) {
+  .today li {
+    font-size: 11px;
+  }
+}
+.objective-goal {
+  margin-top: 5px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(242, 180, 91, 0.35);
+  font-size: 11.5px;
+  color: #ffd9a0;
+  font-variant-numeric: tabular-nums;
+}

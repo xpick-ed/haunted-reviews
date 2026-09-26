@@ -18,7 +18,9 @@ import { PAST_HOTSPOTS } from './past'
 import { BOND_HOTSPOTS } from './bonds'
 import { DECOR_HOTSPOTS } from './decor'
 import { INCIDENT_HOTSPOTS } from './night/incidents'
+import { STORY_HOTSPOTS } from './storyBeats'
 import { festivalOf } from './night/plan'
+import { requestById } from './requests'
 import { night, yinMax } from './night/director'
 import { NEED_INFO } from './night/guests'
 
@@ -119,6 +121,24 @@ const BASE_HOTSPOTS: Hotspot[] = [
   },
 
   {
+    // 小翰留在茶桌上的紙條（DESIGN §28.2）
+    id: 'han_note',
+    scene: 'home',
+    x: TEA_SEAT.x - 0.9,
+    z: TEA_SEAT.z + 0.6,
+    r: 1.1,
+    iconY: 1.3,
+    label: (s) => {
+      const r = s.meta.requests.map((x) => requestById(x.id)).find((d) => d?.note)
+      if (!r || s.phase !== 'dusk') return null
+      return s.meta.requests.find((x) => x.id === r.id)?.done ? '小翰的紙條（做好了）' : '看小翰留的紙條'
+    },
+    run: (s) => {
+      const r = s.meta.requests.map((x) => requestById(x.id)).find((d) => d?.note)
+      if (r) s.say(`小翰的紙條：「${r.text}」`)
+    },
+  },
+  {
     // 地基主（陰陽眼才看得到）：提示今晚接下來的需求，每晚給一次陰氣
     id: 'dijizhu',
     scene: 'home',
@@ -216,6 +236,7 @@ export const HOTSPOTS: Hotspot[] = [
   ...BOND_HOTSPOTS,
   ...DECOR_HOTSPOTS,
   ...INCIDENT_HOTSPOTS,
+  ...STORY_HOTSPOTS,
 ]
 
 /** 範圍內所有能用的熱點（近的排前面）：同一個地方有好幾件事可以做時（跟 NPC 說話、送禮……），按 Q 切換 */

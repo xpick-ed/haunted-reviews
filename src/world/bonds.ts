@@ -196,7 +196,8 @@ export function giveGift(api: Api, npc: BondId, gift: GiftId): { kind: GiftKind;
   meta.bonds = { ...meta.bonds, [npc]: after }
   // 送小翰他喜歡的東西：小翰的心也會暖一點
   if (npc === 'xiaohan' && kind === 'like') meta.heart = Math.min(100, meta.heart + 2)
-  const flags = { ...s.flags, [giftedFlag(npc)]: true, [knowFlag(npc, gift)]: true }
+  // gave_<npc>_<item>_today：今天的委託（world/requests.ts）看這個判斷有沒有送到
+  const flags = { ...s.flags, [giftedFlag(npc)]: true, [knowFlag(npc, gift)]: true, [`gave_${npc}_${gift}_today`]: true }
   api.setState({ meta, flags })
   const line = kind === 'like' ? pick([`bond.${npc}.like.1`, `bond.${npc}.like.2`]) : `bond.${npc}.${kind}`
   api.getState().bark(line)

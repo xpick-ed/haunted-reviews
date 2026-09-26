@@ -81,7 +81,7 @@ export function WorldController() {
     const s = useStore.getState()
     const dt = Math.min(rawDt, 0.1) * s.timeScale
     const scene = SCENES[s.scene]
-    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy || !!s.minigame || !!s.hidden || giftUI.npc !== null
+    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy || !!s.minigame || !!s.hidden || giftUI.npc !== null || !!s.ending
     const move = input.read()
     // 躲著的時候一推搖桿就出來
     if (s.hidden && !s.dialogue && !s.minigame && Math.hypot(move.x, move.y) > 0.5) s.exitHide()

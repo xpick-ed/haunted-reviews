@@ -21,7 +21,10 @@ import { IncidentHud } from './IncidentHud'
 import { EncounterPanel } from './EncounterPanel'
 import { GiftPanel } from './GiftPanel'
 import { PastHud } from './PastHud'
+import { EndingScreen } from './EndingScreen'
+import { GOAL, goalShown } from '../world/story'
 import { MEMORIES } from '../world/memories'
+import { requestById } from '../world/requests'
 
 const PHASE_NAME = { dusk: '傍晚', night: '深夜', dawn: '清晨' } as const
 
@@ -42,7 +45,8 @@ export function Hud() {
   const inDream = useStore((s) => s.scene === 'dream')
   // 回到 1958：有自己的目標（PastHud），現在的目標、住客、陰陽眼都收起來
   const inPast = useStore((s) => s.scene === 'past')
-  const modal = !!summary || !!month || intro || !!panel || minigame
+  const ending = useStore((s) => !!s.ending)
+  const modal = !!summary || !!month || intro || !!panel || minigame || ending
   return (
     <div className="hud">
       <VisionOverlay />
@@ -52,6 +56,7 @@ export function Hud() {
       {!modal && !inDream && !inPast && (
         <div className="left-col">
           <Objective />
+          <TodayList />
           <GuestsPanel />
         </div>
       )}
@@ -73,6 +78,7 @@ export function Hud() {
       <IncidentHud />
       <EncounterPanel />
       <GiftPanel />
+      <EndingScreen />
       {summary && <NightSummaryCard />}
       {month && <MonthSummary />}
       <MinigameHost />
@@ -104,6 +110,11 @@ function Objective() {
       </div>
       <div className="objective-main">{o.main}</div>
       {o.extra && <div className="objective-extra">{o.extra}</div>}
+      {goalShown(s.meta) && !s.meta.story.some((x) => x.startsWith('ended_')) && (
+        <div className="objective-goal">
+          主線：第 12 晚前 存款 ${s.meta.money.toLocaleString()} / {GOAL.money.toLocaleString()}・小翰的心 {s.meta.heart} / {GOAL.heart}
+        </div>
+      )}
       {s.phase === 'night' && challenges.length > 0 && (
         <ul className="challenges">
           {challenges.map((c) => (
@@ -320,6 +331,39 @@ function ActionButton() {
 }
 
 const HOLD_HINT = new Set(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver', 'retrieve'])
+
+/** 今天的事（DESIGN §28.2）：小翰的紙條＋鄰居的委託 */
+function TodayList() {
+  const reqs = useStore((s) => s.meta.requests)
+  const phase = useStore((s) => s.phase)
+  const [open, setOpen] = useState(() => innerHeight > 620)
+  if (!reqs.length || phase === 'dawn') return null
+  const left = reqs.filter((r) => !r.done).length
+  return (
+    <div className="today">
+      <button className="today-head" onClick={() => setOpen(!open)}>
+        今天的事 <span className="muted">{left ? `還有 ${left} 件` : '都做完了'}</span> {open ? '▾' : '▸'}
+      </button>
+      {open && (
+        <ul>
+          {reqs.map((r) => {
+            const d = requestById(r.id)
+            if (!d) return null
+            return (
+              <li key={r.id} className={r.done ? 'done' : ''}>
+                <span className="tick">{r.done ? '✓' : d.note ? '📝' : '○'}</span>
+                <span className="today-text">
+                  <b>{d.who}</b>：{d.text}
+                  {!r.done && <small>{d.where}</small>}
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </div>
+  )
+}
 
 /** 陰陽眼、念力、回憶相簿 */
 function PowerButtons() {

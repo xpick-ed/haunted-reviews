@@ -14,6 +14,7 @@ import type { MinigameId } from './ui/minigames/types'
 import { START_META, createNightSlice, night, planFor, preloadNightVoices, yinMax, type NightSlice, type PromptOpt } from './world/night/director'
 import { HAN_BARKS } from './data/barks'
 import { MEMORIES, MEMORY_BONUS_AT } from './world/memories'
+import { requestById, todayRequests } from './world/requests'
 import { encounterState } from './world/night/encounters'
 import { giftUI } from './world/bonds'
 
@@ -34,7 +35,12 @@ export interface Prompt {
 }
 
 const HOURS_PER_SEC = 1 / 37.5 // 深夜 300 秒走完 8 小時（DESIGN §2.2）
-const DUSK_TIME = 18.6
+/** 傍晚從 17:30 走到 22:00（DESIGN §28.1）：純走路大約 6 分鐘，做事另外花時間 */
+const DUSK_TIME = 17.5
+const DUSK_END = 22
+const DUSK_HOURS_PER_SEC = 1 / 80
+/** 傍晚做事花的時間（分鐘） */
+export const DUSK_COST = { travel: 15, minigame: 20, dialogue: 5, chore: 10 }
 
 export interface GameState extends NightSlice {
   // 流程
@@ -100,6 +106,8 @@ export interface GameState extends NightSlice {
   incense: (where: 'home' | 'temple') => void
   sit: () => void
   spendYin: (v: number) => void
+  /** 傍晚做事花的時間（分鐘）：時間到 22:00 就天黑、客人到了 */
+  spendTime: (minutes: number) => void
   bark: (lineId: string, quiet?: boolean) => void
   say: (text: string) => void
   setWorld: (patch: { room?: string | null; building?: string | null; faded?: string; prompt?: Prompt | null }) => void
@@ -128,9 +136,29 @@ export interface GameState extends NightSlice {
 
 let subId = 0
 let minigameDone: ((result: unknown) => void) | null = null
+/** 上一個小遊戲結束的時間：小遊戲後面跟著設的旗標不要再多扣一次時間 */
+let lastMinigameEnd = 0
 let minigameKey = 0
 const later = (ms: number, fn: () => void) => window.setTimeout(fn, ms)
 let dialogueEnd: (() => void) | null = null
+
+/** 天黑了、客人到了：不管阿嬤在哪裡，都回到家裡的竹椅旁開始深夜 */
+function beginNight() {
+  const st = useStore.getState()
+  if (st.phase !== 'dusk' || st.transitioning) return
+  useStore.setState({ transitioning: true, prompt: null, panel: null })
+  later(900, () => useStore.setState({ blackout: true }))
+  later(1700, () => {
+    placePlayer(TEA_SEAT.x + 0.9, TEA_SEAT.z + 0.4)
+    useStore.setState({ scene: 'home', room: null, building: null, faded: '', phase: 'night', time: 22, running: true, isNight: true })
+    audio.setNight(true)
+    useStore.getState().nightBegin()
+  })
+  later(2500, () => {
+    useStore.setState({ blackout: false, transitioning: false })
+    if (useStore.getState().meta.night === 1) useStore.getState().bark('core.night')
+  })
+}
 
 /** 沒有語音檔時，至少讓三個主角用瀏覽器語音唸 */
 const LEGACY_SPEAKER: Record<string, '阿嬤' | '小美' | '小翰'> = { grandma: '阿嬤', xiaomei: '小美', xiaohan: '小翰' }
@@ -211,7 +239,7 @@ export const useStore = create<GameState>()((set, get) => ({
       isNight: false,
       yin: 60,
       flags: {},
-      meta: START_META(),
+      meta: { ...START_META(), requests: todayRequests(1, planFor(START_META()), START_META()) },
       plan: planFor(START_META()),
       objects: {},
       summary: null,
@@ -252,6 +280,8 @@ export const useStore = create<GameState>()((set, get) => ({
       intro: true,
       view: [],
     })
+    // 舊存檔沒有「今天的事」：補產生
+    if (!get().meta.requests.length) set((x) => ({ meta: { ...x.meta, requests: todayRequests(x.meta.night, x.plan, x.meta) } }))
     preloadNightVoices(get().plan, get().meta)
   },
 
@@ -273,6 +303,12 @@ export const useStore = create<GameState>()((set, get) => ({
     if (s.horror > 0) fx.horror = Math.max(0, s.horror - rawDt / 0.9)
     if (s.warm > 0) fx.warm = Math.max(0, s.warm - rawDt / 1.6)
     if (Object.keys(fx).length) set(fx)
+    // 傍晚：時間也在走（看對話、開面板、玩小遊戲時停），天慢慢暗下來
+    if (s.phase === 'dusk') {
+      if (!s.started || s.dialogue || s.transitioning || s.intro || s.summary || s.month || s.minigame || s.scene === 'past' || s.scene === 'dream') return
+      get().spendTime(rawDt * DUSK_HOURS_PER_SEC * 60)
+      return
+    }
     if (!s.running || s.dialogue || s.transitioning) return
 
     const time = s.time + dt * HOURS_PER_SEC
@@ -345,6 +381,7 @@ export const useStore = create<GameState>()((set, get) => ({
     if (next >= d.steps.length) {
       voice.stop()
       set({ dialogue: null, typing: false })
+      get().spendTime(DUSK_COST.dialogue)
       const end = dialogueEnd
       dialogueEnd = null
       end?.()
@@ -370,6 +407,8 @@ export const useStore = create<GameState>()((set, get) => ({
   goto: (to, spawn) => {
     const s = get()
     if (s.transitioning) return
+    // 傍晚走到別的地方要花時間
+    if (s.phase === 'dusk') later(1000, () => get().spendTime(DUSK_COST.travel))
     set({ transitioning: true, blackout: true, prompt: null })
     sfx.play('whoosh', { volume: 0.6 })
     later(450, () => {
@@ -416,18 +455,7 @@ export const useStore = create<GameState>()((set, get) => ({
         return
       }
       get().bark('gm.wait')
-      set({ transitioning: true })
-      later(900, () => set({ blackout: true }))
-      later(1700, () => {
-        placePlayer(TEA_SEAT.x + 0.9, TEA_SEAT.z + 0.4)
-        set({ phase: 'night', time: 22, running: true, isNight: true })
-        audio.setNight(true)
-        get().nightBegin()
-      })
-      later(2500, () => {
-        set({ blackout: false, transitioning: false })
-        if (get().meta.night === 1) get().bark('core.night')
-      })
+      beginNight()
       return
     }
     if (s.phase === 'night' && s.time < 29) {
@@ -453,6 +481,25 @@ export const useStore = create<GameState>()((set, get) => ({
       })
       later(2100, () => set({ blackout: false, transitioning: false }))
     }
+  },
+
+  spendTime: (minutes) => {
+    const s = get()
+    if (s.phase !== 'dusk' || !s.started) return
+    const time = Math.min(DUSK_END, s.time + minutes / 60)
+    const patch: Partial<GameState> = { time }
+    const isNight = time > 20
+    if (isNight !== s.isNight) {
+      patch.isNight = isNight
+      audio.setNight(isNight)
+    }
+    set(patch)
+    if (time >= 21.5 && !s.flags.dusk_warned_today) {
+      set({ flags: { ...get().flags, dusk_warned_today: true } })
+      get().say('天快黑了……客人再半個鐘頭就到，阿嬤該回家了。')
+    }
+    // 22:00 客人到了：不管在哪裡都回家
+    if (time >= DUSK_END && !s.transitioning) beginNight()
   },
 
   spendYin: (v) => set((s) => ({ yin: Math.max(0, s.yin - v * (s.meta.skills.includes('swift') ? 0.5 : 1)) })),
@@ -524,7 +571,7 @@ export const useStore = create<GameState>()((set, get) => ({
       view: [],
       intro: true,
       plan: planFor(s.meta),
-      meta: { ...s.meta, jiaobei: 0 },
+      meta: { ...s.meta, jiaobei: 0, requests: todayRequests(s.meta.night, planFor(s.meta), s.meta) },
       hold: null,
       possess: null,
       hidden: null,
@@ -561,6 +608,8 @@ export const useStore = create<GameState>()((set, get) => ({
     const done = minigameDone
     minigameDone = null
     set({ minigame: null })
+    get().spendTime(DUSK_COST.minigame)
+    lastMinigameEnd = performance.now()
     done?.(result)
   },
 
@@ -656,6 +705,54 @@ function runStep(id: string, i: number) {
   audio.stopSpeech()
   if (s.voice) speakLine(step.line)
 }
+
+// 傍晚做了一件事（DESIGN §28.1）：新的「今天做過了」旗標、或家裡的東西變多（採收、買東西）→ 花 10 分鐘。
+// 系統自己設的旗標（提醒、到訪紀錄）不算；剛玩完小遊戲的也不算（小遊戲已經算過）。
+const FREE_FLAGS = /^(dusk_warned|.*_visit|handream.*|dijizhu_bless)_today$/
+useStore.subscribe((s, prev) => {
+  if (s.phase !== 'dusk' || !s.started || s.transitioning || performance.now() - lastMinigameEnd < 2500) return
+  let chore = false
+  if (s.flags !== prev.flags) {
+    for (const k of Object.keys(s.flags)) if (s.flags[k] && !prev.flags[k] && k.endsWith('_today') && !FREE_FLAGS.test(k)) chore = true
+  }
+  if (!chore && s.meta.pantry !== prev.meta.pantry) {
+    for (const k of Object.keys(s.meta.pantry) as (keyof typeof s.meta.pantry)[]) if ((s.meta.pantry[k] ?? 0) > (prev.meta.pantry[k] ?? 0)) chore = true
+  }
+  if (!chore) return
+  // 同一個地方 20 秒內連續做的事（例如在柑仔店一次買好幾樣）只算一件
+  const now = performance.now()
+  if (lastChore.scene === s.scene && now - lastChore.t < 20000) return
+  lastChore.t = now
+  lastChore.scene = s.scene
+  queueMicrotask(() => useStore.getState().spendTime(DUSK_COST.chore))
+})
+const lastChore = { t: -1e9, scene: '' }
+
+// 今天的事（DESIGN §28.2）：做到了就打勾、給獎勵
+useStore.subscribe((s) => {
+  if (!s.started || !s.meta.requests.length) return
+  const todo = s.meta.requests.filter((r) => !r.done && requestById(r.id)?.done(s))
+  if (!todo.length) return
+  queueMicrotask(() => {
+    const st = useStore.getState()
+    let meta = { ...st.meta, requests: st.meta.requests.map((r) => (todo.some((t) => t.id === r.id) ? { ...r, done: true } : r)) }
+    for (const t of todo) {
+      const def = requestById(t.id)!
+      const w = def.reward
+      meta = {
+        ...meta,
+        heart: Math.min(100, meta.heart + (w.heart ?? 0)),
+        merit: meta.merit + (w.merit ?? 0),
+        money: meta.money + (w.money ?? 0),
+        bonds: w.bond ? { ...meta.bonds, [w.bond[0]]: Math.min(100, (meta.bonds[w.bond[0]] ?? 0) + w.bond[1]) } : meta.bonds,
+      }
+      const parts = [w.heart && `小翰的心 +${w.heart}`, w.merit && `功德 +${w.merit}`, w.money && `$${w.money}`, w.bond && `${def.who}的好感 ↑`].filter(Boolean)
+      st.say(`✓ ${def.who}的事做好了（${parts.join('、')}）`)
+    }
+    useStore.setState({ meta })
+    sfx.play('ui_confirm', { volume: 0.5 })
+  })
+})
 
 // 開發時把 store 掛到 window，方便在 console 或自動化測試裡直接操作
 if (import.meta.env.DEV) {

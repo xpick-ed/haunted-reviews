@@ -72,8 +72,9 @@ src/
   store.ts          遊戲狀態（流程、時間、陰氣、對話、互動），深夜的部分接 world/night/director.ts
   audio.ts          合成音效、環境音、語音
   audio/            語音（voice.ts）、音效（sfx.ts）
-  chars/            3D Q 版角色（長相、臉、姿勢、卡通材質）、貓阿咪（Cat.tsx）
-  ui/minigames/     小遊戲：煮宵夜、打蚊子、擲筊、撈金魚、射氣球（index.tsx 登記）
+  chars/            3D Q 版角色（長相、臉、姿勢、卡通材質）、阿咪（Cat）、小黑（Dog）、壁虎（Gecko）
+  ui/minigames/     小遊戲（index.tsx 登記）：煮宵夜、打蚊子、擲筊、撈金魚、射氣球、釣溪哥、放水燈、
+                    歌仔戲鑼鼓、包粽子、跳房子、夾娃娃機、彈珠台、碟仙
   art/              對話頭像與 SVG 插畫、客家花布
   data/             台詞（*.lines.json）、角色聲線（cast.json）
   world/            遊戲規則：輸入、碰撞、玩家移動、場景定義（scenes.ts ＋ scene<Name>.ts）、熱點、對話、存檔、夢境（dream.ts）
@@ -94,6 +95,12 @@ src/
     Garden.tsx      後院菜園＋雞舍（GardenChickens.tsx）
     Market.tsx      鬼夜市（MarketStalls.tsx 攤位、MarketFx.tsx 燈籠與冥紙）
     Dream.tsx       夢境（DreamProps.tsx）
+    River.tsx       溪邊＋螢火蟲（RiverFx、RiverPlants；村子那頭的小路在 RiverPath.tsx）
+    School.tsx      廢棄國小（SchoolProps、SchoolKids；鬼抓人／躲貓貓的規則在 world/tag.ts）
+    Hill.tsx        山上墓仔埔（HillProps；廟後的山路在 HillPath.tsx）
+    Stage.tsx       廟埕野台戲（StageShow、StageTex；掛在 Temple.tsx 裡，節日才開演）
+    Vision.tsx      陰陽眼才看得到的東西：回憶碎片、腳印、地基主
+    Telekinesis.tsx 念力：拖被子、滾球、推窗、撿東西（world/night/tk.ts）
     Temple.tsx      土地公廟場景
     World.tsx       每幀的遊戲邏輯（移動、房間判定、淡出、熱點、出口）
     Markers.tsx     熱點光點、出口路牌

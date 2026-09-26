@@ -8,6 +8,10 @@
 import { SCHOOL_SCENE, HIDE_SPOTS, SCHOOL, CLASSROOM } from '../src/world/sceneSchool'
 import { newPlay, configurePlay, startTag, startHide, stepPlay, type PlayRT } from '../src/world/tag'
 import { resolve } from '../src/world/collision'
+import { seeded } from '../src/world/rng'
+
+// 機器人自己的亂數也用固定種子：測試每次結果一樣（之前用 Math.random，偶爾會失敗）
+const botRnd = seeded(20260926)
 
 const DT = 1 / 30
 const C = SCHOOL_SCENE.colliders
@@ -99,7 +103,7 @@ function play(kind: 'tag' | 'hide', speed: number, seed: number) {
         resolve(gm, 0.3, C)
         stall = Math.hypot(gm.x - ox, gm.z - oz) < speed * DT * 0.3 ? stall + DT : 0
         if (stall > 0.4 && detour <= 0) {
-          const sgn = Math.random() < 0.5 ? 1 : -1
+          const sgn = botRnd() < 0.5 ? 1 : -1
           side = [(-dz / l) * 2 * sgn, (dx / l) * 2 * sgn]
           detour = 0.8
           stall = 0

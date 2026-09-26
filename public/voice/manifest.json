@@ -566,6 +566,160 @@
   "dur": 1.9,
   "hash": "378e9aae5198"
  },
+ "akai.ouija.end": {
+  "file": "akai.ouija.end.mp3",
+  "who": "akai",
+  "text": "今天的直播就到這邊……碟仙碟仙，請回。謝謝收看！",
+  "dur": 4.73,
+  "hash": "1905079c94d5"
+ },
+ "akai.ouija.q1": {
+  "file": "akai.ouija.q1.mp3",
+  "who": "akai",
+  "text": "碟仙碟仙……這間房子裡，除了我，還有別人嗎？",
+  "dur": 4.18,
+  "hash": "54ba9452e5dc"
+ },
+ "akai.ouija.q2": {
+  "file": "akai.ouija.q2.mp3",
+  "who": "akai",
+  "text": "妳……會傷害我嗎？",
+  "dur": 2.14,
+  "hash": "ab36e0354546"
+ },
+ "akai.ouija.q3": {
+  "file": "akai.ouija.q3.mp3",
+  "who": "akai",
+  "text": "妳現在……在我旁邊嗎？",
+  "dur": 2.21,
+  "hash": "9dfda9df2026"
+ },
+ "akai.ouija.q4": {
+  "file": "akai.ouija.q4.mp3",
+  "who": "akai",
+  "text": "妳在這裡……一個人會寂寞嗎？",
+  "dur": 2.52,
+  "hash": "811bc9721332"
+ },
+ "akai.ouija.q5": {
+  "file": "akai.ouija.q5.mp3",
+  "who": "akai",
+  "text": "最後一題！碟仙有沒有什麼話，想跟觀眾說？",
+  "dur": 3.96,
+  "hash": "ad52a4787b37"
+ },
+ "akai.ouija.r1.comfort": {
+  "file": "akai.ouija.r1.comfort.mp3",
+  "who": "akai",
+  "text": "沒有？……呼，好啦，那我就放心了一點點。",
+  "dur": 3.98,
+  "hash": "74e703736515"
+ },
+ "akai.ouija.r1.scare": {
+  "file": "akai.ouija.r1.scare.mp3",
+  "who": "akai",
+  "text": "有！？在哪？在哪裡！？你們有看到嗎！",
+  "dur": 4.94,
+  "hash": "6fe7be1e2688"
+ },
+ "akai.ouija.r1.secret": {
+  "file": "akai.ouija.r1.secret.mp3",
+  "who": "akai",
+  "text": "床、床下？……我的耳機！我找了一整晚！",
+  "dur": 4.42,
+  "hash": "59afc9ebfd63"
+ },
+ "akai.ouija.r2.comfort": {
+  "file": "akai.ouija.r2.comfort.mp3",
+  "who": "akai",
+  "text": "不會……好，謝謝碟仙，妳人真好。",
+  "dur": 3.26,
+  "hash": "10cb0ac2be47"
+ },
+ "akai.ouija.r2.scare": {
+  "file": "akai.ouija.r2.scare.mp3",
+  "who": "akai",
+  "text": "會！？不不不，我開玩笑的，對不起對不起！",
+  "dur": 4.1,
+  "hash": "03c47958eabb"
+ },
+ "akai.ouija.r2.secret": {
+  "file": "akai.ouija.r2.secret.mp3",
+  "who": "akai",
+  "text": "打……電話？打給誰？給我媽？……好啦，明天打。",
+  "dur": 5.5,
+  "hash": "566e31abcbc4"
+ },
+ "akai.ouija.r3.comfort": {
+  "file": "akai.ouija.r3.comfort.mp3",
+  "who": "akai",
+  "text": "不在？……那碟子是誰推的啦！",
+  "dur": 2.81,
+  "hash": "bcc64e7b0967"
+ },
+ "akai.ouija.r3.scare": {
+  "file": "akai.ouija.r3.scare.mp3",
+  "who": "akai",
+  "text": "在……在我旁邊……我不敢動了。",
+  "dur": 3.02,
+  "hash": "48b70a24be89"
+ },
+ "akai.ouija.r3.secret": {
+  "file": "akai.ouija.r3.secret.mp3",
+  "who": "akai",
+  "text": "左邊……（慢慢轉頭）……什麼都沒有……吧？",
+  "dur": 3.7,
+  "hash": "bca42432bdd8"
+ },
+ "akai.ouija.r4.comfort": {
+  "file": "akai.ouija.r4.comfort.mp3",
+  "who": "akai",
+  "text": "不會啊……那就好。有人陪就好。",
+  "dur": 3.26,
+  "hash": "87afc180ab4b"
+ },
+ "akai.ouija.r4.scare": {
+  "file": "akai.ouija.r4.scare.mp3",
+  "who": "akai",
+  "text": "會……好寂寞……所以要我留下來陪妳嗎！？不要！",
+  "dur": 4.58,
+  "hash": "3e1597084817"
+ },
+ "akai.ouija.r4.secret": {
+  "file": "akai.ouija.r4.secret.mp3",
+  "who": "akai",
+  "text": "阿翰？民宿老闆的名字？妳、妳認識他？",
+  "dur": 4.85,
+  "hash": "acd5ef5ae7db"
+ },
+ "akai.ouija.r5.comfort": {
+  "file": "akai.ouija.r5.comfort.mp3",
+  "who": "akai",
+  "text": "早……睡？碟仙叫大家早點睡啦，好貼心喔。",
+  "dur": 4.18,
+  "hash": "fba3bada05e4"
+ },
+ "akai.ouija.r5.scare": {
+  "file": "akai.ouija.r5.scare.mp3",
+  "who": "akai",
+  "text": "快……走？……我們、我們今天就先到這裡！",
+  "dur": 3.77,
+  "hash": "8c38e3e27763"
+ },
+ "akai.ouija.r5.secret": {
+  "file": "akai.ouija.r5.secret.mp3",
+  "who": "akai",
+  "text": "按……讚？碟仙叫大家按讚訂閱啦！這段一定要剪！",
+  "dur": 5.23,
+  "hash": "156b70662e0c"
+ },
+ "akai.ouija.timeout": {
+  "file": "akai.ouija.timeout.mp3",
+  "who": "akai",
+  "text": "……碟仙？沒反應？好，那我們換下一題。",
+  "dur": 4.44,
+  "hash": "6d680d7031d8"
+ },
  "akai.seen.1": {
   "file": "akai.seen.1.mp3",
   "who": "akai",
@@ -860,6 +1014,181 @@
   "dur": 4.27,
   "hash": "547654f37f93"
  },
+ "banzhu.1": {
+  "file": "banzhu.1.mp3",
+  "who": "banzhu",
+  "text": "唉……打鼓的阿明又喝到茫了，後場沒人打鑼鼓，這齣戲是要怎麼開？",
+  "dur": 6.5,
+  "hash": "a2a475f734f5"
+ },
+ "banzhu.2": {
+  "file": "banzhu.2.mp3",
+  "who": "banzhu",
+  "text": "咦？這陣涼風……我走江湖四十年，這種感覺我知道——有好兄弟在這裡。",
+  "dur": 8.33,
+  "hash": "aed8acfb8968"
+ },
+ "banzhu.3": {
+  "file": "banzhu.3.mp3",
+  "who": "banzhu",
+  "text": "這位朋友，不管妳是誰，今晚後場的鑼鼓，就拜託妳了！",
+  "dur": 6.19,
+  "hash": "b9335b8e32d8"
+ },
+ "banzhu.4": {
+  "file": "banzhu.4.mp3",
+  "who": "banzhu",
+  "text": "好！開鑼——！",
+  "dur": 3.86,
+  "hash": "dbb6baf9c581"
+ },
+ "banzhu.hello.1": {
+  "file": "banzhu.hello.1.mp3",
+  "who": "banzhu",
+  "text": "來了來了！後場交給妳了！",
+  "dur": 4.54,
+  "hash": "2bab0788fdd8"
+ },
+ "banzhu.hello.2": {
+  "file": "banzhu.hello.2.mp3",
+  "who": "banzhu",
+  "text": "今晚也麻煩妳囉，好兄弟。",
+  "dur": 3.65,
+  "hash": "9ad27fca47a2"
+ },
+ "banzhu.lose": {
+  "file": "banzhu.lose.mp3",
+  "who": "banzhu",
+  "text": "呃……拍子有一點亂，不過台下好像沒發現，哈哈。",
+  "dur": 5.42,
+  "hash": "3eabfef7c0fc"
+ },
+ "banzhu.ok": {
+  "file": "banzhu.ok.mp3",
+  "who": "banzhu",
+  "text": "有模有樣，戲總算撐下來了，多謝多謝！",
+  "dur": 4.92,
+  "hash": "698f8fdb5ffd"
+ },
+ "banzhu.thanks.1": {
+  "file": "banzhu.thanks.1.mp3",
+  "who": "banzhu",
+  "text": "今晚多虧了妳，戲班上下都感謝妳啦！",
+  "dur": 4.37,
+  "hash": "1bb1ba4588a1"
+ },
+ "banzhu.thanks.2": {
+  "file": "banzhu.thanks.2.mp3",
+  "who": "banzhu",
+  "text": "下次節日，還要來喔！",
+  "dur": 3.17,
+  "hash": "6b7aec2a949f"
+ },
+ "banzhu.win": {
+  "file": "banzhu.win.mp3",
+  "who": "banzhu",
+  "text": "讚啦！這鑼鼓打得比阿明還好！",
+  "dur": 4.87,
+  "hash": "9716931b6090"
+ },
+ "body.dog.bark": {
+  "file": "body.dog.bark.mp3",
+  "who": "grandma",
+  "text": "汪！……嘿嘿，阿嬤嘛會吠。",
+  "dur": 4.22,
+  "hash": "6e53757066cc"
+ },
+ "body.dog.leave": {
+  "file": "body.dog.leave.mp3",
+  "who": "grandma",
+  "text": "好啦，還你，乖狗仔。",
+  "dur": 3.17,
+  "hash": "f291b690d299"
+ },
+ "body.dog.possess": {
+  "file": "body.dog.possess.mp3",
+  "who": "grandma",
+  "text": "小黑，借阿嬤一下。",
+  "dur": 2.95,
+  "hash": "56e9fb328ea5"
+ },
+ "body.gecko.chirp": {
+  "file": "body.gecko.chirp.mp3",
+  "who": "grandma",
+  "text": "嘖嘖嘖——對啦對啦。",
+  "dur": 2.98,
+  "hash": "31de2f7e3d48"
+ },
+ "body.gecko.leave": {
+  "file": "body.gecko.leave.mp3",
+  "who": "grandma",
+  "text": "爬甲頭殼眩眩……",
+  "dur": 2.59,
+  "hash": "287377cf8190"
+ },
+ "body.gecko.possess": {
+  "file": "body.gecko.possess.mp3",
+  "who": "grandma",
+  "text": "變做壁虎，天篷嘛爬會過。",
+  "dur": 3.86,
+  "hash": "cb78a3c432ea"
+ },
+ "body.tk.ball": {
+  "file": "body.tk.ball.mp3",
+  "who": "grandma",
+  "text": "球來囉，接好喔。",
+  "dur": 2.66,
+  "hash": "bfc3c3f5cb37"
+ },
+ "body.tk.blanket": {
+  "file": "body.tk.blanket.mp3",
+  "who": "grandma",
+  "text": "被仔拉予好，莫著涼。",
+  "dur": 3.22,
+  "hash": "1c6a6099e964"
+ },
+ "body.tk.door": {
+  "file": "body.tk.door.mp3",
+  "who": "grandma",
+  "text": "推一下就好……",
+  "dur": 1.92,
+  "hash": "4387034568a2"
+ },
+ "body.tk.item": {
+  "file": "body.tk.item.mp3",
+  "who": "grandma",
+  "text": "放床頭，明仔早就揣會著。",
+  "dur": 3.91,
+  "hash": "29902fe3ac80"
+ },
+ "body.tk.noyin": {
+  "file": "body.tk.noyin.mp3",
+  "who": "grandma",
+  "text": "念力用了了，無陰氣矣……",
+  "dur": 3.36,
+  "hash": "8eeb8daf8115"
+ },
+ "body.tk.slam": {
+  "file": "body.tk.slam.mp3",
+  "who": "grandma",
+  "text": "哎喲，傷大力矣！",
+  "dur": 2.62,
+  "hash": "3d2d52f8460c"
+ },
+ "body.tk.start": {
+  "file": "body.tk.start.mp3",
+  "who": "grandma",
+  "text": "來，阿嬤用念力……慢慢仔，莫出聲。",
+  "dur": 4.82,
+  "hash": "022cce132933"
+ },
+ "body.tk.window": {
+  "file": "body.tk.window.mp3",
+  "who": "grandma",
+  "text": "窗仔關起來，風較袂灌入來。",
+  "dur": 4.18,
+  "hash": "366c23d013d9"
+ },
  "chendong.a1": {
   "file": "chendong.a1.mp3",
   "who": "chendong",
@@ -922,6 +1251,41 @@
   "text": "哇，這裡好有氣氛喔……",
   "dur": 2.57,
   "hash": "10f1a3db7442"
+ },
+ "dijizhu.bless": {
+  "file": "dijizhu.bless.mp3",
+  "who": "dijizhu",
+  "text": "拿去，一點陰氣。這間厝，我們一起顧。",
+  "dur": 5.04,
+  "hash": "cd493baa5a0a"
+ },
+ "dijizhu.day": {
+  "file": "dijizhu.day.mp3",
+  "who": "dijizhu",
+  "text": "天還沒黑，客人還沒來。晚上再來找我。",
+  "dur": 5.14,
+  "hash": "a3e67a080f84"
+ },
+ "dijizhu.hello": {
+  "file": "dijizhu.hello.mp3",
+  "who": "dijizhu",
+  "text": "……阿春，妳也看得到我了。",
+  "dur": 2.47,
+  "hash": "4fbede659fbd"
+ },
+ "dijizhu.hint": {
+  "file": "dijizhu.hint.mp3",
+  "who": "dijizhu",
+  "text": "這間厝的地基跟我講了今晚的事，妳聽好。",
+  "dur": 4.34,
+  "hash": "0d536b297bd4"
+ },
+ "dijizhu.none": {
+  "file": "dijizhu.none.mp3",
+  "who": "dijizhu",
+  "text": "今晚……安靜。妳也歇一下吧。",
+  "dur": 3.77,
+  "hash": "47f327baeb72"
  },
  "dlg.agui.1": {
   "file": "dlg.agui.1.mp3",
@@ -1553,6 +1917,13 @@
   "dur": 4.44,
   "hash": "b8d3dd9c85df"
  },
+ "gm.bark.dog": {
+  "file": "gm.bark.dog.mp3",
+  "who": "grandma",
+  "text": "汪！……哎喲，我怎麼叫得這麼大聲。",
+  "dur": 4.97,
+  "hash": "ca6b53baec6e"
+ },
  "gm.captured.1": {
   "file": "gm.captured.1.mp3",
   "who": "grandma",
@@ -1594,6 +1965,13 @@
   "text": "好久不見了。",
   "dur": 1.92,
   "hash": "80327b299c3b"
+ },
+ "gm.chirp": {
+  "file": "gm.chirp.mp3",
+  "who": "grandma",
+  "text": "嘖嘖嘖——",
+  "dur": 1.49,
+  "hash": "69aa6e225458"
  },
  "gm.coil.1": {
   "file": "gm.coil.1.mp3",
@@ -1692,6 +2070,13 @@
   "text": "不要動、不要動……",
   "dur": 2.35,
   "hash": "a40fbed1b33b"
+ },
+ "gm.gift": {
+  "file": "gm.gift.mp3",
+  "who": "grandma",
+  "text": "來，阿嬤送你一隻恐龍。",
+  "dur": 3.31,
+  "hash": "d24607c40b61"
  },
  "gm.hide.1": {
   "file": "gm.hide.1.mp3",
@@ -1861,6 +2246,13 @@
   "dur": 2.26,
   "hash": "2480f25826b0"
  },
+ "gm.ouija": {
+  "file": "gm.ouija.mp3",
+  "who": "grandma",
+  "text": "要問什麼？阿嬤給你回答。",
+  "dur": 4.42,
+  "hash": "1b1dbcbc0013"
+ },
  "gm.pat.1": {
   "file": "gm.pat.1.mp3",
   "who": "grandma",
@@ -1924,6 +2316,20 @@
   "dur": 3.31,
   "hash": "6e1a72f7c95d"
  },
+ "gm.possess.dog": {
+  "file": "gm.possess.dog.mp3",
+  "who": "grandma",
+  "text": "小黑，借阿嬤一下，乖。",
+  "dur": 3.58,
+  "hash": "b6b374c687cd"
+ },
+ "gm.possess.gecko": {
+  "file": "gm.possess.gecko.mp3",
+  "who": "grandma",
+  "text": "變成壁虎，天花板也爬得上去囉。",
+  "dur": 4.58,
+  "hash": "0bd776a24238"
+ },
  "gm.radio.1": {
   "file": "gm.radio.1.mp3",
   "who": "grandma",
@@ -1937,6 +2343,13 @@
   "text": "這條是阮少年時最愛聽的……",
   "dur": 3.74,
   "hash": "de584991365a"
+ },
+ "gm.retrieve": {
+  "file": "gm.retrieve.mp3",
+  "who": "grandma",
+  "text": "東西掉了喔，阿嬤幫你撿起來。",
+  "dur": 4.32,
+  "hash": "51e250058d6b"
  },
  "gm.rocker.1": {
   "file": "gm.rocker.1.mp3",
@@ -2029,6 +2442,13 @@
   "dur": 3.0,
   "hash": "292cc69760c5"
  },
+ "gm.vision.on": {
+  "file": "gm.vision.on.mp3",
+  "who": "grandma",
+  "text": "目睭瞇一下……看卡清楚。",
+  "dur": 3.41,
+  "hash": "71ab7ce12fd7"
+ },
  "gm.wait": {
   "file": "gm.wait.mp3",
   "who": "grandma",
@@ -2077,6 +2497,90 @@
   "text": "唉唷，這個孫仔，都不會照顧自己。",
   "dur": 4.54,
   "hash": "e0d0a258fb28"
+ },
+ "guikid1.1": {
+  "file": "guikid1.1.mp3",
+  "who": "guikid1",
+  "text": "阿嬤妳看！我會跳石頭！一、二、三！",
+  "dur": 4.63,
+  "hash": "f40e730e5c64"
+ },
+ "guikid1.2": {
+  "file": "guikid1.2.mp3",
+  "who": "guikid1",
+  "text": "我抓到一隻火金姑了……啊，又飛走了。",
+  "dur": 3.72,
+  "hash": "5e2a8382bc8a"
+ },
+ "guikid1.3": {
+  "file": "guikid1.3.mp3",
+  "who": "guikid1",
+  "text": "我們才不怕黑，我們有火金姑。",
+  "dur": 2.69,
+  "hash": "1495ca2c6f07"
+ },
+ "guikid1.hi.1": {
+  "file": "guikid1.hi.1.mp3",
+  "who": "guikid1",
+  "text": "咦？阿嬤，妳也看得到我們？",
+  "dur": 3.02,
+  "hash": "9e76e81c0562"
+ },
+ "guikid1.hi.2": {
+  "file": "guikid1.hi.2.mp3",
+  "who": "guikid1",
+  "text": "阿嬤，妳陪我們玩好不好？",
+  "dur": 2.26,
+  "hash": "191d392f923e"
+ },
+ "guikid1.splash": {
+  "file": "guikid1.splash.mp3",
+  "who": "guikid1",
+  "text": "潑妳水！嘿嘿，鬼阿嬤不會濕！",
+  "dur": 3.38,
+  "hash": "46c476131433"
+ },
+ "guikid2.1": {
+  "file": "guikid2.1.mp3",
+  "who": "guikid2",
+  "text": "阿嬤，妳會唱〈火金姑〉嗎？教我好不好？",
+  "dur": 3.58,
+  "hash": "f0615e4a2fb6"
+ },
+ "guikid2.2": {
+  "file": "guikid2.2.mp3",
+  "who": "guikid2",
+  "text": "水涼涼的，好好玩喔。",
+  "dur": 1.99,
+  "hash": "f69dad5d2222"
+ },
+ "guikid2.3": {
+  "file": "guikid2.3.mp3",
+  "who": "guikid2",
+  "text": "中元節的時候，溪裡會漂好多好多燈，好漂亮。",
+  "dur": 4.08,
+  "hash": "a55466e7cc72"
+ },
+ "guikid2.hi.1": {
+  "file": "guikid2.hi.1.mp3",
+  "who": "guikid2",
+  "text": "我們一直都在這裡玩啊……玩到忘記時間了。",
+  "dur": 3.55,
+  "hash": "b5ac68f20788"
+ },
+ "guikid2.hi.2": {
+  "file": "guikid2.hi.2.mp3",
+  "who": "guikid2",
+  "text": "阿嬤是好人。這隻火金姑送妳！",
+  "dur": 3.1,
+  "hash": "8569528c1944"
+ },
+ "guikid2.splash": {
+  "file": "guikid2.splash.mp3",
+  "who": "guikid2",
+  "text": "阿弟仔你不要亂潑啦！",
+  "dur": 1.75,
+  "hash": "a6c1af9077a2"
  },
  "han.again": {
   "file": "han.again.mp3",
@@ -2183,6 +2687,314 @@
   "dur": 3.24,
   "hash": "19f5b5c20ae8"
  },
+ "hill.acacia.1": {
+  "file": "hill.acacia.1.mp3",
+  "who": "grandma",
+  "text": "你出殯那天，我在這棵樹下坐到天黑。",
+  "dur": 5.14,
+  "hash": "ed3675d6f7e4"
+ },
+ "hill.acacia.2": {
+  "file": "hill.acacia.2.mp3",
+  "who": "grandma",
+  "text": "相思樹……這名字取得真好。",
+  "dur": 3.62,
+  "hash": "9e26f67bb0c0"
+ },
+ "hill.agong.1": {
+  "file": "hill.agong.1.mp3",
+  "who": "grandma",
+  "text": "老伴，民宿今天又住了人。你以前嫌這間厝太大，現在剛剛好。",
+  "dur": 9.58,
+  "hash": "db2759781a73"
+ },
+ "hill.agong.2": {
+  "file": "hill.agong.2.mp3",
+  "who": "grandma",
+  "text": "你欠火伯那盤棋，他還記著喔。",
+  "dur": 4.39,
+  "hash": "d502f53a1d87"
+ },
+ "hill.agong.3": {
+  "file": "hill.agong.3.mp3",
+  "who": "grandma",
+  "text": "你走了以後，我每天都來這裡坐一下。現在換我躺這裡了，哈。",
+  "dur": 8.88,
+  "hash": "60547a7a0240"
+ },
+ "hill.agong.first.1": {
+  "file": "hill.agong.first.1.mp3",
+  "who": "grandma",
+  "text": "老伴，我來看你了。",
+  "dur": 2.62,
+  "hash": "68e34d6751d8"
+ },
+ "hill.agong.first.2": {
+  "file": "hill.agong.first.2.mp3",
+  "who": "grandma",
+  "text": "你在那邊好嗎？我還在這邊……幫小翰顧民宿。",
+  "dur": 7.3,
+  "hash": "0fa028f07fd5"
+ },
+ "hill.agong.first.3": {
+  "file": "hill.agong.first.3.mp3",
+  "who": "grandma",
+  "text": "你走的時候，小翰才國中。現在都會自己開店了。",
+  "dur": 7.25,
+  "hash": "664080d44788"
+ },
+ "hill.agong.first.4": {
+  "file": "hill.agong.first.4.mp3",
+  "who": "grandma",
+  "text": "你怎麼沒留下來陪我？……我知道，你一定是先去把位子占好了。",
+  "dur": 8.64,
+  "hash": "aa0b77f35faa"
+ },
+ "hill.agong.night.1": {
+  "file": "hill.agong.night.1.mp3",
+  "who": "grandma",
+  "text": "今晚月亮很圓，跟我們結婚那天一樣。",
+  "dur": 5.21,
+  "hash": "2cf7f2b66c1f"
+ },
+ "hill.agong.night.2": {
+  "file": "hill.agong.night.2.mp3",
+  "who": "grandma",
+  "text": "你是不是先去投胎了？也不等我一下。",
+  "dur": 5.83,
+  "hash": "904dde143eac"
+ },
+ "hill.farmer.1": {
+  "file": "hill.farmer.1.mp3",
+  "who": "grandma",
+  "text": "他每天都坐在這裡看山下的田。田還在，只是換人種了。",
+  "dur": 8.28,
+  "hash": "973474659678"
+ },
+ "hill.farmer.2": {
+  "file": "hill.farmer.2.mp3",
+  "who": "grandma",
+  "text": "要不要下去看看你的田？……他不說話。",
+  "dur": 5.5,
+  "hash": "316f712151a8"
+ },
+ "hill.gm.bowl": {
+  "file": "hill.gm.bowl.mp3",
+  "who": "grandma",
+  "text": "好了，扶正了。火伯，下次有人來，香就插得上了。",
+  "dur": 7.75,
+  "hash": "857e17d4319c"
+ },
+ "hill.gm.gossip": {
+  "file": "hill.gm.gossip.mp3",
+  "who": "grandma",
+  "text": "玉姨，我去過柑仔店了。阿嬌看得到我喔。",
+  "dur": 6.38,
+  "hash": "7ed8836bdc01"
+ },
+ "hill.gm.gossip.fridge": {
+  "file": "hill.gm.gossip.fridge.mp3",
+  "who": "grandma",
+  "text": "她的店還是老樣子，汽水冰箱還是那一台。",
+  "dur": 5.93,
+  "hash": "0309eebfec74"
+ },
+ "hill.gm.gossip.miss": {
+  "file": "hill.gm.gossip.miss.mp3",
+  "who": "grandma",
+  "text": "她說……她有點想妳。",
+  "dur": 2.98,
+  "hash": "8d74e9cc167e"
+ },
+ "hill.gm.intro": {
+  "file": "hill.gm.intro.mp3",
+  "who": "grandma",
+  "text": "我是林家的阿春，剛搬上來……也不算搬啦。",
+  "dur": 5.26,
+  "hash": "de601b70d484"
+ },
+ "hill.gm.opera": {
+  "file": "hill.gm.opera.mp3",
+  "who": "grandma",
+  "text": "火伯，廟口的戲我看了。",
+  "dur": 3.17,
+  "hash": "7402fb8b54fe"
+ },
+ "hill.gm.opera.sing": {
+  "file": "hill.gm.opera.sing.mp3",
+  "who": "grandma",
+  "text": "我唱兩句給你聽：「五娘仔～在樓頂～」",
+  "dur": 4.49,
+  "hash": "a8b6c2ae233a"
+ },
+ "hill.gm.opera.tell": {
+  "file": "hill.gm.opera.tell.mp3",
+  "who": "grandma",
+  "text": "唱陳三五娘。五娘在樓上丟荔枝，陳三在樓下接，台下的人都在笑。",
+  "dur": 10.15,
+  "hash": "66af345227aa"
+ },
+ "hill.gm.really": {
+  "file": "hill.gm.really.mp3",
+  "who": "grandma",
+  "text": "真的假的？",
+  "dur": 1.49,
+  "hash": "5017ab5c66d3"
+ },
+ "hill.gm.yuyi": {
+  "file": "hill.gm.yuyi.mp3",
+  "who": "grandma",
+  "text": "玉姨？妳不是以前在市場賣魚丸那個？",
+  "dur": 6.0,
+  "hash": "5ad20b6dc414"
+ },
+ "hill.granny.1": {
+  "file": "hill.granny.1.mp3",
+  "who": "grandma",
+  "text": "她在等人來看她。……已經很多年沒人來了吧。",
+  "dur": 6.48,
+  "hash": "6bf3235d27fc"
+ },
+ "hill.granny.2": {
+  "file": "hill.granny.2.mp3",
+  "who": "grandma",
+  "text": "來，阿嬤陪妳站一下。",
+  "dur": 3.07,
+  "hash": "fcf2e461ed25"
+ },
+ "hill.qm.1": {
+  "file": "hill.qm.1.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤，清明了，我來看妳。",
+  "dur": 3.48,
+  "hash": "fd309896e469"
+ },
+ "hill.qm.2": {
+  "file": "hill.qm.2.mp3",
+  "who": "xiaohan",
+  "text": "民宿開了一陣子了。客人都說睡得很好，還說半夜好像有人幫他們蓋被子。",
+  "dur": 7.56,
+  "hash": "4e91544740a2"
+ },
+ "hill.qm.3": {
+  "file": "hill.qm.3.mp3",
+  "who": "grandma",
+  "text": "憨孫，那就是阿嬤啊。",
+  "dur": 2.93,
+  "hash": "da9361fe3e87"
+ },
+ "hill.qm.4": {
+  "file": "hill.qm.4.mp3",
+  "who": "xiaohan",
+  "text": "有時候我覺得妳還在家裡。灶腳的鍋子會自己變乾淨，神明廳的香老是先點好了。",
+  "dur": 8.06,
+  "hash": "b55f8fe94aeb"
+ },
+ "hill.qm.5": {
+  "file": "hill.qm.5.mp3",
+  "who": "xiaohan",
+  "text": "……我是不是太累了。",
+  "dur": 2.21,
+  "hash": "46a858f9bc25"
+ },
+ "hill.qm.6": {
+  "file": "hill.qm.6.mp3",
+  "who": "grandma",
+  "text": "你不是累，是阿嬤捨不得你。",
+  "dur": 3.31,
+  "hash": "d1a683ff3b21"
+ },
+ "hill.qm.7": {
+  "file": "hill.qm.7.mp3",
+  "who": "xiaohan",
+  "text": "妳以前最愛煎菜脯蛋給我吃。我學了，煎出來還是沒妳好吃。",
+  "dur": 6.77,
+  "hash": "cd4a63a6969d"
+ },
+ "hill.qm.8": {
+  "file": "hill.qm.8.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤，我會好好顧這間厝。妳放心。",
+  "dur": 5.23,
+  "hash": "01399715a303"
+ },
+ "hill.qm.9": {
+  "file": "hill.qm.9.mp3",
+  "who": "grandma",
+  "text": "阿嬤知道。阿嬤一直都知道。",
+  "dur": 4.66,
+  "hash": "fc51413e19e6"
+ },
+ "hill.self.1": {
+  "file": "hill.self.1.mp3",
+  "who": "grandma",
+  "text": "「林媽陳氏春」……聽起來好像在說別人。",
+  "dur": 5.16,
+  "hash": "09bca14a739e"
+ },
+ "hill.self.2": {
+  "file": "hill.self.2.mp3",
+  "who": "grandma",
+  "text": "墳做得這麼漂亮，要花不少錢吧。這個憨孫。",
+  "dur": 7.03,
+  "hash": "cc378b7e9271"
+ },
+ "hill.self.3": {
+  "file": "hill.self.3.mp3",
+  "who": "grandma",
+  "text": "自己來看自己的墳，說出去誰會相信。",
+  "dur": 5.09,
+  "hash": "9549e99514ad"
+ },
+ "hill.self.4": {
+  "file": "hill.self.4.mp3",
+  "who": "grandma",
+  "text": "草長得有點高了，清明的時候小翰會來拔吧。",
+  "dur": 5.83,
+  "hash": "cfc5af158d84"
+ },
+ "hill.self.first": {
+  "file": "hill.self.first.mp3",
+  "who": "grandma",
+  "text": "唉唷……原來照片選這張。我就說這張拍得不好看，小翰偏偏要用。",
+  "dur": 9.6,
+  "hash": "d5d0fa665ca9"
+ },
+ "hill.self.qingming.1": {
+  "file": "hill.self.qingming.1.mp3",
+  "who": "grandma",
+  "text": "新的墓紙……小翰剛來過。",
+  "dur": 3.29,
+  "hash": "c91a047f11a0"
+ },
+ "hill.self.qingming.2": {
+  "file": "hill.self.qingming.2.mp3",
+  "who": "grandma",
+  "text": "還帶了紅龜粿。傻孩子，阿嬤又吃不到。……聞得到啦。",
+  "dur": 8.59,
+  "hash": "30d42de0ed7d"
+ },
+ "hill.view.dusk": {
+  "file": "hill.view.dusk.mp3",
+  "who": "grandma",
+  "text": "從這裡看得到整個村子。以前我們家的田，就在那一片。",
+  "dur": 7.78,
+  "hash": "307a9aec55cf"
+ },
+ "hill.view.night.1": {
+  "file": "hill.view.night.1.mp3",
+  "who": "grandma",
+  "text": "山下的燈一盞一盞的。那一盞是柑仔店，那一盞……是我們家吧。",
+  "dur": 8.26,
+  "hash": "3b8f1a3f5f72"
+ },
+ "hill.view.night.2": {
+  "file": "hill.view.night.2.mp3",
+  "who": "grandma",
+  "text": "夜裡的村子好安靜。小翰這時候，應該還在煩惱客人吧。",
+  "dur": 8.26,
+  "hash": "43cb8f8d77d0"
+ },
  "hongyi.1": {
   "file": "hongyi.1.mp3",
   "who": "hongyi",
@@ -2259,6 +3071,160 @@
   "text": "功德還不夠喔，再多做點好事。",
   "dur": 3.48,
   "hash": "38136f1ea70e"
+ },
+ "huobo.1.1": {
+  "file": "huobo.1.1.mp3",
+  "who": "huobo",
+  "text": "看什麼看？沒看過鬼啊？……喔，妳也是。",
+  "dur": 5.3,
+  "hash": "1b841441e63b"
+ },
+ "huobo.1.2": {
+  "file": "huobo.1.2.mp3",
+  "who": "huobo",
+  "text": "林家的？添福那小子的老婆？他走的時候還欠我一盤象棋！",
+  "dur": 7.22,
+  "hash": "b9f95c8133be"
+ },
+ "huobo.1.3": {
+  "file": "huobo.1.3.mp3",
+  "who": "huobo",
+  "text": "我叫張火旺，大家叫我火伯。山東人，十六歲跟著部隊過來，一輩子沒回去過。",
+  "dur": 8.35,
+  "hash": "8839fae11dd1"
+ },
+ "huobo.1.4": {
+  "file": "huobo.1.4.mp3",
+  "who": "huobo",
+  "text": "哼，妳要是有閒，幫我把香爐扶正。前年颱風吹歪的，家裡沒人來，香都插不上。",
+  "dur": 8.47,
+  "hash": "b7bdd158b68e"
+ },
+ "huobo.2.1": {
+  "file": "huobo.2.1.mp3",
+  "who": "huobo",
+  "text": "……謝啦。四十幾年了，第一次有人幫我弄這個。",
+  "dur": 5.06,
+  "hash": "1f8910f0127e"
+ },
+ "huobo.2.2": {
+  "file": "huobo.2.2.mp3",
+  "who": "huobo",
+  "text": "我跟妳講，我在營區的時候，看過一次歌仔戲。",
+  "dur": 4.58,
+  "hash": "b7c57ea27998"
+ },
+ "huobo.2.3": {
+  "file": "huobo.2.3.mp3",
+  "who": "huobo",
+  "text": "演陳三五娘，唱得我在台下哭得跟什麼一樣。一個大男人喔。",
+  "dur": 6.1,
+  "hash": "60e141dee76f"
+ },
+ "huobo.2.4": {
+  "file": "huobo.2.4.mp3",
+  "who": "huobo",
+  "text": "村子土地公生的時候，廟口會搭戲台吧？妳去看，回來講給我聽。",
+  "dur": 6.82,
+  "hash": "5bba44021e57"
+ },
+ "huobo.3.1": {
+  "file": "huobo.3.1.mp3",
+  "who": "huobo",
+  "text": "真的？唱什麼？唱什麼？快說！",
+  "dur": 4.94,
+  "hash": "72bb69071fd4"
+ },
+ "huobo.3.2": {
+  "file": "huobo.3.2.mp3",
+  "who": "huobo",
+  "text": "（揉眼睛）……山上風沙大，眼睛進沙了。",
+  "dur": 3.89,
+  "hash": "f9349a6f3e83"
+ },
+ "huobo.3.3": {
+  "file": "huobo.3.3.mp3",
+  "who": "huobo",
+  "text": "這個給妳。我在山上攢了四十年的功德，放著也沒用。",
+  "dur": 5.59,
+  "hash": "4808569ae015"
+ },
+ "huobo.3.sing": {
+  "file": "huobo.3.sing.mp3",
+  "who": "huobo",
+  "text": "妳、妳唱得比戲台上的還好聽……",
+  "dur": 3.26,
+  "hash": "92d7cb61d708"
+ },
+ "huobo.3.tell": {
+  "file": "huobo.3.tell.mp3",
+  "who": "huobo",
+  "text": "對對對，就是這齣！就是這齣……",
+  "dur": 3.79,
+  "hash": "dbe0f550f876"
+ },
+ "huobo.idle.1": {
+  "file": "huobo.idle.1.mp3",
+  "who": "huobo",
+  "text": "添福那盤棋，我還記著。",
+  "dur": 2.62,
+  "hash": "4b7fdabc0fc4"
+ },
+ "huobo.idle.2": {
+  "file": "huobo.idle.2.mp3",
+  "who": "huobo",
+  "text": "今晚月亮圓。山東的月亮也是這麼圓嗎？……忘了。",
+  "dur": 5.95,
+  "hash": "8c839c66e7e9"
+ },
+ "huobo.idle.3": {
+  "file": "huobo.idle.3.mp3",
+  "who": "huobo",
+  "text": "妳那個孫子不錯，清明都會上來。我家……算了。",
+  "dur": 5.26,
+  "hash": "f01d9598080b"
+ },
+ "huobo.night.1": {
+  "file": "huobo.night.1.mp3",
+  "who": "huobo",
+  "text": "睡不著？鬼本來就不用睡。",
+  "dur": 3.07,
+  "hash": "c3f4ff95f62f"
+ },
+ "huobo.night.2": {
+  "file": "huobo.night.2.mp3",
+  "who": "huobo",
+  "text": "山下的燈又少了幾盞，年輕人都走了。",
+  "dur": 4.08,
+  "hash": "e7c137ce87a9"
+ },
+ "huobo.wait.bowl.1": {
+  "file": "huobo.wait.bowl.1.mp3",
+  "who": "huobo",
+  "text": "香爐還歪著呢，妳看了不難過嗎？",
+  "dur": 3.53,
+  "hash": "4afc30950aaf"
+ },
+ "huobo.wait.bowl.2": {
+  "file": "huobo.wait.bowl.2.mp3",
+  "who": "huobo",
+  "text": "我自己扶不起來啦，鬼手什麼都碰不到……欸，妳碰得到？",
+  "dur": 5.33,
+  "hash": "7cf61d286b2d"
+ },
+ "huobo.wait.opera.1": {
+  "file": "huobo.wait.opera.1.mp3",
+  "who": "huobo",
+  "text": "戲台搭了沒？還沒喔。",
+  "dur": 3.05,
+  "hash": "12b736030832"
+ },
+ "huobo.wait.opera.2": {
+  "file": "huobo.wait.opera.2.mp3",
+  "who": "huobo",
+  "text": "妳別忘了，看完回來講給我聽，一句都不能漏。",
+  "dur": 4.75,
+  "hash": "c0596b795edd"
  },
  "jinyubo.1": {
   "file": "jinyubo.1.mp3",
@@ -2652,6 +3618,104 @@
   "dur": 2.62,
   "hash": "2bf68d6d9a6d"
  },
+ "mem.all": {
+  "file": "mem.all.mp3",
+  "who": "grandma",
+  "text": "一輩子，就是這樣走過來的。沒有什麼遺憾了。",
+  "dur": 6.65,
+  "hash": "6ccd3e8882a0"
+ },
+ "mem.altar": {
+  "file": "mem.altar.mp3",
+  "who": "grandma",
+  "text": "神明保庇，我們小翰平安出世。",
+  "dur": 4.37,
+  "hash": "eaa4ed084e98"
+ },
+ "mem.desk": {
+  "file": "mem.desk.mp3",
+  "who": "grandma",
+  "text": "這個「春」字，還在啊……",
+  "dur": 2.93,
+  "hash": "408411435ab4"
+ },
+ "mem.garden": {
+  "file": "mem.garden.mp3",
+  "who": "grandma",
+  "text": "地瓜不嫌土，人也是。",
+  "dur": 3.1,
+  "hash": "a8f34a22c21c"
+ },
+ "mem.grave": {
+  "file": "mem.grave.mp3",
+  "who": "grandma",
+  "text": "你先去，我慢慢來……我來了喔。",
+  "dur": 3.98,
+  "hash": "177a88d34d0f"
+ },
+ "mem.kitchen": {
+  "file": "mem.kitchen.mp3",
+  "who": "grandma",
+  "text": "黑黑的菜脯蛋，他說明天還要。",
+  "dur": 4.18,
+  "hash": "0db077c730d1"
+ },
+ "mem.podium": {
+  "file": "mem.podium.mp3",
+  "who": "grandma",
+  "text": "〈我的家〉……阿母，我寫的就是妳。",
+  "dur": 3.6,
+  "hash": "1794879ce92a"
+ },
+ "mem.sewing": {
+  "file": "mem.sewing.mp3",
+  "who": "grandma",
+  "text": "噠噠噠噠……一針一針，踩到天光。",
+  "dur": 4.3,
+  "hash": "92e9f1372bff"
+ },
+ "mem.shop": {
+  "file": "mem.shop.mp3",
+  "who": "grandma",
+  "text": "這張板凳……阿嬌，妳還記得那顆糖否？",
+  "dur": 4.66,
+  "hash": "866a55bc98fc"
+ },
+ "mem.stones": {
+  "file": "mem.stones.mp3",
+  "who": "grandma",
+  "text": "憨慢的少年仔，鞋子流走了還在笑。",
+  "dur": 4.78,
+  "hash": "1f2338ea5d45"
+ },
+ "mem.stool": {
+  "file": "mem.stool.mp3",
+  "who": "grandma",
+  "text": "假仙，明明就是你哭比較大聲。",
+  "dur": 4.61,
+  "hash": "a4d0e250ec74"
+ },
+ "mem.temple": {
+  "file": "mem.temple.mp3",
+  "who": "grandma",
+  "text": "土地公伯仔，多謝祢，這間厝還在。",
+  "dur": 4.97,
+  "hash": "3fe9dd1a99b3"
+ },
+ "mem.tree": {
+  "file": "mem.tree.mp3",
+  "who": "grandma",
+  "text": "小翰那時候的手，好小。",
+  "dur": 3.36,
+  "hash": "325a51c821a8"
+ },
+ "mem.wedding": {
+  "file": "mem.wedding.mp3",
+  "who": "grandma",
+  "text": "這面鏡子，照過十八歲的我。",
+  "dur": 3.86,
+  "hash": "e33106bf52b5"
+ },
  "miaogong.a1": {
   "file": "miaogong.a1.mp3",
   "who": "miaogong",
@@ -2743,6 +3807,622 @@
   "dur": 3.1,
   "hash": "ace986756d97"
  },
+ "river.enter": {
+  "file": "river.enter.mp3",
+  "who": "grandma",
+  "text": "好久沒來溪邊了……以前洗衣服、摸蜆仔，都在這條溪。",
+  "dur": 7.27,
+  "hash": "4352774439fa"
+ },
+ "river.enter.night": {
+  "file": "river.enter.night.mp3",
+  "who": "grandma",
+  "text": "晚上的溪邊，火金姑還是這麼多。",
+  "dur": 4.42,
+  "hash": "3d3b0edb9833"
+ },
+ "river.firefly.1": {
+  "file": "river.firefly.1.mp3",
+  "who": "grandma",
+  "text": "火金姑，來食茶，茶燒燒，食芎蕉……",
+  "dur": 5.16,
+  "hash": "e1561bd03fef"
+ },
+ "river.firefly.2": {
+  "file": "river.firefly.2.mp3",
+  "who": "grandma",
+  "text": "火金姑這麼多，水一定很乾淨。",
+  "dur": 4.15,
+  "hash": "c208d3f744c1"
+ },
+ "river.firefly.3": {
+  "file": "river.firefly.3.mp3",
+  "who": "grandma",
+  "text": "小翰小時候，最愛抓火金姑裝在玻璃罐裡，抓到了又捨不得，全部放掉。",
+  "dur": 9.53,
+  "hash": "134da2b3e8c3"
+ },
+ "river.firefly.day": {
+  "file": "river.firefly.day.mp3",
+  "who": "grandma",
+  "text": "等天暗，火金姑就出來了。",
+  "dur": 3.79,
+  "hash": "3201f5a40c56"
+ },
+ "river.fish.done": {
+  "file": "river.fish.done.mp3",
+  "who": "grandma",
+  "text": "今天釣過了，留一些給明天。",
+  "dur": 4.15,
+  "hash": "dcb6fa549abf"
+ },
+ "river.fish.good": {
+  "file": "river.fish.good.mp3",
+  "who": "grandma",
+  "text": "好幾尾！今晚有溪哥湯了。",
+  "dur": 4.7,
+  "hash": "15314782ab71"
+ },
+ "river.fish.none": {
+  "file": "river.fish.none.mp3",
+  "who": "grandma",
+  "text": "唉，今天溪哥不吃餌。",
+  "dur": 3.05,
+  "hash": "95f5727260c9"
+ },
+ "river.fish.one": {
+  "file": "river.fish.one.mp3",
+  "who": "grandma",
+  "text": "一尾也好，加減煮。",
+  "dur": 2.88,
+  "hash": "5d03553e862b"
+ },
+ "river.fish.start": {
+  "file": "river.fish.start.mp3",
+  "who": "grandma",
+  "text": "來，釣幾尾溪哥，煮湯給客人喝。",
+  "dur": 4.8,
+  "hash": "ad08e7ad39e1"
+ },
+ "river.kids.gm.1": {
+  "file": "river.kids.gm.1.mp3",
+  "who": "grandma",
+  "text": "當然看得到。你們兩個，這麼晚了還在溪邊玩水？",
+  "dur": 7.06,
+  "hash": "9fb0eb900b4b"
+ },
+ "river.kids.gm.2": {
+  "file": "river.kids.gm.2.mp3",
+  "who": "grandma",
+  "text": "好啊，不過不可以去深的地方喔。",
+  "dur": 4.03,
+  "hash": "96d93bcee875"
+ },
+ "river.kids.gm.3": {
+  "file": "river.kids.gm.3.mp3",
+  "who": "grandma",
+  "text": "謝謝你們……這隻火金姑好亮。",
+  "dur": 4.03,
+  "hash": "a4a8d93cbaa9"
+ },
+ "river.lantern.done": {
+  "file": "river.lantern.done.mp3",
+  "who": "grandma",
+  "text": "水燈放過了，路照亮了。",
+  "dur": 3.41,
+  "hash": "8631ef73bb3e"
+ },
+ "river.lantern.good": {
+  "file": "river.lantern.good.mp3",
+  "who": "grandma",
+  "text": "燈漂得好遠……好，好。",
+  "dur": 2.81,
+  "hash": "05b71a001a4f"
+ },
+ "river.lantern.ok": {
+  "file": "river.lantern.ok.mp3",
+  "who": "grandma",
+  "text": "燈有漂出去就好，心意到了。",
+  "dur": 3.77,
+  "hash": "260960433398"
+ },
+ "river.lantern.start": {
+  "file": "river.lantern.start.mp3",
+  "who": "grandma",
+  "text": "中元節，放一盞水燈，給找不到路回來的人照路。",
+  "dur": 6.36,
+  "hash": "999bb5336494"
+ },
+ "river.shrine.1": {
+  "file": "river.shrine.1.mp3",
+  "who": "grandma",
+  "text": "石頭公，保佑溪水平安，囡仔不要去深的地方。",
+  "dur": 6.31,
+  "hash": "c1c00b0eae29"
+ },
+ "river.shrine.2": {
+  "file": "river.shrine.2.mp3",
+  "who": "grandma",
+  "text": "以前大家洗衣服之前，都會先跟石頭公拜一下。",
+  "dur": 6.48,
+  "hash": "20b079a910f3"
+ },
+ "river.stone.1": {
+  "file": "river.stone.1.mp3",
+  "who": "grandma",
+  "text": "這顆大石頭，我小時候常常爬上去曬太陽。",
+  "dur": 6.12,
+  "hash": "d9b367dbecb4"
+ },
+ "river.stone.2": {
+  "file": "river.stone.2.mp3",
+  "who": "grandma",
+  "text": "石頭上都是青苔，滑溜溜的，小心一點。",
+  "dur": 5.5,
+  "hash": "e146b1074e05"
+ },
+ "river.weir.1": {
+  "file": "river.weir.1.mp3",
+  "who": "grandma",
+  "text": "攔沙壩的水聲嘩啦嘩啦，聽了好好睡。",
+  "dur": 4.99,
+  "hash": "7f71d3a8b6ed"
+ },
+ "river.weir.2": {
+  "file": "river.weir.2.mp3",
+  "who": "grandma",
+  "text": "下面那個水潭比較深，囡仔不可以去。",
+  "dur": 5.28,
+  "hash": "2d25d5d02ce2"
+ },
+ "river.wheel.1": {
+  "file": "river.wheel.1.mp3",
+  "who": "grandma",
+  "text": "這台老水車，還在轉啊……轉了幾十年了。",
+  "dur": 5.38,
+  "hash": "241cee2783a4"
+ },
+ "river.wheel.2": {
+  "file": "river.wheel.2.mp3",
+  "who": "grandma",
+  "text": "以前這條溝的水，是要引去灌田的。",
+  "dur": 4.68,
+  "hash": "d0e75a641ab5"
+ },
+ "school.bell": {
+  "file": "school.bell.mp3",
+  "who": "grandma",
+  "text": "噹、噹、噹——下課囉！",
+  "dur": 3.1,
+  "hash": "2a058a1c1b35"
+ },
+ "school.bell.kids": {
+  "file": "school.bell.kids.mp3",
+  "who": "grandma",
+  "text": "鐘一響，一群猴死囡仔就跑過來了。",
+  "dur": 4.9,
+  "hash": "b8195b070047"
+ },
+ "school.board": {
+  "file": "school.board.mp3",
+  "who": "grandma",
+  "text": "值日生：春……是誰寫的？阮以前就是當值日生，要擦黑板。",
+  "dur": 8.62,
+  "hash": "62730711d7b5"
+ },
+ "school.board.kids": {
+  "file": "school.board.kids.mp3",
+  "who": "grandma",
+  "text": "四個小人手牽手，畫得真古錐。是你們畫的厚？",
+  "dur": 7.1,
+  "hash": "a04e7965f355"
+ },
+ "school.enter": {
+  "file": "school.enter.mp3",
+  "who": "grandma",
+  "text": "哎喲，後壁厝國民學校……阮細漢的時陣，就是在這讀冊的。",
+  "dur": 7.75,
+  "hash": "ac188f4b98ed"
+ },
+ "school.hide.lose": {
+  "file": "school.hide.lose.mp3",
+  "who": "grandma",
+  "text": "躲得真厲害，阿嬤認輸。",
+  "dur": 3.34,
+  "hash": "81fdaca5a5ce"
+ },
+ "school.hide.win": {
+  "file": "school.hide.win.mp3",
+  "who": "grandma",
+  "text": "統統找到了，出來出來，回家吃飯囉。",
+  "dur": 5.18,
+  "hash": "d2a666b0f073"
+ },
+ "school.hop.bad": {
+  "file": "school.hop.bad.mp3",
+  "who": "grandma",
+  "text": "哎喲，腳打結了……",
+  "dur": 2.57,
+  "hash": "a3bbf321ea22"
+ },
+ "school.hop.done": {
+  "file": "school.hop.done.mp3",
+  "who": "grandma",
+  "text": "今天跳夠了，阿嬤的老骨頭要休息一下。",
+  "dur": 5.57,
+  "hash": "d672b3c5ed2f"
+ },
+ "school.hop.great": {
+  "file": "school.hop.great.mp3",
+  "who": "grandma",
+  "text": "一格都沒踩線！阿嬤當年可是跳房子冠軍。",
+  "dur": 6.84,
+  "hash": "effd118739e5"
+ },
+ "school.hop.ok": {
+  "file": "school.hop.ok.mp3",
+  "who": "grandma",
+  "text": "嘿，還跳得動嘛。",
+  "dur": 2.45,
+  "hash": "d56312d209f5"
+ },
+ "school.kid1.again": {
+  "file": "school.kid1.again.mp3",
+  "who": "guikid1",
+  "text": "今天玩過了啦，明天再來好不好？",
+  "dur": 2.76,
+  "hash": "2080a257550c"
+ },
+ "school.kid1.bell": {
+  "file": "school.kid1.bell.mp3",
+  "who": "guikid1",
+  "text": "下課了下課了！",
+  "dur": 1.51,
+  "hash": "8f251affff47"
+ },
+ "school.kid1.found": {
+  "file": "school.kid1.found.mp3",
+  "who": "guikid1",
+  "text": "吼，被找到了！",
+  "dur": 1.58,
+  "hash": "d5d2bfb27f19"
+ },
+ "school.kid1.giggle": {
+  "file": "school.kid1.giggle.mp3",
+  "who": "guikid1",
+  "text": "嘻嘻嘻……",
+  "dur": 1.01,
+  "hash": "2f869d081dd1"
+ },
+ "school.kid1.hidestart": {
+  "file": "school.kid1.hidestart.mp3",
+  "who": "guikid1",
+  "text": "阿嬤數到十喔！不可以偷看！",
+  "dur": 2.74,
+  "hash": "21c4aefe0625"
+ },
+ "school.kid1.tagged": {
+  "file": "school.kid1.tagged.mp3",
+  "who": "guikid1",
+  "text": "哇！被抓到了啦！",
+  "dur": 2.04,
+  "hash": "c26cd4d1fdf7"
+ },
+ "school.kid1.tagstart": {
+  "file": "school.kid1.tagstart.mp3",
+  "who": "guikid1",
+  "text": "阿嬤當鬼！大家快跑喔——",
+  "dur": 2.62,
+  "hash": "5779f108f123"
+ },
+ "school.kid1.taunt": {
+  "file": "school.kid1.taunt.mp3",
+  "who": "guikid1",
+  "text": "抓不到——抓不到——",
+  "dur": 1.61,
+  "hash": "1d8f48e9710a"
+ },
+ "school.kid2.again": {
+  "file": "school.kid2.again.mp3",
+  "who": "guikid2",
+  "text": "阿嬤明天還會來嗎？",
+  "dur": 1.85,
+  "hash": "d270a11b19b3"
+ },
+ "school.kid2.bell": {
+  "file": "school.kid2.bell.mp3",
+  "who": "guikid2",
+  "text": "鐘響了！要升旗了嗎？",
+  "dur": 2.28,
+  "hash": "f9322a8304e4"
+ },
+ "school.kid2.found": {
+  "file": "school.kid2.found.mp3",
+  "who": "guikid2",
+  "text": "阿嬤怎麼知道我在這裡？",
+  "dur": 2.16,
+  "hash": "5f737a46afc7"
+ },
+ "school.kid2.giggle": {
+  "file": "school.kid2.giggle.mp3",
+  "who": "guikid2",
+  "text": "嘻嘻……",
+  "dur": 0.96,
+  "hash": "b12e4311f8ba"
+ },
+ "school.kid2.hidestart": {
+  "file": "school.kid2.hidestart.mp3",
+  "who": "guikid2",
+  "text": "我躲好了喔……",
+  "dur": 1.2,
+  "hash": "7ed2a787b9a8"
+ },
+ "school.kid2.hop": {
+  "file": "school.kid2.hop.mp3",
+  "who": "guikid2",
+  "text": "阿嬤，石頭丟準一點喔！",
+  "dur": 2.04,
+  "hash": "e5df6f593c77"
+ },
+ "school.kid2.tagged": {
+  "file": "school.kid2.tagged.mp3",
+  "who": "guikid2",
+  "text": "呀！阿嬤好快！",
+  "dur": 1.94,
+  "hash": "69cf46693e88"
+ },
+ "school.kid2.tagstart": {
+  "file": "school.kid2.tagstart.mp3",
+  "who": "guikid2",
+  "text": "阿嬤要跑慢一點喔……",
+  "dur": 1.7,
+  "hash": "9832b4b3416d"
+ },
+ "school.kid2.taunt": {
+  "file": "school.kid2.taunt.mp3",
+  "who": "guikid2",
+  "text": "阿嬤，我在這裡！",
+  "dur": 1.61,
+  "hash": "212ec41348ff"
+ },
+ "school.meet.1": {
+  "file": "school.meet.1.mp3",
+  "who": "guikid1",
+  "text": "咦？妳是誰？妳也是鬼喔？",
+  "dur": 3.26,
+  "hash": "7792064ff299"
+ },
+ "school.meet.2": {
+  "file": "school.meet.2.mp3",
+  "who": "grandma",
+  "text": "我是阿春啦。很久很久以前，我也在這間學校讀冊。",
+  "dur": 8.14,
+  "hash": "a9c33480f0c9"
+ },
+ "school.meet.3": {
+  "file": "school.meet.3.mp3",
+  "who": "guikid2",
+  "text": "那……妳是學姊？",
+  "dur": 1.73,
+  "hash": "ee149529cc83"
+ },
+ "school.meet.4": {
+  "file": "school.meet.4.mp3",
+  "who": "grandma",
+  "text": "學姊？哈哈，我是阿嬤了。你們怎麼這麼晚還在這裡？",
+  "dur": 8.52,
+  "hash": "c5ce2e8248c6"
+ },
+ "school.meet.5": {
+  "file": "school.meet.5.mp3",
+  "who": "guikid1",
+  "text": "我們一直在這裡玩啊。可是都沒有人來陪我們玩。",
+  "dur": 4.08,
+  "hash": "c87f673a06d5"
+ },
+ "school.meet.6": {
+  "file": "school.meet.6.mp3",
+  "who": "guikid2",
+  "text": "阿嬤……妳可以陪我們玩嗎？",
+  "dur": 2.18,
+  "hash": "93908f2e8334"
+ },
+ "school.meet.7": {
+  "file": "school.meet.7.mp3",
+  "who": "grandma",
+  "text": "好啊，阿嬤陪你們玩。要玩什麼？",
+  "dur": 5.38,
+  "hash": "bd8ede2f16bf"
+ },
+ "school.organ.1": {
+  "file": "school.organ.1.mp3",
+  "who": "grandma",
+  "text": "妹妹背著洋娃娃……老師最愛彈這條。",
+  "dur": 5.04,
+  "hash": "c397f0fad11f"
+ },
+ "school.organ.2": {
+  "file": "school.organ.2.mp3",
+  "who": "grandma",
+  "text": "風琴的聲音走鐘了，跟我的腳一樣，老囉。",
+  "dur": 5.33,
+  "hash": "91732531953f"
+ },
+ "school.plaque": {
+  "file": "school.plaque.mp3",
+  "who": "grandma",
+  "text": "校名的字掉了一個，以前每天早上都要在這排隊點名。",
+  "dur": 6.98,
+  "hash": "43dc5051f895"
+ },
+ "school.stage": {
+  "file": "school.stage.mp3",
+  "who": "grandma",
+  "text": "五年級那年，我在這個司令台領作文比賽第一名。腳在抖，獎狀拿倒反。",
+  "dur": 10.25,
+  "hash": "b81f702ec53a"
+ },
+ "school.statue": {
+  "file": "school.statue.mp3",
+  "who": "grandma",
+  "text": "頂面本來有一尊銅像，後來不知道被搬去哪了。",
+  "dur": 6.14,
+  "hash": "f3104ed5e38c"
+ },
+ "school.tag.lose": {
+  "file": "school.tag.lose.mp3",
+  "who": "grandma",
+  "text": "跑那麼快……阿嬤下次再來抓你們。",
+  "dur": 4.2,
+  "hash": "a61dad5bca29"
+ },
+ "school.tag.win": {
+  "file": "school.tag.win.mp3",
+  "who": "grandma",
+  "text": "一個一個都抓到了！阿嬤寶刀未老。",
+  "dur": 5.23,
+  "hash": "e6173d388e9e"
+ },
+ "school.trough": {
+  "file": "school.trough.mp3",
+  "who": "grandma",
+  "text": "下課大家搶著喝水，水龍頭一開，噴得規身軀都是。",
+  "dur": 6.86,
+  "hash": "18ad4b50f99d"
+ },
+ "stage.bare.1": {
+  "file": "stage.bare.1.mp3",
+  "who": "grandma",
+  "text": "戲台只剩竹架子……等節日的時候就熱鬧了。",
+  "dur": 5.71,
+  "hash": "24328574e395"
+ },
+ "stage.bare.2": {
+  "file": "stage.bare.2.mp3",
+  "who": "grandma",
+  "text": "帆布摺得好好的，戲班的人很愛惜東西。",
+  "dur": 5.06,
+  "hash": "1bc918f04536"
+ },
+ "stage.bare.3": {
+  "file": "stage.bare.3.mp3",
+  "who": "grandma",
+  "text": "阿嬤年輕的時候，常常跟阿公坐在這裡看戲。",
+  "dur": 5.86,
+  "hash": "86a76dec3e4f"
+ },
+ "stage.gm.1": {
+  "file": "stage.gm.1.mp3",
+  "who": "grandma",
+  "text": "少年仔喝成這樣，明天頭一定很痛。",
+  "dur": 4.97,
+  "hash": "afcad6921430"
+ },
+ "stage.gm.2": {
+  "file": "stage.gm.2.mp3",
+  "who": "grandma",
+  "text": "唉唷，阿嬤少年時也跟過戲班打鼓呢。來！",
+  "dur": 7.01,
+  "hash": "bdbedfcf7042"
+ },
+ "stage.offering.1": {
+  "file": "stage.offering.1.mp3",
+  "who": "grandma",
+  "text": "雞鴨魚肉、罐頭疊成塔……普渡就是要讓大家都吃飽。",
+  "dur": 6.98,
+  "hash": "eeb0eadd6801"
+ },
+ "stage.offering.2": {
+  "file": "stage.offering.2.mp3",
+  "who": "grandma",
+  "text": "好兄弟們，慢慢吃，吃飽了就好好上路。",
+  "dur": 5.59,
+  "hash": "c596b78024b3"
+ },
+ "stage.offering.3": {
+  "file": "stage.offering.3.mp3",
+  "who": "grandma",
+  "text": "那疊罐頭塔，一定是阿嬌店裡買的。",
+  "dur": 4.58,
+  "hash": "b218315bddf1"
+ },
+ "stage.watch.1": {
+  "file": "stage.watch.1.mp3",
+  "who": "grandma",
+  "text": "陳三五娘……這齣阿嬤看過好幾遍了，每次都還是會哭。",
+  "dur": 7.3,
+  "hash": "c137e0960c90"
+ },
+ "stage.watch.2": {
+  "file": "stage.watch.2.mp3",
+  "who": "grandma",
+  "text": "這個小生唱得真好，字咬得清清楚楚。",
+  "dur": 4.9,
+  "hash": "d87ba5c3a3f7"
+ },
+ "stage.watch.3": {
+  "file": "stage.watch.3.mp3",
+  "who": "grandma",
+  "text": "以前戲台前面都擠滿人，現在台下的比台上的還少。",
+  "dur": 6.6,
+  "hash": "1b099a79d027"
+ },
+ "stage.watch.4": {
+  "file": "stage.watch.4.mp3",
+  "who": "grandma",
+  "text": "苦旦又要哭了，快拿手帕……",
+  "dur": 3.7,
+  "hash": "71032a7a37ae"
+ },
+ "stage.watch.5": {
+  "file": "stage.watch.5.mp3",
+  "who": "grandma",
+  "text": "天還沒暗，戲就先開鑼了，熱鬧喔。",
+  "dur": 4.92,
+  "hash": "bf93a9296e24"
+ },
+ "stage.watch.ghost": {
+  "file": "stage.watch.ghost.mp3",
+  "who": "grandma",
+  "text": "半夜的戲是演給好兄弟看的，你看後面那幾排，坐得滿滿的。",
+  "dur": 7.44,
+  "hash": "b32718f27f24"
+ },
+ "stage.zongzi.done": {
+  "file": "stage.zongzi.done.mp3",
+  "who": "grandma",
+  "text": "今天的粽子包好了，剩下的讓阿桑們忙。",
+  "dur": 5.3,
+  "hash": "28c65330b2f8"
+ },
+ "stage.zongzi.good": {
+  "file": "stage.zongzi.good.mp3",
+  "who": "grandma",
+  "text": "這幾顆包得漂漂亮亮，帶回去給客人當宵夜！",
+  "dur": 5.93,
+  "hash": "cfefdc23c4f8"
+ },
+ "stage.zongzi.none": {
+  "file": "stage.zongzi.none.mp3",
+  "who": "grandma",
+  "text": "唉唷，手變生疏了……下次再來。",
+  "dur": 4.3,
+  "hash": "56e100935d58"
+ },
+ "stage.zongzi.ok": {
+  "file": "stage.zongzi.ok.mp3",
+  "who": "grandma",
+  "text": "有一點歪歪的，不過一樣好吃啦。",
+  "dur": 4.34,
+  "hash": "6b1565a481ee"
+ },
+ "stage.zongzi.start": {
+  "file": "stage.zongzi.start.mp3",
+  "who": "grandma",
+  "text": "包粽子喔？阿嬤最會了，粽葉要摺得緊緊的。",
+  "dur": 6.72,
+  "hash": "f875a54f8698"
+ },
  "temple.incense": {
   "file": "temple.incense.mp3",
   "who": "grandma",
@@ -2756,6 +4436,104 @@
   "text": "今天已經拜過土地公了。",
   "dur": 3.29,
   "hash": "b11d33d1bfb8"
+ },
+ "toys.claw.ajiao": {
+  "file": "toys.claw.ajiao.mp3",
+  "who": "ajiao",
+  "text": "阿春，妳也要玩喔？那台很難夾啦，我顧店顧到都會背了。",
+  "dur": 7.37,
+  "hash": "a70b5198cfb6"
+ },
+ "toys.claw.done": {
+  "file": "toys.claw.done.mp3",
+  "who": "grandma",
+  "text": "今天夾夠了，錢要留著買菜。",
+  "dur": 4.15,
+  "hash": "279ea4f94002"
+ },
+ "toys.claw.hello": {
+  "file": "toys.claw.hello.mp3",
+  "who": "grandma",
+  "text": "夾娃娃機……一次二十塊，搶錢喔。",
+  "dur": 4.87,
+  "hash": "d9b55cd5df3c"
+ },
+ "toys.claw.lose": {
+  "file": "toys.claw.lose.mp3",
+  "who": "grandma",
+  "text": "這爪仔沒力啦，騙錢的。",
+  "dur": 3.38,
+  "hash": "04346fd318b5"
+ },
+ "toys.claw.nomoney": {
+  "file": "toys.claw.nomoney.mp3",
+  "who": "grandma",
+  "text": "錢不夠了，不夾了。",
+  "dur": 2.64,
+  "hash": "124f3a4f0ca8"
+ },
+ "toys.claw.win.dino": {
+  "file": "toys.claw.win.dino.mp3",
+  "who": "grandma",
+  "text": "夾到了！這隻恐龍，小宇一定會喜歡。",
+  "dur": 6.26,
+  "hash": "747ba0410a0d"
+ },
+ "toys.claw.win.doll": {
+  "file": "toys.claw.win.doll.mp3",
+  "who": "grandma",
+  "text": "這個紅衫的胖囡仔，跟阿翰小時候一模一樣。",
+  "dur": 5.64,
+  "hash": "03c2cc127f11"
+ },
+ "toys.claw.win.rabbit": {
+  "file": "toys.claw.win.rabbit.mp3",
+  "who": "grandma",
+  "text": "粉紅色的兔仔，送給哪個小姑娘好呢？",
+  "dur": 4.87,
+  "hash": "52452f326dc6"
+ },
+ "toys.claw.win.snack": {
+  "file": "toys.claw.win.snack.mp3",
+  "who": "grandma",
+  "text": "乖乖！放在機器上面，機器就會乖乖的。",
+  "dur": 6.38,
+  "hash": "2d966714067f"
+ },
+ "toys.pachinko.done": {
+  "file": "toys.pachinko.done.mp3",
+  "who": "grandma",
+  "text": "今晚玩過了，別貪心。",
+  "dur": 3.31,
+  "hash": "0ae263174df7"
+ },
+ "toys.pachinko.hello": {
+  "file": "toys.pachinko.hello.mp3",
+  "who": "grandma",
+  "text": "彈珠台！阮少年時，一粒彈珠一角銀。",
+  "dur": 6.36,
+  "hash": "76acee9360b6"
+ },
+ "toys.pachinko.lose": {
+  "file": "toys.pachinko.lose.mp3",
+  "who": "grandma",
+  "text": "彈珠都跑去底下了……",
+  "dur": 2.76,
+  "hash": "ff6ced81f524"
+ },
+ "toys.pachinko.win": {
+  "file": "toys.pachinko.win.mp3",
+  "who": "grandma",
+  "text": "嘿，阿嬤還有兩下子。",
+  "dur": 3.17,
+  "hash": "3cd84c368513"
+ },
+ "toys.pachinko.win.big": {
+  "file": "toys.pachinko.win.big.mp3",
+  "who": "grandma",
+  "text": "大獎！叮叮叮，好響亮！",
+  "dur": 4.56,
+  "hash": "b023a60f72bd"
  },
  "village.banyan.1": {
   "file": "village.banyan.1.mp3",
@@ -3148,6 +4926,132 @@
   "text": "嗯……好吵喔……",
   "dur": 2.14,
   "hash": "5f03894c6f4d"
+ },
+ "yuyi.1.1": {
+  "file": "yuyi.1.1.mp3",
+  "who": "yuyi",
+  "text": "唉唷，新來的？讓我看看……林家的阿春嘛！我是玉姨啦，蔡家的。",
+  "dur": 7.94,
+  "hash": "b08590140d75"
+ },
+ "yuyi.1.2": {
+  "file": "yuyi.1.2.mp3",
+  "who": "yuyi",
+  "text": "對啦對啦！人走了，嘴巴還停不下來。這山上的事我全都知道，誰家的墳最久沒人掃、誰半夜會偷哭……",
+  "dur": 11.4,
+  "hash": "d406b5a7ddde"
+ },
+ "yuyi.1.3": {
+  "file": "yuyi.1.3.mp3",
+  "who": "yuyi",
+  "text": "可是啊，山下的消息我就不知道了。柑仔店的阿嬌最近怎樣？她那張嘴，以前跟我吵最兇。",
+  "dur": 10.27,
+  "hash": "eba23a135236"
+ },
+ "yuyi.1.4": {
+  "file": "yuyi.1.4.mp3",
+  "who": "yuyi",
+  "text": "妳去幫我探聽一下，回來講給我聽，我拿一個秘密跟妳換！",
+  "dur": 5.52,
+  "hash": "0c7467880b0b"
+ },
+ "yuyi.2.1": {
+  "file": "yuyi.2.1.mp3",
+  "who": "yuyi",
+  "text": "什麼！阿嬌看得到鬼？怪不得她以前老是說我後面有人！",
+  "dur": 6.91,
+  "hash": "d00a6f95a3ed"
+ },
+ "yuyi.2.2": {
+  "file": "yuyi.2.2.mp3",
+  "who": "yuyi",
+  "text": "好，換我跟妳講一個秘密。",
+  "dur": 2.78,
+  "hash": "c59b18db6677"
+ },
+ "yuyi.2.3": {
+  "file": "yuyi.2.3.mp3",
+  "who": "yuyi",
+  "text": "廟口那個王伯啊——就是會抓鬼那個——他從小最怕狗。狗一叫，他就繞路走。",
+  "dur": 7.94,
+  "hash": "9f9314df5b13"
+ },
+ "yuyi.2.4": {
+  "file": "yuyi.2.4.mp3",
+  "who": "yuyi",
+  "text": "騙妳幹嘛！他小時候被黑狗追了一整條街。妳要是被他盯上，找隻狗叫兩聲就好。",
+  "dur": 9.38,
+  "hash": "d554e017fa86"
+ },
+ "yuyi.2.ask": {
+  "file": "yuyi.2.ask.mp3",
+  "who": "yuyi",
+  "text": "然後呢？她說了什麼？店裡怎樣？",
+  "dur": 4.85,
+  "hash": "c34588877b86"
+ },
+ "yuyi.2.fridge": {
+  "file": "yuyi.2.fridge.mp3",
+  "who": "yuyi",
+  "text": "那台冰箱是我家那口子幫她搬的！四十年了還沒壞？",
+  "dur": 5.83,
+  "hash": "2b19fd71afe6"
+ },
+ "yuyi.2.miss1": {
+  "file": "yuyi.2.miss1.mp3",
+  "who": "yuyi",
+  "text": "……她、她真的這樣說？那個死阿嬌……",
+  "dur": 4.13,
+  "hash": "b781c3d1344d"
+ },
+ "yuyi.2.miss2": {
+  "file": "yuyi.2.miss2.mp3",
+  "who": "yuyi",
+  "text": "（別過頭）好啦好啦，我也有一點想她。",
+  "dur": 3.91,
+  "hash": "1f73153ec962"
+ },
+ "yuyi.gossip.1": {
+  "file": "yuyi.gossip.1.mp3",
+  "who": "yuyi",
+  "text": "妳知道嗎？下面那排的黃先生，清明節三個兒子為了誰出錢，吵了一整個下午。",
+  "dur": 8.38,
+  "hash": "f54ff928a87b"
+ },
+ "yuyi.gossip.2": {
+  "file": "yuyi.gossip.2.mp3",
+  "who": "yuyi",
+  "text": "火伯啊，嘴巴很壞，其實每年他戰友的忌日，都一個人坐在那邊。",
+  "dur": 6.5,
+  "hash": "4aa9a86ce0c8"
+ },
+ "yuyi.gossip.3": {
+  "file": "yuyi.gossip.3.mp3",
+  "who": "yuyi",
+  "text": "村長家的孫子考上大學了，他阿公在墳前講了三次，整座山都聽到了。",
+  "dur": 6.82,
+  "hash": "709a3be6584b"
+ },
+ "yuyi.gossip.4": {
+  "file": "yuyi.gossip.4.mp3",
+  "who": "yuyi",
+  "text": "妳家小翰清明的時候，在妳墳前待了好久喔。我都有看到。",
+  "dur": 6.38,
+  "hash": "cf2d6de7a065"
+ },
+ "yuyi.wait.1": {
+  "file": "yuyi.wait.1.mp3",
+  "who": "yuyi",
+  "text": "阿嬌那邊探聽了沒？快點啦，我好奇得要死——喔，已經死了。",
+  "dur": 6.86,
+  "hash": "1254d7c8b00f"
+ },
+ "yuyi.wait.2": {
+  "file": "yuyi.wait.2.mp3",
+  "who": "yuyi",
+  "text": "柑仔店就在村子裡嘛，妳飄一下就到了。",
+  "dur": 4.08,
+  "hash": "e9be2b73344f"
  },
  "zhang.arrive.1": {
   "file": "zhang.arrive.1.mp3",

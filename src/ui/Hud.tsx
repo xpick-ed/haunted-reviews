@@ -358,11 +358,12 @@ function HideView() {
   )
 }
 
-/** 附身在阿咪身上 */
+/** 附身在動物身上 */
 function PossessBadge() {
   const possess = useStore((s) => s.possess)
   if (!possess) return null
-  return <div className="possess-badge">🐈 附身阿咪中（陰氣一直在扣）</div>
+  const name = { cat: '🐈 附身阿咪中', dog: '🐕 附身小黑中', gecko: '🦎 附身壁虎中' }[possess]
+  return <div className="possess-badge">{name}（陰氣一直在扣）</div>
 }
 
 function KeyHint() {

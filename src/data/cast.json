@@ -543,5 +543,221 @@
    "wave": "triangle",
    "jitter": 0.1
   }
+ },
+ {
+  "id": "conductor",
+  "name": "鬼車掌",
+  "desc": "末班鬼火車的車掌，制服筆挺、說話一板一眼，其實很念舊。",
+  "ghost": true,
+  "color": "#6f8fb0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-10%",
+   "pitch": "-14Hz",
+   "fx": [
+    "plain",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "bingmom",
+  "name": "冰果室阿桃",
+  "desc": "老街冰果室的老闆娘，七十幾歲還在剉冰，看得到鬼（生意照做）。",
+  "ghost": false,
+  "color": "#f0a0b8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-8%",
+   "pitch": "-20Hz",
+   "fx": [
+    "elder",
+    "warm"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "projectionist",
+  "name": "放映師",
+  "desc": "老戲院的放映師鬼，戲院關了幾十年，他還在等最後一場。",
+  "ghost": true,
+  "color": "#b0a070",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-16%",
+   "pitch": "-18Hz",
+   "fx": [
+    "mystic",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "photographer",
+  "name": "照相館老闆",
+  "desc": "照相館的老闆，戴老花眼鏡，拍照時會喊「笑一個」。",
+  "ghost": false,
+  "color": "#a0b0c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-6%",
+   "pitch": "-12Hz",
+   "fx": [
+    "elder"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "keeper",
+  "name": "守燈人",
+  "desc": "燈塔的守燈人鬼，守了一輩子的燈，燈熄了他就睡不著。",
+  "ghost": true,
+  "color": "#8fc0d0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-18%",
+   "pitch": "-24Hz",
+   "fx": [
+    "elder",
+    "gruff",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "youngchun",
+  "name": "年輕的阿春",
+  "desc": "1958 年的阿春，十八歲，愛笑、手腳很快。",
+  "ghost": false,
+  "color": "#f4c0a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "+4%",
+   "pitch": "+6Hz",
+   "fx": [
+    "bright"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "agong",
+  "name": "阿公（年輕）",
+  "desc": "年輕的林添福，憨直、不太會講話，笑起來很傻。",
+  "ghost": false,
+  "color": "#9ab070",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-4%",
+   "pitch": "-4Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "popo",
+  "name": "婆婆",
+  "desc": "阿春的婆婆，嘴巴嚴、心很軟。",
+  "ghost": false,
+  "color": "#c09080",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-12%",
+   "pitch": "-28Hz",
+   "fx": [
+    "elder",
+    "raspy"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "thief",
+  "name": "小偷",
+  "desc": "半夜翻牆進來的小偷，膽子很小。",
+  "ghost": false,
+  "color": "#707070",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiNeural",
+   "rate": "+10%",
+   "pitch": "-6Hz",
+   "fx": [
+    "plain"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "drunk",
+  "name": "醉漢",
+  "desc": "在門口大聲唱歌的醉漢，其實是想家。",
+  "ghost": false,
+  "color": "#b07050",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-20%",
+   "pitch": "-10Hz",
+   "fx": [
+    "drunk"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
  }
 ]

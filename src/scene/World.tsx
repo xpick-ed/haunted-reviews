@@ -8,7 +8,8 @@ import { SCENES, npcColliders, type SceneId } from '../world/scenes'
 import type { Circle, Colliders } from '../world/collision'
 import { nearestHotspot } from '../world/hotspots'
 import { inRect, segmentHitsBox } from '../world/collision'
-import { night, nightOptions, type PromptOpt } from '../world/night/director'
+import { night, nightOptions, type DecorPlacement, type PromptOpt } from '../world/night/director'
+import { decorCircles } from '../world/decor'
 
 // 每幀的遊戲邏輯（放在 Canvas 裡，才拿得到鏡頭位置）：
 // 輸入 → 移動與碰撞 → 深夜模擬 → 在哪個房間 → 哪些建築要淡出 → 附近能做的事 → 出口。
@@ -17,18 +18,25 @@ import { night, nightOptions, type PromptOpt } from '../world/night/director'
 const colliderCache = new Map<string, Colliders>()
 function collidersFor(scene: SceneId, phase: string): Colliders {
   // 夢境的碰撞每場夢都不一樣（src/world/dream.ts 會換掉 DREAM_SCENE.colliders），不快取
-  if (scene === 'dream') return SCENES.dream.colliders
-  const key = `${scene}|${phase}`
+  // 夢境、1958、漲退潮的海邊：碰撞會變（各自的模組直接換掉 SceneDef.colliders），不快取
+  if (scene === 'dream' || scene === 'past' || scene === 'harbor') return SCENES[scene].colliders
+  // 家裡：擺設換了就重算（快取的 key 帶擺設的版本）
+  const decor = useStore.getState().meta.decor
+  const key = scene === 'home' ? `${scene}|${phase}|${decorKey(decor)}` : `${scene}|${phase}`
   let c = colliderCache.get(key)
   if (!c) {
     const base = SCENES[scene].colliders
-    c = { rects: base.rects, circles: [...base.circles, ...npcColliders(scene, phase)], bounds: base.bounds }
+    c = { rects: base.rects, circles: [...base.circles, ...npcColliders(scene, phase), ...(scene === 'home' ? decorCircles(decor) : [])], bounds: base.bounds }
     colliderCache.set(key, c)
   }
   return c
 }
 
 let wasDashing = false
+
+function decorKey(decor: DecorPlacement[]) {
+  return decor.map((d) => `${d.item}@${d.x.toFixed(2)},${d.z.toFixed(2)}`).join(';')
+}
 
 /** 深夜：走動中的客人、廟公也不能重疊（每幀位置會變，不快取） */
 const moving: Colliders = { rects: [], circles: [], bounds: { x0: -1e3, z0: -1e3, x1: 1e3, z1: 1e3 } }

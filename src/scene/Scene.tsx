@@ -24,6 +24,14 @@ import { DreamScene } from './Dream'
 import { RiverScene } from './River'
 import { SchoolScene } from './School'
 import { HillScene } from './Hill'
+import { StationScene } from './Station'
+import { OldStreetScene } from './OldStreet'
+import { HarborScene } from './Harbor'
+import { PastScene } from './Past'
+import { HomeStationPath } from './StationPath'
+import { DecorLayer } from './Decor'
+import { IncidentsLayer } from './Incidents'
+import { EncounterLayer } from './Encounters'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { VisionLayer } from './Vision'
 import { ChibiNpc } from '../chars/Chibi'
@@ -115,6 +123,10 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
   if (scene === 'river') return <RiverScene />
   if (scene === 'school') return <SchoolScene />
   if (scene === 'hill') return <HillScene />
+  if (scene === 'station') return <StationScene />
+  if (scene === 'oldstreet') return <OldStreetScene />
+  if (scene === 'harbor') return <HarborScene />
+  if (scene === 'past') return <PastScene />
   return (
     <group>
       <Landscape quality={quality} />
@@ -125,6 +137,10 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
       </MergeStatic>
       <Guests />
       <TelekinesisLayer />
+      <HomeStationPath />
+      <DecorLayer />
+      <IncidentsLayer />
+      <EncounterLayer />
       {phase === 'dusk' && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )

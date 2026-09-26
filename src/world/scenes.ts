@@ -45,11 +45,15 @@ import { RIVER_SCENE } from './sceneRiver'
 import { SCHOOL_SCENE } from './sceneSchool'
 import { HILL_SCENE } from './sceneHill'
 import { STAGE_CIRCLES, STAGE_RECTS } from './sceneStage'
+import { STATION_SCENE } from './sceneStation'
+import { OLDSTREET_SCENE } from './sceneOldStreet'
+import { HARBOR_SCENE } from './sceneHarbor'
+import { PAST_SCENE } from './scenePast'
 
 // 場景定義：碰撞、出生點、出口、建築（淡出與室內鏡頭用）、地板高度。
 // 視覺在 scene/ 底下，這裡只有「規則」需要的資料。
 
-export type SceneId = 'home' | 'temple' | 'village' | 'garden' | 'market' | 'dream' | 'river' | 'school' | 'hill'
+export type SceneId = 'home' | 'temple' | 'village' | 'garden' | 'market' | 'dream' | 'river' | 'school' | 'hill' | 'station' | 'oldstreet' | 'harbor' | 'past'
 
 export interface Building {
   id: string
@@ -200,10 +204,12 @@ export const HOME: SceneDef = {
     yard: [0, 2.5],
     gate: [0, FENCE.z + 1.2],
     road_east: [22.5, ROAD.z],
+    road_west: [-20.8, ROAD.z],
     back: [-11.5, -14.2],
   },
   exits: [
     { area: rect(25.2, ROAD.z - 3, 28, ROAD.z + 3), to: 'village', spawn: 'west', label: '村子 →', sign: [23.6, ROAD.z - 2.1] },
+    { area: rect(-24, ROAD.z - 3, -22.4, ROAD.z + 3), to: 'station', spawn: 'east', label: '← 小火車站', sign: [-20.6, ROAD.z - 2.1] },
     { area: rect(-14, -17, -9, -15.8), to: 'garden', spawn: 'path', label: '後院菜園 ↑', sign: [-8.4, -14.6] },
   ],
   buildings: [
@@ -327,6 +333,10 @@ export const SCENES: Record<SceneId, SceneDef> = {
   river: RIVER_SCENE,
   school: SCHOOL_SCENE,
   hill: HILL_SCENE,
+  station: STATION_SCENE,
+  oldstreet: OLDSTREET_SCENE,
+  harbor: HARBOR_SCENE,
+  past: PAST_SCENE,
 }
 
 /** NPC 站的位置（畫面與碰撞共用） */

@@ -18,6 +18,13 @@ export type MinigameId =
   | 'zongzi'
   | 'hopscotch'
   | 'ouija'
+  // 第三批（DESIGN §27）
+  | 'train'
+  | 'shaveice'
+  | 'cinema'
+  | 'photo'
+  | 'crab'
+  | 'fuse'
 
 export interface MinigameProps<P = unknown, R = unknown> {
   params: P
@@ -100,3 +107,40 @@ export interface OuijaParams {
   guest: string
 }
 export type OuijaResult = { comfort: number; scare: number; secret: number } | null
+
+// ---------------------------------------------------------------------------
+// 第三批（DESIGN §27）
+// ---------------------------------------------------------------------------
+
+/** 五分車：坐在車頂穿過甘蔗田，贏到的功德 */
+export type TrainResult = PrizeResult
+
+/** 冰果室剉冰：做對幾碗、贏到的功德 */
+export interface ShaveIceResult {
+  served: number
+  merit: number
+}
+
+/** 老戲院放映機：params 是可以放的回憶（已收集的 id）；看了哪一卷（null＝沒看） */
+export interface CinemaParams {
+  reels: string[]
+}
+export interface CinemaResult {
+  watched: string | null
+}
+
+/** 照相館：拍了沒（照片可以留在相簿） */
+export interface PhotoResult {
+  taken: boolean
+}
+
+/** 抓螃蟹：抓到幾隻（每隻是一份「螃蟹」食材） */
+export interface CrabResult {
+  crabs: number
+}
+
+/** 修保險絲：修好沒、花幾秒 */
+export interface FuseResult {
+  fixed: boolean
+  seconds: number
+}

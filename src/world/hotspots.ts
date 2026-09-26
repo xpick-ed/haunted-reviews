@@ -11,6 +11,12 @@ import { SCHOOL_HOTSPOTS } from './sceneSchool'
 import { HILL_HOTSPOTS } from './sceneHill'
 import { STAGE_HOTSPOTS } from './sceneStage'
 import { MEMORY_HOTSPOTS } from './memories'
+import { STATION_HOTSPOTS } from './sceneStation'
+import { OLDSTREET_HOTSPOTS } from './sceneOldStreet'
+import { HARBOR_HOTSPOTS } from './sceneHarbor'
+import { PAST_HOTSPOTS } from './past'
+import { BOND_HOTSPOTS } from './bonds'
+import { DECOR_HOTSPOTS } from './decor'
 import { festivalOf } from './night/plan'
 import { night, yinMax } from './night/director'
 import { NEED_INFO } from './night/guests'
@@ -202,6 +208,12 @@ export const HOTSPOTS: Hotspot[] = [
   ...HILL_HOTSPOTS,
   ...STAGE_HOTSPOTS,
   ...MEMORY_HOTSPOTS,
+  ...STATION_HOTSPOTS,
+  ...OLDSTREET_HOTSPOTS,
+  ...HARBOR_HOTSPOTS,
+  ...PAST_HOTSPOTS,
+  ...BOND_HOTSPOTS,
+  ...DECOR_HOTSPOTS,
 ]
 
 /** 目前最近、可以用的熱點 */

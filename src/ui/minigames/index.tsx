@@ -14,6 +14,12 @@ import Pachinko from './pachinko'
 import Zongzi from './zongzi'
 import Hopscotch from './hopscotch'
 import Ouija from './ouija'
+import Train from './train'
+import Shaveice from './shaveice'
+import Cinema from './cinema'
+import Photo from './photo'
+import Crab from './crab'
+import Fuse from './fuse'
 
 // 小遊戲登記表：id → 元件。新增小遊戲：在這裡加一行、在 types.ts 加 id。
 
@@ -32,6 +38,12 @@ export const MINIGAMES: Record<MinigameId, ComponentType<MinigameProps<any, any>
   zongzi: Zongzi,
   hopscotch: Hopscotch,
   ouija: Ouija,
+  train: Train,
+  shaveice: Shaveice,
+  cinema: Cinema,
+  photo: Photo,
+  crab: Crab,
+  fuse: Fuse,
 }
 
 /** HUD 上的覆蓋層 */

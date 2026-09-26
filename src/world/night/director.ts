@@ -9,8 +9,10 @@ import { player } from '../player'
 import { ACTION_DEFS, nightSpots, type NightCtx, type Option } from './actions'
 import { GUESTS } from './guests'
 import { MONTHLY_COST, NIGHTS_PER_MONTH, SKILLS, UPGRADES, planNight, type NightPlan, type UpgradeDef } from './plan'
-import { NightSim, type SimEvent } from './sim'
+import { NightSim, type DecorBonus, type SimEvent, type SimPlugin } from './sim'
 import { rateGuest } from './rating'
+import { createIncidents, INCIDENT_EVENTS } from './incidents'
+import { createEncounters, ENCOUNTER_EVENTS } from './encounters'
 import { RECIPES, START_PANTRY, canCook, type Fortune, type Ingredient, type RecipeId, type RelicId } from './items'
 import { HIDE_SPOTS } from './actions'
 import { input } from '../input'
@@ -51,6 +53,24 @@ export interface Meta {
   jiaobei: number
   /** 收集到的回憶碎片（src/world/memories.ts 的 id） */
   memories: string[]
+  /** 裝修民宿：擺好的家具擺飾（src/world/decor.ts） */
+  decor: DecorPlacement[]
+  /** 好感度 0–100（每 20 一顆心；src/world/bonds.ts） */
+  bonds: Record<string, number>
+  /** 玩過的 1958 關卡（src/world/past.ts） */
+  pastDone: string[]
+}
+
+/** 一件擺好的家具擺飾 */
+export interface DecorPlacement {
+  /** 目錄裡的 id */
+  item: string
+  x: number
+  z: number
+  /** 轉幾度（弧度） */
+  rot: number
+  /** 擺在哪間客房（擺在埕、神明廳等公共空間是 null） */
+  room: RoomId | null
 }
 
 export interface GuestView {
@@ -222,6 +242,9 @@ export const START_META = (): Meta => ({
   fortune: null,
   jiaobei: 0,
   memories: [],
+  decor: [],
+  bonds: {},
+  pastDone: [],
 })
 
 /** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
@@ -252,6 +275,19 @@ export const EMPTY_STATS = (): NightStats => ({ seen: 0, captures: 0, nearmiss: 
 
 /** 要長按的動作（慈祥、會發出一點聲音的小事） */
 const HOLD_ACTIONS = new Set<ActionId>(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver', 'retrieve'])
+
+/**
+ * NightSim 的外掛登記表（DESIGN §27.2）：每晚開始時呼叫，回傳 null 表示今晚沒有。
+ * 突發事件（night/incidents.ts）、客人之間的故事（night/encounters.ts）在自己的模組裡 push 進來。
+ */
+export const SIM_PLUGINS: ((sim: NightSim, plan: NightPlan, meta: Meta) => SimPlugin | null)[] = [createIncidents, createEncounters]
+
+/** 外掛發出的自訂事件（SimEvent 的 t: 'custom'）的處理函式：kind → handler */
+export const CUSTOM_EVENTS: Record<string, (data: unknown) => void> = { ...INCIDENT_EVENTS, ...ENCOUNTER_EVENTS }
+
+/** 擺設換算成模擬用的加成（src/world/decor.ts 登記進來；還沒登記就沒有加成） */
+export const decorHooks: { bonus: (decor: DecorPlacement[]) => DecorBonus | undefined } = { bonus: () => undefined }
+const decorBonusFor = (decor: DecorPlacement[] | undefined) => decorHooks.bonus(decor ?? [])
 
 /** 模擬本體放在模組變數（每幀會改的東西不放進 zustand） */
 export const night: { sim: NightSim | null } = { sim: null }
@@ -419,6 +455,11 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         break
       case 'need':
       case 'asleep':
+        break
+      case 'custom':
+        // 外掛的事件：'line' 是講一句台詞；其他交給登記的處理函式
+        if (e.kind === 'line') get().bark((e.data as { id: string }).id)
+        else CUSTOM_EVENTS[e.kind]?.(e.data)
         break
     }
     set({ stats })
@@ -670,7 +711,14 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     nightBegin: () => {
       const s = get()
       const plan = planFor(s.meta)
-      night.sim = new NightSim(plan, { seed: s.meta.night * 131 + 7, upgrades: s.meta.upgrades, items: s.meta.items, fortune: s.meta.fortune })
+      // 傍晚在小火車站觀察過的客人（旗標 observed_<id>_today）：需求一出現就看得到
+      const observed = Object.keys(s.flags).filter((k) => s.flags[k] && k.startsWith('observed_') && k.endsWith('_today')).map((k) => k.slice(9, -6))
+      night.sim = new NightSim(plan, { seed: s.meta.night * 131 + 7, upgrades: s.meta.upgrades, items: s.meta.items, fortune: s.meta.fortune, decor: decorBonusFor(s.meta.decor), observed })
+      // 外掛：半夜突發事件、客人之間的故事（各自的模組決定今晚有沒有）
+      for (const make of SIM_PLUGINS) {
+        const p = make(night.sim, plan, s.meta)
+        if (p) night.sim.plugins.push(p)
+      }
       set({ plan, objects: {}, carrying: false, dish: null, hold: null, possess: null, hidden: null, stats: EMPTY_STATS(), challenges: makeChallenges(plan, s.meta), summary: null, flickerUntil: { r1: 0, r2: 0 } })
       // 擲筊擲到「陰氣充足」
       if (s.meta.fortune === 'yin') set({ yin: Math.min(yinMax(s.meta), s.yin + 30) })
@@ -922,7 +970,10 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         else warmD += (stars - 3) * 3
         if (stars <= 2 && d.type !== 'thrill' && !d.seesGhost) pressureD++
         if (stars === 5 && d.type !== 'thrill') pressureD--
-        const text = g.dreamt && stars >= 4 && !d.seesGhost ? '昨晚做了一個好溫暖的夢，夢裡有個阿嬤陪著我。起來精神超好，好久沒睡這麼熟了。' : reviewText(g.id, stars, g.seen, g.captures)
+        const base = g.dreamt && stars >= 4 && !d.seesGhost ? '昨晚做了一個好溫暖的夢，夢裡有個阿嬤陪著我。起來精神超好，好久沒睡這麼熟了。' : reviewText(g.id, stars, g.seen, g.captures)
+        // 外掛（突發事件、客人之間的故事）寫的附註接在後面
+        const note = sim.reviewNotes[g.id]
+        const text = note ? `${base}${note}` : base
         reviews.push({ id: g.id, name: d.name, stars, text, pay })
       }
       const challenges = s.challenges.map((c) => {

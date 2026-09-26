@@ -16,6 +16,11 @@ import { ShopPanel } from './Shop'
 import { RelicPanel } from './Relics'
 import { DreamHud } from './DreamHud'
 import { AlbumPanel } from './Album'
+import { DecorHud } from './DecorHud'
+import { IncidentHud } from './IncidentHud'
+import { EncounterPanel } from './EncounterPanel'
+import { GiftPanel } from './GiftPanel'
+import { PastHud } from './PastHud'
 import { MEMORIES } from '../world/memories'
 
 const PHASE_NAME = { dusk: '傍晚', night: '深夜', dawn: '清晨' } as const
@@ -61,6 +66,11 @@ export function Hud() {
       {panel === 'relics' && <RelicPanel />}
       {panel === 'album' && <AlbumPanel />}
       <DreamHud />
+      <PastHud />
+      <DecorHud />
+      <IncidentHud />
+      <EncounterPanel />
+      <GiftPanel />
       {summary && <NightSummaryCard />}
       {month && <MonthSummary />}
       <MinigameHost />

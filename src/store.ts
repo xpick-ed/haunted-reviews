@@ -76,6 +76,8 @@ export interface GameState extends NightSlice {
   minigame: { id: MinigameId; params: unknown; key: number } | null
   /** 托夢中：哪位客人的夢、醒來要回到哪裡 */
   dream: { guest: GuestId; from: [number, number]; startedAt: number } | null
+  /** 回到 1958：哪一關、結束後回到哪個場景的哪裡 */
+  past: { episode: string; from: { scene: SceneId; x: number; z: number } } | null
 
   // 其他
   /** 場景貼圖載完、shader 預先編譯完，才能按開始 */
@@ -113,6 +115,12 @@ export interface GameState extends NightSlice {
   endDream: (ok: boolean) => void
   /** 撿起一片回憶（src/world/memories.ts） */
   collectMemory: (id: string) => void
+  /** 走進 1958 的某一關（場景換成 past；src/world/past.ts 依 episode 擺好場景） */
+  enterPast: (episode: string) => void
+  /** 1958 的關卡結束：完成的話記在 meta.pastDone，回到原來的地方 */
+  exitPast: (done: boolean) => void
+  /** 好感度 +pts（0–100；src/world/bonds.ts） */
+  addBond: (npc: string, pts: number) => void
   save: () => void
 }
 
@@ -175,6 +183,7 @@ export const useStore = create<GameState>()((set, get) => ({
   roomLit: { r1: 0, r2: 0 },
   minigame: null,
   dream: null,
+  past: null,
   ready: false,
   voice: true,
   quality: new URLSearchParams(location.search).get('q') === 'low' ? 'low' : 'high',
@@ -574,6 +583,39 @@ export const useStore = create<GameState>()((set, get) => ({
     })
     later(1300, () => set({ blackout: false, transitioning: false }))
   },
+
+  enterPast: (episode) => {
+    const s = get()
+    if (s.transitioning || s.past || s.dream) return
+    const from = { scene: s.scene, x: player.x, z: player.z }
+    set({ transitioning: true, blackout: true, prompt: null, panel: null })
+    audio.whoosh()
+    later(700, () => {
+      const [x, z] = SCENES.past.spawns.start
+      placePlayer(x, z)
+      set({ scene: 'past', room: null, building: null, faded: '', past: { episode, from } })
+    })
+    later(1500, () => set({ blackout: false, transitioning: false }))
+  },
+
+  exitPast: (done) => {
+    const s = get()
+    const p = s.past
+    if (!p || s.transitioning) return
+    set({ transitioning: true, blackout: true })
+    if (done) {
+      audio.chime()
+      if (!s.meta.pastDone.includes(p.episode)) set({ meta: { ...s.meta, pastDone: [...s.meta.pastDone, p.episode], merit: s.meta.merit + 2 } })
+    }
+    later(700, () => {
+      placePlayer(p.from.x, p.from.z)
+      set({ scene: p.from.scene, room: null, building: null, faded: '', past: null })
+    })
+    later(1500, () => set({ blackout: false, transitioning: false }))
+  },
+
+  addBond: (npc, pts) =>
+    set((s) => ({ meta: { ...s.meta, bonds: { ...s.meta.bonds, [npc]: Math.max(0, Math.min(100, (s.meta.bonds[npc] ?? 0) + pts)) } } })),
 
   collectMemory: (id) => {
     const s = get()

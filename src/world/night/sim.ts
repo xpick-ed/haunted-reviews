@@ -5,7 +5,7 @@ import { seeded } from '../rng'
 import { BLOCKS_SLEEP, GUESTS, type GuestDef } from './guests'
 import { BED_NODE, MIAOGONG_LOOP, NODES, PATROL, route } from './nav'
 import type { NightPlan } from './plan'
-import type { BarkKind, GuestId, NeedKind, NightEvent, ObjectState, RoomId } from './types'
+import type { BarkKind, GuestId, GuestType, NeedKind, NightEvent, ObjectState, RoomId } from './types'
 
 // 深夜模擬（DESIGN §2.2、§5、§6、§11）。純 TypeScript，不碰畫面：
 // store 每幀呼叫 update()，把回傳的事件轉成語音、字幕、特效；畫面讀 guests 的位置與狀態來畫。
@@ -129,6 +129,28 @@ export interface DogRT {
   stopT: number
 }
 
+/**
+ * 外掛（DESIGN §27.2）：半夜突發事件、客人之間的故事……每幀在客人更新完之後呼叫。
+ * 可以用 sim.sendGuest() 叫客人走去某個地方、用 sim.emitCustom() 發事件。
+ */
+export interface SimPlugin {
+  update(dt: number, hour: number, gm: GrandmaState, sim: NightSim): void
+}
+
+/** 裝修民宿的加成（src/world/decor.ts 算好給進來） */
+export interface DecorBonus {
+  /** 每間客房一開始的舒適加成 */
+  comfort?: Partial<Record<RoomId, number>>
+  /** 每間客房：這些類型的客人特別喜歡（再 +10 舒適） */
+  likes?: Partial<Record<RoomId, GuestType[]>>
+  /** 每間客房的「嚇人」程度（YouTuber 開心、膽小的人會怕一點） */
+  spooky?: Partial<Record<RoomId, number>>
+  /** 這些房間不會有蚊子（蚊帳） */
+  noMosquito?: RoomId[]
+  /** 這些房間的人比較早睡（小時） */
+  sleepier?: Partial<Record<RoomId, number>>
+}
+
 export interface GrandmaState {
   x: number
   z: number
@@ -184,6 +206,8 @@ export type SimEvent =
   | { t: 'mg'; kind: 'arrive' | 'patrol' | 'spot' | 'catch' | 'leave' }
   | { t: 'mgCatch'; count: number }
   | { t: 'dog'; kind: 'start' | 'bark' | 'calm' }
+  /** 外掛的事件：kind 'line' 的 data 是 { id: 台詞 id }；其他交給 director 的 CUSTOM_EVENTS */
+  | { t: 'custom'; kind: string; data?: unknown }
 
 /** 牆（厚度 ≤ 0.32 的長條）：擋視線、擋聲音。家具不擋視線。 */
 const WALLS: Rect[] = HOME.colliders.rects.filter((r) => Math.min(r.x1 - r.x0, r.z1 - r.z0) <= 0.32 && Math.max(r.x1 - r.x0, r.z1 - r.z0) > 0.4)
@@ -246,6 +270,14 @@ export class NightSim {
   private mgDetour: { x: number; z: number; wait: number } | null = null
   cat: CatRT
   gecko: GeckoRT
+  /** 外掛（突發事件、客人之間的故事） */
+  plugins: SimPlugin[] = []
+  /** 裝修民宿的加成 */
+  decor: DecorBonus
+  /** 外掛寫給天亮評論的附註（接在評論後面） */
+  reviewNotes: Partial<Record<GuestId, string>> = {}
+  /** 傍晚在車站觀察過的客人：需求一出現就看得到 */
+  private observed: Set<string>
   hour = 22
   private rnd: () => number
   private needPlan: { g: GuestRT; kind: NeedKind; at: number }[] = []
@@ -257,8 +289,10 @@ export class NightSim {
   private grandmaPrevNear = new Set<string>()
   private inspectT = 0
 
-  constructor(plan: NightPlan, opts: { seed: number; upgrades: string[]; items?: string[]; fortune?: string | null }) {
+  constructor(plan: NightPlan, opts: { seed: number; upgrades: string[]; items?: string[]; fortune?: string | null; decor?: DecorBonus; observed?: string[] }) {
     this.rnd = seeded(opts.seed)
+    this.decor = opts.decor ?? {}
+    this.observed = new Set(opts.observed ?? [])
     this.upgrades = new Set(opts.upgrades)
     this.items = new Set(opts.items ?? [])
     this.fortune = opts.fortune ?? null
@@ -321,6 +355,18 @@ export class NightSim {
         }
       })
     }
+    // 裝修民宿：每間客房的舒適加成、客人喜好、嚇人程度
+    for (const g of this.guests) {
+      const d = this.decor
+      g.comfort += d.comfort?.[g.room] ?? 0
+      if (d.likes?.[g.room]?.includes(g.def.type)) g.comfort += 10
+      const spooky = d.spooky?.[g.room] ?? 0
+      if (spooky) {
+        if (g.def.type === 'thrill') g.comfort += spooky * 4
+        else if (!g.def.seesGhost) g.fear += spooky * 2
+      }
+    }
+    if (this.decor.noMosquito?.length) this.needPlan = this.needPlan.filter((p) => !(p.kind === 'mosquito' && this.decor.noMosquito!.includes(p.g.room)))
     // 突發事件
     if (plan.event === 'mosquitoes' && !this.upgrades.has('net'))
       for (const g of this.guests) if (!this.items.has('charm') || this.rnd() < 0.5) this.needPlan.push({ g, kind: 'mosquito', at: 23.4 + this.rnd() * 0.4 })
@@ -346,6 +392,7 @@ export class NightSim {
     this.updateDog(dt, hour, gm)
     this.updateCat(dt, gm)
     this.updateGecko(dt, gm)
+    for (const p of this.plugins) p.update(dt, hour, gm, this)
     this.doorEvents(gm)
     return this.out
   }
@@ -478,7 +525,7 @@ export class NightSim {
       if (p.kind === 'thirsty' && on('cup')) continue
       if (p.kind === 'cold' && g.tucked) continue
       if (p.kind === 'hungry' && on('dish')) continue
-      g.needs.push({ kind: p.kind, since: hour, known: this.farSight })
+      g.needs.push({ kind: p.kind, since: hour, known: this.farSight || this.observed.has(g.id) })
       this.emit({ t: 'need', who: g.id, kind: p.kind })
       if (g.awake) this.bark(g, `need_${p.kind}` as BarkKind, 4)
     }
@@ -515,7 +562,7 @@ export class NightSim {
       const blocked = g.needs.some((n) => BLOCKS_SLEEP.includes(n.kind))
       if (g.awake) {
         g.resleepT = Math.max(0, g.resleepT - dt)
-        const sleepy = hour >= g.def.bedtime - (this.calm ? 0.33 : 0) && g.resleepT <= 0 && g.scaredT <= 0 && g.fear < 70
+        const sleepy = hour >= g.def.bedtime - (this.calm ? 0.33 : 0) - (this.decor.sleepier?.[g.room] ?? 0) && g.resleepT <= 0 && g.scaredT <= 0 && g.fear < 70
         if (sleepy && !blocked) {
           g.awake = false
           g.sleep = g.tucked ? 0.4 : 0.1
@@ -1065,6 +1112,30 @@ export class NightSim {
       g.possessed = false
       g.speed = 0
     }
+  }
+
+  /** 外掛用：發一個自訂事件（director 的 CUSTOM_EVENTS 處理；kind 'line' 會直接講那句台詞） */
+  emitCustom(kind: string, data?: unknown) {
+    this.emit({ t: 'custom', kind, data })
+  }
+
+  /** 外掛用：這位客人現在有空嗎（醒著、躺在床上、沒有要去哪裡） */
+  isFree(id: GuestId) {
+    const g = this.guests.find((x) => x.id === id)
+    return !!g && g.awake && g.mode === 'bed' && g.steps.length === 0 && g.scaredT <= 0
+  }
+
+  /**
+   * 外掛用：叫客人下床走到某個路點（src/world/night/nav.ts 的 NODES），待 wait 秒（看著 look），再走回床上。
+   * 客人不在床上或正要去別的地方就不理（回傳 false）。
+   */
+  sendGuest(id: GuestId, node: string, wait: number, look?: XZ) {
+    const g = this.guests.find((x) => x.id === id)
+    if (!g || g.mode !== 'bed' || g.steps.length || !NODES[node]) return false
+    if (!g.awake) g.awake = true
+    g.steps = [{ path: route(BED_NODE[g.room], node) }, { wait, look }, { path: route(node, BED_NODE[g.room]), toBed: true }]
+    this.leaveBed(g)
+    return true
   }
 
   /** 今晚的碟仙玩過了 */

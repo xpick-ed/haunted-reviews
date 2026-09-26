@@ -8896,6 +8896,314 @@
   "dur": 7.22,
   "hash": "665970901e79"
  },
+ "story.cd.1": {
+  "file": "story.cd.1.mp3",
+  "who": "chendong",
+  "text": "小老闆，考慮得怎樣？這塊地，我出這個數。",
+  "dur": 4.3,
+  "hash": "a1402844d1a1"
+ },
+ "story.cd.2": {
+  "file": "story.cd.2.mp3",
+  "who": "xiaohan",
+  "text": "……這麼多？",
+  "dur": 1.7,
+  "hash": "8be929c416b1"
+ },
+ "story.cd.3": {
+  "file": "story.cd.3.mp3",
+  "who": "chendong",
+  "text": "三合院拆一拆，蓋六間透天，前面做店面。你一個少年仔，守著這堆老磚仔做什麼？",
+  "dur": 7.97,
+  "hash": "ee9745950f6e"
+ },
+ "story.cd.4": {
+  "file": "story.cd.4.mp3",
+  "who": "xiaohan",
+  "text": "民宿才剛開始……還沒賺錢，這是真的。",
+  "dur": 4.3,
+  "hash": "6b60c1485332"
+ },
+ "story.cd.5": {
+  "file": "story.cd.5.mp3",
+  "who": "chendong",
+  "text": "對嘛！現金馬上入帳，你回台北去，過卡好的日子。",
+  "dur": 5.14,
+  "hash": "f23663ee62ce"
+ },
+ "story.cd.6": {
+  "file": "story.cd.6.mp3",
+  "who": "xiaohan",
+  "text": "這是我阿嬤的厝。她走之前一直說，這間厝要有人住。",
+  "dur": 6.24,
+  "hash": "8b8c0260491d"
+ },
+ "story.cd.7": {
+  "file": "story.cd.7.mp3",
+  "who": "chendong",
+  "text": "老人家都嘛這樣講。（遞名片）我不急，你想清楚再打給我。",
+  "dur": 5.9,
+  "hash": "ba99bb07a53a"
+ },
+ "story.cd.8": {
+  "file": "story.cd.8.mp3",
+  "who": "xiaohan",
+  "text": "……給我一點時間。",
+  "dur": 2.16,
+  "hash": "89ab2b0f89a1"
+ },
+ "story.cd.gm1": {
+  "file": "story.cd.gm1.mp3",
+  "who": "grandma",
+  "text": "透天厝？這間厝住過四代人，你要把它拆了蓋透天厝？",
+  "dur": 8.18,
+  "hash": "84cda16069c7"
+ },
+ "story.cd.gm2": {
+  "file": "story.cd.gm2.mp3",
+  "who": "grandma",
+  "text": "好，小翰，阿嬤幫你。咱來做給他看。",
+  "dur": 5.9,
+  "hash": "ee913f3fce68"
+ },
+ "story.cd.gm3": {
+  "file": "story.cd.gm3.mp3",
+  "who": "grandma",
+  "text": "……還有，他的皮鞋踩到我的地瓜葉了啦。",
+  "dur": 4.61,
+  "hash": "4534dd124a4f"
+ },
+ "story.deadline": {
+  "file": "story.deadline.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤……陳董又打電話來了。我跟他說，給我到下個月底。如果那時候存到三萬塊，我自己也覺得做得下去，就不賣。",
+  "dur": 11.95,
+  "hash": "97f6adbdcc62"
+ },
+ "story.end.keep.1": {
+  "file": "story.end.keep.1.mp3",
+  "who": "xiaohan",
+  "text": "陳董，歹勢。這間厝，我要自己顧。",
+  "dur": 5.69,
+  "hash": "21ba31518b70"
+ },
+ "story.end.keep.2": {
+  "file": "story.end.keep.2.mp3",
+  "who": "grandma",
+  "text": "……好孩子。",
+  "dur": 1.42,
+  "hash": "cf5f2393c94f"
+ },
+ "story.end.keep.3": {
+  "file": "story.end.keep.3.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤，民宿我會做下去。妳放心。",
+  "dur": 5.16,
+  "hash": "762262599620"
+ },
+ "story.end.keep.4": {
+  "file": "story.end.keep.4.mp3",
+  "who": "grandma",
+  "text": "放心、放心。阿嬤看你今天有吃早餐，就放心了。",
+  "dur": 7.78,
+  "hash": "59cef1969619"
+ },
+ "story.end.review": {
+  "file": "story.end.review.mp3",
+  "who": "xiaomei",
+  "text": "半夜好像有個阿嬤幫我蓋被子。起來的時候，床頭還有一杯溫水。這間民宿，好有家的味道。",
+  "dur": 9.62,
+  "hash": "ed6d2aba18d3"
+ },
+ "story.end.sold.1": {
+  "file": "story.end.sold.1.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤……對不起。我真的撐不下去了。",
+  "dur": 4.8,
+  "hash": "c5785bd50cb3"
+ },
+ "story.end.sold.2": {
+  "file": "story.end.sold.2.mp3",
+  "who": "chendong",
+  "text": "少年仔，這樣才對嘛。",
+  "dur": 2.45,
+  "hash": "1676e6d7b233"
+ },
+ "story.end.sold.3": {
+  "file": "story.end.sold.3.mp3",
+  "who": "grandma",
+  "text": "……輕一點，那是我的曬衫竹篙。",
+  "dur": 3.89,
+  "hash": "d1109b3e1658"
+ },
+ "story.end.sold.4": {
+  "file": "story.end.sold.4.mp3",
+  "who": "grandma",
+  "text": "這間，是小翰出世那年加蓋的。",
+  "dur": 4.27,
+  "hash": "d2f2b54f49c2"
+ },
+ "story.end.sold.5": {
+  "file": "story.end.sold.5.mp3",
+  "who": "grandma",
+  "text": "七歲、九歲、十二歲……長這麼高了。",
+  "dur": 4.85,
+  "hash": "b94ead3002e6"
+ },
+ "story.end.sold.6": {
+  "file": "story.end.sold.6.mp3",
+  "who": "conductor",
+  "text": "阿春，上車吧。靠窗的位子。",
+  "dur": 3.84,
+  "hash": "5c78570e549c"
+ },
+ "story.end.sold.7": {
+  "file": "story.end.sold.7.mp3",
+  "who": "grandma",
+  "text": "好。厝沒了，人還在就好。",
+  "dur": 4.49,
+  "hash": "126cb1fa96d4"
+ },
+ "story.end.sold.8": {
+  "file": "story.end.sold.8.mp3",
+  "who": "xiaohan",
+  "text": "阿嬤，早安。今天也要加油。",
+  "dur": 4.97,
+  "hash": "fdcae20cd140"
+ },
+ "story.end.stay.1": {
+  "file": "story.end.stay.1.mp3",
+  "who": "grandma",
+  "text": "……還沒啦。",
+  "dur": 1.49,
+  "hash": "c7ca93bc96e1"
+ },
+ "story.end.stay.2": {
+  "file": "story.end.stay.2.mp3",
+  "who": "grandma",
+  "text": "車掌先生，明年再說！",
+  "dur": 3.31,
+  "hash": "ab81b9d71e98"
+ },
+ "story.end.stay.3": {
+  "file": "story.end.stay.3.mp3",
+  "who": "conductor",
+  "text": "好，明年這個時候，我再來。",
+  "dur": 3.0,
+  "hash": "3e5f721835c2"
+ },
+ "story.end.stay.4": {
+  "file": "story.end.stay.4.mp3",
+  "who": "grandma",
+  "text": "小翰才剛開始，阿嬤再陪他一陣子。",
+  "dur": 4.94,
+  "hash": "6718741cd478"
+ },
+ "story.end.stay.5": {
+  "file": "story.end.stay.5.mp3",
+  "who": "xiaomei",
+  "text": "這間民宿半夜好像有個阿嬤……不過一點都不可怕，睡得比在家還好。",
+  "dur": 5.9,
+  "hash": "011d93eef737"
+ },
+ "story.end.tog.1": {
+  "file": "story.end.tog.1.mp3",
+  "who": "conductor",
+  "text": "靠窗的位子……旁邊，有人等妳很久了。",
+  "dur": 4.06,
+  "hash": "54063e512d6a"
+ },
+ "story.end.tog.2": {
+  "file": "story.end.tog.2.mp3",
+  "who": "agong",
+  "text": "阿春。",
+  "dur": 1.7,
+  "hash": "aa08e36fc881"
+ },
+ "story.end.tog.3": {
+  "file": "story.end.tog.3.mp3",
+  "who": "grandma",
+  "text": "……你這個憨人，怎麼會在這？",
+  "dur": 3.46,
+  "hash": "97a5a7d0b9ff"
+ },
+ "story.end.tog.4": {
+  "file": "story.end.tog.4.mp3",
+  "who": "agong",
+  "text": "那年流走的鞋子，我找到了。一直想拿給妳看。",
+  "dur": 5.66,
+  "hash": "42a19933d5cd"
+ },
+ "story.end.tog.5": {
+  "file": "story.end.tog.5.mp3",
+  "who": "grandma",
+  "text": "一隻鞋子找六十幾年，你喔……",
+  "dur": 4.15,
+  "hash": "bafda66546ea"
+ },
+ "story.end.tog.6": {
+  "file": "story.end.tog.6.mp3",
+  "who": "agong",
+  "text": "以後，我們每次都坐第七排。",
+  "dur": 3.53,
+  "hash": "d52d7ec425c1"
+ },
+ "story.end.tog.7": {
+  "file": "story.end.tog.7.mp3",
+  "who": "grandma",
+  "text": "這是火車啦，憨人。",
+  "dur": 2.93,
+  "hash": "dc0ae64d3f92"
+ },
+ "story.end.train.1": {
+  "file": "story.end.train.1.mp3",
+  "who": "grandma",
+  "text": "汽笛……是來接我的喔。",
+  "dur": 2.86,
+  "hash": "da9b51af725d"
+ },
+ "story.end.train.2": {
+  "file": "story.end.train.2.mp3",
+  "who": "grandma",
+  "text": "被子蓋好，窗戶關好，蚊香點了……好，都好了。",
+  "dur": 5.86,
+  "hash": "fe82d2cb4b68"
+ },
+ "story.end.train.3": {
+  "file": "story.end.train.3.mp3",
+  "who": "grandma",
+  "text": "小翰，阿嬤要走了。三餐要吃，不要一直吃泡麵。",
+  "dur": 7.61,
+  "hash": "996ce6b89651"
+ },
+ "story.end.train.4": {
+  "file": "story.end.train.4.mp3",
+  "who": "xiaohan",
+  "text": "……阿嬤……菜脯蛋……明天還要……",
+  "dur": 3.19,
+  "hash": "2275ed4581a6"
+ },
+ "story.end.train.5": {
+  "file": "story.end.train.5.mp3",
+  "who": "conductor",
+  "text": "阿春，靠窗的位子，一直幫妳留著。",
+  "dur": 3.79,
+  "hash": "59ad104430c9"
+ },
+ "story.end.train.6": {
+  "file": "story.end.train.6.mp3",
+  "who": "grandma",
+  "text": "多謝你。這班車，我坐。",
+  "dur": 4.2,
+  "hash": "54f039c8637c"
+ },
+ "story.end.train.7": {
+  "file": "story.end.train.7.mp3",
+  "who": "grandma",
+  "text": "這一世人……真好。",
+  "dur": 2.38,
+  "hash": "2cc8c6e03ca4"
+ },
  "temple.incense": {
   "file": "temple.incense.mp3",
   "who": "grandma",

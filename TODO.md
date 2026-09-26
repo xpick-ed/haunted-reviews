@@ -2,14 +2,14 @@
 
 ## Current
 
-**Doing:** 第三批內容完成（DESIGN §27）：小火車站「後壁厝站」（傍晚觀察下車的客人、半夜鬼末班車、五分車小遊戲）、老街（冰果室剉冰、老戲院放映回憶、照相館）、海邊漁港＋燈塔（漲退潮、抓螃蟹、守燈人支線）、回到 1958（三個年輕阿春的關卡）；裝修民宿（12 種擺設、擺放模式）、半夜突發事件（小偷、夢遊、小孩走失、醉漢、保險絲）、客人之間的故事（5 段、耳語選項）、好感度＋送禮（14 位、托夢給小翰）。回憶 15 片。所有自動測試全過（night / dream / tag / encounters / decor / incidents / motion）。
+**Doing:** 遊戲性：傍晚的時間壓力（17:30→22:00，做事花時間，22:00 自動天黑）＋「今天的事」（小翰的紙條＋鄰居委託）；主線（第 7 晚陳董來、第 8 晚月底小翰給期限）與四個結局（末班車、一起回家、守著老家、賣掉了）＋製作名單。八個自動測試全過。
 
 **Next:**
-1. 真機玩：所有新小遊戲、擺放模式、耳語的時機、夢遊帶路、1958 的慢鞋子（無頭瀏覽器 < 2fps，時機都沒辦法測）
-2. 語音已經很大（30MB 以上）：考慮依場景分包、只預載今晚用得到的
-3. 新角色（小孩鬼、火伯、玉姨、班主、阿桃、放映師、守燈人、鬼車掌…）沒有對話頭像
-4. 老戲院只有大廳，沒有放映廳；照相館老闆只在傍晚
-5. 結局：回憶收齊、好感度滿、小翰的心
+1. 真機調：傍晚的時間夠不夠（DUSK_HOURS_PER_SEC、DUSK_COST 在 store.ts）、委託的難度與獎勵、結局條件（GOAL 在 story.ts）
+2. 逐步解鎖：第一個月只開家、村子、菜園、廟，其他隨劇情開（避免一開始太多）
+3. 背景音樂、設定選單、存檔欄位
+4. 新角色的對話頭像；場景用到才載入
+5. 更難的客人（道士、美食評論家、考生、孕婦）
 
 **Blockers:** 無
 
@@ -28,7 +28,7 @@
 - `?zoom=0.4`（dev 模式）：鏡頭拉近看角色
 - `window.__player`（dev 模式）：阿嬤的位置，測試時可以直接 `__player.x = 7.5` 瞬移
 - `window.__store`（dev 模式）可以直接操作遊戲狀態，例如 `__store.getState().sit()`、`__store.setState({ time: 23 })`；`window.__night.sim` 是深夜模擬（客人在 `.guests`）
-- 夢境：`npm run test:dream`；國小：`npm run test:tag`；客人之間的故事：`npm run test:encounters`；裝修：`npm run test:decor`；突發事件：`npm run test:incidents`
+- 夢境：`npm run test:dream`；國小：`npm run test:tag`；客人之間的故事：`npm run test:encounters`；裝修：`npm run test:decor`；突發事件：`npm run test:incidents`；結局判定：`npm run test:story`
 - 截圖（不佔用共用瀏覽器）：scratchpad 的 `pw/shot.mjs <port> <out.png> <setup.js>`；5173 常被別的專案佔用，dev server 用別的 port
 - 深夜平衡：`npm run test:night`（`ONLY=M1-N2 TRACE=zhang TRACE_SEED=102` 印出某位客人整晚的狀態）
 - `window.__three`（dev 模式）：`gl.info.render.calls` 量 draw call

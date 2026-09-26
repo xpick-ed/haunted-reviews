@@ -34,7 +34,7 @@
 - `window.__three`（dev 模式）：`gl.info.render.calls` 量 draw call
 - 網址參數：`?q=low|high` 畫質；dev 限定 `?fx=0` 關後製、`?nofx=ao,bloom,tilt` 關單一效果、`?shadow=0` 關陰影
 - Three r155+ 的點光源是物理單位，intensity 大概 1–8 就夠；之前設 24 整個爆白
-- headless Chromium 是軟體渲染（high 約 0.5fps），Playwright 預設 5 秒截圖逾時會失敗，要用 `browser_run_code_unsafe` 自己 `page.screenshot({ timeout: 120000 })`
+- headless Chromium 是軟體渲染（SwiftShader，high 約 0.6fps）。用顯示卡：WSLg 開有視窗的 Chromium（`headless: false`、`--window-position=-3000,0`、環境變數 `GALLIUM_DRIVER=d3d12`、`LD_LIBRARY_PATH=/usr/lib/wsl/lib`），RTX 2070 大約 60fps，時間、手感才測得出來
 - 測 high 要擋掉自動降級：`__store.setState({ quality: 'high', setQuality: () => {} })`
 - 貼圖重新下載：`python3 scripts/fetch_textures.py`（CC0，來源列在 public/tex/CREDITS.txt）
 - 新增台詞：寫進 `src/data/story.lines.json`（who 用 cast.json 的 id），再跑 `scripts/gen_voices.py` 生成語音

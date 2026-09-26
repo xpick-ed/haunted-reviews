@@ -283,4 +283,28 @@ export const MARKET_HOTSPOTS: Hotspot[] = [
     label: () => '看布袋戲',
     run: (s) => s.bark(pick(['market.stage.1', 'market.stage.2', 'market.stage.3'])),
   },
+  {
+    // 彈珠台：十顆彈珠換功德，一晚一次
+    id: 'market_marble',
+    scene: 'market',
+    x: stall('marble').x,
+    z: stall('marble').z + 1.9,
+    r: 1.4,
+    icon: { x: stall('marble').x, z: stall('marble').z },
+    iconY: 1.8,
+    label: (s) => (s.flags.market_marble_today ? '彈珠台（今晚玩過了）' : '彈珠台（贏功德）'),
+    run: (s) => {
+      if (s.flags.market_marble_today) {
+        s.bark('toys.pachinko.done')
+        return
+      }
+      setFlag('market_marble_today')
+      s.bark('toys.pachinko.hello')
+      s.startMinigame('pachinko', {}, (r) => {
+        const merit = (r as PrizeResult | null)?.merit ?? 0
+        addMerit(merit)
+        s.bark(merit >= 3 ? 'toys.pachinko.win.big' : merit > 0 ? 'toys.pachinko.win' : 'toys.pachinko.lose')
+      })
+    },
+  },
 ]

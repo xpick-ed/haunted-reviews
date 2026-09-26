@@ -40,6 +40,7 @@ export function VillageScene() {
         <BanyanCorner />
       </MergeStatic>
       <ShopFront />
+      <ClawMachine />
       <PoleLine xs={V.poleXs} z={V.poleZ} lamps={V.lampXs} lampZ={-1.25} />
       <Tree position={[V.banyan.x, 0, V.banyan.z]} scale={1.05} />
       <Tree position={[-27, 0, -12]} scale={0.7} />
@@ -1049,3 +1050,120 @@ function VillageLights() {
     </group>
   )
 }
+
+// ---------------------------------------------------------------------------
+// 夾娃娃機（柑仔店門口）：粉紅色機台、裡面一坑娃娃，晚上招牌會亮。頂上照慣例放一包綠色零食（「乖乖」保佑機器乖乖的）
+// ---------------------------------------------------------------------------
+
+const PLUSH_COLORS = ['#4caf50', '#d8312a', '#ffb3cf', '#3aa655', '#ffd23f', '#8fd3ff', '#4caf50', '#ffb3cf']
+
+function ClawMachine() {
+  const C = V.claw
+  const sign = useMemo(
+    () =>
+      canvasTexture(
+        256,
+        72,
+        (ctx, w, h) => {
+          ctx.fillStyle = '#3a0a22'
+          ctx.fillRect(0, 0, w, h)
+          ctx.fillStyle = '#ffec78'
+          ctx.font = `700 46px ${BRUSH_FONT}`
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          ctx.fillText('夾娃娃', w / 2, h / 2 + 2)
+        },
+        [{ spec: `700 46px ${BRUSH_FONT}`, text: '夾娃娃' }],
+      ),
+    [],
+  )
+  const signMat = useMemo(() => new THREE.MeshStandardMaterial({ map: sign, emissiveMap: sign, emissive: '#ffffff', emissiveIntensity: 0.2, roughness: 0.5 }), [sign])
+  const pink = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ff8ab8', roughness: 0.45 }), [])
+  const deep = useMemo(() => new THREE.MeshStandardMaterial({ color: '#c8386e', roughness: 0.5 }), [])
+  const inside = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffd6e8', emissive: '#ff9ac4', emissiveIntensity: 0.1, roughness: 0.8 }), [])
+  const steel = useMemo(() => new THREE.MeshStandardMaterial({ color: '#c0c4c8', metalness: 0.8, roughness: 0.3 }), [])
+  const plush = useMemo(() => PLUSH_COLORS.map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 })), [])
+  const light = useRef<THREE.PointLight>(null)
+  useFrame(({ clock }) => {
+    const l = lanternAt(useStore.getState().time)
+    const flick = Math.sin(clock.elapsedTime * 17) > 0.97 ? 0.4 : 1
+    signMat.emissiveIntensity = 0.2 + 1.3 * l * flick
+    inside.emissiveIntensity = 0.1 + 0.7 * l
+    if (light.current) light.current.intensity = 1.6 * l
+  })
+  return (
+    <group position={[C.x, 0.02, C.z]}>
+      {/* 下半部機身 */}
+      <RoundedBox args={[0.82, 0.76, 0.78]} radius={0.05} smoothness={3} position={[0, 0.38, 0]} material={pink} castShadow receiveShadow />
+      {/* 前面的操作台：搖桿、按鈕、投幣孔 */}
+      <mesh material={deep} position={[0, 0.78, 0.36]} rotation={[-0.5, 0, 0]}>
+        <boxGeometry args={[0.8, 0.05, 0.16]} />
+      </mesh>
+      <mesh material={clawBlack} position={[-0.2, 0.85, 0.38]}>
+        <cylinderGeometry args={[0.012, 0.012, 0.12, 6]} />
+      </mesh>
+      <mesh position={[-0.2, 0.92, 0.38]}>
+        <sphereGeometry args={[0.035, 12, 8]} />
+        <meshStandardMaterial color="#ff3b30" roughness={0.3} />
+      </mesh>
+      <mesh position={[0.15, 0.82, 0.4]}>
+        <cylinderGeometry args={[0.045, 0.045, 0.03, 16]} />
+        <meshStandardMaterial color="#2e7dff" roughness={0.3} emissive="#2e7dff" emissiveIntensity={0.3} />
+      </mesh>
+      <mesh material={clawBlack} position={[0.3, 0.55, 0.395]}>
+        <boxGeometry args={[0.1, 0.14, 0.01]} />
+      </mesh>
+      {/* 玻璃箱：四根柱子、裡面的娃娃坑、爪子 */}
+      {[
+        [-1, -1],
+        [1, -1],
+        [-1, 1],
+        [1, 1],
+      ].map(([sx, sz], i) => (
+        <mesh key={i} material={pink} position={[sx * 0.39, 1.2, sz * 0.37]}>
+          <boxGeometry args={[0.04, 0.88, 0.04]} />
+        </mesh>
+      ))}
+      <mesh material={inside} position={[0, 1.2, -0.36]}>
+        <planeGeometry args={[0.76, 0.86]} />
+      </mesh>
+      <mesh material={inside} position={[0, 0.8, 0]} rotation-x={-Math.PI / 2}>
+        <planeGeometry args={[0.76, 0.72]} />
+      </mesh>
+      {PLUSH_COLORS.map((_, i) => (
+        <mesh key={i} material={plush[i]} position={[-0.26 + (i % 4) * 0.17, 0.86 + Math.floor(i / 4) * 0.07, -0.18 + Math.floor(i / 4) * 0.2 + (i % 2) * 0.05]} scale={[1, 0.85, 1]}>
+          <sphereGeometry args={[0.07, 10, 8]} />
+        </mesh>
+      ))}
+      <mesh material={steel} position={[0.1, 1.5, 0]}>
+        <cylinderGeometry args={[0.004, 0.004, 0.2, 4]} />
+      </mesh>
+      {[-1, 0, 1].map((k) => (
+        <mesh key={k} material={steel} position={[0.1 + k * 0.025, 1.36, 0]} rotation={[0, 0, k * 0.4]}>
+          <boxGeometry args={[0.012, 0.08, 0.012]} />
+        </mesh>
+      ))}
+      {[
+        [0, 1.2, 0.39, 0],
+        [-0.41, 1.2, 0, Math.PI / 2],
+        [0.41, 1.2, 0, Math.PI / 2],
+      ].map(([x, y, z, ry], i) => (
+        <mesh key={i} material={glassMat} position={[x, y, z]} rotation-y={ry}>
+          <planeGeometry args={[0.76, 0.86]} />
+        </mesh>
+      ))}
+      {/* 招牌與頂蓋 */}
+      <RoundedBox args={[0.86, 0.26, 0.8]} radius={0.04} smoothness={3} position={[0, 1.77, 0]} material={pink} castShadow />
+      <mesh material={signMat} position={[0, 1.77, 0.405]}>
+        <planeGeometry args={[0.74, 0.2]} />
+      </mesh>
+      <mesh position={[0.22, 1.95, 0.1]} rotation={[0, 0.3, 0.05]}>
+        <boxGeometry args={[0.12, 0.1, 0.04]} />
+        <meshStandardMaterial color="#3aa655" roughness={0.5} />
+      </mesh>
+      <pointLight ref={light} position={[0, 1.35, 0.1]} color="#ff9ac4" intensity={0} distance={3.5} decay={2} />
+    </group>
+  )
+}
+
+const clawBlack = new THREE.MeshStandardMaterial({ color: '#1a1a1a', roughness: 0.4 })

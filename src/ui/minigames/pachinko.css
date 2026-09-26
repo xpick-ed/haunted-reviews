@@ -1,0 +1,143 @@
+/* 彈珠台：紅木框、金邊；盤面是畫布 */
+
+.pc-card {
+  position: relative;
+  width: min(94vw, 390px, calc((100vh - 170px) / 1.5));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(58, 20, 16, 0.97), rgba(24, 10, 10, 0.97));
+  border: 1.5px solid rgba(242, 180, 91, 0.5);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(242, 180, 91, 0.15);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+}
+.pc-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+}
+.pc-title {
+  flex: 1;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #ffe2a8;
+}
+.pc-stat {
+  font-size: 13px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pc-stat b {
+  font-size: 17px;
+  color: var(--gold-2);
+}
+.pc-leave {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  font: inherit;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(12, 16, 22, 0.9);
+  color: var(--muted);
+  cursor: pointer;
+}
+.pc-stage {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.pc-canvas {
+  display: block;
+  touch-action: none;
+  cursor: pointer;
+}
+.pc-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px;
+  text-align: center;
+  background: rgba(14, 8, 10, 0.72);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: fade 0.25s ease-out;
+}
+.pc-overlay p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #f3efe6;
+}
+.pc-overlay b {
+  color: var(--gold-2);
+}
+.pc-result {
+  font-size: 20px !important;
+}
+.pc-result b {
+  font-size: 34px;
+}
+.pc-merit {
+  font-size: 22px !important;
+  font-weight: 700;
+  color: #bff8ee !important;
+  text-shadow: 0 0 16px rgba(79, 224, 200, 0.7);
+  animation: pop-in 0.3s ease-out;
+}
+.pc-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pc-power {
+  flex: 1;
+  height: 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.pc-power i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #6fe07c, #ffd58a 60%, #ff6b6b);
+}
+.pc-pull {
+  position: relative;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  min-width: 128px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 213, 138, 0.55);
+  background: linear-gradient(160deg, rgba(90, 44, 20, 0.95), rgba(40, 20, 10, 0.95));
+  color: var(--gold-2);
+  cursor: pointer;
+  touch-action: none;
+}
+.pc-pull.on {
+  transform: translateY(2px);
+  border-color: #ff9f6b;
+  box-shadow: 0 0 18px rgba(255, 150, 80, 0.45);
+}

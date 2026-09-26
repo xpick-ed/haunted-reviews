@@ -1,6 +1,7 @@
 import { box, rect, type Circle, type Rect } from './collision'
 import type { SceneDef } from './scenes'
 import type { Hotspot } from './hotspots'
+import type { ClawResult } from '../ui/minigames/types'
 
 // 村路＋柑仔店（DESIGN §25.1）：阿春民宿東邊的路走過來，再往東是土地公廟。
 // 柑仔店的阿嬌看得到阿嬤。這個檔案是規則（碰撞、出生點、出口、熱點）；畫面在 src/scene/Village.tsx。
@@ -38,6 +39,8 @@ export const VILLAGE = {
   lampXs: [-10.6, 5.3],
   /** 路南側的水溝 */
   ditch: { z0: 2.05, z1: 2.65 },
+  /** 柑仔店門口東邊的夾娃娃機 */
+  claw: { x: 4.75, z: -4.3 },
   /** 往溪邊的小路（北）、往國小的小橋（南） */
   riverLane: { x: 13.7 },
   schoolBridge: { x: -6.5 },
@@ -68,6 +71,7 @@ function villageColliders() {
     box(V.stoneTable.x - 1.0, V.stoneTable.z, 0.4, 0.9),
     box(V.stoneTable.x + 1.0, V.stoneTable.z, 0.4, 0.9),
     box(V.tablet.x, V.tablet.z, 0.6, 0.5),
+    box(V.claw.x, V.claw.z, 0.9, 0.85),
   ]
   const circles: Circle[] = [
     ...[-1, 1].map((s) => ({ x: s * V.awning.postX, z: V.awning.postZ, r: 0.13 })),
@@ -132,6 +136,44 @@ export const VILLAGE_HOTSPOTS: Hotspot[] = [
       }
       s.bark(night(s) ? pick(['ajiao.night.1', 'ajiao.night.2']) : pick(['ajiao.hi.1', 'ajiao.hi.2', 'ajiao.hi.3']))
       shop()
+    },
+  },
+  {
+    // 夾娃娃機：一枚 $20，一天一次（最多三枚）。夾到的玩具放進 pantry.toy，可以送小宇
+    id: 'village_claw',
+    scene: 'village',
+    x: V.claw.x,
+    z: V.claw.z + 1.05,
+    r: 1.2,
+    icon: { x: V.claw.x, z: V.claw.z },
+    iconY: 2.2,
+    label: (s) => (s.flags.claw_today ? '夾娃娃機（今天夾過了）' : '夾娃娃機（一次 $20）'),
+    run: (s) => {
+      if (s.flags.claw_today) {
+        s.bark('toys.claw.done')
+        return
+      }
+      const coins = Math.min(3, Math.floor(s.meta.money / 20))
+      if (coins <= 0) {
+        s.bark('toys.claw.nomoney')
+        return
+      }
+      s.bark(s.flags.claw_met ? 'toys.claw.hello' : 'toys.claw.ajiao')
+      s.startMinigame('claw', { coins }, (r) => {
+        const res = (r as ClawResult | null) ?? { prize: null, coins: 0 }
+        if (res.coins <= 0) return
+        // 規則檔不能直接 import store（Node 測試會載入這個檔），要改狀態時再動態載入
+        void import('../store').then(({ useStore }) => {
+          const st = useStore.getState()
+          const pantry = { ...st.meta.pantry }
+          if (res.prize) pantry.toy = (pantry.toy ?? 0) + 1
+          useStore.setState({
+            meta: { ...st.meta, money: Math.max(0, st.meta.money - res.coins * 20), pantry },
+            flags: { ...st.flags, claw_today: true, claw_met: true },
+          })
+          st.bark(res.prize ? `toys.claw.win.${res.prize}` : 'toys.claw.lose')
+        })
+      })
     },
   },
   {

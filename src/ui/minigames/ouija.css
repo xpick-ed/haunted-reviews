@@ -1,0 +1,296 @@
+/* 碟仙直播：暗紅色、燭光、右邊是聊天室（手機上聊天室在下面） */
+
+.oj-card {
+  position: relative;
+  width: min(96vw, 780px);
+  max-height: calc(100vh - 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(40, 14, 14, 0.97), rgba(16, 8, 8, 0.97));
+  border: 1.5px solid rgba(255, 107, 107, 0.4);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.65),
+    0 0 40px rgba(255, 80, 60, 0.12);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+  overflow: hidden;
+}
+.oj-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 64px;
+}
+.oj-live {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  background: #e0302a;
+  border-radius: 5px;
+  padding: 1px 6px;
+  animation: blink 1s steps(2) infinite;
+}
+.oj-title {
+  flex: 1;
+  min-width: 0;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffd9c8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oj-viewers {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: #ffd9c8;
+  font-variant-numeric: tabular-nums;
+}
+.oj-leave {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(12, 8, 8, 0.9);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.oj-main {
+  display: flex;
+  gap: 10px;
+  min-height: 0;
+}
+.oj-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 阿凱的問題 */
+.oj-ask {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.oj-ask img {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: radial-gradient(circle at 50% 35%, #4a2a2a, #1c1010);
+}
+.oj-say {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.oj-name {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #ff9f8a;
+}
+.oj-text {
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #fbeee4;
+}
+.oj-timer {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #2b1a05;
+  background: #ffd58a;
+}
+.oj-timer.hurry {
+  background: #ff6b6b;
+  color: #fff;
+  animation: blink 0.5s steps(2) infinite;
+}
+
+/* 紙板 */
+.oj-board {
+  position: relative;
+  width: 100%;
+  max-width: min(480px, calc(100vh - 290px));
+  align-self: center;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.oj-canvas {
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+.oj-canvas:active {
+  cursor: grabbing;
+}
+.oj-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px;
+  text-align: center;
+  background: rgba(14, 6, 6, 0.78);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: fade 0.25s ease-out;
+}
+.oj-overlay p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #fbeee4;
+}
+.oj-overlay b {
+  color: #ffd58a;
+}
+.oj-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.oj-legend small {
+  margin-left: 8px;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+}
+.oj-sum {
+  font-size: 18px !important;
+}
+.oj-sum b {
+  font-size: 26px;
+}
+
+/* 這一題的三個答案 */
+.oj-answers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.oj-ans {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 6px 5px;
+  border-radius: 10px;
+  border: 1px solid;
+  background: rgba(255, 255, 255, 0.04);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.oj-ans small {
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.oj-ans b {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+}
+.oj-ans i {
+  font-style: normal;
+  color: rgba(251, 238, 228, 0.55);
+}
+.oj-ans i.got {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(143, 244, 255, 0.9);
+}
+.oj-ans.on {
+  transform: scale(1.06);
+  background: rgba(255, 255, 255, 0.12);
+}
+.oj-ans.off {
+  opacity: 0.3;
+}
+
+/* 聊天室 */
+.oj-chat {
+  width: 210px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 12px;
+  line-height: 1.45;
+  color: #eee4dc;
+  scrollbar-width: none;
+}
+.oj-msg {
+  animation: pop-in 0.18s ease-out;
+  word-break: break-all;
+}
+.oj-msg span {
+  margin-right: 5px;
+  font-weight: 700;
+}
+.oj-msg.big {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+.oj-msg.donate {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(255, 180, 60, 0.35), rgba(255, 100, 60, 0.2));
+  color: #ffe6b0;
+}
+
+@media (max-width: 640px) {
+  .oj-main {
+    flex-direction: column;
+  }
+  .oj-chat {
+    width: auto;
+    height: 92px;
+  }
+  .oj-board {
+    max-width: min(100%, calc(100vh - 360px));
+  }
+  .oj-text {
+    font-size: 14px;
+  }
+}

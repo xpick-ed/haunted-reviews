@@ -9,7 +9,7 @@ import type { Circle, Colliders } from '../world/collision'
 import { nearestHotspot } from '../world/hotspots'
 import { inRect, segmentHitsBox } from '../world/collision'
 import { night, nightOptions, type DecorPlacement, type PromptOpt } from '../world/night/director'
-import { decorCircles } from '../world/decor'
+import { decorCircles, useDecor } from '../world/decor'
 
 // 每幀的遊戲邏輯（放在 Canvas 裡，才拿得到鏡頭位置）：
 // 輸入 → 移動與碰撞 → 深夜模擬 → 在哪個房間 → 哪些建築要淡出 → 附近能做的事 → 出口。
@@ -119,7 +119,9 @@ export function WorldController() {
     // 附近能做的事：深夜動作（客人需要的排前面）＋ 固定的互動點
     let prompt: Prompt | null = null
     // 長按中：動作鈕要留著（放開才知道）；躲著、附身時只有特別的選項
-    const promptOpen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || !!s.minigame ? false : !s.busy || !!s.hold
+    // 裝修民宿的目錄或擺放模式開著：動作鈕讓給擺放（不然點「放下」會順便觸發旁邊的互動點）
+    const decorUI = useDecor.getState()
+    const promptOpen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || !!s.minigame || decorUI.open || decorUI.placing ? false : !s.busy || !!s.hold
     if (promptOpen && s.hidden) {
       prompt = { opts: [{ key: 'unhide', label: '出來', cost: 0, needed: false, spot: s.hidden, special: 'unhide' }], i: 0, key: 'unhide' }
     } else if (promptOpen && s.possess) {

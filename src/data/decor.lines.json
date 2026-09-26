@@ -1,0 +1,18 @@
+{
+  "decor.open": { "who": "grandma", "text": "這堆雜物……來把民宿整理得漂亮一點。" },
+  "decor.open.again": { "who": "grandma", "text": "來看看還有哪裡可以擺點什麼。" },
+  "decor.buy.1": { "who": "grandma", "text": "記在小翰的帳上，他不會計較啦。" },
+  "decor.buy.2": { "who": "grandma", "text": "這個好，客人一定會喜歡。" },
+  "decor.hold": { "who": "grandma", "text": "要擺在哪裡好呢……" },
+  "decor.place.1": { "who": "grandma", "text": "嗯，擺在這裡剛剛好。" },
+  "decor.place.2": { "who": "grandma", "text": "厝內有點東西，比較有人氣。" },
+  "decor.place.3": { "who": "grandma", "text": "好，看起來真舒適。" },
+  "decor.bad": { "who": "grandma", "text": "這裡擺不下啦，換個地方。" },
+  "decor.pickup": { "who": "grandma", "text": "這個換個位置好了。" },
+  "decor.store": { "who": "grandma", "text": "先收起來，以後再擺。" },
+  "decor.doll": { "who": "grandma", "text": "這尊人偶……我自己看了都會怕。那個拍影片的少年應該會很愛。" },
+  "decor.net": { "who": "grandma", "text": "罩一頂蚊帳，蚊仔就咬不到了。" },
+  "decor.lanterns": { "who": "grandma", "text": "燈籠一掛，埕裡就熱鬧了。" },
+  "decor.windchime": { "who": "grandma", "text": "風一吹，叮叮噹噹，好睏。" },
+  "decor.photowall": { "who": "grandma", "text": "這些老照片……哎喲，那個穿花裙的是我啦。" }
+}

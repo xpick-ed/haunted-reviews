@@ -1,0 +1,914 @@
+{
+ "bond.ajiao.s2.1": {
+  "who": "ajiao",
+  "text": "阿春，妳還記得否？十六歲那年，我們兩個去溪邊洗衫，偷看添福仔在溪裡摸蜆仔。"
+ },
+ "bond.ajiao.s2.2": {
+  "who": "grandma",
+  "text": "是妳在偷看，我是在洗衫。"
+ },
+ "bond.ajiao.s2.3": {
+  "who": "ajiao",
+  "text": "騙肖仔！妳的衫洗到漂走，是誰害的？"
+ },
+ "bond.ajiao.s2.4": {
+  "who": "grandma",
+  "text": "……那也是妳推我的。"
+ },
+ "bond.ajiao.s2.5": {
+  "who": "ajiao",
+  "text": "對啦，是我推的。不然妳哪會嫁給他？這個媒人紅包，妳欠我六十幾年了。"
+ },
+ "bond.ajiao.s4.1": {
+  "who": "ajiao",
+  "text": "阿春，我跟妳說一件事，妳不要笑。"
+ },
+ "bond.ajiao.s4.2": {
+  "who": "ajiao",
+  "text": "我們家那個走的那年，我一個人吃飯，吃不下。是妳每天傍晚端一盤菜脯蛋來，坐在這張板凳陪我吃。"
+ },
+ "bond.ajiao.s4.3": {
+  "who": "grandma",
+  "text": "妳那時候瘦到剩一把骨頭。"
+ },
+ "bond.ajiao.s4.4": {
+  "who": "ajiao",
+  "text": "整整一年，一天都沒斷。……現在換我了。妳要吃什麼，跟我講，我燒給妳。"
+ },
+ "bond.ajiao.s4.5": {
+  "who": "grandma",
+  "text": "燒一盒糖就好，要那種小時候我們偷吃的。"
+ },
+ "bond.ajiao.s4.6": {
+  "who": "ajiao",
+  "text": "好，我記住了。一盒不夠，我燒兩盒。"
+ },
+ "bond.ajiao.like.1": {
+  "who": "ajiao",
+  "text": "哎喲，這個我愛！妳還記得喔？"
+ },
+ "bond.ajiao.like.2": {
+  "who": "ajiao",
+  "text": "阿春最知我了，比我們家那個還知。"
+ },
+ "bond.ajiao.neutral": {
+  "who": "ajiao",
+  "text": "好啦，收下了，多謝喔。"
+ },
+ "bond.ajiao.dislike": {
+  "who": "ajiao",
+  "text": "這個……我店裡就有在賣啦！妳是要我拿去退貨喔？"
+ },
+ "bond.ajiao.h3": {
+  "who": "ajiao",
+  "text": "來，這幾盒蚊香跟蠟燭妳拿去，不用錢啦——記小翰的帳。"
+ },
+ "bond.ajiao.h5": {
+  "who": "ajiao",
+  "text": "阿春，下輩子我們還要做厝邊喔。講好了。"
+ },
+ "bond.ajiao.done": {
+  "who": "ajiao",
+  "text": "今天送過了啦，妳是要把我餵到跟豬一樣喔？"
+ },
+ "bond.ayi.s2.1": {
+  "who": "ayi",
+  "text": "阿春姐，妳知道我以前是做什麼的否？總舖師啦！辦桌。村子裡嫁娶，一次五十桌，都是我煮的。"
+ },
+ "bond.ayi.s2.2": {
+  "who": "grandma",
+  "text": "我知道。我嫁過來那天，就是你煮的。"
+ },
+ "bond.ayi.s2.3": {
+  "who": "ayi",
+  "text": "對！那天的佛跳牆，我偷加了半瓶米酒……所以大家都醉了，哈哈！"
+ },
+ "bond.ayi.s2.4": {
+  "who": "grandma",
+  "text": "難怪添福那天一直在笑。"
+ },
+ "bond.ayi.s2.5": {
+  "who": "ayi",
+  "text": "那是他高興娶到妳啦。酒只是……幫忙一下。"
+ },
+ "bond.ayi.s4.1": {
+  "who": "ayi",
+  "text": "阿春姐……我女兒上個月有回來拜拜。"
+ },
+ "bond.ayi.s4.2": {
+  "who": "ayi",
+  "text": "她站在這個香爐前面，跟土地公說：「爸爸，我不怪你了。」"
+ },
+ "bond.ayi.s4.3": {
+  "who": "grandma",
+  "text": "……你有聽到。"
+ },
+ "bond.ayi.s4.4": {
+  "who": "ayi",
+  "text": "有啊。我坐在這裡，離她三步遠。我想摸她的頭，手穿過去了。"
+ },
+ "bond.ayi.s4.5": {
+  "who": "ayi",
+  "text": "我喝了一輩子的酒，就是不敢回家見她。現在想回也回不去了。"
+ },
+ "bond.ayi.s4.6": {
+  "who": "grandma",
+  "text": "她說不怪你了。阿義，你可以不用一直喝了。"
+ },
+ "bond.ayi.s4.7": {
+  "who": "ayi",
+  "text": "……嗯。今晚少喝一杯。"
+ },
+ "bond.ayi.like.1": {
+  "who": "ayi",
+  "text": "好料！這配酒剛剛好！"
+ },
+ "bond.ayi.like.2": {
+  "who": "ayi",
+  "text": "阿春姐，妳是活菩薩……喔不對，妳是好鬼。"
+ },
+ "bond.ayi.neutral": {
+  "who": "ayi",
+  "text": "謝啦，我先放著，等一下配酒。"
+ },
+ "bond.ayi.dislike": {
+  "who": "ayi",
+  "text": "薑喔？這個會醒酒捏……我不要醒啦。"
+ },
+ "bond.ayi.h3": {
+  "who": "ayi",
+  "text": "這包功德是我在廟裡撿……不是，是我存的啦，妳拿去。"
+ },
+ "bond.ayi.h5": {
+  "who": "ayi",
+  "text": "阿春姐，以後辦桌，妳的位子我永遠留著。主桌喔。"
+ },
+ "bond.ayi.done": {
+  "who": "ayi",
+  "text": "今天夠了夠了，再送我會哭。"
+ },
+ "bond.hongyi.s2.1": {
+  "who": "hongyi",
+  "text": "阿春，妳知道「紅姨」是什麼意思嗎？"
+ },
+ "bond.hongyi.s2.2": {
+  "who": "grandma",
+  "text": "牽亡的……幫人跟過世的親人說話的。"
+ },
+ "bond.hongyi.s2.3": {
+  "who": "hongyi",
+  "text": "嗯。活著的時候，我幫很多人問他們的阿爸阿母過得好不好。"
+ },
+ "bond.hongyi.s2.4": {
+  "who": "hongyi",
+  "text": "一直到我自己死了，才知道——大家過得都還不錯。只是很想家。"
+ },
+ "bond.hongyi.s2.5": {
+  "who": "grandma",
+  "text": "那妳呢？妳想家嗎？"
+ },
+ "bond.hongyi.s2.6": {
+  "who": "hongyi",
+  "text": "……所以我在夜市擺攤。有人來，就不寂寞。"
+ },
+ "bond.hongyi.s4.1": {
+  "who": "hongyi",
+  "text": "阿春，我有一個問題，一直沒人可以問。"
+ },
+ "bond.hongyi.s4.2": {
+  "who": "hongyi",
+  "text": "以前有一個女孩子，每年都來找我，問她媽媽有沒有怪她。"
+ },
+ "bond.hongyi.s4.3": {
+  "who": "hongyi",
+  "text": "我每次都說：「妳媽媽說她很驕傲。」……其實我根本聽不到。我是說謊的。"
+ },
+ "bond.hongyi.s4.4": {
+  "who": "grandma",
+  "text": "妳說的是真的。"
+ },
+ "bond.hongyi.s4.5": {
+  "who": "hongyi",
+  "text": "……妳怎麼知道？"
+ },
+ "bond.hongyi.s4.6": {
+  "who": "grandma",
+  "text": "因為我也是當媽媽的。當媽媽的，都是那樣想的。"
+ },
+ "bond.hongyi.s4.7": {
+  "who": "hongyi",
+  "text": "……多謝。這個答案，我等了四十年。"
+ },
+ "bond.hongyi.like.1": {
+  "who": "hongyi",
+  "text": "……妳有心。"
+ },
+ "bond.hongyi.like.2": {
+  "who": "hongyi",
+  "text": "這個香火，是好香火。"
+ },
+ "bond.hongyi.neutral": {
+  "who": "hongyi",
+  "text": "收下了。"
+ },
+ "bond.hongyi.dislike": {
+  "who": "hongyi",
+  "text": "螃蟹……會夾人。拿遠一點。"
+ },
+ "bond.hongyi.h3": {
+  "who": "hongyi",
+  "text": "以後來我攤子，法器算妳便宜一點。熟人價，別跟別人說。"
+ },
+ "bond.hongyi.h5": {
+  "who": "hongyi",
+  "text": "阿春，妳是我在這條夜市，唯一的朋友。"
+ },
+ "bond.hongyi.done": {
+  "who": "hongyi",
+  "text": "一天一次就好。緣分，不用急。"
+ },
+ "bond.jinyubo.s2.1": {
+  "who": "jinyubo",
+  "text": "阿春！妳知道我在夜市撈金魚撈多久嗎？四十二年！全台灣最久的！"
+ },
+ "bond.jinyubo.s2.2": {
+  "who": "grandma",
+  "text": "你每次講都不一樣，上次說五十年。"
+ },
+ "bond.jinyubo.s2.3": {
+  "who": "jinyubo",
+  "text": "哎呀，加上當鬼的時間嘛！"
+ },
+ "bond.jinyubo.s2.4": {
+  "who": "jinyubo",
+  "text": "我跟妳說，每個囡仔拿著破掉的紙網哭的時候，我都偷偷送一隻給他。"
+ },
+ "bond.jinyubo.s2.5": {
+  "who": "jinyubo",
+  "text": "生意做不大，但是囡仔笑，我就爽快。"
+ },
+ "bond.jinyubo.s4.1": {
+  "who": "jinyubo",
+  "text": "阿春……我撈了一輩子的金魚，有一隻我一直撈不到。"
+ },
+ "bond.jinyubo.s4.2": {
+  "who": "grandma",
+  "text": "哪一隻？"
+ },
+ "bond.jinyubo.s4.3": {
+  "who": "jinyubo",
+  "text": "我孫子。他小時候來攤子，我叫他等一下，阿公收攤就陪你玩。"
+ },
+ "bond.jinyubo.s4.4": {
+  "who": "jinyubo",
+  "text": "結果那天收攤收到半夜，他在旁邊睡著了。後來他長大去台北，就沒再來了。"
+ },
+ "bond.jinyubo.s4.5": {
+  "who": "jinyubo",
+  "text": "我到現在還在想，那天如果早一點收攤就好了。"
+ },
+ "bond.jinyubo.s4.6": {
+  "who": "grandma",
+  "text": "……小翰小時候，我也常常叫他等一下。"
+ },
+ "bond.jinyubo.s4.7": {
+  "who": "jinyubo",
+  "text": "那妳現在要多陪他喔。我們鬼，沒有「等一下」了。"
+ },
+ "bond.jinyubo.like.1": {
+  "who": "jinyubo",
+  "text": "哇！這個我最愛！阿春妳怎麼知道？"
+ },
+ "bond.jinyubo.like.2": {
+  "who": "jinyubo",
+  "text": "好啦好啦，這個讚！金魚伯給妳按一百個讚！"
+ },
+ "bond.jinyubo.neutral": {
+  "who": "jinyubo",
+  "text": "謝啦謝啦！"
+ },
+ "bond.jinyubo.dislike": {
+  "who": "jinyubo",
+  "text": "蚊香？咳咳……我的魚會被燻昏啦！"
+ },
+ "bond.jinyubo.h3": {
+  "who": "jinyubo",
+  "text": "來，這兩點功德給妳，別客氣，金魚伯請的！"
+ },
+ "bond.jinyubo.h5": {
+  "who": "jinyubo",
+  "text": "阿春，妳這個朋友，我撈到了！紙網都沒破！"
+ },
+ "bond.jinyubo.done": {
+  "who": "jinyubo",
+  "text": "今天送過了啦，我又不是金魚，一直吃會撐死！"
+ },
+ "bond.huobo.s2.1": {
+  "who": "huobo",
+  "text": "民國三十八年，我十九歲，跟著部隊上船。我媽塞了一包麵線在我口袋。"
+ },
+ "bond.huobo.s2.2": {
+  "who": "huobo",
+  "text": "她說：「到那邊，生日要吃麵線，長命百歲。」"
+ },
+ "bond.huobo.s2.3": {
+  "who": "grandma",
+  "text": "你後來有吃嗎？"
+ },
+ "bond.huobo.s2.4": {
+  "who": "huobo",
+  "text": "有。吃了六十年，一年一碗。我活到八十九，也算長命了。"
+ },
+ "bond.huobo.s2.5": {
+  "who": "huobo",
+  "text": "就是再也沒回去。也不知道我媽葬在哪裡。"
+ },
+ "bond.huobo.s4.1": {
+  "who": "huobo",
+  "text": "阿春，妳上次說妳那個孫子，一個人撐一間民宿。"
+ },
+ "bond.huobo.s4.2": {
+  "who": "huobo",
+  "text": "我跟妳說，我在這裡，沒有人掃墓。十幾年了，一次都沒有。"
+ },
+ "bond.huobo.s4.3": {
+  "who": "huobo",
+  "text": "每年清明，我就看別人家熱熱鬧鬧的。我告訴自己：無所謂，當兵的，習慣了。"
+ },
+ "bond.huobo.s4.4": {
+  "who": "grandma",
+  "text": "今年清明，我叫小翰也幫你拔拔草。"
+ },
+ "bond.huobo.s4.5": {
+  "who": "huobo",
+  "text": "……不用麻煩啦。"
+ },
+ "bond.huobo.s4.6": {
+  "who": "huobo",
+  "text": "……要是他真的來了，叫他順便……插一炷香就好。"
+ },
+ "bond.huobo.like.1": {
+  "who": "huobo",
+  "text": "麵線……好，好。家鄉味。"
+ },
+ "bond.huobo.like.2": {
+  "who": "huobo",
+  "text": "嗯。不錯。"
+ },
+ "bond.huobo.neutral": {
+  "who": "huobo",
+  "text": "收下了。謝了。"
+ },
+ "bond.huobo.dislike": {
+  "who": "huobo",
+  "text": "玩具？我幾歲了？拿走拿走。"
+ },
+ "bond.huobo.h3": {
+  "who": "huobo",
+  "text": "我這裡還有一點陰氣，當兵的省吃儉用存的。拿去。"
+ },
+ "bond.huobo.h5": {
+  "who": "huobo",
+  "text": "阿春同志——敬禮！"
+ },
+ "bond.huobo.done": {
+  "who": "huobo",
+  "text": "一天一次，這是規矩。"
+ },
+ "bond.yuyi.s2.1": {
+  "who": "yuyi",
+  "text": "阿春，我跟妳講，這整個墓仔埔的事，沒有我不知道的。"
+ },
+ "bond.yuyi.s2.2": {
+  "who": "yuyi",
+  "text": "東邊那個老李，生前娶了兩個某，現在兩個都葬在他旁邊，每天吵，他都假裝睡覺。"
+ },
+ "bond.yuyi.s2.3": {
+  "who": "grandma",
+  "text": "妳怎麼什麼都知道？"
+ },
+ "bond.yuyi.s2.4": {
+  "who": "yuyi",
+  "text": "因為我生前是村子裡的媒人婆啊。誰家的囡仔幾歲、愛吃什麼、喜歡誰，我全部記在心裡。"
+ },
+ "bond.yuyi.s2.5": {
+  "who": "yuyi",
+  "text": "……不過我自己，一輩子沒嫁。專門幫人家牽，牽到忘記自己。"
+ },
+ "bond.yuyi.s4.1": {
+  "who": "yuyi",
+  "text": "阿春，我跟妳講一個我沒跟別人講過的。"
+ },
+ "bond.yuyi.s4.2": {
+  "who": "yuyi",
+  "text": "我年輕的時候，有一個人要來提親。他在門口站了一整個下午，我不敢出去。"
+ },
+ "bond.yuyi.s4.3": {
+  "who": "yuyi",
+  "text": "因為我阿爸說，媒人婆的女兒，要嫁得比別人好。那個人只是一個賣菜的。"
+ },
+ "bond.yuyi.s4.4": {
+  "who": "grandma",
+  "text": "後來呢？"
+ },
+ "bond.yuyi.s4.5": {
+  "who": "yuyi",
+  "text": "後來他娶了隔壁村的，生了五個囡仔，每個都很乖。我幫他們每一個都做了媒。"
+ },
+ "bond.yuyi.s4.6": {
+  "who": "yuyi",
+  "text": "……妳看，我還是很會牽吧。"
+ },
+ "bond.yuyi.like.1": {
+  "who": "yuyi",
+  "text": "哎喲，這個好！跟我以前種的一樣嫩。"
+ },
+ "bond.yuyi.like.2": {
+  "who": "yuyi",
+  "text": "這個好、這個好，我拿去給隔壁炫耀。"
+ },
+ "bond.yuyi.neutral": {
+  "who": "yuyi",
+  "text": "謝謝喔，我收起來。"
+ },
+ "bond.yuyi.dislike": {
+  "who": "yuyi",
+  "text": "魚？腥腥的，我怕味道……"
+ },
+ "bond.yuyi.h3": {
+  "who": "yuyi",
+  "text": "阿春，我跟隔壁幾個鬼說了，說妳的民宿很好。傳到廟公那邊，壓力會小一點啦。"
+ },
+ "bond.yuyi.h5": {
+  "who": "yuyi",
+  "text": "阿春，要是我們早一點認識，我一定幫妳做媒……喔妳已經嫁了。那幫小翰！"
+ },
+ "bond.yuyi.done": {
+  "who": "yuyi",
+  "text": "今天送過了，別讓人說閒話。"
+ },
+ "bond.banzhu.s2.1": {
+  "who": "banzhu",
+  "text": "……又是妳吧？每次戲台上缺一個人，就有人幫忙打鑼。"
+ },
+ "bond.banzhu.s2.2": {
+  "who": "banzhu",
+  "text": "我走江湖四十年，碰過的好兄弟比觀眾還多。妳是最有禮貌的一個。"
+ },
+ "bond.banzhu.s2.3": {
+  "who": "grandma",
+  "text": "那是阮應該的。"
+ },
+ "bond.banzhu.s2.4": {
+  "who": "banzhu",
+  "text": "我年輕的時候演小生，最拿手的是〈山伯英台〉。台下有一個少年郎，每場都坐第一排，哭得比苦旦還兇。"
+ },
+ "bond.banzhu.s2.5": {
+  "who": "banzhu",
+  "text": "他旁邊的查某人都在拍他的背。……那一對，我到現在都記得。"
+ },
+ "bond.banzhu.s2.6": {
+  "who": "grandma",
+  "text": "……那是阮家阿公啦。"
+ },
+ "bond.banzhu.s4.1": {
+  "who": "banzhu",
+  "text": "今年是戲班最後一年了。年輕人不看戲，團員一個一個走。"
+ },
+ "bond.banzhu.s4.2": {
+  "who": "banzhu",
+  "text": "我本來想，演完這一檔就收起來。"
+ },
+ "bond.banzhu.s4.3": {
+  "who": "banzhu",
+  "text": "但是妳每次都來幫忙打鑼，台下的好兄弟也越坐越多。"
+ },
+ "bond.banzhu.s4.4": {
+  "who": "banzhu",
+  "text": "我想，就算台下沒有人，只要還有鬼要看，我就繼續演。"
+ },
+ "bond.banzhu.s4.5": {
+  "who": "grandma",
+  "text": "好，阮都會來。坐第一排。"
+ },
+ "bond.banzhu.like.1": {
+  "who": "banzhu",
+  "text": "……咦？誰放在這裡的？還溫溫的。"
+ },
+ "bond.banzhu.like.2": {
+  "who": "banzhu",
+  "text": "生雞蛋？這是給唱戲的人潤喉的，內行喔。"
+ },
+ "bond.banzhu.neutral": {
+  "who": "banzhu",
+  "text": "……多謝了，不知道是哪位。"
+ },
+ "bond.banzhu.dislike": {
+  "who": "banzhu",
+  "text": "螃蟹？我對螃蟹過敏啦……拿去給團員吃好了。"
+ },
+ "bond.banzhu.h3": {
+  "who": "banzhu",
+  "text": "這個紅包，我放在神明廳桌上了。不管是誰，拿去買點好吃的。"
+ },
+ "bond.banzhu.h5": {
+  "who": "banzhu",
+  "text": "以後我的戲，第一排的位子，永遠留給妳。"
+ },
+ "bond.banzhu.done": {
+  "who": "banzhu",
+  "text": "今天夠了，今天夠了，謝謝喔。"
+ },
+ "bond.dijizhu.s2.1": {
+  "who": "dijizhu",
+  "text": "……這間厝，是妳阿公的阿公蓋的。"
+ },
+ "bond.dijizhu.s2.2": {
+  "who": "dijizhu",
+  "text": "那時候我就住進來了。地基打下去那天，他們拜了我一碗飯、一隻雞腿。"
+ },
+ "bond.dijizhu.s2.3": {
+  "who": "grandma",
+  "text": "一百多年了。"
+ },
+ "bond.dijizhu.s2.4": {
+  "who": "dijizhu",
+  "text": "……一百二十三年。看過四代人出世，也送走了三代。"
+ },
+ "bond.dijizhu.s2.5": {
+  "who": "dijizhu",
+  "text": "妳是第一個，走了還留下來的。"
+ },
+ "bond.dijizhu.s4.1": {
+  "who": "dijizhu",
+  "text": "……阿春。有一件事，要跟妳說。"
+ },
+ "bond.dijizhu.s4.2": {
+  "who": "dijizhu",
+  "text": "小翰小時候，半夜發燒，妳抱著他在灶腳走來走去，走了一整夜。"
+ },
+ "bond.dijizhu.s4.3": {
+  "who": "dijizhu",
+  "text": "那晚我也沒睡。我在地底下，一直頂著這間厝，不讓風灌進來。"
+ },
+ "bond.dijizhu.s4.4": {
+  "who": "grandma",
+  "text": "……原來是你。那一晚，外面颱風那麼大，厝裡一點風都沒有。"
+ },
+ "bond.dijizhu.s4.5": {
+  "who": "dijizhu",
+  "text": "嗯。這是我的工作。……現在，也是妳的了。"
+ },
+ "bond.dijizhu.like.1": {
+  "who": "dijizhu",
+  "text": "……好。"
+ },
+ "bond.dijizhu.like.2": {
+  "who": "dijizhu",
+  "text": "……有心。"
+ },
+ "bond.dijizhu.neutral": {
+  "who": "dijizhu",
+  "text": "……收了。"
+ },
+ "bond.dijizhu.dislike": {
+  "who": "dijizhu",
+  "text": "……囡仔的東西，給囡仔。"
+ },
+ "bond.dijizhu.h3": {
+  "who": "dijizhu",
+  "text": "……陰氣，給妳一點。顧厝，要有力氣。"
+ },
+ "bond.dijizhu.h5": {
+  "who": "dijizhu",
+  "text": "……阿春，這間厝，交給妳，我放心。"
+ },
+ "bond.dijizhu.done": {
+  "who": "dijizhu",
+  "text": "……一天一次。"
+ },
+ "bond.guikids.s2.1": {
+  "who": "guikid1",
+  "text": "阿嬤阿嬤！妳知道我們為什麼都在這裡玩嗎？"
+ },
+ "bond.guikids.s2.2": {
+  "who": "guikid2",
+  "text": "因為這裡的囡仔都長大走了……只剩我們。"
+ },
+ "bond.guikids.s2.3": {
+  "who": "guikid1",
+  "text": "以前放學鐘一響，大家都跑來溜滑梯。現在鐘都生鏽了。"
+ },
+ "bond.guikids.s2.4": {
+  "who": "grandma",
+  "text": "那阿嬤來當你們的同學好不好？"
+ },
+ "bond.guikids.s2.5": {
+  "who": "guikid2",
+  "text": "阿嬤太老了啦！……但是可以啦。"
+ },
+ "bond.guikids.s4.1": {
+  "who": "guikid2",
+  "text": "阿嬤，我跟妳說一個秘密。"
+ },
+ "bond.guikids.s4.2": {
+  "who": "guikid2",
+  "text": "我不記得我媽媽的臉了。我只記得她的手，很粗，會幫我綁辮子。"
+ },
+ "bond.guikids.s4.3": {
+  "who": "grandma",
+  "text": "過來，阿嬤幫妳綁。"
+ },
+ "bond.guikids.s4.4": {
+  "who": "guikid2",
+  "text": "……阿嬤的手也很粗。"
+ },
+ "bond.guikids.s4.5": {
+  "who": "guikid1",
+  "text": "我也要！我也要綁！"
+ },
+ "bond.guikids.s4.6": {
+  "who": "grandma",
+  "text": "你是男生，綁什麼辮子啦。"
+ },
+ "bond.guikids.s4.7": {
+  "who": "guikid1",
+  "text": "那……那我要抱一下！"
+ },
+ "bond.guikids.like.1": {
+  "who": "guikid1",
+  "text": "哇！是玩具耶！阿嬤最好了！"
+ },
+ "bond.guikids.like.2": {
+  "who": "guikid2",
+  "text": "烤地瓜……好香喔……"
+ },
+ "bond.guikids.neutral": {
+  "who": "guikid1",
+  "text": "謝謝阿嬤～"
+ },
+ "bond.guikids.dislike": {
+  "who": "guikid2",
+  "text": "薑……好辣……我不要……"
+ },
+ "bond.guikids.h3": {
+  "who": "guikid1",
+  "text": "阿嬤，這顆彈珠給妳，是我最寶貝的！"
+ },
+ "bond.guikids.h5": {
+  "who": "guikid2",
+  "text": "阿嬤，明天也要來喔，每天都要來喔。打勾勾。"
+ },
+ "bond.guikids.done": {
+  "who": "guikid1",
+  "text": "阿嬤今天已經送過了啦，媽媽說不可以一直拿人家的東西。"
+ },
+ "bond.xiaohan.s2.1": {
+  "who": "xiaohan",
+  "text": "阿嬤，今天又有客人在評論寫說，半夜被子被人拉好。"
+ },
+ "bond.xiaohan.s2.2": {
+  "who": "xiaohan",
+  "text": "我知道不可能……但是我每次看到，都想哭。"
+ },
+ "bond.xiaohan.s2.3": {
+  "who": "grandma",
+  "text": "傻囡仔。"
+ },
+ "bond.xiaohan.s2.4": {
+  "who": "xiaohan",
+  "text": "小時候我踢被子，妳每天半夜都起來幫我蓋。我以為那是理所當然的。"
+ },
+ "bond.xiaohan.s2.5": {
+  "who": "xiaohan",
+  "text": "……現在換我幫客人蓋了。雖然好像都被別人搶先了。"
+ },
+ "bond.xiaohan.s4.1": {
+  "who": "xiaohan",
+  "text": "阿嬤，台北那間公司又打電話來了，叫我回去上班。"
+ },
+ "bond.xiaohan.s4.2": {
+  "who": "xiaohan",
+  "text": "薪水很好。比這間民宿好太多了。"
+ },
+ "bond.xiaohan.s4.3": {
+  "who": "grandma",
+  "text": "……那你想回去嗎？"
+ },
+ "bond.xiaohan.s4.4": {
+  "who": "xiaohan",
+  "text": "我拒絕了。"
+ },
+ "bond.xiaohan.s4.5": {
+  "who": "xiaohan",
+  "text": "因為在這裡，我總覺得……妳還在。"
+ },
+ "bond.xiaohan.s4.6": {
+  "who": "grandma",
+  "text": "阿嬤在啊。一直都在。"
+ },
+ "bond.xiaohan.like.1": {
+  "who": "xiaohan",
+  "text": "……咦？誰放在這裡的？……阿嬤以前也都放一顆在我書包旁邊。"
+ },
+ "bond.xiaohan.like.2": {
+  "who": "xiaohan",
+  "text": "這個……好懷念喔。"
+ },
+ "bond.xiaohan.neutral": {
+  "who": "xiaohan",
+  "text": "嗯？誰放的？……先收起來好了。"
+ },
+ "bond.xiaohan.dislike": {
+  "who": "xiaohan",
+  "text": "薑……我從小就不吃薑啦……到底是誰。"
+ },
+ "bond.xiaohan.h3": {
+  "who": "xiaohan",
+  "text": "最近，常常覺得阿嬤還在。……好像也沒那麼累了。"
+ },
+ "bond.xiaohan.h5": {
+  "who": "xiaohan",
+  "text": "阿嬤，我會把這間厝顧好的。妳放心。"
+ },
+ "bond.xiaohan.done": {
+  "who": "grandma",
+  "text": "今天已經偷偷放過了，別讓他起疑。"
+ },
+ "bond.han1.1": {
+  "who": "xiaohan",
+  "text": "……阿嬤？我是在做夢嗎？"
+ },
+ "bond.han1.2": {
+  "who": "grandma",
+  "text": "嘿啦，是夢。阿嬤來看你。"
+ },
+ "bond.han1.q": {
+  "who": "xiaohan",
+  "text": "阿嬤，民宿……我是不是做不起來？這個月又差一點點。"
+ },
+ "bond.han1.a": {
+  "who": "grandma",
+  "text": "你已經做得很好了，阿嬤很驕傲。"
+ },
+ "bond.han1.a2": {
+  "who": "xiaohan",
+  "text": "……真的嗎？阿嬤不是在安慰我？"
+ },
+ "bond.han1.b": {
+  "who": "grandma",
+  "text": "做不起來就再做一次。阿嬤當年也是這樣。"
+ },
+ "bond.han1.b2": {
+  "who": "xiaohan",
+  "text": "……嗯。我知道了，再試一次。"
+ },
+ "bond.han1.end": {
+  "who": "grandma",
+  "text": "好了，睡吧。明天還要早起。"
+ },
+ "bond.han2.1": {
+  "who": "xiaohan",
+  "text": "阿嬤，我好久沒吃妳煮的菜脯蛋了。"
+ },
+ "bond.han2.2": {
+  "who": "grandma",
+  "text": "你這陣子都吃泡麵對不對？"
+ },
+ "bond.han2.q": {
+  "who": "xiaohan",
+  "text": "……妳怎麼知道。"
+ },
+ "bond.han2.a": {
+  "who": "grandma",
+  "text": "冰箱第二層有雞蛋，明天自己煎，阿嬤教你。"
+ },
+ "bond.han2.a2": {
+  "who": "xiaohan",
+  "text": "好，我明天試試看。煎黑了不要笑我。"
+ },
+ "bond.han2.b": {
+  "who": "grandma",
+  "text": "泡麵不准再吃了！阿嬤在天上都看到了！"
+ },
+ "bond.han2.b2": {
+  "who": "xiaohan",
+  "text": "好啦好啦……阿嬤妳明明就在灶腳。"
+ },
+ "bond.han2.end": {
+  "who": "grandma",
+  "text": "要吃飯，知道否？"
+ },
+ "bond.han3.1": {
+  "who": "xiaohan",
+  "text": "阿嬤，我夢到小時候，妳帶我去溪邊抓火金姑。"
+ },
+ "bond.han3.2": {
+  "who": "grandma",
+  "text": "你那時候抓一隻放一隻，說牠們也要回家找媽媽。"
+ },
+ "bond.han3.q": {
+  "who": "xiaohan",
+  "text": "……我都忘了。"
+ },
+ "bond.han3.a": {
+  "who": "grandma",
+  "text": "你從小就是心軟的囡仔，這樣很好。"
+ },
+ "bond.han3.a2": {
+  "who": "xiaohan",
+  "text": "心軟……做生意好像不太行。"
+ },
+ "bond.han3.b": {
+  "who": "grandma",
+  "text": "現在溪邊還是很多火金姑，有空去看看。"
+ },
+ "bond.han3.b2": {
+  "who": "xiaohan",
+  "text": "好。等客人少一點的時候。"
+ },
+ "bond.han3.end": {
+  "who": "grandma",
+  "text": "心軟的人，客人會記得的。睡吧。"
+ },
+ "bond.han4.1": {
+  "who": "xiaohan",
+  "text": "阿嬤，這間厝晚上好安靜。"
+ },
+ "bond.han4.2": {
+  "who": "grandma",
+  "text": "有客人啊。"
+ },
+ "bond.han4.q": {
+  "who": "xiaohan",
+  "text": "客人睡了以後，就只剩我一個。"
+ },
+ "bond.han4.a": {
+  "who": "grandma",
+  "text": "你不是一個人。阿嬤、阿咪、小黑，都陪著你。"
+ },
+ "bond.han4.a2": {
+  "who": "xiaohan",
+  "text": "……阿咪最近常常跑來我房間，是妳叫牠來的嗎？"
+ },
+ "bond.han4.b": {
+  "who": "grandma",
+  "text": "那就去交朋友啊！阿嬌的孫女好像也回來了喔。"
+ },
+ "bond.han4.b2": {
+  "who": "xiaohan",
+  "text": "阿嬤！妳又在亂牽！"
+ },
+ "bond.han4.end": {
+  "who": "grandma",
+  "text": "好啦好啦，睡吧。"
+ },
+ "bond.han5.1": {
+  "who": "xiaohan",
+  "text": "阿嬤，妳會一直在嗎？"
+ },
+ "bond.han5.q": {
+  "who": "grandma",
+  "text": "……阿嬤會一直在，直到你不需要阿嬤的那一天。"
+ },
+ "bond.han5.a": {
+  "who": "grandma",
+  "text": "傻囡仔，阿嬤哪裡都不去。"
+ },
+ "bond.han5.a2": {
+  "who": "xiaohan",
+  "text": "那我要一直需要妳。"
+ },
+ "bond.han5.b": {
+  "who": "grandma",
+  "text": "那不行，你要長大。"
+ },
+ "bond.han5.b2": {
+  "who": "xiaohan",
+  "text": "……我已經長大了啦。好啦，我會長大。"
+ },
+ "bond.han5.end": {
+  "who": "grandma",
+  "text": "睡吧，阿嬤在這裡。"
+ },
+ "bond.gm.nothing": {
+  "who": "grandma",
+  "text": "身上沒東西可以送……先去菜園還是柑仔店看看。"
+ },
+ "bond.gm.handream.done": {
+  "who": "grandma",
+  "text": "今晚已經去過小翰的夢裡了，讓他好好睡。"
+ },
+ "bond.gm.handream.noyin": {
+  "who": "grandma",
+  "text": "陰氣不夠……托夢要十點陰氣。"
+ },
+ "bond.gm.handream.go": {
+  "who": "grandma",
+  "text": "小翰，阿嬤來看你。"
+ },
+ "bond.gm.skill": {
+  "who": "grandma",
+  "text": "心裡暖暖的……好像又多會了一點什麼。"
+ }
+}

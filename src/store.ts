@@ -15,6 +15,7 @@ import { START_META, createNightSlice, night, planFor, preloadNightVoices, yinMa
 import { HAN_BARKS } from './data/barks'
 import { MEMORIES, MEMORY_BONUS_AT } from './world/memories'
 import { encounterState } from './world/night/encounters'
+import { giftUI } from './world/bonds'
 
 export type Phase = 'dusk' | 'night' | 'dawn'
 export type Quality = 'high' | 'low'
@@ -303,7 +304,7 @@ export const useStore = create<GameState>()((set, get) => ({
       else get().advance()
       return
     }
-    if (!s.started || s.transitioning || s.summary || s.month || s.intro || s.panel || s.busy || s.hold || s.minigame || !s.prompt) return
+    if (!s.started || s.transitioning || s.summary || s.month || s.intro || s.panel || s.busy || s.hold || s.minigame || giftUI.npc !== null || !s.prompt) return
     const o = s.prompt.opts[s.prompt.i] ?? s.prompt.opts[0]
     if (!o) return
     if (o.special === 'unhide') s.exitHide()

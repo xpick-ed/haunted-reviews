@@ -14,18 +14,21 @@ export function RelicPanel() {
   const merit = useStore((s) => s.meta.merit)
   const owned = useStore((s) => s.meta.items)
   const [fresh, setFresh] = useState<RelicId | null>(null)
+  // 紅姨三顆心：每樣法器便宜 1 功德（最少 1）
+  const discount = useStore((s) => (s.flags.hongyi_discount ? 1 : 0))
+  const price = (r: { merit: number }) => Math.max(1, r.merit - discount)
   const hasPortrait = (PORTRAIT_IDS as readonly string[]).includes('hongyi')
 
   const buy = (id: RelicId) => {
     const s = useStore.getState()
     const r = RELICS.find((x) => x.id === id)
     if (!r || s.meta.items.includes(id)) return
-    if (s.meta.merit < r.merit) {
+    if (s.meta.merit < price(r)) {
       sfx.play('ui_cancel', { volume: 0.6 })
       s.bark('hongyi.poor')
       return
     }
-    useStore.setState({ meta: { ...s.meta, merit: s.meta.merit - r.merit, items: [...s.meta.items, id] } })
+    useStore.setState({ meta: { ...s.meta, merit: s.meta.merit - price(r), items: [...s.meta.items, id] } })
     sfx.play('temple_bell', { volume: 0.5 })
     s.bark(BUY_LINES[Math.floor(Math.random() * BUY_LINES.length)])
     setFresh(id)
@@ -50,7 +53,7 @@ export function RelicPanel() {
         <div className="relic-grid">
           {RELICS.map((r) => {
             const has = owned.includes(r.id)
-            const poor = !has && merit < r.merit
+            const poor = !has && merit < price(r)
             return (
               <button key={r.id} className={`relic ${has ? 'owned' : ''} ${poor ? 'poor' : ''} ${fresh === r.id ? 'fresh' : ''}`} disabled={has} onClick={() => buy(r.id)}>
                 <span className="relic-icon">{r.icon}</span>
@@ -58,7 +61,7 @@ export function RelicPanel() {
                   <b>{r.name}</b>
                   <span className="relic-desc">{r.desc}</span>
                 </span>
-                <span className="relic-cost">{has ? '已擁有' : `🪷 ${r.merit}`}</span>
+                <span className="relic-cost">{has ? '已擁有' : `🪷 ${price(r)}`}</span>
               </button>
             )
           })}

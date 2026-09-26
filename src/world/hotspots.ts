@@ -216,6 +216,20 @@ export const HOTSPOTS: Hotspot[] = [
   ...DECOR_HOTSPOTS,
 ]
 
+/** 範圍內所有能用的熱點（近的排前面）：同一個地方有好幾件事可以做時（跟 NPC 說話、送禮……），按 Q 切換 */
+export function hotspotsNear(s: GameState, x: number, z: number): { h: Hotspot; label: string; cost: number }[] {
+  const out: { h: Hotspot; label: string; cost: number; d: number }[] = []
+  for (const h of HOTSPOTS) {
+    if (h.scene !== s.scene) continue
+    const d = Math.hypot(h.x - x, h.z - z)
+    if (d > h.r) continue
+    const label = h.label(s)
+    if (!label) continue
+    out.push({ h, label, cost: h.cost?.(s) ?? 0, d })
+  }
+  return out.sort((a, b) => a.d - b.d)
+}
+
 /** 目前最近、可以用的熱點 */
 export function nearestHotspot(s: GameState, x: number, z: number): { h: Hotspot; label: string; cost: number } | null {
   let best: { h: Hotspot; label: string; cost: number } | null = null

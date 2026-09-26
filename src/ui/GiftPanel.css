@@ -1,0 +1,279 @@
+/* 送禮面板（world/bonds.ts） */
+.sheet.gift {
+  width: min(100%, 440px);
+}
+.gift-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.gift-face {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: radial-gradient(circle at 50% 35%, #3a4a6a, #1c2236);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  object-fit: cover;
+}
+.gift-face-char {
+  display: grid;
+  place-items: center;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--gold-2);
+}
+.gift-face-char.ghost {
+  color: var(--ghost);
+  background: radial-gradient(circle at 50% 35%, #2a5a64, #122630);
+  box-shadow: inset 0 0 14px rgba(143, 244, 255, 0.25);
+}
+.gift-who {
+  flex: 1;
+  min-width: 0;
+}
+.gift-hearts {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 22px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.25);
+}
+.gift-hearts .on {
+  color: #ff7a9a;
+  text-shadow: 0 0 8px rgba(255, 122, 154, 0.55);
+}
+.gift-hearts.pop-like .on,
+.gift-hearts.pop-neutral .on {
+  animation: gift-beat 0.5s ease-out 2;
+}
+.gift-hearts.pop-dislike {
+  animation: gift-shake 0.3s linear 2;
+}
+.gift-pts {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.gift-bar {
+  margin-top: 6px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.gift-bar > i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ff9ab4, #ff6f91);
+  transition: width 0.6s ease;
+}
+.gift-likes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+.gift-tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 12px;
+}
+.gift-tag.like {
+  border-color: rgba(255, 122, 154, 0.6);
+  color: #ffb3c6;
+}
+.gift-tag.dislike {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.gift-tag.unknown {
+  border-style: dashed;
+  color: var(--muted);
+}
+.gift-reward {
+  line-height: 1.5;
+}
+.gift-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+.gift-item {
+  position: relative;
+  font: inherit;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 6px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition:
+    transform 0.08s,
+    background 0.2s;
+}
+.gift-item:active {
+  transform: scale(0.96);
+}
+.gift-item:not(:disabled):hover {
+  background: rgba(255, 213, 138, 0.1);
+}
+.gift-item:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.gift-item.like {
+  border-color: rgba(255, 122, 154, 0.55);
+}
+.gift-item.dislike {
+  opacity: 0.6;
+}
+.gift-item-icon {
+  font-size: 26px;
+  line-height: 1.2;
+}
+.gift-item-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+.gift-item-count {
+  font-size: 11px;
+  color: var(--muted);
+}
+.gift-mark {
+  position: absolute;
+  top: 4px;
+  right: 7px;
+  font-size: 13px;
+}
+.gift-mark.like {
+  color: #ff7a9a;
+}
+.gift-mark.dislike {
+  color: var(--muted);
+}
+.gift-empty {
+  margin: 4px 0;
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+}
+.gift-result {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 0 12px;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  animation: pop-in 0.25s ease-out;
+}
+.gift-result-text {
+  font-size: 22px;
+  letter-spacing: 3px;
+}
+.gift-result-pts {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.gift-result.like {
+  color: #ffb3c6;
+}
+.gift-result.neutral {
+  color: var(--gold-2);
+}
+.gift-result.dislike {
+  color: var(--muted);
+}
+.gift-float {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.gift-float i {
+  position: absolute;
+  bottom: 10px;
+  font-style: normal;
+  font-size: 20px;
+  color: #ff7a9a;
+  animation: gift-float 1.3s ease-out forwards;
+  opacity: 0;
+}
+@keyframes gift-float {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-70px) scale(1.2);
+    opacity: 0;
+  }
+}
+@keyframes gift-beat {
+  50% {
+    transform: scale(1.35);
+  }
+}
+@keyframes gift-shake {
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+/* 托夢給小翰：夢的邊框（柔和的紫、慢慢往上飄的光點） */
+.han-dream-frame {
+  position: fixed;
+  inset: 0;
+  pointer-events: none !important;
+  background: radial-gradient(ellipse at 50% 45%, transparent 38%, rgba(120, 90, 180, 0.35) 80%, rgba(40, 20, 70, 0.7) 100%);
+  animation: fade 0.6s ease-out;
+  z-index: 1;
+}
+.han-dream-frame i {
+  position: absolute;
+  bottom: -10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 236, 200, 0.85);
+  box-shadow: 0 0 10px rgba(255, 230, 180, 0.9);
+  animation-name: han-dream-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes han-dream-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-105vh);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .han-dream-frame i,
+  .gift-float i {
+    animation: none;
+    display: none;
+  }
+}

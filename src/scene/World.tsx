@@ -6,7 +6,8 @@ import { sfx } from '../audio/sfx'
 import { player, stepPlayer } from '../world/player'
 import { SCENES, npcColliders, type SceneId } from '../world/scenes'
 import type { Circle, Colliders } from '../world/collision'
-import { nearestHotspot } from '../world/hotspots'
+import { hotspotsNear } from '../world/hotspots'
+import { giftUI } from '../world/bonds'
 import { inRect, segmentHitsBox } from '../world/collision'
 import { night, nightOptions, type DecorPlacement, type PromptOpt } from '../world/night/director'
 import { decorCircles, useDecor } from '../world/decor'
@@ -80,7 +81,7 @@ export function WorldController() {
     const s = useStore.getState()
     const dt = Math.min(rawDt, 0.1) * s.timeScale
     const scene = SCENES[s.scene]
-    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy || !!s.minigame || !!s.hidden
+    const frozen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || s.busy || !!s.minigame || !!s.hidden || giftUI.npc !== null
     const move = input.read()
     // 躲著的時候一推搖桿就出來
     if (s.hidden && !s.dialogue && !s.minigame && Math.hypot(move.x, move.y) > 0.5) s.exitHide()
@@ -121,7 +122,7 @@ export function WorldController() {
     // 長按中：動作鈕要留著（放開才知道）；躲著、附身時只有特別的選項
     // 裝修民宿的目錄或擺放模式開著：動作鈕讓給擺放（不然點「放下」會順便觸發旁邊的互動點）
     const decorUI = useDecor.getState()
-    const promptOpen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || !!s.minigame || decorUI.open || decorUI.placing ? false : !s.busy || !!s.hold
+    const promptOpen = !s.started || !!s.dialogue || s.transitioning || !!s.summary || !!s.month || s.intro || !!s.panel || !!s.minigame || decorUI.open || decorUI.placing || giftUI.npc !== null ? false : !s.busy || !!s.hold
     if (promptOpen && s.hidden) {
       prompt = { opts: [{ key: 'unhide', label: '出來', cost: 0, needed: false, spot: s.hidden, special: 'unhide' }], i: 0, key: 'unhide' }
     } else if (promptOpen && s.possess) {
@@ -142,8 +143,8 @@ export function WorldController() {
           opts.push({ key: `${o.spot}:${o.action}`, label: o.label, cost: o.cost, needed: o.needed, spot: o.spot, option: o })
         }
       }
-      const near = nearestHotspot(s, player.x, player.z)
-      if (near) opts.push({ key: `h:${near.h.id}:${near.label}`, label: near.label, cost: near.cost, needed: false, spot: near.h.id, hotspot: near.h.id })
+      for (const near of hotspotsNear(s, player.x, player.z))
+        opts.push({ key: `h:${near.h.id}:${near.label}`, label: near.label, cost: near.cost, needed: false, spot: near.h.id, hotspot: near.h.id })
       if (opts.length) {
         const key = opts.map((o) => `${o.key}:${o.needed ? 1 : 0}`).join('|')
         const prev = s.prompt

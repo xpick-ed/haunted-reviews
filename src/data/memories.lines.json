@@ -90,5 +90,9 @@
   "mem.harbor": {
     "who": "grandma",
     "text": "紅手帕……那條手帕，我收到現在。"
+  },
+  "mem.cinema": {
+    "who": "grandma",
+    "text": "第七排……憨人，電影都沒在看。"
   }
 }

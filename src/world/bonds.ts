@@ -12,6 +12,7 @@ import { RIVER, riverKids } from './sceneRiver'
 import { kidsGate } from './tag'
 import { STATION, ghostTrain } from './sceneStation'
 import { keeperSpot } from './sceneHarbor'
+import { OLDSTREET } from './sceneOldStreet'
 import { HAN_BED, HAN_SWEEP, KITCHEN_TABLE } from '../scene/layout'
 
 // 好感度＋送禮（DESIGN §27.2）：村民與鬼鄰居的好感度、喜歡的東西、每顆心的故事與回禮。
@@ -20,7 +21,7 @@ import { HAN_BED, HAN_SWEEP, KITCHEN_TABLE } from '../scene/layout'
 //   2♥、4♥：一段故事（對話）；3♥：回禮；5♥：技能點 +1
 // 這個檔案會被 hotspots.ts 載入，不能在最上面 import store／audio（改 store 都經過呼叫的人傳進來的 api，或動態 import）。
 
-export type BondId = 'ajiao' | 'ayi' | 'hongyi' | 'jinyubo' | 'huobo' | 'yuyi' | 'banzhu' | 'dijizhu' | 'guikids' | 'xiaohan' | 'conductor' | 'keeper'
+export type BondId = 'ajiao' | 'ayi' | 'hongyi' | 'jinyubo' | 'huobo' | 'yuyi' | 'banzhu' | 'dijizhu' | 'guikids' | 'xiaohan' | 'conductor' | 'keeper' | 'bingmom' | 'projectionist'
 
 /** 可以送的東西：食材／雜貨，或燒金紙（花 1 點功德，只有鬼收） */
 export type GiftId = Ingredient | 'joss'
@@ -54,6 +55,8 @@ export const BONDS: Record<BondId, BondDef> = {
   // 第三批（DESIGN §27）
   conductor: { id: 'conductor', name: '鬼車掌', icon: '車', ghost: true, likes: ['egg', 'joss', 'noodle'], dislike: 'crab', reward: '功德 +2' },
   keeper: { id: 'keeper', name: '守燈人', icon: '燈', ghost: true, likes: ['candle', 'fish', 'ginger'], dislike: 'toy', reward: '溪哥 ×2、功德 +1' },
+  bingmom: { id: 'bingmom', name: '阿桃', icon: '桃', ghost: false, likes: ['sweetpotato', 'egg', 'toy'], dislike: 'crab', reward: '紅豆冰請客（小翰的心 +3、$500）' },
+  projectionist: { id: 'projectionist', name: '放映師', icon: '映', ghost: true, likes: ['joss', 'candle', 'noodle'], dislike: 'fish', reward: '陰氣 +20' },
 }
 
 export const BOND_ORDER = Object.keys(BONDS) as BondId[]
@@ -96,6 +99,8 @@ const STORY_LEN: Record<BondId, [number, number]> = {
   xiaohan: [5, 6],
   conductor: [5, 6],
   keeper: [5, 6],
+  bingmom: [5, 6],
+  projectionist: [5, 6],
 }
 
 export const storyId = (npc: BondId, n: 2 | 4) => `bond_${npc}_${n}`
@@ -284,6 +289,13 @@ async function applyReward(api: Api, npc: BondId) {
       bump('fish', 2)
       merit(1)
       break
+    case 'bingmom':
+      // 阿桃請小翰吃冰（她看得到阿嬤，也認識小翰）
+      set((x) => ({ meta: { ...x.meta, heart: Math.min(100, x.meta.heart + 3), money: x.meta.money + 500 } }))
+      break
+    case 'projectionist':
+      await yin(20)
+      break
   }
 }
 
@@ -345,6 +357,16 @@ export const BOND_HOTSPOTS: Hotspot[] = [
     icon: { x: STATION.conductor.x + 0.4, z: STATION.conductor.z },
     iconY: 2.5,
     present: (s) => !!ghostTrain(s.time, s.phase)?.stopped,
+  }),
+  bondHotspot('bingmom', 'oldstreet', OLDSTREET.ice.bingmom.x + 1.3, OLDSTREET.ice.bingmom.z + 1.7, {
+    r: 1.1,
+    icon: { x: OLDSTREET.ice.bingmom.x + 0.5, z: OLDSTREET.ice.bingmom.z },
+    iconY: 2.4,
+  }),
+  bondHotspot('projectionist', 'oldstreet', OLDSTREET.projectionist.x - 1.4, OLDSTREET.projectionist.z + 1.0, {
+    r: 1.1,
+    icon: { x: OLDSTREET.projectionist.x - 0.4, z: OLDSTREET.projectionist.z },
+    iconY: 2.4,
   }),
   bondHotspot('keeper', 'harbor', keeperSpot.x + 0.3, keeperSpot.z + 1.1, { r: 1.5, icon: { x: keeperSpot.x + 0.4, z: keeperSpot.z }, iconY: 2.4 }),
   bondHotspot('ajiao', 'village', 1.9, -2.55, { icon: { x: VILLAGE.ajiao.x + 0.6, z: VILLAGE.ajiao.z }, iconY: 2.5 }),

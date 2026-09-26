@@ -252,6 +252,11 @@ export function nearestHotspot(s: GameState, x: number, z: number): { h: Hotspot
 export function objectives(s: GameState): { main: string | null; extra: string | null } {
   const n = s.meta.night
   const fest = festivalOf(n)
+  // 傍晚在這些地方：先講這裡能做什麼（上香之類的主線提醒回家再說）
+  if (s.phase === 'dusk' && s.flags.incense_today) {
+    if (s.scene === 'oldstreet') return { main: '逛老街', extra: '冰果室阿桃看得到阿嬤；老戲院的放映師可以放妳的回憶' }
+    if (s.scene === 'station') return { main: '小火車站', extra: '今晚的客人剛下車：先「觀察」他們，晚上就知道他們需要什麼' }
+  }
   if (s.phase === 'dusk') {
     const p = s.meta.pantry
     const extra = fest

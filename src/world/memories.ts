@@ -123,6 +123,18 @@ export const MEMORIES: Memory[] = [
     line: 'mem.stool',
   },
   {
+    id: 'cinema',
+    title: '第七排',
+    year: 1960,
+    icon: '🎞️',
+    scene: 'oldstreet',
+    x: -5.0,
+    z: -9.2,
+    y: 1.2,
+    text: '阿公第一次約我去看電影，買的是第七排。整場電影他都沒在看，一直偷看我有沒有在笑。散場的時候他說：「以後我們每次都坐第七排。」後來戲院最後一場，我們也坐那裡。',
+    line: 'mem.cinema',
+  },
+  {
     id: 'harbor',
     title: '堤防上揮手',
     year: 1965,

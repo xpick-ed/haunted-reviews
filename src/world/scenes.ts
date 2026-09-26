@@ -305,6 +305,13 @@ export const TEMPLE_SCENE: SceneDef = {
       min: [-3.0, 0, -4.1],
       max: [3.0, TEMPLE.ridgeY + 0.6, 0.2],
     },
+    // 老榕樹的樹冠：只拿來判斷有沒有擋到阿嬤（室內範圍設在碰不到的地方，鏡頭不會拉近）
+    {
+      id: 'banyan',
+      inside: rect(1e3, 1e3, 1e3 + 0.1, 1e3 + 0.1),
+      min: [TEMPLE.banyan.x - 3.6, 1.8, TEMPLE.banyan.z - 3.6],
+      max: [TEMPLE.banyan.x + 3.6, 6.5, TEMPLE.banyan.z + 3.6],
+    },
   ],
   rooms: [{ id: 'temple', name: '福德祠', area: TEMPLE.hall }],
   floorAt: (x, z) => (inside(TEMPLE.base, x, z) ? TEMPLE.baseY : 0.02),

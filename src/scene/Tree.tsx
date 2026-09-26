@@ -1,4 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
+import { useStore } from '../store'
 import * as THREE from 'three'
 import { seeded } from './kit'
 import { MeshBuilder, banyanLeafTexture, randomQuat, taperTube, windSway } from './Plants'
@@ -125,14 +127,31 @@ function buildBanyan(seed: number) {
   return { bark: bark.build(), leaves: leaves.build() }
 }
 
-export function Tree({ position = [-15.5, 0, 1.5], scale = 1 }: { position?: [number, number, number]; scale?: number }) {
+/**
+ * fadeId：場景的 buildings 裡有同 id 的遮擋盒時，樹冠擋住阿嬤會淡成半透明
+ * （樹葉材質是所有樹共用的，所以要淡出的樹自己複製一份）。
+ */
+export function Tree({ position = [-15.5, 0, 1.5], scale = 1, fadeId }: { position?: [number, number, number]; scale?: number; fadeId?: string }) {
   const seed = (Math.round(position[0] * 131 + position[2] * 71) & 0xffff) + 1
   const geo = useMemo(() => buildBanyan(seed), [seed])
   const m = materials()
+  const leaf = useMemo(() => (fadeId ? m.leaf.clone() : m.leaf), [fadeId, m.leaf])
+  const k = useRef(1)
+  useFrame(() => {
+    if (!fadeId) return
+    const target = useStore.getState().faded.split(',').includes(fadeId) ? 0.2 : 1
+    if (Math.abs(k.current - target) < 0.005) return
+    k.current += (target - k.current) * 0.15
+    const wasT = leaf.transparent
+    leaf.opacity = k.current
+    leaf.transparent = k.current < 0.99
+    leaf.depthWrite = k.current > 0.6
+    if (wasT !== leaf.transparent) leaf.needsUpdate = true
+  })
   return (
     <group position={position} scale={scale} rotation-y={(seed % 628) / 100}>
       <mesh geometry={geo.bark} material={m.bark} castShadow receiveShadow />
-      <mesh geometry={geo.leaves} material={m.leaf} castShadow />
+      <mesh geometry={geo.leaves} material={leaf} castShadow userData={fadeId ? { noMerge: true } : undefined} />
     </group>
   )
 }

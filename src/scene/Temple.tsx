@@ -43,7 +43,7 @@ export function TempleScene() {
       <Smoke x={TEMPLE.burner.x} z={TEMPLE.burner.z} y={1.35} />
       <TempleLights />
       <MarketPath />
-      <Tree position={[TEMPLE.banyan.x, 0, TEMPLE.banyan.z]} scale={0.95} />
+      <Tree position={[TEMPLE.banyan.x, 0, TEMPLE.banyan.z]} scale={0.95} fadeId="banyan" />
       <Tree position={[8.5, 0, -6.5]} scale={0.6} />
       <ChibiNpc id="ayi" pose="drink" position={[NPC_SPOTS.ayi.x, 0.2, NPC_SPOTS.ayi.z]} heading={0.9} seesGhosts outline={quality === 'high'} />
       <group visible={isNight}>

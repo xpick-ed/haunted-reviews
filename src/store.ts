@@ -14,6 +14,7 @@ import type { MinigameId } from './ui/minigames/types'
 import { START_META, createNightSlice, night, planFor, preloadNightVoices, yinMax, type NightSlice, type PromptOpt } from './world/night/director'
 import { HAN_BARKS } from './data/barks'
 import { MEMORIES, MEMORY_BONUS_AT } from './world/memories'
+import { encounterState } from './world/night/encounters'
 
 export type Phase = 'dusk' | 'night' | 'dawn'
 export type Quality = 'high' | 'low'
@@ -429,6 +430,12 @@ export const useStore = create<GameState>()((set, get) => ({
       return
     }
     if (s.phase === 'night' && s.time < 29) {
+      // 客人正在聊天（客人之間的故事）：打盹會把故事快轉掉，先不要睡
+      const enc = encounterState.view
+      if (enc && enc.phase !== 'done') {
+        get().say('客人正在聊天，阿嬤先別打盹，過去聽聽看。')
+        return
+      }
       get().bark('gm.nap')
       set({ transitioning: true })
       later(700, () => set({ blackout: true }))

@@ -130,6 +130,7 @@ function Status() {
   const toggleVoice = useStore((s) => s.toggleVoice)
   const openPanel = useStore((s) => s.openPanel)
   const modal = useStore((s) => !!s.summary || !!s.month || s.intro || !!s.panel || !!s.dialogue)
+  const inPast = useStore((s) => s.scene === 'past')
   return (
     <div className="status">
       <div className="clock">

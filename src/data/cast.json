@@ -759,5 +759,48 @@
    "wave": "triangle",
    "jitter": 0.1
   }
+ },
+ {
+  "id": "shugong",
+  "name": "叔公",
+  "desc": "1958 年婚禮上的叔公，愛開玩笑、嗓門大。",
+  "ghost": false,
+  "color": "#c0a080",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-10%",
+   "pitch": "-20Hz",
+   "fx": [
+    "elder"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "shenpo",
+  "name": "嬸婆",
+  "desc": "1958 年婚禮上的嬸婆，笑咪咪、愛塞紅包。",
+  "ghost": false,
+  "color": "#c0a080",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-8%",
+   "pitch": "-22Hz",
+   "fx": [
+    "elder",
+    "warm"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
  }
 ]

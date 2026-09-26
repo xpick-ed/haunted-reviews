@@ -9,6 +9,7 @@ import { canvasTexture } from './kit'
 import { Chibi, newDrive } from '../chars/Chibi'
 import { SPECS } from '../chars/specs'
 import { floatBob, type BobState } from '../world/motion'
+import { PastAvatar } from './PastAvatar'
 
 // 阿嬤：3D Q 版角色（src/chars/）。她是鬼：半透明、發光、沒有影子。
 // 深夜的客人、廟公、狗在 Guests.tsx。
@@ -34,7 +35,13 @@ function makeTextures() {
 // 阿嬤：半透明、發青白光、飄著、沒有影子
 // ---------------------------------------------------------------------------
 
+/** 玩家：平常是阿嬤（鬼）；回到 1958 時是年輕的阿春（src/scene/PastAvatar.tsx） */
 export function Grandma() {
+  const inPast = useStore((s) => s.scene === 'past')
+  return inPast ? <PastAvatar /> : <GhostGrandma />
+}
+
+function GhostGrandma() {
   const tex = textures()
   const quality = useStore((s) => s.quality)
   const group = useRef<THREE.Group>(null)

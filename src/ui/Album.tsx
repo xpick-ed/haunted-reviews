@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '../store'
 import { MEMORIES, MEMORY_BONUS_AT } from '../world/memories'
+import { EPISODE_OF, preparePast } from '../world/past'
 import './Album.css'
 
 // 回憶相簿（DESIGN §26.2）：依年代排的阿嬤的一生。沒撿到的只看得到年份和一個問號。
@@ -22,6 +23,17 @@ export function AlbumPanel() {
   const list = [...MEMORIES].sort((a, b) => a.year - b.year)
   const [open, setOpen] = useState<string | null>(null)
   const cur = list.find((m) => m.id === open && got.includes(m.id))
+  const pastDone = useStore((s) => s.meta.pastDone)
+  // 走進回憶只在傍晚（晚上要顧客人），而且不在夢裡、不在另一段回憶裡
+  const canWalk = useStore((s) => s.phase === 'dusk' && !s.dream && !s.past && !s.transitioning && s.scene !== 'past')
+  const walkIn = (id: string) => {
+    const ep = EPISODE_OF[id]
+    if (!ep || !canWalk) return
+    preparePast(ep)
+    const st = useStore.getState()
+    st.openPanel(null)
+    st.enterPast(ep)
+  }
   return (
     <div className="screen-backdrop" onClick={() => openPanel(null)}>
       <div className="sheet album" onClick={(e) => e.stopPropagation()}>
@@ -40,6 +52,22 @@ export function AlbumPanel() {
             </div>
             <h3>{cur.title}</h3>
             <p className="memory-text">{cur.text}</p>
+            {EPISODE_OF[cur.id] && (
+              <div className="memory-walk">
+                <button
+                  className="btn primary"
+                  disabled={!canWalk}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    walkIn(cur.id)
+                  }}
+                >
+                  👣 走進回憶{pastDone.includes(EPISODE_OF[cur.id]) ? '（再走一次）' : ''}
+                </button>
+                {!canWalk && <span className="muted">傍晚才能走進回憶（晚上要顧客人）</span>}
+                {pastDone.includes(EPISODE_OF[cur.id]) && <span className="memory-done">✓ 走過了</span>}
+              </div>
+            )}
             <span className="muted">（點一下回到相簿）</span>
           </div>
         ) : (
@@ -51,6 +79,7 @@ export function AlbumPanel() {
                   <span className="memory-icon">{has ? m.icon : '？'}</span>
                   <span className="memory-year">{m.year}</span>
                   <span className="memory-title">{has ? m.title : `（${SCENE_HINT[m.scene] ?? '某個地方'}）`}</span>
+                  {has && EPISODE_OF[m.id] && <span className="memory-badge">{pastDone.includes(EPISODE_OF[m.id]) ? '✓' : '👣'}</span>}
                 </button>
               )
             })}

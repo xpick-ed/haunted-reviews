@@ -1,0 +1,198 @@
+/* 回到 1958：老照片的顏色（泛黃、顆粒、暗角、微微閃） */
+.past-sepia {
+  position: fixed;
+  inset: 0;
+  pointer-events: none !important;
+  background: rgba(140, 92, 38, 0.46);
+  mix-blend-mode: color;
+}
+.past-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none !important;
+  background: radial-gradient(ellipse at center, rgba(255, 236, 200, 0.06) 35%, rgba(46, 26, 8, 0.6) 100%);
+  animation: past-flicker 3.4s infinite;
+}
+.past-grain {
+  position: fixed;
+  inset: -64px;
+  pointer-events: none !important;
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+  animation: past-grain 0.9s steps(5) infinite;
+}
+@keyframes past-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-22px, 14px);
+  }
+  40% {
+    transform: translate(18px, -26px);
+  }
+  60% {
+    transform: translate(-30px, -8px);
+  }
+  80% {
+    transform: translate(12px, 28px);
+  }
+}
+@keyframes past-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  47% {
+    opacity: 0.92;
+  }
+  49% {
+    opacity: 1;
+  }
+  74% {
+    opacity: 0.95;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .past-grain,
+  .past-vignette {
+    animation: none;
+  }
+}
+
+/* 開場標題卡 */
+.past-title {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none !important;
+  color: #f7ecd4;
+  text-shadow: 0 2px 18px rgba(40, 20, 4, 0.9);
+  animation: past-title 3s ease-out forwards;
+  white-space: nowrap;
+}
+.past-year {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px;
+  letter-spacing: 10px;
+  opacity: 0.85;
+}
+.past-name {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 34px;
+  letter-spacing: 10px;
+  margin-top: 6px;
+}
+@keyframes past-title {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  18%,
+  75% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 目前的目標 */
+.past-objective {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(420px, calc(100vw - 32px));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(46, 30, 14, 0.78);
+  border: 1px solid rgba(233, 200, 140, 0.5);
+  color: #f6e6c4;
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  pointer-events: none !important;
+  animation: rise 0.3s ease-out;
+}
+.past-tag {
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #3a2410;
+  background: #e9c88c;
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.past-leave {
+  position: absolute;
+  left: 12px;
+  bottom: calc(14px + var(--safe-b, 0px));
+  opacity: 0.8;
+}
+
+/* 結尾卡 */
+.past-end-backdrop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(30, 18, 6, 0.45);
+  animation: fade 0.6s ease-out;
+  padding: 16px;
+  z-index: 6;
+}
+.past-end {
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(64, 44, 26, 0.97), rgba(34, 24, 14, 0.97));
+  border: 1.5px solid rgba(233, 200, 140, 0.5);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  text-align: center;
+  animation: slideup 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.past-end-photo {
+  width: 140px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #e9d8b4, #b99a66);
+  border: 6px solid #f5ecd8;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  transform: rotate(-2deg);
+  color: #3a2a18;
+}
+.past-end-icon {
+  font-size: 42px;
+  line-height: 1.1;
+}
+.past-end-year {
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+.past-end h2 {
+  margin: 4px 0 0;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 21px;
+  letter-spacing: 3px;
+  color: #f2d9a8;
+}
+.past-end p {
+  margin: 0;
+  font-family: 'LXGW WenKai TC', 'Noto Sans TC', sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #f6ecd8;
+}

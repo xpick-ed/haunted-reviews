@@ -40,6 +40,8 @@ export function Hud() {
   const minigame = useStore((s) => !!s.minigame)
   // 夢裡有自己的 HUD（DreamHud），家裡的目標、住客、動作鈕先收起來
   const inDream = useStore((s) => s.scene === 'dream')
+  // 回到 1958：有自己的目標（PastHud），現在的目標、住客、陰陽眼都收起來
+  const inPast = useStore((s) => s.scene === 'past')
   const modal = !!summary || !!month || intro || !!panel || minigame
   return (
     <div className="hud">
@@ -47,7 +49,7 @@ export function Hud() {
       <HideView />
       <PossessBadge />
       <Watched />
-      {!modal && !inDream && (
+      {!modal && !inDream && !inPast && (
         <div className="left-col">
           <Objective />
           <GuestsPanel />
@@ -149,7 +151,7 @@ function Status() {
           ❤️ {heart}
         </span>
       </div>
-      {!modal && <PowerButtons />}
+      {!modal && !inPast && <PowerButtons />}
       <div className="status-row">
         {phase === 'dusk' && !modal && (
           <button className={`chip ${pts > 0 ? 'glow' : ''}`} onClick={() => openPanel('skills')}>

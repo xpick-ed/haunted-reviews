@@ -1,0 +1,404 @@
+/* 冰果室剉冰（老街） */
+
+.si-card {
+  position: relative;
+  width: min(94vw, 560px);
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(58, 30, 36, 0.97), rgba(30, 16, 20, 0.97));
+  border: 1.5px solid rgba(255, 150, 190, 0.45);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(255, 120, 170, 0.15);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+}
+.si-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px;
+}
+.si-title {
+  flex: 1;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffd6e6;
+  white-space: nowrap;
+}
+.si-stat {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.si-stat b {
+  font-size: 18px;
+  color: var(--gold-2);
+}
+.si-stat.hurry {
+  color: var(--danger);
+  animation: blink 0.5s steps(2) infinite;
+}
+.si-close {
+  font: inherit;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* 排隊的好兄弟 */
+.si-queue {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.si-cust {
+  position: relative;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.3s,
+    opacity 0.6s;
+}
+.si-cust.empty {
+  border-style: dashed;
+  background: none;
+}
+.si-cust.now {
+  border-color: #ffb3cf;
+  box-shadow: 0 0 14px rgba(255, 150, 190, 0.35);
+}
+.si-cust.happy {
+  transform: translateY(-14px);
+  opacity: 0;
+  transition-duration: 1.1s;
+}
+.si-cust.sad {
+  transform: translateY(-8px) rotate(-6deg);
+  opacity: 0;
+  transition-duration: 1.1s;
+}
+.si-ghost {
+  position: relative;
+  width: 38px;
+  height: 40px;
+  border-radius: 20px 20px 6px 6px;
+  background: hsla(var(--h), 70%, 90%, 0.85);
+  box-shadow: 0 0 12px hsla(var(--h), 90%, 80%, 0.6);
+  animation: si-float 2.2s ease-in-out infinite;
+}
+.si-ghost i {
+  position: absolute;
+  top: 13px;
+  width: 6px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2a2230;
+}
+.si-ghost i:first-child {
+  left: 10px;
+}
+.si-ghost i:nth-child(2) {
+  right: 10px;
+}
+.si-mouth {
+  position: absolute;
+  left: 50%;
+  top: 25px;
+  width: 8px;
+  height: 4px;
+  margin-left: -4px;
+  border-radius: 0 0 6px 6px;
+  background: #d8607a;
+}
+@keyframes si-float {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+.si-name {
+  font-size: 12px;
+  color: #ffe6ef;
+}
+.si-order {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+}
+.si-chip {
+  font-size: 11px;
+  line-height: 1;
+  padding: 3px 5px;
+  border-radius: 999px;
+  color: #fff;
+  background: color-mix(in srgb, var(--c) 75%, #000 10%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+.si-patience {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 3px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.si-patience i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ff6a6a, #ffd36a);
+}
+
+/* 剉冰機的畫布 */
+.si-stage {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.si-canvas {
+  display: block;
+  touch-action: none;
+}
+.si-meter {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  height: 10px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.si-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(111, 224, 124, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(160, 255, 170, 0.8);
+}
+.si-meter i {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 4px;
+  background: #cfe8ff;
+}
+.si-meter i.ok {
+  background: #9dff9a;
+}
+.si-meter i.over {
+  background: #ff7a6a;
+}
+.si-toast {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  animation: si-pop 1.6s ease-out forwards;
+  pointer-events: none;
+}
+.si-toast.good {
+  background: rgba(40, 110, 60, 0.9);
+  color: #d8ffd8;
+}
+.si-toast.bad {
+  background: rgba(140, 40, 40, 0.9);
+  color: #ffe0e0;
+}
+@keyframes si-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.9);
+  }
+  12%,
+  75% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.si-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  text-align: center;
+  background: rgba(30, 14, 18, 0.8);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.si-overlay p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ffeef4;
+}
+.si-overlay b {
+  color: #ffd6e6;
+}
+.si-overlay b.g {
+  color: #9dff9a;
+}
+.si-keys {
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+.si-big {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 22px !important;
+  color: var(--gold-2) !important;
+}
+.si-merit {
+  font-size: 16px !important;
+  color: #9be8d8 !important;
+}
+
+/* 操作 */
+.si-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+.si-shave {
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(160, 210, 255, 0.6);
+  background: linear-gradient(180deg, #3a6a9a, #24466a);
+  color: #eaf6ff;
+  cursor: pointer;
+  touch-action: none;
+}
+.si-shave:active {
+  transform: scale(0.98);
+  background: linear-gradient(180deg, #4a82ba, #2e5a8a);
+}
+.si-shave.off {
+  opacity: 0.45;
+}
+.si-tops {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+.si-top {
+  position: relative;
+  font: inherit;
+  font-size: 13px;
+  padding: 9px 2px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+.si-top:active {
+  transform: scale(0.95);
+}
+.si-top:disabled {
+  opacity: 0.45;
+}
+.si-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.si-top kbd {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 9px;
+  color: var(--muted);
+  font-family: inherit;
+}
+.si-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 6px;
+}
+.si-dump,
+.si-serve {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 11px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.si-dump {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+}
+.si-serve {
+  border: none;
+  background: linear-gradient(135deg, var(--gold), #d98a2e);
+  color: #2b1a05;
+  letter-spacing: 3px;
+}
+.si-dump:disabled,
+.si-serve:disabled {
+  opacity: 0.45;
+}
+.si-bowl-tops {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+@media (pointer: coarse) {
+  .si-top kbd {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .si-ghost {
+    animation: none;
+  }
+}

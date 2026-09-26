@@ -1,0 +1,173 @@
+/* 老戲院放映機（老街） */
+
+.cn-card {
+  position: relative;
+  width: min(96vw, 640px);
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(34, 12, 12, 0.98), rgba(14, 6, 6, 0.98));
+  border: 1.5px solid rgba(233, 196, 106, 0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  animation: slideup 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+.cn-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px;
+}
+.cn-title {
+  flex: 1;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #f4d27a;
+}
+.cn-close {
+  font: inherit;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+}
+.cn-hint,
+.cn-empty {
+  margin: 2px 4px 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #e8d8c0;
+}
+.cn-empty {
+  padding: 24px 8px;
+  text-align: center;
+}
+.cn-reels {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 8px;
+}
+.cn-reel {
+  font: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 6px 9px;
+  border-radius: 12px;
+  border: 1px solid rgba(233, 196, 106, 0.35);
+  background: linear-gradient(160deg, rgba(90, 40, 30, 0.6), rgba(40, 18, 14, 0.6));
+  color: #f4e6c8;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.cn-reel:hover,
+.cn-reel:focus-visible {
+  transform: translateY(-2px);
+  border-color: #f4d27a;
+}
+.cn-can {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, #5a5a5e 0 22%, #2a2a2e 23% 30%, #6a6a70 31% 100%);
+  box-shadow:
+    inset 0 0 0 3px #3a3a3e,
+    0 3px 8px rgba(0, 0, 0, 0.5);
+}
+.cn-icon {
+  font-size: 22px;
+  filter: sepia(0.6);
+}
+.cn-year {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #c9b48c;
+  font-variant-numeric: tabular-nums;
+}
+.cn-name {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.35;
+}
+
+/* 放映中：黑黑的戲院、放映機的光、銀幕 */
+.cn-theater {
+  position: relative;
+  padding: 14px 10px 26px;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 20%, #2a1a14, #080404 70%);
+  overflow: hidden;
+}
+.cn-beam {
+  position: absolute;
+  right: -40px;
+  top: -30px;
+  width: 70%;
+  height: 90%;
+  background: linear-gradient(210deg, rgba(255, 240, 200, 0.14), rgba(255, 240, 200, 0) 70%);
+  clip-path: polygon(100% 0, 0 30%, 0 90%);
+  animation: cn-flicker 0.12s steps(2) infinite;
+  pointer-events: none;
+}
+@keyframes cn-flicker {
+  50% {
+    opacity: 0.75;
+  }
+}
+.cn-screen {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 6px #1a0e0a,
+    0 0 40px rgba(255, 230, 180, 0.12);
+}
+.cn-canvas {
+  display: block;
+}
+.cn-seats {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22px;
+  background: repeating-radial-gradient(circle at 12px 30px, #1a0a0a 0 14px, transparent 15px 24px);
+  background-size: 26px 30px;
+  opacity: 0.9;
+}
+.cn-end {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(20, 10, 6, 0.72);
+  animation: fade 0.5s ease-out;
+}
+.cn-end p {
+  margin: 0;
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 16px;
+  color: #f0e2c4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cn-beam {
+    animation: none;
+  }
+}

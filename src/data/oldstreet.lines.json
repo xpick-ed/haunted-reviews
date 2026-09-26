@@ -1,0 +1,210 @@
+{
+ "oldstreet.arrive.dusk": {
+  "who": "grandma",
+  "text": "老街……以前趕集都來這裡。石板路走了幾十年，都磨亮了。"
+ },
+ "oldstreet.arrive.night": {
+  "who": "grandma",
+  "text": "晚上的老街，路燈還是一樣黃黃的。戲院的燈怎麼還亮著？"
+ },
+ "bingmom.first.1": {
+  "who": "bingmom",
+  "text": "哎喲，這不是阿春嗎？妳……妳不是去年就……"
+ },
+ "oldstreet.gm.ice.1": {
+  "who": "grandma",
+  "text": "是啦，我走了。不過還是想吃一碗妳剉的冰。"
+ },
+ "bingmom.first.2": {
+  "who": "bingmom",
+  "text": "妳喔，死了還嘴饞！跟以前一模一樣。"
+ },
+ "bingmom.first.3": {
+  "who": "bingmom",
+  "text": "我跟妳講，晚上我這間店生意最好——客人都是好兄弟。我一個人剉不過來啦。"
+ },
+ "oldstreet.gm.ice.help": {
+  "who": "grandma",
+  "text": "那我來幫妳剉。"
+ },
+ "oldstreet.gm.ice.eat": {
+  "who": "grandma",
+  "text": "我先吃一碗再說。"
+ },
+ "bingmom.first.eat": {
+  "who": "bingmom",
+  "text": "吃什麼吃，先來幫忙！做完請妳一碗綜合冰。"
+ },
+ "bingmom.first.4": {
+  "who": "bingmom",
+  "text": "好，妳顧剉冰機，我顧收錢。紅豆、芒果、粉圓、芋圓，客人點什麼就加什麼，順序不要亂。"
+ },
+ "bingmom.hi.1": {
+  "who": "bingmom",
+  "text": "阿春，今天也來幫忙喔？"
+ },
+ "bingmom.hi.2": {
+  "who": "bingmom",
+  "text": "來來來，冰塊剛送到。"
+ },
+ "bingmom.night.1": {
+  "who": "bingmom",
+  "text": "好兄弟排到門口了，快來！"
+ },
+ "bingmom.night.2": {
+  "who": "bingmom",
+  "text": "半夜的客人，煉乳要多加，他們說甜的比較有味道。"
+ },
+ "bingmom.done.1": {
+  "who": "bingmom",
+  "text": "今天夠了夠了，妳也休息一下。"
+ },
+ "bingmom.done.2": {
+  "who": "bingmom",
+  "text": "冰塊用完了啦，明天再來。"
+ },
+ "bingmom.win": {
+  "who": "bingmom",
+  "text": "嘿，妳手腳還是那麼快！好兄弟都說讚。"
+ },
+ "bingmom.ok": {
+  "who": "bingmom",
+  "text": "還不錯啦，有幾碗客人說太少。"
+ },
+ "bingmom.lose": {
+  "who": "bingmom",
+  "text": "哎喲，冰都融了啦，客人都跑了。"
+ },
+ "projectionist.first.1": {
+  "who": "projectionist",
+  "text": "……有人？這間戲院關了四十年了。"
+ },
+ "oldstreet.gm.proj.1": {
+  "who": "grandma",
+  "text": "我是阿春，以前常跟我們家那個來看電影。"
+ },
+ "projectionist.first.2": {
+  "who": "projectionist",
+  "text": "阿春……坐第七排中間，每次都帶一包瓜子的那個？"
+ },
+ "oldstreet.gm.proj.2": {
+  "who": "grandma",
+  "text": "你還記得！"
+ },
+ "projectionist.first.3": {
+  "who": "projectionist",
+  "text": "每一個觀眾我都記得。戲院關了，我還在等最後一場。放映機還會轉，只是沒有片子。"
+ },
+ "projectionist.first.4": {
+  "who": "projectionist",
+  "text": "聽說，鬼的回憶可以做成膠捲。妳有的話拿來，我放給妳看。"
+ },
+ "projectionist.noreel": {
+  "who": "projectionist",
+  "text": "妳還沒有回憶可以放。開陰陽眼看看，老東西上面都有。"
+ },
+ "projectionist.hi.1": {
+  "who": "projectionist",
+  "text": "今天要看哪一卷？"
+ },
+ "projectionist.hi.2": {
+  "who": "projectionist",
+  "text": "放映機熱好了，請坐。"
+ },
+ "projectionist.after.1": {
+  "who": "projectionist",
+  "text": "……這一卷，拍得真好。"
+ },
+ "projectionist.after.2": {
+  "who": "projectionist",
+  "text": "散場了。下次再來，位子幫妳留著。"
+ },
+ "photographer.first.1": {
+  "who": "photographer",
+  "text": "歡迎光臨——咦？門自己開了，沒有人？"
+ },
+ "photographer.first.2": {
+  "who": "photographer",
+  "text": "算了，這台老相機底片還有幾張。進來坐啦，拍一張看看。"
+ },
+ "oldstreet.gm.photo.1": {
+  "who": "grandma",
+  "text": "好啊，阿嬤一輩子沒拍過幾張相片。"
+ },
+ "photographer.first.3": {
+  "who": "photographer",
+  "text": "來，看這裡——笑一個！"
+ },
+ "photographer.hi.1": {
+  "who": "photographer",
+  "text": "門又自己開了……好啦好啦，拍一張。"
+ },
+ "photographer.again": {
+  "who": "grandma",
+  "text": "今天拍過了，底片要留給別人。"
+ },
+ "photographer.closed": {
+  "who": "grandma",
+  "text": "照相館關門了，老闆回去睏了。"
+ },
+ "photographer.after.1": {
+  "who": "photographer",
+  "text": "奇怪……洗出來怎麼多了兩個人？"
+ },
+ "photographer.after.2": {
+  "who": "photographer",
+  "text": "這張拍得真好，連我自己都嚇一跳。"
+ },
+ "oldstreet.poster.1": {
+  "who": "grandma",
+  "text": "〈梁山伯與祝英台〉，那年我們看了三遍，每遍都哭。"
+ },
+ "oldstreet.poster.2": {
+  "who": "grandma",
+  "text": "〈王哥柳哥遊台灣〉，他笑到從椅子上摔下來。"
+ },
+ "oldstreet.poster.night": {
+  "who": "grandma",
+  "text": "看板都褪色了，燈怎麼還一閃一閃的？"
+ },
+ "oldstreet.ticket": {
+  "who": "grandma",
+  "text": "售票口……以前全票五塊，半票三塊。"
+ },
+ "oldstreet.barber.1": {
+  "who": "grandma",
+  "text": "新美理髮廳……他的頭髮都在這裡剪，每次都剪太短，回家被我笑。"
+ },
+ "oldstreet.barber.night": {
+  "who": "grandma",
+  "text": "燈柱還在轉，裡面沒有人。"
+ },
+ "oldstreet.herb": {
+  "who": "grandma",
+  "text": "和春中藥行。阿公生病那年，我天天來這裡抓藥。"
+ },
+ "oldstreet.cart": {
+  "who": "grandma",
+  "text": "豆花車！以前一碗兩塊錢，加花生要多一塊。"
+ },
+ "oldstreet.cart.night": {
+  "who": "grandma",
+  "text": "攤子收了，豆花桶還是溫的。"
+ },
+ "oldstreet.yam": {
+  "who": "grandma",
+  "text": "烤番薯的味道……冬天放學，小翰都要買一條。"
+ },
+ "oldstreet.scooter": {
+  "who": "grandma",
+  "text": "偉士牌。小翰他爸年輕的時候，也騎這台載我去市場。"
+ },
+ "oldstreet.canal": {
+  "who": "grandma",
+  "text": "圳溝的水還是這麼清，以前有人在這裡洗菜。"
+ },
+ "oldstreet.canal.night": {
+  "who": "grandma",
+  "text": "水裡有月亮。"
+ }
+}

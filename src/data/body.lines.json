@@ -1,0 +1,16 @@
+{
+  "body.tk.start": { "who": "grandma", "text": "來，阿嬤用念力……慢慢仔，莫出聲。" },
+  "body.tk.blanket": { "who": "grandma", "text": "被仔拉予好，莫著涼。" },
+  "body.tk.ball": { "who": "grandma", "text": "球來囉，接好喔。" },
+  "body.tk.window": { "who": "grandma", "text": "窗仔關起來，風較袂灌入來。" },
+  "body.tk.item": { "who": "grandma", "text": "放床頭，明仔早就揣會著。" },
+  "body.tk.door": { "who": "grandma", "text": "推一下就好……" },
+  "body.tk.slam": { "who": "grandma", "text": "哎喲，傷大力矣！" },
+  "body.tk.noyin": { "who": "grandma", "text": "念力用了了，無陰氣矣……" },
+  "body.dog.possess": { "who": "grandma", "text": "小黑，借阿嬤一下。" },
+  "body.dog.bark": { "who": "grandma", "text": "汪！……嘿嘿，阿嬤嘛會吠。" },
+  "body.dog.leave": { "who": "grandma", "text": "好啦，還你，乖狗仔。" },
+  "body.gecko.possess": { "who": "grandma", "text": "變做壁虎，天篷嘛爬會過。" },
+  "body.gecko.chirp": { "who": "grandma", "text": "嘖嘖嘖——對啦對啦。" },
+  "body.gecko.leave": { "who": "grandma", "text": "爬甲頭殼眩眩……" }
+}

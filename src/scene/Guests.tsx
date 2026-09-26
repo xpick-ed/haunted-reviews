@@ -15,6 +15,8 @@ import { NEED_INFO } from '../world/night/guests'
 import { HOME } from '../world/scenes'
 import { player } from '../world/player'
 import { Cat, newCatDrive, type CatDrive } from '../chars/Cat'
+import { Dog, newDogDrive, type DogDrive } from '../chars/Dog'
+import { Gecko, newGeckoDrive, type GeckoDrive } from '../chars/Gecko'
 import { turnToward, type TurnState } from '../world/motion'
 import type { RoomId } from '../world/night/types'
 
@@ -127,8 +129,9 @@ export function Guests() {
         <GuestRoom key={r} room={GUEST_ROOMS[r]} guests={sim.guests.filter((g) => g.room === r)} outline={quality === 'high'} />
       ))}
       {sim.miaogong && <Miaogong outline={quality === 'high'} />}
-      {sim.dog && <Dog />}
+      {sim.dog && <DogActor outline={quality === 'high'} />}
       <CatActor outline={quality === 'high'} />
+      <GeckoActor outline={quality === 'high'} />
       {sim.event === 'blackout' && <Storm />}
     </group>
   )
@@ -560,64 +563,6 @@ function Miaogong({ outline }: { outline: boolean }) {
 }
 
 // ---------------------------------------------------------------------------
-// 小黑：圍牆外的黑狗，半夜會叫
-// ---------------------------------------------------------------------------
-
-function Dog() {
-  const group = useRef<THREE.Group>(null)
-  const head = useRef<THREE.Group>(null)
-  const tail = useRef<THREE.Mesh>(null)
-  const mat = useMemo(() => new THREE.MeshToonMaterial({ color: '#2a2524', emissive: '#151212' }), [])
-  const eye = useMemo(() => new THREE.MeshBasicMaterial({ color: '#f4f1ea' }), [])
-  useFrame(({ clock }) => {
-    const d = night.sim?.dog
-    const t = clock.elapsedTime
-    if (!d || !group.current) return
-    group.current.position.set(d.x, 0, d.z)
-    if (head.current) head.current.rotation.x = d.barking ? -0.25 + Math.abs(Math.sin(t * 9)) * 0.3 : 0.15
-    if (tail.current) tail.current.rotation.z = d.calm ? Math.sin(t * 12) * 0.6 : 0.2
-  })
-  return (
-    <group ref={group} rotation={[0, Math.PI, 0]}>
-      <mesh material={mat} position={[0, 0.32, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-        <capsuleGeometry args={[0.13, 0.36, 6, 12]} />
-      </mesh>
-      {[
-        [-0.08, 0.2],
-        [0.08, 0.2],
-        [-0.08, -0.18],
-        [0.08, -0.18],
-      ].map(([x, z], i) => (
-        <mesh key={i} material={mat} position={[x, 0.12, z]} castShadow>
-          <cylinderGeometry args={[0.035, 0.035, 0.24, 6]} />
-        </mesh>
-      ))}
-      <group ref={head} position={[0, 0.48, 0.3]}>
-        <mesh material={mat} castShadow>
-          <sphereGeometry args={[0.13, 14, 10]} />
-        </mesh>
-        <mesh material={mat} position={[0, -0.03, 0.12]}>
-          <sphereGeometry args={[0.07, 10, 8]} />
-        </mesh>
-        {[-1, 1].map((s) => (
-          <mesh key={s} material={mat} position={[s * 0.08, 0.12, -0.02]} rotation={[0, 0, s * -0.3]}>
-            <coneGeometry args={[0.045, 0.12, 6]} />
-          </mesh>
-        ))}
-        {[-1, 1].map((s) => (
-          <mesh key={`e${s}`} material={eye} position={[s * 0.05, 0.03, 0.115]}>
-            <sphereGeometry args={[0.018, 8, 6]} />
-          </mesh>
-        ))}
-      </group>
-      <mesh ref={tail} material={mat} position={[0, 0.42, -0.3]} rotation={[0.6, 0, 0.2]}>
-        <cylinderGeometry args={[0.02, 0.03, 0.22, 6]} />
-      </mesh>
-    </group>
-  )
-}
-
-// ---------------------------------------------------------------------------
 // 颱風夜：閃電（整片天空一亮）＋ 雷聲晚一點到
 // ---------------------------------------------------------------------------
 
@@ -674,6 +619,81 @@ function CatActor({ outline }: { outline: boolean }) {
   return (
     <group ref={group}>
       <Cat drive={drive} possessed={possess === 'cat'} outline={outline} />
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// 小黑：每晚睡在大門外；「狗叫」的晚上半夜會叫；可以附身（DESIGN §26.2）
+// ---------------------------------------------------------------------------
+
+function DogActor({ outline }: { outline: boolean }) {
+  const possess = useStore((s) => s.possess)
+  const group = useRef<THREE.Group>(null)
+  const drive = useRef<DogDrive>(newDogDrive({ pose: 'lie' }))
+  const turn = useRef<TurnState>({ heading: Math.PI, dir: 1 })
+  useFrame((_, rawDt) => {
+    const d = night.sim?.dog
+    const g = group.current
+    if (!d || !g) return
+    const dt = Math.min(rawDt, 0.1)
+    const possessed = useStore.getState().possess === 'dog'
+    const x = possessed ? player.x : d.x
+    const z = possessed ? player.z : d.z
+    g.position.set(x, HOME.floorAt(x, z), z)
+    const target = possessed && (player.wantX || player.wantZ) ? Math.atan2(player.wantX, player.wantZ) : d.heading
+    turnToward(turn.current, target, dt)
+    const dr = drive.current
+    dr.heading = turn.current.heading
+    dr.speed = possessed ? player.speed : d.speed
+    dr.pose = possessed ? (d.woofT > 0 ? 'bark' : player.speed > 0.2 ? 'walk' : 'sit') : d.barking ? 'bark' : d.event && d.calm ? 'wag' : 'lie'
+  })
+  return (
+    <group ref={group}>
+      <Dog drive={drive} possessed={possess === 'dog'} outline={outline} />
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// 壁虎：平常趴在神明廳門邊的牆上；附身時在屋裡沿著天花板爬（在屋外就貼著地）
+// ---------------------------------------------------------------------------
+
+/** 壁虎太小，放大一點鏡頭才看得到 */
+const GECKO_SCALE = 3.2
+
+function GeckoActor({ outline }: { outline: boolean }) {
+  const possess = useStore((s) => s.possess)
+  const group = useRef<THREE.Group>(null)
+  const flip = useRef<THREE.Group>(null)
+  const drive = useRef<GeckoDrive>(newGeckoDrive({ pose: 'still' }))
+  const turn = useRef<TurnState>({ heading: 0, dir: 1 })
+  useFrame((_, rawDt) => {
+    const k = night.sim?.gecko
+    const g = group.current
+    if (!k || !g || !flip.current) return
+    const dt = Math.min(rawDt, 0.1)
+    const possessed = useStore.getState().possess === 'gecko'
+    const x = possessed ? player.x : k.x
+    const z = possessed ? player.z : k.z
+    // 在屋裡（任何一棟建築的室內範圍）就爬在天花板上，倒過來
+    const indoor = HOME.buildings.some((b) => x >= b.inside.x0 && x <= b.inside.x1 && z >= b.inside.z0 && z <= b.inside.z1)
+    const ceiling = possessed ? indoor : true
+    const target = possessed && (player.wantX || player.wantZ) ? Math.atan2(player.wantX, player.wantZ) : k.heading
+    turnToward(turn.current, target, dt)
+    g.position.set(x, ceiling ? HOME.floorAt(x, z) + 2.55 : HOME.floorAt(x, z) + 0.02, z)
+    flip.current.rotation.set(ceiling ? Math.PI : 0, 0, 0)
+    const dr = drive.current
+    // 倒過來以後 z 軸反了：要面向 H 就給 π − H
+    dr.heading = ceiling ? Math.PI - turn.current.heading : turn.current.heading
+    dr.speed = possessed ? player.speed : k.speed
+    dr.pose = k.chirpT > 0 ? 'chirp' : dr.speed > 0.1 ? 'crawl' : 'still'
+  })
+  return (
+    <group ref={group}>
+      <group ref={flip} scale={GECKO_SCALE}>
+        <Gecko drive={drive} possessed={possess === 'gecko'} outline={outline} />
+      </group>
     </group>
   )
 }

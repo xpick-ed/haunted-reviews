@@ -12,6 +12,7 @@ import { Landscape } from './Landscape'
 import { MergeStatic } from './MergeStatic'
 import { Grandma } from './Characters'
 import { Guests } from './Guests'
+import { TelekinesisLayer } from './Telekinesis'
 import { Effects } from './Effects'
 import { CameraRig } from './CameraRig'
 import { WorldController } from './World'
@@ -123,6 +124,7 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
         <Yard />
       </MergeStatic>
       <Guests />
+      <TelekinesisLayer />
       {phase === 'dusk' && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )

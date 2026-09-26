@@ -256,6 +256,23 @@ export const DIALOGUES: Record<string, Dialogue> = {
     unseen: true,
     steps: [{ line: 'photographer.first.1' }, { line: 'photographer.first.2' }, { line: 'oldstreet.gm.photo.1' }, { line: 'photographer.first.3', set: 'photographer_met' }],
   },
+  // 主線（DESIGN §28.3）：第 6 晚傍晚，建商陳董在大門口找小翰；阿嬤躲在門邊偷聽（他們看不到她）
+  story_chendong: {
+    unseen: true,
+    steps: [
+      { line: 'story.cd.1' },
+      { line: 'story.cd.2' },
+      { line: 'story.cd.3' },
+      { line: 'story.cd.4' },
+      { line: 'story.cd.5' },
+      { line: 'story.cd.6' },
+      { line: 'story.cd.7' },
+      { line: 'story.cd.8' },
+      { line: 'story.cd.gm1' },
+      { line: 'story.cd.gm2' },
+      { line: 'story.cd.gm3' },
+    ],
+  },
 }
 
 export function indexOfLabel(d: Dialogue, label: string) {

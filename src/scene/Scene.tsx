@@ -33,6 +33,7 @@ import { DecorLayer } from './Decor'
 import { IncidentsLayer } from './Incidents'
 import { EncounterLayer } from './Encounters'
 import { StoryScene } from './StoryScene'
+import { hanAtHome } from '../world/storyBeats'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { VisionLayer } from './Vision'
 import { ChibiNpc } from '../chars/Chibi'
@@ -115,7 +116,8 @@ function ReadyGate() {
 /** 依目前場景換掉整組內容（換場景時由黑幕遮住） */
 function SceneContent({ quality }: { quality: 'high' | 'low' }) {
   const scene = useStore((s) => s.scene)
-  const phase = useStore((s) => s.phase)
+  // 小翰不在埕裡掃地：清明去山上掃墓、陳董來的那天在大門口
+  const hanAway = useStore((s) => !hanAtHome(s))
   if (scene === 'temple') return <TempleScene />
   if (scene === 'village') return <VillageScene />
   if (scene === 'garden') return <GardenScene />
@@ -143,7 +145,7 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
       <IncidentsLayer />
       <EncounterLayer />
       <StoryScene />
-      {phase === 'dusk' && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
+      {!hanAway && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )
 }

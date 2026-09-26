@@ -20,9 +20,9 @@ export const ENDING_NAME: Record<EndingId, string> = {
   sold: '賣掉了',
 }
 
-/** 主線劇情：陳董第 6 晚傍晚來、第 8 晚月底小翰給期限 */
+/** 主線劇情：陳董第 7 晚傍晚來（第 6 晚是清明，小翰在山上掃墓）、第 8 晚月底小翰給期限 */
 export const STORY = {
-  chendong: { night: 6 },
+  chendong: { night: 7 },
   deadline: { night: 2 * NIGHTS_PER_MONTH },
 }
 

@@ -18,7 +18,7 @@ import { PAST_HOTSPOTS } from './past'
 import { BOND_HOTSPOTS } from './bonds'
 import { DECOR_HOTSPOTS } from './decor'
 import { INCIDENT_HOTSPOTS } from './night/incidents'
-import { STORY_HOTSPOTS } from './storyBeats'
+import { STORY_HOTSPOTS, hanAtHome } from './storyBeats'
 import { festivalOf } from './night/plan'
 import { requestById } from './requests'
 import { night, yinMax } from './night/director'
@@ -66,7 +66,7 @@ const BASE_HOTSPOTS: Hotspot[] = [
     ...HAN_SWEEP,
     r: 1.6,
     iconY: 2.0,
-    label: (s) => (s.phase === 'dusk' ? (s.flags.han_talk ? '看看小翰' : '靠近小翰') : null),
+    label: (s) => (hanAtHome(s) ? (s.flags.han_talk ? '看看小翰' : '靠近小翰') : null),
     run: (s) => s.startDialogue(s.flags.han_talk ? 'han_again' : 'han_dusk'),
   },
   {

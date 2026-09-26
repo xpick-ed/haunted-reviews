@@ -10,6 +10,7 @@ import { HILL_GHOSTS, hillGate } from './sceneHill'
 import { STAGE, stageMode } from './sceneStage'
 import { RIVER, riverKids } from './sceneRiver'
 import { kidsGate } from './tag'
+import { hanAtHome } from './storyBeats'
 import { STATION, ghostTrain } from './sceneStation'
 import { keeperSpot } from './sceneHarbor'
 import { OLDSTREET } from './sceneOldStreet'
@@ -395,7 +396,7 @@ export const BOND_HOTSPOTS: Hotspot[] = [
     icon: { x: HAN_SWEEP.x + 1.2, z: HAN_SWEEP.z + 0.3 },
     iconY: 1.3,
     verb: '偷偷送東西給小翰',
-    present: (s) => s.phase === 'dusk',
+    present: (s) => hanAtHome(s),
   }),
   {
     // 托夢給小翰：深夜，在他床邊（一晚一次，花 10 陰氣）

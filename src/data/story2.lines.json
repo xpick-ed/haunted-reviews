@@ -1,0 +1,174 @@
+{
+  "story.cd.1": {
+    "who": "chendong",
+    "text": "小老闆，考慮得怎樣？這塊地，我出這個數。"
+  },
+  "story.cd.2": {
+    "who": "xiaohan",
+    "text": "……這麼多？"
+  },
+  "story.cd.3": {
+    "who": "chendong",
+    "text": "三合院拆一拆，蓋六間透天，前面做店面。你一個少年仔，守著這堆老磚仔做什麼？"
+  },
+  "story.cd.4": {
+    "who": "xiaohan",
+    "text": "民宿才剛開始……還沒賺錢，這是真的。"
+  },
+  "story.cd.5": {
+    "who": "chendong",
+    "text": "對嘛！現金馬上入帳，你回台北去，過卡好的日子。"
+  },
+  "story.cd.6": {
+    "who": "xiaohan",
+    "text": "這是我阿嬤的厝。她走之前一直說，這間厝要有人住。"
+  },
+  "story.cd.7": {
+    "who": "chendong",
+    "text": "老人家都嘛這樣講。（遞名片）我不急，你想清楚再打給我。"
+  },
+  "story.cd.8": {
+    "who": "xiaohan",
+    "text": "……給我一點時間。"
+  },
+  "story.cd.gm1": {
+    "who": "grandma",
+    "text": "透天厝？這間厝住過四代人，你要把它拆了蓋透天厝？"
+  },
+  "story.cd.gm2": {
+    "who": "grandma",
+    "text": "好，小翰，阿嬤幫你。咱來做給他看。"
+  },
+  "story.cd.gm3": {
+    "who": "grandma",
+    "text": "……還有，他的皮鞋踩到我的地瓜葉了啦。"
+  },
+  "story.end.keep.1": {
+    "who": "xiaohan",
+    "text": "陳董，歹勢。這間厝，我要自己顧。"
+  },
+  "story.end.keep.2": {
+    "who": "grandma",
+    "text": "……好孩子。"
+  },
+  "story.end.keep.3": {
+    "who": "xiaohan",
+    "text": "阿嬤，民宿我會做下去。妳放心。"
+  },
+  "story.end.keep.4": {
+    "who": "grandma",
+    "text": "放心、放心。阿嬤看你今天有吃早餐，就放心了。"
+  },
+  "story.end.train.1": {
+    "who": "grandma",
+    "text": "汽笛……是來接我的喔。"
+  },
+  "story.end.train.2": {
+    "who": "grandma",
+    "text": "被子蓋好，窗戶關好，蚊香點了……好，都好了。"
+  },
+  "story.end.train.3": {
+    "who": "grandma",
+    "text": "小翰，阿嬤要走了。三餐要吃，不要一直吃泡麵。"
+  },
+  "story.end.train.4": {
+    "who": "xiaohan",
+    "text": "……阿嬤……菜脯蛋……明天還要……"
+  },
+  "story.end.train.5": {
+    "who": "conductor",
+    "text": "阿春，靠窗的位子，一直幫妳留著。"
+  },
+  "story.end.train.6": {
+    "who": "grandma",
+    "text": "多謝你。這班車，我坐。"
+  },
+  "story.end.train.7": {
+    "who": "grandma",
+    "text": "這一世人……真好。"
+  },
+  "story.end.review": {
+    "who": "xiaomei",
+    "text": "半夜好像有個阿嬤幫我蓋被子。起來的時候，床頭還有一杯溫水。這間民宿，好有家的味道。"
+  },
+  "story.end.tog.1": {
+    "who": "conductor",
+    "text": "靠窗的位子……旁邊，有人等妳很久了。"
+  },
+  "story.end.tog.2": {
+    "who": "agong",
+    "text": "阿春。"
+  },
+  "story.end.tog.3": {
+    "who": "grandma",
+    "text": "……你這個憨人，怎麼會在這？"
+  },
+  "story.end.tog.4": {
+    "who": "agong",
+    "text": "那年流走的鞋子，我找到了。一直想拿給妳看。"
+  },
+  "story.end.tog.5": {
+    "who": "grandma",
+    "text": "一隻鞋子找六十幾年，你喔……"
+  },
+  "story.end.tog.6": {
+    "who": "agong",
+    "text": "以後，我們每次都坐第七排。"
+  },
+  "story.end.tog.7": {
+    "who": "grandma",
+    "text": "這是火車啦，憨人。"
+  },
+  "story.end.stay.1": {
+    "who": "grandma",
+    "text": "……還沒啦。"
+  },
+  "story.end.stay.2": {
+    "who": "grandma",
+    "text": "車掌先生，明年再說！"
+  },
+  "story.end.stay.3": {
+    "who": "conductor",
+    "text": "好，明年這個時候，我再來。"
+  },
+  "story.end.stay.4": {
+    "who": "grandma",
+    "text": "小翰才剛開始，阿嬤再陪他一陣子。"
+  },
+  "story.end.stay.5": {
+    "who": "xiaomei",
+    "text": "這間民宿半夜好像有個阿嬤……不過一點都不可怕，睡得比在家還好。"
+  },
+  "story.end.sold.1": {
+    "who": "xiaohan",
+    "text": "阿嬤……對不起。我真的撐不下去了。"
+  },
+  "story.end.sold.2": {
+    "who": "chendong",
+    "text": "少年仔，這樣才對嘛。"
+  },
+  "story.end.sold.3": {
+    "who": "grandma",
+    "text": "……輕一點，那是我的曬衫竹篙。"
+  },
+  "story.end.sold.4": {
+    "who": "grandma",
+    "text": "這間，是小翰出世那年加蓋的。"
+  },
+  "story.end.sold.5": {
+    "who": "grandma",
+    "text": "七歲、九歲、十二歲……長這麼高了。"
+  },
+  "story.end.sold.6": {
+    "who": "conductor",
+    "text": "阿春，上車吧。靠窗的位子。"
+  },
+  "story.end.sold.7": {
+    "who": "grandma",
+    "text": "好。厝沒了，人還在就好。"
+  },
+  "story.end.sold.8": {
+    "who": "xiaohan",
+    "text": "阿嬤，早安。今天也要加油。"
+  }
+}

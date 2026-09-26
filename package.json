@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test:motion": "tsx scripts/sim-motion.ts",
     "test:night": "tsx scripts/sim-night.ts",
-    "test:dream": "tsx scripts/sim-dream.ts"
+    "test:dream": "tsx scripts/sim-dream.ts",
+    "test:tag": "tsx scripts/sim-tag.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

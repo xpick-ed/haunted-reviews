@@ -7,7 +7,8 @@ import { useStore } from '../store'
 // 淡出（跟三合院、夜市的一樣：子樹裡的網格換成自己的材質複本，才能單獨調透明度）
 // ---------------------------------------------------------------------------
 
-export function Fader({ id, children }: { id: string; children: ReactNode }) {
+/** id 可以給好幾個：任何一個被淡出就淡出（例如店的外殼：走進店裡、或在隔壁擋到鏡頭） */
+export function Fader({ id, children }: { id: string | string[]; children: ReactNode }) {
   const group = useRef<THREE.Group>(null)
   const clones = useRef(new Map<THREE.Material, THREE.Material>())
   const seen = useRef(new WeakSet<THREE.Object3D>())
@@ -33,7 +34,8 @@ export function Fader({ id, children }: { id: string; children: ReactNode }) {
         }
         m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material)
       })
-    const target = useStore.getState().faded.split(',').includes(id) ? 0.12 : 1
+    const faded = useStore.getState().faded.split(',')
+    const target = (typeof id === 'string' ? faded.includes(id) : id.some((x) => faded.includes(x))) ? 0.12 : 1
     const prev = opacity.current
     opacity.current += (target - opacity.current) * 0.15
     if (Math.abs(opacity.current - target) < 0.01) opacity.current = target

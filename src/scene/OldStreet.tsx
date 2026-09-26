@@ -5,12 +5,15 @@ import * as THREE from 'three'
 import { useStore } from '../store'
 import { OLDSTREET } from '../world/sceneOldStreet'
 import { lanternAt } from './daylight'
-import { BRUSH_FONT, TILE, WBox, boxGeo, canvasTexture, planeGeo, useMats } from './kit'
+import { TILE, WBox, canvasTexture, planeGeo, useMats } from './kit'
 import { MergeStatic } from './MergeStatic'
 import { Fader } from './OldStreetFader'
 import { Paddies } from './VillageKit'
-import { Arcade, ArcadeColumn, FZ, Lot, signTexture, type LotStyle } from './OldStreetFacades'
-import { BarberFront, BarberPole, CinemaLobby, CinemaShell, ClothFront, EndFront, HerbFront, IceShop, Marquee, PhotoStudio } from './OldStreetShops'
+import { Arcade, Lot, signTexture } from './OldStreetFacades'
+import { CinemaLobby, CinemaShell, EndFront, Marquee } from './OldStreetShops'
+import { STYLES } from './oldStreetStyles'
+import { OldStreetWest, WEST_LOTS } from './OldStreetWest'
+import { OldStreetEast, EAST_LOTS } from './OldStreetEast'
 import '../chars/specs.oldstreet'
 import { Nakashi } from './Nakashi'
 
@@ -20,51 +23,6 @@ import { Nakashi } from './Nakashi'
 
 const O = OLDSTREET
 const A = O.arcade
-
-/** 立面的樣子（顏色、家徽、招牌） */
-const STYLES: Record<string, LotStyle> = {
-  barber: {
-    color: '#b9cdb4',
-    crest: '新',
-    crestColor: '#2e5a3a',
-    windows: 'glass',
-    sign: { text: '新美理髮廳', bg: '#1d4f8a', fg: '#fdf6e8', frame: '#e8e2d4' },
-    vsign: { text: '理髮', bg: '#f4f1ea', fg: '#c62828' },
-  },
-  herb: {
-    color: '#bdb6a8',
-    crest: '和',
-    crestColor: '#5a3a1a',
-    windows: 'shutter',
-    sign: { text: '和春中藥行', bg: '#1c1a18', fg: '#e9c46a', frame: '#b08a3a', sub: '參茸燕窩．丸散膏丹' },
-    vsign: { text: '中藥', bg: '#1c1a18', fg: '#e9c46a' },
-  },
-  cinema: { color: '#d9ccb0', windows: 'glass', noWindows: true },
-  ice: {
-    color: '#e6c2bc',
-    crest: '桃',
-    crestColor: '#c2385a',
-    windows: 'glass',
-    sign: { text: '阿桃冰果室', bg: '#d8342b', fg: '#fff6e2', frame: '#f4efe2', sub: '清涼消暑．剉冰．果汁' },
-  },
-  photo: {
-    color: '#b8c6cf',
-    crest: '光',
-    crestColor: '#1d4f8a',
-    windows: 'glass',
-    sign: { text: '光明照相館', bg: '#f4efe2', fg: '#1d4f8a', frame: '#1d4f8a', sub: '人像．結婚照．證件' },
-    vsign: { text: '照相', bg: '#1d4f8a', fg: '#fdf6e8' },
-  },
-  cloth: {
-    color: '#d9c29a',
-    crest: '錦',
-    crestColor: '#8f2a20',
-    windows: 'shutter',
-    sign: { text: '錦繡布莊', bg: '#8f2a20', fg: '#f4d27a', frame: '#e9c46a' },
-    vsign: { text: '布莊', bg: '#f4efe2', fg: '#8f2a20' },
-  },
-  end: { color: '#c4c0b8', windows: 'shutter' },
-}
 
 export function OldStreetScene() {
   const quality = useStore((s) => s.quality)
@@ -81,31 +39,20 @@ export function OldStreetScene() {
     }, 1400)
     return () => window.clearTimeout(id)
   }, [])
-  const glowHerb = useWindowGlowMat('#ffd9a0', 0.8)
-  const glowPhoto = useWindowGlowMat('#ffe8c0', 1)
-  const glowIce = useWindowGlowMat('#ffe4ec', 0.9)
-  const cinemaLot = O.lots.find((l) => l.id === 'cinema')!
   const iceLot = O.lots.find((l) => l.id === 'ice')!
+  // 可以走進去的店自己畫（OldStreetWest.tsx、OldStreetEast.tsx），這裡只畫其他的
+  const own = new Set(['cinema', ...WEST_LOTS, ...EAST_LOTS])
+  const cinemaLot = O.lots.find((l) => l.id === 'cinema')!
   return (
     <group>
       <Grounds />
       <MergeStatic>
         <Arcade skip={[iceLot.x0]} />
         {O.lots
-          .filter((l) => l.id !== 'cinema' && l.id !== 'ice')
+          .filter((l) => !own.has(l.id))
           .map((l) => (
-            <Lot
-              key={l.id}
-              x0={l.x0}
-              x1={l.x1}
-              top={l.top}
-              endWall={l.id === 'end'}
-              style={{ ...STYLES[l.id], glow: l.id === 'herb' ? glowHerb : l.id === 'photo' ? glowPhoto : undefined }}
-            />
+            <Lot key={l.id} x0={l.x0} x1={l.x1} top={l.top} endWall={l.id === 'end'} style={STYLES[l.id]} />
           ))}
-        <BarberFront />
-        <HerbFront />
-        <ClothFront />
         <EndFront />
         <Canal />
         <Benches />
@@ -120,18 +67,9 @@ export function OldStreetScene() {
         </MergeStatic>
         <Marquee />
       </Fader>
-      {/* 冰果室的二樓立面＋轉角柱：阿嬤在戲院大廳東邊時會擋到鏡頭 */}
-      <Fader id="os_ice_front">
-        <MergeStatic>
-          <Lot x0={iceLot.x0} x1={iceLot.x1} top={iceLot.top} style={{ ...STYLES.ice, glow: glowIce }} />
-          <ArcadeColumn x={iceLot.x0} />
-        </MergeStatic>
-      </Fader>
       <CinemaLobby outline={outline} />
-      <IceShop outline={outline} />
-      <PhotoStudio outline={outline} />
-      <BarberPole />
-      <IceNeon />
+      <OldStreetWest outline={outline} />
+      <OldStreetEast outline={outline} />
       {O.lampXs.map((x) => (
         <StreetLamp key={x} x={x} />
       ))}
@@ -154,18 +92,6 @@ export function OldStreetScene() {
   )
 }
 
-
-/** 二樓的窗（晚上亮）：跟村子的一樣，天黑變成屋裡的燈光 */
-function useWindowGlowMat(color: string, strength: number) {
-  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#1a2230', toneMapped: false, side: THREE.DoubleSide }), [])
-  const on = useMemo(() => new THREE.Color(color), [color])
-  const off = useMemo(() => new THREE.Color('#1c2533'), [])
-  useFrame(() => {
-    const l = lanternAt(useStore.getState().time)
-    mat.color.copy(off).lerp(on, THREE.MathUtils.clamp(l * strength, 0, 1.3))
-  })
-  return mat
-}
 
 // ---------------------------------------------------------------------------
 // 地面：石板街、亭仔腳前的排水溝、圳溝、南邊的田
@@ -365,58 +291,6 @@ function NightLight({ position, color, power }: { position: [number, number, num
     if (ref.current) ref.current.intensity = power * (0.15 + 0.85 * lanternAt(useStore.getState().time))
   })
   return <pointLight ref={ref} position={position} color={color} intensity={0} distance={7} decay={2} />
-}
-
-/** 冰果室門口的霓虹招牌（直立、從立面伸出來，晚上亮粉紅色） */
-function IceNeon() {
-  const tex = useMemo(
-    () =>
-      canvasTexture(
-        96,
-        300,
-        (ctx, w, h) => {
-          ctx.fillStyle = '#1a0e14'
-          ctx.fillRect(0, 0, w, h)
-          ctx.strokeStyle = '#ff7ab8'
-          ctx.lineWidth = 4
-          ctx.strokeRect(8, 8, w - 16, h - 16)
-          ctx.fillStyle = '#ffd0e8'
-          ctx.shadowColor = '#ff4fa0'
-          ctx.shadowBlur = 12
-          ctx.font = `900 64px ${BRUSH_FONT}`
-          ctx.textAlign = 'center'
-          ctx.textBaseline = 'middle'
-          ;['冰', '果', '室'].forEach((ch, i) => ctx.fillText(ch, w / 2, 58 + i * 92))
-        },
-        [{ spec: `900 64px ${BRUSH_FONT}`, text: '冰果室' }],
-      ),
-    [],
-  )
-  const mat = useMemo(() => new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, color: '#555555' }), [tex])
-  useFrame(({ clock }) => {
-    const l = lanternAt(useStore.getState().time)
-    const t = clock.elapsedTime
-    // 老霓虹管：偶爾閃爍
-    const f = Math.sin(t * 1.7) > 0.96 && Math.sin(t * 41) > 0 ? 0.35 : 1
-    const k = (0.35 + 1.1 * l) * f
-    mat.color.setRGB(k, k, k)
-  })
-  const x = O.lots[3].x1 - 0.55
-  return (
-    <group position={[x, 5.0, FZ + 0.45]} userData={{ noMerge: true }}>
-      <mesh geometry={boxGeo(0.05, 0.05, 0.6, 1)} position={[0, 1.0, -0.2]}>
-        <meshStandardMaterial color="#5b5f66" metalness={0.6} roughness={0.4} />
-      </mesh>
-      <mesh geometry={boxGeo(0.08, 1.9, 0.62, 1)}>
-        <meshStandardMaterial color="#1a1418" roughness={0.6} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <mesh key={s} material={mat} position={[s * 0.045, 0, 0]} rotation={[0, (s * Math.PI) / 2, 0]}>
-          <planeGeometry args={[0.58, 1.82]} />
-        </mesh>
-      ))}
-    </group>
-  )
 }
 
 function DouhuaCart() {

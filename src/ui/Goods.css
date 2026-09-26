@@ -1,0 +1,33 @@
+/* 店裡的好東西（DESIGN §31.1）：住客列表的提示、「今天的事」下面的菜櫥與建議 */
+.need .good-fix {
+  margin-left: 3px;
+  padding-left: 3px;
+  border-left: 1px solid rgba(255, 213, 138, 0.4);
+  font-size: 11px;
+}
+.guest-loves {
+  font-size: 10px;
+  color: var(--ghost);
+  opacity: 0.85;
+  margin-top: 1px;
+}
+.today-goods {
+  margin-top: 5px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(143, 244, 255, 0.28);
+  font-size: 11px;
+  line-height: 1.45;
+  color: #cfeff3;
+}
+.today-goods b {
+  color: var(--gold-2);
+  font-weight: 600;
+}
+.today-goods .owned {
+  color: #9fe8b0;
+}
+@media (max-width: 560px) {
+  .today-goods {
+    font-size: 10.5px;
+  }
+}

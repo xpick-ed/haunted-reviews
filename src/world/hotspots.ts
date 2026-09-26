@@ -24,6 +24,7 @@ import { ADULT_STORY_HOTSPOTS } from './adultStory'
 import { HORROR_HOTSPOTS } from './horrorStory'
 import { HAN_HOTSPOTS } from './han'
 import { SHOP_GOODS_HOTSPOTS } from './shopGoods'
+import { SPECIAL_HOTSPOTS } from './specialStory'
 import { COUPLE_HOTSPOTS } from './couplesStory'
 import { festivalOf } from './night/plan'
 import { requestById } from './requests'
@@ -248,6 +249,7 @@ export const HOTSPOTS: Hotspot[] = [
   ...HORROR_HOTSPOTS,
   ...HAN_HOTSPOTS,
   ...SHOP_GOODS_HOTSPOTS,
+  ...SPECIAL_HOTSPOTS,
   ...COUPLE_HOTSPOTS,
 ]
 

@@ -139,7 +139,7 @@ export function WorldController() {
     } else if (promptOpen) {
       const opts: PromptOpt[] = []
       if (s.phase === 'night' && s.scene === 'home' && night.sim) {
-        for (const o of nightOptions({ sim: night.sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time, pantry: s.meta.pantry }, player.x, player.z)) {
+        for (const o of nightOptions({ sim: night.sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time, pantry: s.meta.pantry, good: s.good }, player.x, player.z)) {
           opts.push({ key: `${o.spot}:${o.action}`, label: o.label, cost: o.cost, needed: o.needed, spot: o.spot, option: o })
         }
       }

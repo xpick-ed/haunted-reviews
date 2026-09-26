@@ -1,4 +1,5 @@
-import { GUEST_ROOMS, KITCHEN_JAR, MAIN, ROCKER, SINK, STOVE, WING_R } from '../../scene/layout'
+import { CUPBOARD, GUEST_ROOMS, KITCHEN_JAR, MAIN, ROCKER, SINK, STOVE, WING_R } from '../../scene/layout'
+import { GOODS, GOOD_IDS, INGREDIENTS, type GoodId } from './items'
 import type { GuestRT, NightSim } from './sim'
 import type { ActionId, GuestId, NeedKind, ObjectState, RoomId } from './types'
 
@@ -47,6 +48,8 @@ export const ACTION_DEFS: Record<ActionId, ActionDef> = {
   retrieve: { id: 'retrieve', name: '把東西撿回床頭', yin: 3, noise: 0.08, type: 'kind', busy: 1.2, satisfies: 'lost', comfort: 12 },
   ouija: { id: 'ouija', name: '推碟子（碟仙）', yin: 8, noise: 0, type: 'scare', busy: 0.5 },
   gift: { id: 'gift', name: '送小玩具', yin: 0, noise: 0.03, type: 'social', busy: 0.6, satisfies: 'play', comfort: 20 },
+  fetch: { id: 'fetch', name: '從菜櫥拿東西', yin: 0, noise: 0.05, type: 'misc', busy: 0.5 },
+  place: { id: 'place', name: '放到床頭', yin: 0, noise: 0.06, type: 'kind', busy: 0.9 },
 }
 
 export interface Option {
@@ -66,7 +69,12 @@ export interface Option {
   area?: string
   /** 對誰做（托夢） */
   guest?: GuestId
+  /** 店裡的哪一樣好東西（拿、放） */
+  good?: GoodId
 }
+
+/** 灶腳的菜櫥：店裡買的好東西放這裡，半夜來拿（DESIGN §31.1） */
+export const GOODS_SPOT = { x: CUPBOARD.x, z: CUPBOARD.z - 0.75 }
 
 /** 躲藏點（DESIGN §25.2）：躲的時候站在 (x, z)（家具裡面），出來站在 (outX, outZ) */
 export const HIDE_SPOTS: { id: string; name: string; x: number; z: number; outX: number; outZ: number; iconY: number }[] = [
@@ -97,11 +105,15 @@ export interface NightCtx {
   yinCost: (a: ActionId) => number
   /** 食材與雜貨（送玩具要有小玩具） */
   pantry?: Partial<Record<string, number>>
+  /** 端著的店裡的好東西 */
+  good?: GoodId | null
 }
 
 const has = (ctx: NightCtx, skill?: string) => !skill || ctx.skills.includes(skill)
 const on = (ctx: NightCtx, id: string) => !!ctx.objects[id]?.on
 const needs = (gs: GuestRT[], kind: NeedKind) => gs.some((g) => g.needs.some((n) => n.kind === kind))
+/** 這樣好東西現在用得到嗎：有人需要它解決的事、或有人特別喜歡它 */
+const wantsGood = (gs: GuestRT[], good: GoodId) => gs.some((g) => g.needs.some((n) => GOODS[good].fixes.includes(n.kind)) || GOODS[good].likes.includes(g.def.type))
 
 /** 深夜所有互動點（依今晚住了誰） */
 export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[] {
@@ -154,7 +166,9 @@ export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[
       ...stand,
       options: () => {
         const o: Option[] = []
-        if (ctx.carrying) o.push(opt('deliver', stand, { room, needed: needs(gs, 'hungry') }))
+        if (ctx.carrying && !ctx.good) o.push(opt('deliver', stand, { room, needed: needs(gs, 'hungry') }))
+        // 店裡的好東西：同一間房同一樣只放一次
+        if (ctx.good && !on(ctx, `${room}.good.${ctx.good}`)) o.push(opt('place', stand, { room, good: ctx.good, label: GOODS[ctx.good].verb, needed: wantsGood(gs, ctx.good) }))
         if (!on(ctx, `${room}.cup`)) o.push(opt('water', stand, { room, needed: needs(gs, 'thirsty') }))
         if (!on(ctx, `${room}.lamp`)) o.push(opt('nightlight', stand, { room, needed: needs(gs, 'dark') }))
         return o
@@ -184,6 +198,18 @@ export function nightSpots(ctx: NightCtx): (Spot & { options: () => Option[] })[
   const anyGuests = ctx.sim.guests
   const stove: Spot = { id: 'kitchen.stove', x: STOVE.x + 1.05, z: STOVE.z, r: 1.1, icon: [STOVE.x, 1.4, STOVE.z] }
   out.push({ ...stove, options: () => (has(ctx, 'cook') && !ctx.carrying ? [opt('cook', stove, { needed: needs(anyGuests, 'hungry') })] : []) })
+  // 菜櫥：傍晚在店裡拿到的好東西（手上沒東西才拿得了）
+  const owned = GOOD_IDS.filter((g) => (ctx.pantry?.[g] ?? 0) > 0)
+  if (owned.length) {
+    const cup: Spot = { id: 'kitchen.cupboard', x: GOODS_SPOT.x, z: GOODS_SPOT.z, r: 1.1, icon: [CUPBOARD.x, 1.7, CUPBOARD.z] }
+    out.push({
+      ...cup,
+      options: () =>
+        ctx.carrying
+          ? []
+          : owned.map((g) => opt('fetch', cup, { good: g, label: `拿${INGREDIENTS[g].name}（還有 ${ctx.pantry?.[g] ?? 0}）`, needed: anyGuests.some((x) => x.needs.some((n) => GOODS[g].fixes.includes(n.kind))) || (!GOODS[g].fixes.length && wantsGood(anyGuests, g)) })),
+    })
+  }
   const rocker: Spot = { id: 'gm.rocker', x: ROCKER.x + 0.6, z: ROCKER.z + 0.7, r: 1.1, icon: [ROCKER.x, 1.4, ROCKER.z] }
   out.push({ ...rocker, options: () => (has(ctx, 'rocker') ? [opt('rocker', rocker, { area: 'gm', needed: needs(anyGuests, 'scare') })] : []) })
   const mirror: Spot = { id: 'bath.mirror', x: SINK.x - 0.7, z: SINK.z - 0.2, r: 1.0, icon: [SINK.x, 2.2, SINK.z] }

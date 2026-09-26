@@ -100,11 +100,23 @@ export function NightIntro() {
             <span>{FEST_DESC[fest]}</span>
           </div>
         )}
-        {ev && (
+        {plan.special === 'typhoon' ? (
           <div className="event-box">
-            <b>⚠ {ev.name}</b>
-            <span>{ev.desc}</span>
+            <b>🌀 颱風夜</b>
+            <span>半夜停電、屋頂漏水、窗板亂撞；兩點風最大，大家會躲到神明廳。準備蠟燭、水桶，別讓人看到。</span>
           </div>
+        ) : plan.special === 'ghost' ? (
+          <div className="event-box festival">
+            <b>👻 中元鬼客人夜</b>
+            <span>客房二今晚住的是回來過節的好兄弟，看得到阿嬤。別讓活人客人撞見他們，陪他們過一個溫暖的中元。</span>
+          </div>
+        ) : (
+          ev && (
+            <div className="event-box">
+              <b>⚠ {ev.name}</b>
+              <span>{ev.desc}</span>
+            </div>
+          )
         )}
         <div className="meta-strip">
           <span>💰 {meta.money.toLocaleString()}</span>

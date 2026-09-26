@@ -2,7 +2,7 @@ import type { GameState } from '../store'
 import type { Hotspot } from './hotspots'
 import { festivalOf } from './night/plan'
 import { FENCE } from '../scene/layout'
-import { STORY } from './story'
+import { HAN_KNOWS, STORY } from './story'
 import { inheritanceBeat } from './adultStory'
 
 // 主線劇情的互動點（DESIGN §28.3）：第 6 晚傍晚在大門口偷聽陳董跟小翰說話……
@@ -43,4 +43,21 @@ export const STORY_HOTSPOTS: Hotspot[] = [
 ]
 
 /** 小翰傍晚在埕裡掃地嗎（清明去山上掃墓、陳董來的那天在大門口就不在） */
-export const hanAtHome = (s: Pick<GameState, 'meta' | 'phase'>) => s.phase === 'dusk' && festivalOf(s.meta.night) !== 'qingming' && !chendongBeat(s) && !inheritanceBeat(s)
+export const hanAtHome = (s: Pick<GameState, 'meta' | 'phase' | 'flags'>) => s.phase === 'dusk' && festivalOf(s.meta.night) !== 'qingming' && !chendongBeat(s) && !inheritanceBeat(s) && !kneelBeat(s) && !bowlBeat(s)
+
+// ---------------------------------------------------------------------------
+// 小翰的陰陽溝通（DESIGN §31.2，src/world/han.ts）：傍晚他不在埕裡掃地的時候
+// ---------------------------------------------------------------------------
+
+type HanBeatState = Pick<GameState, 'meta' | 'phase' | 'flags'>
+const ended = (s: HanBeatState) => s.meta.story.some((x) => x.startsWith('ended_'))
+/** 這幾晚傍晚，小翰跪在神明廳擲筊（第 3 晚：做得起來嗎；第 9 晚：陳董來過、期限說了：要不要賣；第 11 晚：阿嬤妳在嗎） */
+export const KNEEL_NIGHTS = [3, 9, 11]
+/** 他不在家、或別的劇情在演的那天，這些都不出現 */
+const busy = (s: HanBeatState) => festivalOf(s.meta.night) === 'qingming' || chendongBeat(s) || inheritanceBeat(s) || ended(s)
+
+/** 傍晚小翰跪在神明廳擲筊（擲完就回去掃地） */
+export const kneelBeat = (s: HanBeatState) => s.phase === 'dusk' && KNEEL_NIGHTS.includes(s.meta.night) && !s.flags[`hs_jb_${s.meta.night}`] && !busy(s)
+
+/** 他感覺到阿嬤在了：傍晚在茶桌多擺一副碗筷，對著空椅子講話（看完就不再演） */
+export const bowlBeat = (s: HanBeatState) => s.phase === 'dusk' && s.meta.hanSense >= HAN_KNOWS && !s.flags.hs_bowl && !kneelBeat(s) && !busy(s)

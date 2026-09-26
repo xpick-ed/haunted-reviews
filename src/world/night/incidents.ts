@@ -967,7 +967,8 @@ export function makeIncident(sim: NightSim, kind: IncidentKind, seed = 1): Incid
 
 /** 今晚會不會有事、是哪一件（第幾晚當種子：同一晚重玩一樣） */
 export function pickIncident(sim: NightSim, plan: NightPlan, night: number): IncidentKind | null {
-  if (night < 3 || plan.event === 'miaogong') return null
+  // 特別的夜晚（颱風、中元鬼客人）已經夠忙了
+  if (night < 3 || plan.event === 'miaogong' || plan.special) return null
   // 相鄰的種子在這個簡單的亂數裡很像：先打散再用，丟掉前幾個
   const rnd = seeded(Math.imul(night + 1, 2654435761) ^ 0x5bd1e995)
   rnd()

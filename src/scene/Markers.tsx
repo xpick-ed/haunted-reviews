@@ -79,7 +79,7 @@ export function NightMarkers() {
     if (sim && s.phase === 'night' && s.scene === 'home' && !s.dialogue && !s.summary && !s.possess && !s.hidden) {
       const floorAt = SCENES.home.floorAt
       const active = activeSpot()
-      const spots = nightSpots({ sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time, pantry: s.meta.pantry, yinCost: (a) => ACTION_DEFS[a].yin })
+      const spots = nightSpots({ sim, objects: s.objects, skills: s.meta.skills, carrying: s.carrying, hour: s.time, pantry: s.meta.pantry, good: s.good, yinCost: (a) => ACTION_DEFS[a].yin })
       for (const sp of spots) {
         if (n >= MAX_NIGHT) break
         const d = Math.hypot(sp.icon[0] - player.x, sp.icon[2] - player.z)

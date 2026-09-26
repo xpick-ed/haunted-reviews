@@ -49,3 +49,38 @@ export function endingAtMonthEnd(meta: Meta): EndingId | null {
   if (meta.memories.length >= TRAIN_MEMORIES) return 'train'
   return 'stay'
 }
+
+// ---------------------------------------------------------------------------
+// 小翰感覺得到阿嬤（DESIGN §31.2）：meta.hanSense 0..100（src/world/han.ts 加）
+// ---------------------------------------------------------------------------
+
+/** 到這裡：傍晚他多擺一副碗筷（storyBeats.bowlBeat），結局多一段 */
+export const HAN_KNOWS = 80
+
+/** 他感覺得到阿嬤以後，心比較撐得住：天亮時心本來就在加的話，多加一點 */
+export function hanHeartBonus(hanSense: number, heartD: number) {
+  if (heartD <= 0) return 0
+  return hanSense >= 90 ? 2 : hanSense >= 60 ? 1 : 0
+}
+
+/** 結局多一張卡片（EndingScreen 插在 before 那張插畫前面；沒有那張就放最後） */
+export interface HanEpilogue {
+  art: string
+  note: string
+  lines: string[]
+  before: string
+}
+
+export function hanEpilogue(end: EndingId, hanSense: number): HanEpilogue | null {
+  if (hanSense < HAN_KNOWS) return null
+  switch (end) {
+    case 'sold':
+      return { art: 'emptyroom', note: '天亮前，小翰一個人回來了一趟。他在空空的神明廳站了很久。', lines: ['hs.end.sold.1', 'hs.end.sold.2', 'hs.end.sold.3'], before: 'nighttrain' }
+    case 'train':
+      return { art: 'hansleep', note: '汽笛聲傳過來的時候，小翰其實沒有睡著。', lines: ['hs.end.go.1', 'hs.end.go.2', 'hs.end.go.3'], before: 'window' }
+    case 'together':
+      return { art: 'hansleep', note: '汽笛聲傳過來的時候，小翰其實沒有睡著。', lines: ['hs.end.go.1', 'hs.end.go.2', 'hs.end.go.3'], before: 'window2' }
+    case 'stay':
+      return { art: 'dawnhouse', note: '早上，飯桌上擺著兩副碗筷。', lines: ['hs.end.stay.1', 'hs.end.stay.2'], before: 'dawnlights' }
+  }
+}

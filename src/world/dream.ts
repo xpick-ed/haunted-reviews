@@ -441,6 +441,10 @@ const NAMES: Record<GuestId, string> = {
   zhiming: '志明',
   fubo: '福伯',
   zhiwei: '志偉',
+  gg_shuimu: '水木伯',
+  gg_bangsi: '罔市姆',
+  gg_soldier: '陳班長',
+  gg_opera: '秋月',
 }
 
 /** 某位客人的夢（easy：學了「好夢」） */

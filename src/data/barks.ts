@@ -14,6 +14,11 @@ export const BARKS: Record<GuestId, Partial<Record<BarkKind, string[]>>> = {
   zhiming: {},
   fubo: {},
   zhiwei: {},
+  // 中元的好兄弟（night/special.ts 載入時補進來）
+  gg_shuimu: {},
+  gg_bangsi: {},
+  gg_soldier: {},
+  gg_opera: {},
   "xiaomei": {
     "arrive": [
       "xiaomei.arrive.1"

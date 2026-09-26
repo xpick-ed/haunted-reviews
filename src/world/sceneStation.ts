@@ -3,6 +3,7 @@ import type { SceneDef } from './scenes'
 import type { Hotspot } from './hotspots'
 import type { GameState } from '../store'
 import type { GuestId } from './night/types'
+import { INGREDIENTS, goodsLovedBy } from './night/items'
 import { GUESTS, NEED_INFO } from './night/guests'
 
 // 小火車站＋五分車（DESIGN §27.1）：從阿春民宿門前的路一直往西走到底。
@@ -219,7 +220,9 @@ export const STATION_HOTSPOTS: Hotspot[] = [
         if (!id) return
         const g = GUESTS[id]
         const needs = likelyNeeds(id)
-        s.say(`${g.name}（${g.label}）：${g.clues.join('、')}。${needs.length ? `看起來晚上可能會：${needs.join('、')}。` : ''}`)
+        // 店裡的好東西（DESIGN §31.1）：看得出這個人會喜歡什麼
+        const loves = goodsLovedBy(g.type).map((k) => INGREDIENTS[k].icon + INGREDIENTS[k].name)
+        s.say(`${g.name}（${g.label}）：${g.clues.join('、')}。${needs.length ? `看起來晚上可能會：${needs.join('、')}。` : ''}${loves.length ? `應該會喜歡：${loves.join('、')}。` : ''}`)
         if (!s.flags[`observed_${id}_today`]) {
           setFlag(`observed_${id}_today`)
           window.setTimeout(() => s.bark(pick(['station.observe.1', 'station.observe.2', 'station.observe.3'])), 3800)

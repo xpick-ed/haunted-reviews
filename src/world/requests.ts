@@ -1,7 +1,7 @@
 import type { GameState } from '../store'
 import type { Ingredient } from './night/items'
 import type { NightPlan } from './night/plan'
-import { festivalOf } from './night/plan'
+import { festivalOf, specialOf } from './night/plan'
 import { seeded } from './rng'
 
 // 今天的事（DESIGN §28.2）：每天一張小翰的紙條＋兩件村民／鬼鄰居的委託。
@@ -35,15 +35,35 @@ const flag = (f: string) => (s: GameState) => !!s.flags[f]
 const gave = (npc: string, item: Ingredient) => flag(`gave_${npc}_${item}_today`)
 const has = (item: Ingredient, n: number) => (s: GameState) => (s.meta.pantry[item] ?? 0) >= n
 
+/**
+ * 小翰的紙條末尾的附註（DESIGN §31.2）：他越感覺得到阿嬤，紙條越像寫給她的信。
+ * 這個檔案不能 import store：畫面那邊（HanLayer）把讀 meta 的函式掛上來。
+ */
+export const hanNoteSource: { meta: () => Pick<GameState['meta'], 'hanSense' | 'hanSigns'> | null } = { meta: () => null }
+
+export function hanPostscript(m: Pick<GameState['meta'], 'hanSense' | 'hanSigns'> | null): string {
+  if (!m || m.hanSense < 30) return ''
+  if (m.hanSigns.includes('bowl')) return '　P.S. 晚餐多煮了一碗，放在茶桌上。'
+  if (m.hanSense >= 60) return '　P.S. 我知道寫給妳很怪。可是寫完，就比較不累。'
+  return '　P.S. 最近好像一直有人在幫我……謝謝。'
+}
+
+/** 紙條的字：讀的時候才接上附註 */
+function hanNote(d: RequestDef): RequestDef {
+  const base = d.text
+  return Object.defineProperty({ ...d }, 'text', { get: () => base + hanPostscript(hanNoteSource.meta()), enumerable: true })
+}
+
 export const REQUESTS: RequestDef[] = [
   // ---------- 小翰的紙條 ----------
-  { id: 'han_egg', who: '小翰', note: true, text: '阿嬤，今天記得去雞舍撿蛋，晚上客人可能會餓。', where: '後院菜園', done: flag('garden_egg_today'), reward: { heart: 3 } },
-  { id: 'han_leaf', who: '小翰', note: true, text: '後院的地瓜葉長好了，幫我採一點。', where: '後院菜園', done: flag('garden_leaf_today'), reward: { heart: 2 } },
-  { id: 'han_temple', who: '小翰', note: true, text: '幫我去土地公廟拜一下，最近生意都靠祂了。', where: '土地公廟', done: flag('temple_today'), reward: { heart: 3 }, when: (c) => c.night >= 2 },
-  { id: 'han_coil', who: '小翰', note: true, text: '蚊香好像快沒了，家裡要有三盒才放心。', where: '村子的柑仔店', done: has('coil', 3), reward: { heart: 2 }, when: (c) => (c.pantry.coil ?? 0) < 3 },
-  { id: 'han_toy', who: '小翰', note: true, text: '今天有小朋友要來住，房間準備一個小玩具吧。', where: '柑仔店門口的夾娃娃機', done: has('toy', 1), reward: { heart: 3 }, when: (c) => c.members.includes('xiaoyu') && (c.pantry.toy ?? 0) < 1 },
-  { id: 'han_fortune', who: '小翰', note: true, text: '去問問土地公，今晚順不順？', where: '土地公廟（擲筊）', done: (s) => !!s.meta.fortune, reward: { heart: 2 }, when: (c) => !c.fortune && c.night >= 2 },
-  {
+  hanNote({ id: 'han_egg', who: '小翰', note: true, text: '阿嬤，今天記得去雞舍撿蛋，晚上客人可能會餓。', where: '後院菜園', done: flag('garden_egg_today'), reward: { heart: 3 } }),
+  hanNote({ id: 'han_leaf', who: '小翰', note: true, text: '後院的地瓜葉長好了，幫我採一點。', where: '後院菜園', done: flag('garden_leaf_today'), reward: { heart: 2 } }),
+  hanNote({ id: 'han_temple', who: '小翰', note: true, text: '幫我去土地公廟拜一下，最近生意都靠祂了。', where: '土地公廟', done: flag('temple_today'), reward: { heart: 3 }, when: (c) => c.night >= 2 }),
+  hanNote({ id: 'han_coil', who: '小翰', note: true, text: '蚊香好像快沒了，家裡要有三盒才放心。', where: '村子的柑仔店', done: has('coil', 3), reward: { heart: 2 }, when: (c) => (c.pantry.coil ?? 0) < 3 }),
+  hanNote({ id: 'han_toy', who: '小翰', note: true, text: '今天有小朋友要來住，房間準備一個小玩具吧。', where: '柑仔店門口的夾娃娃機', done: has('toy', 1), reward: { heart: 3 }, when: (c) => c.members.includes('xiaoyu') && (c.pantry.toy ?? 0) < 1 }),
+  hanNote({ id: 'han_typhoon', who: '小翰', note: true, text: '颱風要來了！家裡至少要有兩根蠟燭，晚上會停電。', where: '村子的柑仔店', done: has('candle', 2), reward: { heart: 3 }, when: (c) => specialOf(c.night) === 'typhoon' }),
+  hanNote({ id: 'han_fortune', who: '小翰', note: true, text: '去問問土地公，今晚順不順？', where: '土地公廟（擲筊）', done: (s) => !!s.meta.fortune, reward: { heart: 2 }, when: (c) => !c.fortune && c.night >= 2 }),
+  hanNote({
     id: 'han_observe',
     who: '小翰',
     note: true,
@@ -52,7 +72,7 @@ export const REQUESTS: RequestDef[] = [
     done: (s) => Object.keys(s.flags).some((k) => s.flags[k] && k.startsWith('observed_') && k.endsWith('_today')),
     reward: { heart: 2 },
     when: (c) => c.night >= 3,
-  },
+  }),
 
   // ---------- 鄰居的委託 ----------
   { id: 'ajiao_crab', who: '阿嬌', text: '想吃螃蟹！退潮的時候幫我抓一隻好否？', where: '海邊抓螃蟹 → 送給阿嬌', done: gave('ajiao', 'crab'), reward: { money: 300, bond: ['ajiao', 10] }, when: (c) => c.night >= 3 },
@@ -79,10 +99,14 @@ export function todayRequests(night: number, plan: NightPlan, meta: { pantry: Pa
     while (out.length < n && pool.length) out.push(pool.splice(Math.floor(rnd() * pool.length), 1)[0])
     return out
   }
-  const notes = pick(
-    REQUESTS.filter((r) => r.note),
-    1,
-  )
+  // 颱風夜：小翰的紙條一定是準備蠟燭
+  const typhoon = specialOf(night) === 'typhoon' ? REQUESTS.filter((r) => r.id === 'han_typhoon') : []
+  const notes = typhoon.length
+    ? typhoon
+    : pick(
+        REQUESTS.filter((r) => r.note && r.id !== 'han_typhoon'),
+        1,
+      )
   const asks = pick(
     REQUESTS.filter((r) => !r.note),
     2,

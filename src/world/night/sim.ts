@@ -5,6 +5,7 @@ import { seeded } from '../rng'
 import { BLOCKS_SLEEP, GUESTS, type GuestDef } from './guests'
 import { BED_NODE, MIAOGONG_LOOP, NODES, PATROL, route } from './nav'
 import type { NightPlan } from './plan'
+import { GOODS, type GoodId } from './items'
 import type { BarkKind, GuestId, GuestType, NeedKind, NightEvent, ObjectState, RoomId } from './types'
 
 // 深夜模擬（DESIGN §2.2、§5、§6、§11）。純 TypeScript，不碰畫面：
@@ -278,6 +279,8 @@ export class NightSim {
   decor: DecorBonus
   /** 外掛寫給天亮評論的附註（接在評論後面） */
   reviewNotes: Partial<Record<GuestId, string>> = {}
+  /** 放在客房裡的店裡好東西（DESIGN §31.1）：整晚有效 */
+  roomGoods: Record<RoomId, GoodId[]> = { r1: [], r2: [] }
   /** 傍晚在車站觀察過的客人：需求一出現就看得到 */
   private observed: Set<string>
   hour = 22
@@ -528,6 +531,8 @@ export class NightSim {
       if (p.kind === 'thirsty' && on('cup')) continue
       if (p.kind === 'cold' && g.tucked) continue
       if (p.kind === 'hungry' && on('dish')) continue
+      // 店裡的好東西放在房間裡：整晚不會再出現（厚棉被→冷、花露水→蚊子、安神茶→睡不著……）
+      if (this.goodBlocks(g.room, p.kind)) continue
       g.needs.push({ kind: p.kind, since: hour, known: this.farSight || this.observed.has(g.id) })
       this.emit({ t: 'need', who: g.id, kind: p.kind })
       if (g.awake) this.bark(g, `need_${p.kind}` as BarkKind, 4)
@@ -572,7 +577,7 @@ export class NightSim {
           if (!g.sleptOnce) this.bark(g, 'sleepy', 0, true)
           g.sleptOnce = true
           this.emit({ t: 'asleep', who: g.id })
-        } else if (sleepy && blocked && hour >= g.def.bedtime + 0.2 && !g.needs.some((n) => n.kind === 'insomnia') && g.def.type !== 'child') {
+        } else if (sleepy && blocked && hour >= g.def.bedtime + 0.2 && !g.needs.some((n) => n.kind === 'insomnia') && g.def.type !== 'child' && !this.goodBlocks(g.room, 'insomnia')) {
           // 撐太久：焦躁得睡不著
           if (g.def.type === 'timid' || g.def.type === 'business' || g.def.type === 'parent') {
             g.needs.push({ kind: 'insomnia', since: hour, known: false })
@@ -580,7 +585,8 @@ export class NightSim {
           }
         }
       } else {
-        g.sleep = Math.min(1, g.sleep + dt * HOURS_PER_SEC * 1.2)
+        // 喝了安神茶：睡得更快更沉
+        g.sleep = Math.min(1, g.sleep + dt * HOURS_PER_SEC * (this.roomGoods[g.room].includes('herbtea') ? 2.4 : 1.2))
         // 睡一覺，驚嚇慢慢淡掉；蓋好被子睡得更舒服
         g.fear = Math.max(0, g.fear - dt * HOURS_PER_SEC * 3)
         if (g.tucked) g.comfort += dt * HOURS_PER_SEC * 2
@@ -885,6 +891,44 @@ export class NightSim {
       g.sleep = Math.min(1, g.sleep + 0.3)
       g.comfort += 6
     }
+  }
+
+  /** 這間房放了會擋掉這個需求的好東西嗎 */
+  private goodBlocks(room: RoomId, kind: NeedKind) {
+    return this.roomGoods[room].some((id) => GOODS[id].blocks.includes(kind))
+  }
+
+  /**
+   * 把店裡的好東西放到客房（DESIGN §31.1）：解決 fixes 的需求、整晚擋掉 blocks 的需求；
+   * 喜歡的客人舒適再加、天亮評論多一句。回傳：解決了幾個需求、誰特別喜歡。
+   */
+  useGood(room: RoomId, id: GoodId): { fixed: number; loved: GuestId[] } {
+    const d = GOODS[id]
+    if (this.roomGoods[room].includes(id)) return { fixed: 0, loved: [] }
+    this.roomGoods[room].push(id)
+    let fixed = 0
+    for (const k of d.fixes) if (this.satisfy(room, k, d.comfort)) fixed++
+    if (id === 'quilt') this.tuck(room)
+    const loved: GuestId[] = []
+    for (const g of this.guests) {
+      if (g.room !== room) continue
+      if (d.calm && !g.def.seesGhost && g.def.type !== 'thrill') g.fear = Math.max(0, g.fear - d.calm)
+      // 沒解決到需求（先放好、或老照片）：還是舒服一點
+      if (!fixed) g.comfort += d.comfort * (g.awake ? 0.5 : 0.3)
+      if (d.likes.includes(g.def.type)) {
+        g.comfort += d.likeBonus
+        loved.push(g.id)
+        // 福伯的評論是志明代寫的
+        const note = g.def.type === 'wanderer' ? '（志明代寫）爸一直看著床頭那張村子的老照片，說那是他跟媽媽年輕時住的地方。' : d.note
+        this.reviewNotes[g.id] = (this.reviewNotes[g.id] ?? '') + note
+      }
+      if (id === 'herbtea') {
+        // 醒著又到了睡覺時間：馬上想睡；睡著的：睡得更沉、比較吵不醒
+        g.resleepT = 0
+        g.deepUntil = Math.max(g.deepUntil, this.hour + 1)
+      }
+    }
+    return { fixed, loved }
   }
 
   /**

@@ -1,0 +1,362 @@
+{
+  "hs.mirror.q": {
+    "who": "grandma",
+    "text": "鏡子還霧霧的，小翰剛洗好澡……寫什麼給他好呢？"
+  },
+  "hs.mirror.eat": {
+    "who": "grandma",
+    "text": "（用手指寫）吃飯"
+  },
+  "hs.mirror.eat2": {
+    "who": "grandma",
+    "text": "這陣子都吃泡麵，阿嬤看了就心疼。"
+  },
+  "hs.mirror.rest": {
+    "who": "grandma",
+    "text": "（用手指寫）別太累"
+  },
+  "hs.mirror.rest2": {
+    "who": "grandma",
+    "text": "字寫歪了……以前寫紅包袋也是這樣，他都笑我。"
+  },
+  "hs.mirror.here": {
+    "who": "grandma",
+    "text": "（用手指寫）阿嬤在"
+  },
+  "hs.mirror.here2": {
+    "who": "grandma",
+    "text": "……寫完，阿嬤自己站在這裡看了好久。"
+  },
+  "hs.mirror.done": {
+    "who": "grandma",
+    "text": "今晚寫過了。字留著就好，寫太多會嚇到他。"
+  },
+  "hs.mirror.noyin": {
+    "who": "grandma",
+    "text": "陰氣不夠……手指都碰不到鏡子。"
+  },
+  "hs.ledger.flip.0": {
+    "who": "grandma",
+    "text": "這裡……二月的電費算了兩次。憨孫，一樣的錢繳兩遍。"
+  },
+  "hs.ledger.flip.1": {
+    "who": "grandma",
+    "text": "高雄那對夫妻的訂金，收了沒寫上去。阿嬤翻到這頁給你看。"
+  },
+  "hs.ledger.flip.2": {
+    "who": "grandma",
+    "text": "找錢找錯了，少收人家五百還自己貼。這個囡仔，心太軟。"
+  },
+  "hs.ledger.noyin": {
+    "who": "grandma",
+    "text": "陰氣不夠，連一張紙都翻不動。"
+  },
+  "hs.jb3.1": {
+    "who": "xiaohan",
+    "text": "土地公、阿嬤……民宿開一個禮拜了。"
+  },
+  "hs.jb3.2": {
+    "who": "xiaohan",
+    "text": "我想問，這樣做下去……做得起來嗎？做得起來的話，給我一個聖筊。"
+  },
+  "hs.jb3.q": {
+    "who": "grandma",
+    "text": "這個囡仔，問得這麼小聲。"
+  },
+  "hs.jb3.a": {
+    "who": "grandma",
+    "text": "（輕輕推一下：一正一反，聖筊）"
+  },
+  "hs.jb3.a2": {
+    "who": "xiaohan",
+    "text": "……聖筊！好，那我再拚一下！"
+  },
+  "hs.jb3.b": {
+    "who": "grandma",
+    "text": "（讓兩個都翻成正面：笑筊）"
+  },
+  "hs.jb3.b2": {
+    "who": "xiaohan",
+    "text": "笑筊……是在笑我想太多嗎？好啦，先把今天顧好。"
+  },
+  "hs.jb3.end": {
+    "who": "grandma",
+    "text": "問神不如問自己的心。你的心，阿嬤看得到。"
+  },
+  "hs.jb9.1": {
+    "who": "xiaohan",
+    "text": "阿嬤，陳董又打電話來了。那個價錢……我這輩子都賺不到。"
+  },
+  "hs.jb9.2": {
+    "who": "xiaohan",
+    "text": "如果應該賣，就給我一個聖筊。"
+  },
+  "hs.jb9.q": {
+    "who": "grandma",
+    "text": "……這間厝，要不要留，阿嬤怎麼回答他才好？"
+  },
+  "hs.jb9.a": {
+    "who": "grandma",
+    "text": "（讓兩個都蓋著：蓋筊，不要賣）"
+  },
+  "hs.jb9.a2": {
+    "who": "xiaohan",
+    "text": "蓋筊……好。不賣。至少這個月，我不賣。"
+  },
+  "hs.jb9.b": {
+    "who": "grandma",
+    "text": "（一正一反：聖筊。你自己決定，阿嬤都在）"
+  },
+  "hs.jb9.b2": {
+    "who": "xiaohan",
+    "text": "聖筊？……阿嬤是說可以賣？還是說，不管我選什麼，妳都說好？"
+  },
+  "hs.jb9.end": {
+    "who": "grandma",
+    "text": "厝是死的，你是活的。阿嬤只要你好。"
+  },
+  "hs.jb11.1": {
+    "who": "xiaohan",
+    "text": "最後一個問題。問完，我就不問了。"
+  },
+  "hs.jb11.2": {
+    "who": "xiaohan",
+    "text": "阿嬤……妳是不是，一直都在這裡？"
+  },
+  "hs.jb11.q": {
+    "who": "grandma",
+    "text": "……"
+  },
+  "hs.jb11.a": {
+    "who": "grandma",
+    "text": "（一正一反：聖筊）"
+  },
+  "hs.jb11.a2": {
+    "who": "xiaohan",
+    "text": "……聖筊。"
+  },
+  "hs.jb11.a3": {
+    "who": "xiaohan",
+    "text": "我就知道。我就知道……"
+  },
+  "hs.jb11.b": {
+    "who": "grandma",
+    "text": "（兩個都翻成正面：笑筊）"
+  },
+  "hs.jb11.b2": {
+    "who": "xiaohan",
+    "text": "笑筊……妳在笑我對不對。妳以前每次都這樣笑。"
+  },
+  "hs.jb11.end": {
+    "who": "grandma",
+    "text": "傻囡仔，阿嬤一直都在啊。"
+  },
+  "hs.dream.om.1": {
+    "who": "xiaohan",
+    "text": "阿嬤……我又夢到妳了。"
+  },
+  "hs.dream.om.2": {
+    "who": "grandma",
+    "text": "今天阿嬤來教你煎菜脯蛋。你那個煎法，蛋都在哭。"
+  },
+  "hs.dream.om.3": {
+    "who": "xiaohan",
+    "text": "……有那麼糟嗎。"
+  },
+  "hs.dream.om.4": {
+    "who": "grandma",
+    "text": "菜脯先泡水，擰乾，下鍋炒到香。蛋打三顆，加一點點糖。"
+  },
+  "hs.dream.om.5": {
+    "who": "grandma",
+    "text": "油要熱，蛋下去不要一直翻。等它自己定下來。"
+  },
+  "hs.dream.om.6": {
+    "who": "xiaohan",
+    "text": "……不要一直翻。"
+  },
+  "hs.dream.om.7": {
+    "who": "grandma",
+    "text": "做人也是這樣。不要一直翻來翻去，等它自己定下來。"
+  },
+  "hs.dream.om.8": {
+    "who": "xiaohan",
+    "text": "阿嬤，妳是在講蛋，還是在講我。"
+  },
+  "hs.dream.om.9": {
+    "who": "grandma",
+    "text": "都有。睡吧。"
+  },
+  "hs.radio.1": {
+    "who": "xiaohan",
+    "text": "……這首歌。"
+  },
+  "hs.radio.2": {
+    "who": "xiaohan",
+    "text": "阿嬤以前在灶腳煮飯，都跟著收音機哼這首。走音也不管。"
+  },
+  "hs.radio.3": {
+    "who": "xiaohan",
+    "text": "……好啦。不累了。再掃一下就好。"
+  },
+  "hs.radio.gm": {
+    "who": "grandma",
+    "text": "阿嬤最愛的那首。你小時候聽到就睡著。"
+  },
+  "hs.re.mirror.eat": {
+    "who": "xiaohan",
+    "text": "昨天刷牙的時候，鏡子上寫著「吃飯」……"
+  },
+  "hs.re.mirror.eat2": {
+    "who": "xiaohan",
+    "text": "好啦，我今天有吃三餐。泡麵……泡麵不算。"
+  },
+  "hs.re.mirror.rest": {
+    "who": "xiaohan",
+    "text": "鏡子上寫「別太累」。字歪歪的，跟阿嬤寫紅包袋的字好像。"
+  },
+  "hs.re.mirror.rest2": {
+    "who": "xiaohan",
+    "text": "……今天早點睡好了。"
+  },
+  "hs.re.mirror.here": {
+    "who": "xiaohan",
+    "text": "「阿嬤在」……"
+  },
+  "hs.re.mirror.here2": {
+    "who": "xiaohan",
+    "text": "我站在鏡子前面看了好久，不敢擦掉。"
+  },
+  "hs.re.ledger.1": {
+    "who": "xiaohan",
+    "text": "奇怪，帳本怎麼自己翻到這頁……"
+  },
+  "hs.re.ledger.v0": {
+    "who": "xiaohan",
+    "text": "……原來二月的電費我算了兩次！"
+  },
+  "hs.re.ledger.v1": {
+    "who": "xiaohan",
+    "text": "……高雄那對的訂金我忘了記！"
+  },
+  "hs.re.ledger.v2": {
+    "who": "xiaohan",
+    "text": "……那天找錢，我少收了五百。"
+  },
+  "hs.re.ledger.2": {
+    "who": "xiaohan",
+    "text": "差點就虧了。是誰翻的啊……"
+  },
+  "hs.re.om.1": {
+    "who": "xiaohan",
+    "text": "我照夢裡的方法煎……菜脯先泡水，蛋不要一直翻。"
+  },
+  "hs.re.om.2": {
+    "who": "xiaohan",
+    "text": "……怎麼跟阿嬤煮的一樣。"
+  },
+  "hs.re.om.3": {
+    "who": "xiaohan",
+    "text": "今天，第一次不想吃泡麵。"
+  },
+  "hs.tier20.1": {
+    "who": "xiaohan",
+    "text": "奇怪……最近家裡，好像有人在幫我。"
+  },
+  "hs.tier20.2": {
+    "who": "xiaohan",
+    "text": "一定是我太累了。"
+  },
+  "hs.tier40.1": {
+    "who": "xiaohan",
+    "text": "阿咪今天又對著阿嬤的竹椅叫。"
+  },
+  "hs.tier40.2": {
+    "who": "xiaohan",
+    "text": "……我竟然，一點都不覺得怕。"
+  },
+  "hs.tier60.1": {
+    "who": "xiaohan",
+    "text": "我開始跟空氣講話了。客人看到，應該覺得我很怪吧。"
+  },
+  "hs.tier60.2": {
+    "who": "xiaohan",
+    "text": "……可是講完，心裡就沒那麼重。"
+  },
+  "hs.bowl.1": {
+    "who": "xiaohan",
+    "text": "阿嬤，吃飯了。"
+  },
+  "hs.bowl.2": {
+    "who": "xiaohan",
+    "text": "……我知道很奇怪。多擺一副碗筷，對著空椅子講話。"
+  },
+  "hs.bowl.3": {
+    "who": "xiaohan",
+    "text": "可是鏡子上的字、翻開的帳本、那首歌……我又不是笨蛋。"
+  },
+  "hs.bowl.4": {
+    "who": "xiaohan",
+    "text": "阿嬤，是妳嗎？"
+  },
+  "hs.bowl.a": {
+    "who": "grandma",
+    "text": "（輕輕碰一下他的碗，湯面起了一圈漣漪）"
+  },
+  "hs.bowl.a2": {
+    "who": "xiaohan",
+    "text": "……"
+  },
+  "hs.bowl.a3": {
+    "who": "xiaohan",
+    "text": "……謝謝。我就知道。"
+  },
+  "hs.bowl.b": {
+    "who": "grandma",
+    "text": "（什麼都不做，就坐在這裡，陪他吃）"
+  },
+  "hs.bowl.b2": {
+    "who": "xiaohan",
+    "text": "……好安靜。可是，不孤單。"
+  },
+  "hs.bowl.5": {
+    "who": "xiaohan",
+    "text": "阿嬤，我會好好吃飯，好好顧厝。妳不用擔心。"
+  },
+  "hs.bowl.6": {
+    "who": "grandma",
+    "text": "阿嬤知道。阿嬤一直都知道。"
+  },
+  "hs.end.sold.1": {
+    "who": "xiaohan",
+    "text": "厝，謝謝你。二十六年。"
+  },
+  "hs.end.sold.2": {
+    "who": "xiaohan",
+    "text": "阿嬤……我知道妳在。對不起，沒有顧好。"
+  },
+  "hs.end.sold.3": {
+    "who": "grandma",
+    "text": "憨孫，你有顧好。你把自己顧好，就是顧好了。"
+  },
+  "hs.end.go.1": {
+    "who": "xiaohan",
+    "text": "阿嬤……要走了嗎？"
+  },
+  "hs.end.go.2": {
+    "who": "xiaohan",
+    "text": "……路上小心。我會好好吃飯，不會再吃泡麵了。"
+  },
+  "hs.end.go.3": {
+    "who": "grandma",
+    "text": "……這個囡仔。都知道了，還不講。"
+  },
+  "hs.end.stay.1": {
+    "who": "xiaohan",
+    "text": "阿嬤，早。"
+  },
+  "hs.end.stay.2": {
+    "who": "grandma",
+    "text": "早。今天也要好好吃飯。"
+  }
+}

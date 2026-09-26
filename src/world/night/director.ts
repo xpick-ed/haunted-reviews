@@ -11,15 +11,16 @@ import { GUESTS } from './guests'
 import { MONTHLY_COST, NIGHTS_PER_MONTH, SKILLS, UPGRADES, planNight, type NightPlan, type UpgradeDef } from './plan'
 import { NightSim, type DecorBonus, type SimEvent, type SimPlugin } from './sim'
 import { rateGuest } from './rating'
-import { STORY, endingAtDawn, endingAtMonthEnd, type EndingId } from '../story'
+import { STORY, endingAtDawn, endingAtMonthEnd, hanHeartBonus, type EndingId } from '../story'
 import { createIncidents, incidentState, INCIDENT_EVENTS } from './incidents'
 import { createEncounters, ENCOUNTER_EVENTS } from './encounters'
 import { createCouples, COUPLE_EVENTS } from './couples'
 import { createFamily, FAMILY_EVENTS } from './family'
 import { createHorror, HORROR_EVENTS } from './horror'
-import { createSpecialNight, SPECIAL_EVENTS } from './special'
+import { chatDialogueFor, createSpecialNight, SPECIAL_EVENTS } from './special'
+import { isGhostGuest } from './guests.ghost'
 import { adultOn } from '../../settings'
-import { RECIPES, START_PANTRY, canCook, type Fortune, type Ingredient, type RecipeId, type RelicId } from './items'
+import { GOOD_PERISHABLE, RECIPES, START_PANTRY, canCook, type Fortune, type GoodId, type Ingredient, type RecipeId, type RelicId } from './items'
 import { HIDE_SPOTS } from './actions'
 import { input } from '../input'
 import { placePlayer } from '../player'
@@ -220,6 +221,8 @@ export interface NightSlice {
   hidden: string | null
   /** 端著的宵夜（煮好的食譜與品質） */
   dish: { recipe: RecipeId; quality: number } | null
+  /** 端著的店裡好東西（DESIGN §31.1） */
+  good: GoodId | null
 
   nightBegin: () => void
   nightStep: (dt: number) => void
@@ -292,6 +295,8 @@ export function preloadNightVoices(plan: NightPlan, meta?: Meta) {
   if (members.includes('xiaoyu')) add(DIALOGUE_LINES.xiaoyu_play)
   if (members.includes('agui')) add(DIALOGUE_LINES.agui_chat)
   if (plan.story === 'room2') add(HAN_BARKS.room2)
+  // 特別的夜晚（颱風、中元鬼客人）的台詞
+  if (plan.special) for (const id of Object.keys(LINES)) if (id.startsWith('sp.')) ids.push(id)
   // 學了托夢：今晚客人的夢裡會講的話
   if (meta?.skills.includes('dream')) {
     const who = [...members, 'gm', ...(members.includes('zhang') ? ['boss'] : [])]
@@ -306,7 +311,7 @@ export const planFor = (m: Meta) => planNight(m.night, m.warm, m.spooky, m.press
 export const EMPTY_STATS = (): NightStats => ({ seen: 0, captures: 0, nearmiss: 0, woken: 0, mgCatches: 0, dashed: false, dogCalmed: false })
 
 /** 要長按的動作（慈祥、會發出一點聲音的小事） */
-const HOLD_ACTIONS = new Set<ActionId>(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver', 'retrieve'])
+const HOLD_ACTIONS = new Set<ActionId>(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver', 'retrieve', 'place'])
 
 /**
  * NightSim 的外掛登記表（DESIGN §27.2）：每晚開始時呼叫，回傳 null 表示今晚沒有。
@@ -662,12 +667,15 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
       case 'play':
         get().startDialogue('xiaoyu_play', () => sim.satisfy(room!, 'play', def.comfort!))
         break
-      case 'chat':
-        get().startDialogue('agui_chat', () => {
+      case 'chat': {
+        // 中元鬼客人夜：跟鬼客人聊他們自己的事（night/special.ts）
+        const ghost = chatDialogueFor(sim, room!)
+        get().startDialogue(ghost ?? 'agui_chat', () => {
           sim.satisfy(room!, 'chat', def.comfort!)
-          set((x) => ({ flags: { ...x.flags, chat_agui: true } }))
+          if (!ghost) set((x) => ({ flags: { ...x.flags, chat_agui: true } }))
         })
         break
+      }
       case 'calm':
         sim.calmDog()
         audio.chime()
@@ -676,6 +684,19 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         sim.satisfy(room!, 'lost', def.comfort!)
         get().bark('gm.retrieve', true)
         break
+      case 'place': {
+        // 店裡的好東西（DESIGN §31.1）：放下去才扣（半路天亮了東西還在菜櫥）
+        const good = st.good
+        set({ carrying: false, good: null })
+        if (!good || !room) return
+        if (!use(good)) return
+        get().setObject(`${room}.good.${good}`, true)
+        if (good === 'banquet') get().setObject(`${room}.dish`, true)
+        const r = sim.useGood(room, good)
+        set((x) => ({ meta: { ...x.meta, specials: [...x.meta.specials, `${good}@${room}`] } }))
+        get().bark(r.loved.length ? `goods.loved.${good}` : r.fixed ? 'goods.placed' : 'goods.placed.quiet', true)
+        break
+      }
       case 'gift':
         if (!use('toy')) return
         sim.satisfy(room!, 'play', def.comfort!)
@@ -684,7 +705,7 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         break
     }
     if (def.noise > 0 && def.type !== 'scare') sim.noise(o.x, o.z, def.noise * (soft ? 0.5 : 1))
-    if (o.action !== 'play' && o.action !== 'chat' && o.action !== 'cook') gmBark(o.action as keyof typeof GM_BARKS)
+    if (o.action !== 'play' && o.action !== 'chat' && o.action !== 'cook' && o.action !== 'place' && o.action !== 'fetch') gmBark(o.action as keyof typeof GM_BARKS)
     refreshView()
   }
 
@@ -737,6 +758,7 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
     possess: null,
     hidden: null,
     dish: null,
+    good: null,
     vision: false,
     tk: false,
     ending: null,
@@ -755,7 +777,7 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         const p = make(night.sim, plan, s.meta)
         if (p) night.sim.plugins.push(p)
       }
-      set({ plan, objects: {}, carrying: false, dish: null, hold: null, possess: null, hidden: null, stats: EMPTY_STATS(), challenges: makeChallenges(plan, s.meta), summary: null, flickerUntil: { r1: 0, r2: 0 } })
+      set({ plan, objects: {}, carrying: false, dish: null, good: null, hold: null, possess: null, hidden: null, stats: EMPTY_STATS(), challenges: makeChallenges(plan, s.meta), summary: null, flickerUntil: { r1: 0, r2: 0 } })
       // 擲筊擲到「陰氣充足」
       if (s.meta.fortune === 'yin') set({ yin: Math.min(yinMax(s.meta), s.yin + 30) })
       // 入住的第一句話
@@ -832,6 +854,15 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         return
       }
       switch (o.action) {
+        case 'fetch': {
+          // 從菜櫥拿一樣好東西（端著走，飄在空中的東西會被看到）
+          if (!o.good || s.carrying || (s.meta.pantry[o.good] ?? 0) <= 0) return
+          set({ carrying: true, good: o.good })
+          sfx.play('pickup', { volume: 0.4 })
+          get().bark(`goods.fetch.${o.good}`, true)
+          refreshView()
+          return
+        }
         case 'cook': {
           const recipes = RECIPES.filter((r) => canCook(r, s.meta.pantry)).map((r) => r.id)
           get().startMinigame('cook', { recipes }, (r) => {
@@ -1012,7 +1043,7 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         // 外掛（突發事件、客人之間的故事）寫的附註接在後面
         const note = sim.reviewNotes[g.id]
         // 福伯的評論是志明代寫的：外掛寫了就只用外掛的
-        const text = note ? (d.type === 'wanderer' ? note : `${base}${note}`) : base
+        const text = note ? (d.type === 'wanderer' || isGhostGuest(g.id) ? note : `${base}${note}`) : base
         reviews.push({ id: g.id, name: d.name, stars, text, pay })
       }
       const challenges = s.challenges.map((c) => {
@@ -1026,7 +1057,9 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
       const doneCount = challenges.filter((c) => c.done).length
       const points = 1 + fives + (doneCount >= 2 ? 1 : 0)
       const avg = reviews.reduce((a, r) => a + r.stars, 0) / Math.max(1, reviews.length)
-      const heartD = avg >= 4 ? 3 : avg <= 2 ? -5 : 0
+      const heartBase = avg >= 4 ? 3 : avg <= 2 ? -5 : 0
+      // 小翰感覺得到阿嬤以後，好的晚上心多暖一點（DESIGN §31.2）
+      const heartD = heartBase + hanHeartBonus(s.meta.hanSense, heartBase)
       // 擲筊擲到「財神到」：小費加倍
       const tip = doneCount * 300 * (s.meta.fortune === 'luck' ? 2 : 1)
       // 功德：每滿足一個需求 +1、每則五星 +2
@@ -1061,6 +1094,9 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
           sealed: s.stats.mgCatches >= 3,
           merit: s.meta.merit + merit,
           fortune: null,
+          specials: [],
+          // 辦桌菜尾放不過夜
+          pantry: { ...s.meta.pantry, ...Object.fromEntries(GOOD_PERISHABLE.map((k) => [k, 0])) },
         },
       })
     },

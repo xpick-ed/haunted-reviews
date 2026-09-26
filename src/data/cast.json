@@ -1232,5 +1232,93 @@
    "wave": "triangle",
    "jitter": 0.1
   }
+ },
+ {
+  "id": "gg_shuimu",
+  "name": "水木伯",
+  "desc": "中元節回老家看看的老農夫鬼，慢慢的、低低的。",
+  "ghost": true,
+  "color": "#b8c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-22%",
+   "pitch": "-22Hz",
+   "fx": [
+    "elder",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 170,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gg_bangsi",
+  "name": "罔市姆",
+  "desc": "水木伯的牽手，一起回來看村子。",
+  "ghost": true,
+  "color": "#d8c0a8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-12%",
+   "pitch": "-18Hz",
+   "fx": [
+    "elder",
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 300,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gg_soldier",
+  "name": "陳班長",
+  "desc": "1949 年來台灣的山東老兵鬼，穩穩的、話不多，想聽家鄉的消息。",
+  "ghost": true,
+  "color": "#a8b0a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-10%",
+   "pitch": "-16Hz",
+   "fx": [
+    "gruff",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 180,
+   "wave": "sawtooth",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gg_opera",
+  "name": "秋月",
+  "desc": "歌仔戲的花旦鬼，講話像在唱戲，想要有人看她唱。",
+  "ghost": true,
+  "color": "#f0b0c8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "+0%",
+   "pitch": "+4Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 440,
+   "wave": "sine",
+   "jitter": 0.08
+  }
  }
 ]

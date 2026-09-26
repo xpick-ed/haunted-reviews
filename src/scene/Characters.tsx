@@ -10,6 +10,7 @@ import { Chibi, newDrive } from '../chars/Chibi'
 import { SPECS } from '../chars/specs'
 import { floatBob, type BobState } from '../world/motion'
 import { PastAvatar } from './PastAvatar'
+import { CarriedGood } from './CarriedGood'
 
 // 阿嬤：3D Q 版角色（src/chars/）。她是鬼：半透明、發光、沒有影子。
 // 深夜的客人、廟公、狗在 Guests.tsx。
@@ -73,7 +74,7 @@ function GhostGrandma() {
     if (light.current) light.current.intensity = 2.6 + Math.sin(time * 3.1) * 0.5 + s.warm * 3
     // 端著宵夜：捧在胸前
     if (dish.current) {
-      dish.current.visible = s.carrying
+      dish.current.visible = s.carrying && !s.good
       dish.current.rotation.y = d.heading
     }
   }, -2)
@@ -103,6 +104,7 @@ function GhostGrandma() {
           ))}
         </group>
       </group>
+      <CarriedGood />
       <pointLight ref={light} color="#8ff4ff" intensity={2.6} distance={4.5} decay={2} position={[0, 1.9, -0.35]} />
     </group>
   )

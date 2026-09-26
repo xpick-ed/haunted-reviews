@@ -2,6 +2,7 @@ import { box, rect } from './collision'
 import { DIALOGUES, type Dialogue } from './dialogues'
 import { OLDSTREET, isNight, pick, withStore, type ShopInterior } from './oldStreetLayout'
 import type { HerbsParams, HerbsResult } from '../ui/minigames/herbs.logic'
+import { giveGood } from './goodsGive'
 
 // 老街西邊可以走進去的店（DESIGN §30）：新美理髮廳、和春中藥行。
 // 規則在這裡；畫面在 src/scene/OldStreetWest.tsx。這個檔案會被 Node 測試載入，不能 import store／audio（用 s.* 或 withStore）。
@@ -364,6 +365,8 @@ export const OS_WEST: ShopInterior = {
               const x = st.getState()
               const ok = !!x.flags.os_barber_towel_ok
               st.setState({ flags: { ...x.flags, [TOWEL_FLAG]: true, os_barber_towel_ok: false }, meta: { ...x.meta, merit: x.meta.merit + (ok ? 1 : 0) } })
+              // 毛巾溫度剛好：阿水師塞一瓶花露水給阿嬤（DESIGN §31.1）
+              if (ok) window.setTimeout(() => giveGood('floral', 1, 'goods.ashui.floral'), 2200)
             }),
           )
           return
@@ -406,6 +409,8 @@ export const OS_WEST: ShopInterior = {
               st.setState({ flags: { ...x.flags, [HERB_FLAG]: true }, meta: { ...x.meta, merit: x.meta.merit + res.merit } })
               const good = res.herbs >= 4 && res.accuracy >= 0.6
               x.bark(night ? (good ? 'osw.herb.night.win' : 'osw.herb.night.meh') : good ? 'osw.herb.win' : 'osw.herb.meh')
+              // 抓得好：多包一份安神茶帶回家（DESIGN §31.1）；抓得很準包兩包
+              if (good) window.setTimeout(() => giveGood('herbtea', res.accuracy >= 0.85 ? 2 : 1, 'goods.herb.get'), 2600)
             })
           })
         if (!night && !s.flags.herbalist_met) {

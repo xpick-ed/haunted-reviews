@@ -519,7 +519,7 @@ export function brideTargets(plan: NightPlan): GuestId[] {
  * story：meta.story（化解過的不會再來）
  */
 export function pickHorror(night: number, plan: NightPlan, story: string[]): HorrorPick | null {
-  if (plan.event === 'miaogong') return null
+  if (plan.event === 'miaogong' || plan.special) return null
   const r = seeded(night * 613 + 29)
   const a = r()
   const b = r()

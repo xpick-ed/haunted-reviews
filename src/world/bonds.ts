@@ -11,6 +11,7 @@ import { STAGE, stageMode } from './sceneStage'
 import { RIVER, riverKids } from './sceneRiver'
 import { kidsGate } from './tag'
 import { hanAtHome } from './storyBeats'
+import { afterDream, hanDreamPick } from './han'
 import { STATION, ghostTrain } from './sceneStation'
 import { keeperSpot } from './sceneHarbor'
 import { OLDSTREET } from './sceneOldStreet'
@@ -420,17 +421,23 @@ export const BOND_HOTSPOTS: Hotspot[] = [
       }
       withStore((api) => {
         api.setState((x) => ({ yin: x.yin - 10, flags: { ...x.flags, handream_today: true } }))
-        api.getState().startDialogue(hanDreamId(s.meta.night), () => {
-          // 溫柔的話：心 +8；叮嚀：心 +5（好感度另外加）
+        // 他開始感覺到阿嬤了：第一次先教他煎菜脯蛋（han.ts），其他照五場輪流
+        const dream = hanDreamPick(s.meta) ?? hanDreamId(s.meta.night)
+        api.getState().startDialogue(dream, () => {
+          // 溫柔的話：心 +8；叮嚀：心 +5（好感度另外加）；每場夢他都多感覺到一點阿嬤
           const f = api.getState().flags
           const warm = !!f.handream_warm_today
-          api.setState((x) => ({
-            meta: {
-              ...x.meta,
-              heart: Math.min(100, x.meta.heart + (warm ? 8 : 5)),
-              bonds: { ...x.meta.bonds, xiaohan: Math.min(100, (x.meta.bonds.xiaohan ?? 0) + (warm ? 15 : 12)) },
-            },
-          }))
+          api.setState((x) => {
+            const after = afterDream(x.meta, x.flags, dream)
+            return {
+              flags: after.flags,
+              meta: {
+                ...after.meta,
+                heart: Math.min(100, x.meta.heart + (warm ? 8 : 5)),
+                bonds: { ...x.meta.bonds, xiaohan: Math.min(100, (x.meta.bonds.xiaohan ?? 0) + (warm ? 15 : 12)) },
+              },
+            }
+          })
           api.getState().say(`小翰的心 +${warm ? 8 : 5}`)
           window.setTimeout(() => deliverPending(api, 'xiaohan'), 1500)
         })

@@ -5,7 +5,9 @@ import { objectives } from '../world/hotspots'
 import { nameOf } from '../world/lines'
 import { SCENES } from '../world/scenes'
 import { input } from '../world/input'
-import { NEED_INFO } from '../world/night/guests'
+import { GUESTS, NEED_INFO } from '../world/night/guests'
+import { GOODS, GOOD_IDS, INGREDIENTS, goodsFor, goodsLovedBy, type GoodId } from '../world/night/items'
+import './Goods.css'
 import { yinMax, type GuestView } from '../world/night/director'
 import { portraitDataUrl, type PortraitId } from '../art/portraits'
 import { DialogueBox } from './DialogueBox'
@@ -211,6 +213,11 @@ function GuestRow({ g }: { g: GuestView }) {
   const STATE = { asleep: '💤 睡著', scared: '😱 害怕', walk: '🚶 走動', awake: '👀 醒著' }
   const known = g.needs.filter((n) => n.known)
   const unknown = g.needs.length - known.length
+  // 店裡的好東西（DESIGN §31.1）：菜櫥裡有（或手上端著）解決得了這個需求的；傍晚在車站觀察過的人，看得到他喜歡什麼
+  const { pantry, good, observed } = useStore(useShallow((s) => ({ pantry: s.meta.pantry, good: s.good, observed: !!s.flags[`observed_${g.id}_today`] })))
+  const fixFor = (kind: (typeof g.needs)[number]['kind']) => goodsFor(kind).find((k) => good === k || (pantry[k] ?? 0) > 0)
+  const type = GUESTS[g.id as keyof typeof GUESTS]?.type
+  const loves = observed && type ? goodsLovedBy(type) : []
   return (
     <div className={`guest-row ${g.suspicion > 0.5 && !g.seesGhost ? 'alert' : ''}`}>
       <div className="guest-face">
@@ -229,15 +236,20 @@ function GuestRow({ g }: { g: GuestView }) {
           <span className={`state state-${state}`}>{STATE[state]}</span>
         </div>
         <div className="guest-needs">
-          {known.map((n) => (
-            <span key={n.kind} className="need" title={NEED_INFO[n.kind].label}>
-              {NEED_INFO[n.kind].icon}
-              <small>{NEED_INFO[n.kind].label}</small>
-            </span>
-          ))}
+          {known.map((n) => {
+            const fix = fixFor(n.kind)
+            return (
+              <span key={n.kind} className="need" title={NEED_INFO[n.kind].label + (fix ? `（可以用${INGREDIENTS[fix].name}）` : '')}>
+                {NEED_INFO[n.kind].icon}
+                <small>{NEED_INFO[n.kind].label}</small>
+                {fix && <span className="good-fix">{INGREDIENTS[fix].icon}</span>}
+              </span>
+            )
+          })}
           {unknown > 0 && <span className="need unknown">？靠近看看</span>}
           {!g.needs.length && g.awake && <span className="muted">沒事</span>}
         </div>
+        {loves.length > 0 && <div className="guest-loves">喜歡：{loves.map((k) => INGREDIENTS[k].icon + INGREDIENTS[k].name).join('、')}</div>}
         <div className="mini-bars">
           <i className="bar warm" style={{ width: `${Math.min(100, g.comfort)}%` }} />
           <i className="bar fear" style={{ width: `${Math.min(100, g.fear)}%` }} />
@@ -346,7 +358,7 @@ function ActionButton() {
   )
 }
 
-const HOLD_HINT = new Set(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver', 'retrieve'])
+const HOLD_HINT = new Set(['tuck', 'temp', 'water', 'coil', 'nightlight', 'window', 'pat', 'lullaby', 'deliver', 'retrieve', 'place'])
 
 /** 今天的事（DESIGN §28.2）：小翰的紙條＋鄰居的委託 */
 function TodayList() {
@@ -376,6 +388,45 @@ function TodayList() {
             )
           })}
         </ul>
+      )}
+      {open && <GoodsHint />}
+    </div>
+  )
+}
+
+/** 店裡的好東西（DESIGN §31.1）：菜櫥裡有什麼；傍晚依今晚的客人、事件建議去哪間店 */
+function GoodsHint() {
+  const { pantry, plan, phase } = useStore(useShallow((s) => ({ pantry: s.meta.pantry, plan: s.plan, phase: s.phase })))
+  const owned = GOOD_IDS.filter((k) => (pantry[k] ?? 0) > 0)
+  const tips: { good: GoodId; why: string }[] = []
+  if (phase === 'dusk') {
+    const add = (good: GoodId, why: string) => {
+      const t = tips.find((x) => x.good === good)
+      if (t) {
+        if (!t.why.includes(why)) t.why += `、${why}`
+      } else tips.push({ good, why })
+    }
+    if (plan.event === 'coldsnap') add('quilt', '寒流')
+    if (plan.event === 'mosquitoes') add('floral', '蚊子大軍')
+    for (const id of plan.parties.flatMap((p) => p.members)) {
+      const d = GUESTS[id]
+      if (!d) continue
+      for (const k of goodsLovedBy(d.type)) add(k, d.name)
+    }
+  }
+  if (!owned.length && !tips.length) return null
+  return (
+    <div className="today-goods">
+      {owned.length > 0 && (
+        <div className="owned">
+          <b>菜櫥</b> {owned.map((k) => `${INGREDIENTS[k].icon}${INGREDIENTS[k].name}×${pantry[k]}`).join('　')}
+        </div>
+      )}
+      {tips.length > 0 && (
+        <div>
+          <b>今晚可能用得到</b> {tips.slice(0, 3).map((t) => `${INGREDIENTS[t.good].icon}${INGREDIENTS[t.good].name}（${t.why}）`).join('、')}
+          <small className="muted">　{tips.slice(0, 3).map((t) => GOODS[t.good].where.split('（')[0]).filter((w, i, a) => a.indexOf(w) === i).join('、')}</small>
+        </div>
       )}
     </div>
   )

@@ -1,0 +1,104 @@
+/* 特別的夜晚的橫幅：跟突發事件的橫幅同一排（畫面下方中間，字幕上面） */
+.special-hud {
+  position: absolute;
+  left: 50%;
+  bottom: calc(178px + var(--safe-b));
+  transform: translateX(-50%);
+  width: min(92vw, 440px);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 14px 9px 10px;
+  border-radius: 14px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+  pointer-events: none !important;
+  animation: special-in 0.4s ease-out;
+}
+.special-hud.typhoon {
+  background: linear-gradient(180deg, rgba(22, 34, 52, 0.9), rgba(12, 20, 32, 0.9));
+  border: 1.5px solid rgba(140, 180, 230, 0.55);
+}
+.special-hud.ghost {
+  background: linear-gradient(180deg, rgba(40, 22, 44, 0.9), rgba(22, 12, 26, 0.9));
+  border: 1.5px solid rgba(255, 190, 120, 0.5);
+}
+.special-hud.eve {
+  padding: 7px 14px;
+  width: min(92vw, 400px);
+  opacity: 0.94;
+}
+.special-hud.l1 {
+  bottom: calc(248px + var(--safe-b));
+}
+.special-hud.l2 {
+  bottom: calc(318px + var(--safe-b));
+}
+.special-hud.l3 {
+  bottom: calc(388px + var(--safe-b));
+}
+.special-icon {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.special-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.special-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #dbe8ff;
+}
+.special-hud.ghost .special-title {
+  color: #ffd9b0;
+}
+.special-hint {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(236, 242, 255, 0.88);
+}
+.special-hud.ghost .special-hint {
+  color: rgba(255, 238, 226, 0.9);
+}
+.special-check {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #ffc9a0;
+}
+.special-check.ok {
+  color: #b8f0c4;
+}
+@media (min-aspect-ratio: 1/1) and (min-width: 760px) {
+  .special-hud {
+    bottom: auto;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    width: min(36vw, 420px);
+  }
+  .special-hud.l1 {
+    bottom: auto;
+    top: calc(84px + env(safe-area-inset-top, 0px));
+  }
+  .special-hud.l2 {
+    bottom: auto;
+    top: calc(154px + env(safe-area-inset-top, 0px));
+  }
+  .special-hud.l3 {
+    bottom: auto;
+    top: calc(224px + env(safe-area-inset-top, 0px));
+  }
+}
+@keyframes special-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .special-hud {
+    animation: none;
+  }
+}

@@ -19,6 +19,11 @@ export type GuestId =
   | 'zhiming'
   | 'fubo'
   | 'zhiwei'
+  // 中元鬼客人夜（DESIGN §31.3）：回來看村子的老夫妻、1949 年的老兵、歌仔戲的花旦（都是好兄弟）
+  | 'gg_shuimu'
+  | 'gg_bangsi'
+  | 'gg_soldier'
+  | 'gg_opera'
 
 /** 客人類型：決定作息、怕不怕鬼、在意什麼 */
 export type GuestType =
@@ -80,6 +85,9 @@ export type ActionId =
   | 'retrieve' // 把掉的東西撿回床頭
   | 'ouija' // 碟仙：推碟子回答阿凱的問題
   | 'gift' // 把夾娃娃機夾到的小玩具送給小宇
+  // 店裡的東西（DESIGN §31.1）
+  | 'fetch' // 從灶腳的菜櫥拿一樣店裡買的東西（之後端著走）
+  | 'place' // 把店裡的東西放到客人床頭
 
 /** 客人會講的話的種類（src/data/barks.ts 依這些 key 列出台詞 id） */
 export type BarkKind =

@@ -2,6 +2,7 @@ import { box, rect, type Circle, type Rect } from './collision'
 import type { SceneDef } from './scenes'
 import type { Hotspot } from './hotspots'
 import type { ClawResult } from '../ui/minigames/types'
+import { giveGood } from './goodsGive'
 import { DIALOGUES, type Dialogue } from './dialogues'
 
 // 村路＋柑仔店（DESIGN §25.1）：阿春民宿東邊的路走過來，再往東是土地公廟。
@@ -478,7 +479,12 @@ const INTERIOR_HOTSPOTS: Hotspot[] = [
           return
         }
         const ep = TV_EPISODES[s.meta.night % TV_EPISODES.length]
-        const watch = () => s.startDialogue(ep, () => reward(['acai_tv_today'], 1))
+        // 看完：阿財伯把中午辦桌剩的菜尾打包給阿嬤（DESIGN §31.1）
+        const watch = () =>
+          s.startDialogue(ep, () => {
+            reward(['acai_tv_today'], 1)
+            window.setTimeout(() => giveGood('banquet', 1, 'goods.acai.banquet'), 900)
+          })
         if (!s.flags.acai_met) s.startDialogue('v2_acai_tv_intro', watch)
         else watch()
         return

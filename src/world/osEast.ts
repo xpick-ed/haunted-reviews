@@ -3,6 +3,7 @@ import { NOWHERE, OLDSTREET, isNight, pick, withStore, type ShopInterior } from 
 import { DIALOGUES, type Dialogue } from './dialogues'
 import type { GameState } from '../store'
 import type { PhotoResult, ShaveIceResult } from '../ui/minigames/types'
+import { buyGood, giveGood } from './goodsGive'
 import type { SewResult } from '../ui/minigames/sew'
 
 // 老街東邊可以走進去的店（DESIGN §30）：阿桃冰果室、光明照相館、錦繡布莊。
@@ -174,6 +175,10 @@ function reward(flags: Record<string, boolean>, merit = 0) {
   })
 }
 
+/** 店裡的好東西的價錢（DESIGN §31.1） */
+const RAMUNE_PRICE = 30
+const QUILT_PRICE = 150
+
 /** 點唱機這一趟放到第幾首（重新整理從第一首） */
 let song = 0
 
@@ -321,9 +326,14 @@ export const OS_EAST: ShopInterior = {
       r: 0.95,
       icon: { x: ICE_IN.fridge.x, z: ICE_IN.fridge.z },
       iconY: 2.1,
-      label: () => '開一瓶彈珠汽水',
+      label: (s) => (s.flags.goods_ramune2_today ? '開一瓶彈珠汽水' : `帶一瓶彈珠汽水回家（$${RAMUNE_PRICE}${s.flags.goods_ramune_today ? '，還可以再拿一瓶' : ''}）`),
       run: (s) => {
         sound((m) => m.popSoda())
+        // 店裡的好東西（DESIGN §31.1）：一天最多帶兩瓶回家
+        if (!s.flags.goods_ramune2_today) {
+          buyGood('ramune', RAMUNE_PRICE, s.flags.goods_ramune_today ? 'goods_ramune2_today' : 'goods_ramune_today', 'goods.ramune.get')
+          return
+        }
         s.bark(pick(['oseast.soda.1', 'oseast.soda.2', 'oseast.soda.3']))
       },
     },
@@ -406,6 +416,8 @@ export const OS_EAST: ShopInterior = {
               const x = st.getState()
               st.setState({ flags: { ...x.flags, os_photo_today: true }, meta: { ...x.meta, merit: x.meta.merit + 1 } })
               x.bark(pick(['photographer.after.1', 'photographer.after.2']))
+              // 老闆順手洗了一張村子的老照片（DESIGN §31.1）
+              window.setTimeout(() => giveGood('photo', 1, 'goods.photo.get'), 2800)
             })
           })
         if (!s.flags.photographer_met) {
@@ -458,14 +470,43 @@ export const OS_EAST: ShopInterior = {
       r: 1.1,
       icon: { x: CLOTH_IN.machine.x, z: CLOTH_IN.machine.z },
       iconY: 1.8,
-      label: (s) => (isNight(s) ? null : '看看裁縫車'),
+      label: (s) => {
+        if (isNight(s)) return null
+        if (!s.flags.os_sewing_seen) return '看看裁縫車'
+        return s.flags.goods_quilt_today ? '看看裁縫車（今天縫過了）' : `借裁縫車縫一條厚棉被（布 $${QUILT_PRICE}）`
+      },
       run: (s) => {
-        if (s.flags.os_sewing_seen) {
+        if (!s.flags.os_sewing_seen) {
+          s.bark('oseast.sew.dusk.1')
+          reward({ os_sewing_seen: true })
+          return
+        }
+        if (s.flags.goods_quilt_today) {
           s.bark(pick(['oseast.sew.dusk.2', 'oseast.sew.dusk.3']))
           return
         }
-        s.bark('oseast.sew.dusk.1')
-        reward({ os_sewing_seen: true })
+        // 店裡的好東西（DESIGN §31.1）：阿嬤一九六八年踩到半夜的手藝，自己縫一條厚棉被帶回家
+        if (s.meta.money < QUILT_PRICE) {
+          s.bark('goods.nomoney')
+          return
+        }
+        s.bark('goods.quilt.start')
+        window.setTimeout(
+          () =>
+            sew(s, 22, (res) => {
+              if (!res || !res.done) {
+                s.bark('goods.quilt.fail')
+                return
+              }
+              withStore((st) => {
+                const x = st.getState()
+                if (x.flags.goods_quilt_today) return
+                st.setState({ flags: { ...x.flags, goods_quilt_today: true }, meta: { ...x.meta, money: x.meta.money - QUILT_PRICE } })
+                giveGood('quilt', 1, 'goods.quilt.get')
+              })
+            }),
+          1200,
+        )
       },
     },
     {
@@ -498,6 +539,8 @@ export const OS_EAST: ShopInterior = {
                 return
               }
               st.setState({ flags: { ...x.flags, cloth_sew_today: true, jinxiu_dress: true }, meta: { ...x.meta, merit: x.meta.merit + (first ? 2 : 1) } })
+              // 錦繡姨用剩下的布縫了一條被子給阿嬤（DESIGN §31.1）
+              window.setTimeout(() => giveGood('quilt', 1, 'goods.jinxiu.quilt'), first ? 9000 : 2600)
               if (first) x.startDialogue('os_cloth_done')
               else x.bark(res.accuracy >= 0.8 ? 'oseast.jx.good' : 'oseast.jx.ok')
             })

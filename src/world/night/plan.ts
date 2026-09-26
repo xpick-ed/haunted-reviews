@@ -13,7 +13,12 @@ export interface NightPlan {
   event: NightEvent
   /** 開場時小翰或阿嬤說的話（台詞 id 的來源在 barks.ts） */
   story?: 'room2'
+  /** 特別的夜晚（DESIGN §31.3）：颱風夜、中元鬼客人夜（night/special.ts） */
+  special?: SpecialNight
 }
+
+/** 特別的夜晚：颱風夜（停電、漏水、大家擠在神明廳）、中元鬼客人夜（客房二住的是好兄弟） */
+export type SpecialNight = 'typhoon' | 'ghost'
 
 /** 一個月四晚 */
 export const NIGHTS_PER_MONTH = 4
@@ -44,6 +49,8 @@ const EVENTS: NightEvent[] = ['none', 'none', 'dog', 'mosquitoes', 'coldsnap', '
  */
 export function planNight(night: number, warm: number, spooky: number, pressure: number, opts: { adult?: boolean } = {}): NightPlan {
   if (night <= MONTH1.length) return MONTH1[night - 1]
+  const special = specialOf(night)
+  if (special === 'ghost') return ghostPlan(night)
   const r = seeded(night * 7919)
   const pick = (): GuestId[] => {
     const spookyChance = 0.15 + (spooky / 100) * 0.6 - (warm / 100) * 0.2
@@ -58,7 +65,50 @@ export function planNight(night: number, warm: number, spooky: number, pressure:
   const parties: Party[] = [{ room: 'r1', members: a }]
   if (!clash(a, b)) parties.push({ room: 'r2', members: b })
   const event: NightEvent = pressure >= 3 ? 'miaogong' : EVENTS[Math.floor(r() * EVENTS.length)]
+  // 颱風夜：一定停電（沿用「颱風停電」的停電、怕黑）；廟公這種天氣不會出來巡
+  if (special === 'typhoon') return { parties, event: 'blackout', special }
   return { parties, event }
+}
+
+// ---------------------------------------------------------------------------
+// 特別的夜晚（DESIGN §31.3）：一個月大概一次，而且避開主線（第 7 晚陳董、第 8 晚月底期限的帳、第 10 晚分遺產、第 12 晚做決定）
+//   颱風夜    第 5 晚、第 11 晚，之後每 12 晚一次（23、35、47……都是單數，不會碰到節日；也不會緊接在鬼客人夜後面）
+//   鬼客人夜  中元普渡的晚上（第 8、20、32……晚）：客房二住的是好兄弟，客房一是一位活人客人
+//   所以是：5 颱風、8 鬼、11 颱風、20 鬼、23 颱風、32 鬼、35 颱風……（大概一個月一次）
+// ---------------------------------------------------------------------------
+
+export function specialOf(night: number): SpecialNight | null {
+  if (night === 5 || (night >= 11 && (night - 11) % 12 === 0)) return 'typhoon'
+  if (night > MONTH1.length && festivalOf(night) === 'zhongyuan') return 'ghost'
+  return null
+}
+
+/** 鬼客人夜的第幾次（0 起算）：輪流來不同的好兄弟 */
+export function ghostVisit(night: number) {
+  let k = 0
+  for (let n = 1; n < night; n++) if (specialOf(n) === 'ghost') k++
+  return k
+}
+
+/** 好兄弟：第一次是回來看村子的老夫妻，第二次是老兵和歌仔戲的花旦，之後輪流 */
+export const GHOST_PARTIES: GuestId[][] = [
+  ['gg_shuimu', 'gg_bangsi'],
+  ['gg_soldier', 'gg_opera'],
+]
+/** 客房一的活人：一個人來、容易被嚇到的（這樣「別讓他撞見好兄弟」才有意思） */
+const GHOST_NIGHT_LIVING: GuestId[] = ['xiaomei', 'zhang']
+
+function ghostPlan(night: number): NightPlan {
+  const k = ghostVisit(night)
+  return {
+    parties: [
+      { room: 'r1', members: [GHOST_NIGHT_LIVING[k % GHOST_NIGHT_LIVING.length]] },
+      { room: 'r2', members: GHOST_PARTIES[k % GHOST_PARTIES.length] },
+    ],
+    // 普渡的晚上廟公在廟裡忙，不會來巡
+    event: 'none',
+    special: 'ghost',
+  }
 }
 
 // ---------------------------------------------------------------------------

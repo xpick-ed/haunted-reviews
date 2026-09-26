@@ -24,6 +24,7 @@ import { Gecko, newGeckoDrive, type GeckoDrive } from '../chars/Gecko'
 import { turnToward, type TurnState } from '../world/motion'
 import { incidentState, Sleepwalk } from '../world/night/incidents'
 import { familyState } from '../world/night/family'
+import { typhoonNow } from '../world/night/special'
 import type { RoomId } from '../world/night/types'
 
 // 深夜的客人（DESIGN §5、§21）：床上坐著／睡著、下床走動；視線扇形、懷疑的「？」、需求泡泡、zzz。
@@ -138,7 +139,7 @@ export function Guests() {
       {sim.dog && <DogActor outline={quality === 'high'} />}
       <CatActor outline={quality === 'high'} />
       <GeckoActor outline={quality === 'high'} />
-      {sim.event === 'blackout' && <Storm />}
+      {sim.event === 'blackout' && !typhoonNow() && <Storm />}
     </group>
   )
 }

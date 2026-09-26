@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '../store'
 import { audio } from '../audio'
 import { voice } from '../audio/voice'
 import { line, nameOf } from '../world/lines'
-import { ENDING_NAME, type EndingId } from '../world/story'
+import { ENDING_NAME, hanEpilogue, type EndingId } from '../world/story'
 import { StoryArt, type ArtId } from '../scene/StoryArt'
 import './EndingScreen.css'
 
@@ -79,8 +79,19 @@ export function EndingScreen() {
   return <EndingPlayer key={ending} id={ending} />
 }
 
+/** 小翰感覺到阿嬤在了（hanSense ≥ 80）：多一張卡片，插在 before 那張插畫前面（DESIGN §31.2） */
+function withEpilogue(id: EndingId, hanSense: number): Card[] {
+  const base = ENDINGS[id]
+  const ep = hanEpilogue(id, hanSense)
+  if (!ep) return base
+  const card: Card = { art: ep.art as ArtId, note: ep.note, lines: ep.lines }
+  const at = base.findIndex((c) => c.art === ep.before)
+  return at < 0 ? [...base, card] : [...base.slice(0, at), card, ...base.slice(at)]
+}
+
 function EndingPlayer({ id }: { id: EndingId }) {
-  const cards = ENDINGS[id]
+  // 結局開始時的值就好（播的途中不會變）
+  const cards = useMemo(() => withEpilogue(id, useStore.getState().meta.hanSense), [id])
   const finish = useStore((s) => s.finishEnding)
   // -1：標題卡；0..n-1：插畫卡片；n：製作名單
   const [i, setI] = useState(-1)

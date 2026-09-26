@@ -38,6 +38,7 @@ import { CouplesLayer } from './CouplesLayer'
 import { FamilyLayer } from './FamilyLayer'
 import { SpecialLayer } from './SpecialLayer'
 import { HanLayer } from './HanLayer'
+import { GoodsLayer } from './GoodsLayer'
 import { Snapshot } from './Snapshot'
 import { hanAtHome } from '../world/storyBeats'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
@@ -157,6 +158,7 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
       <FamilyLayer />
       <SpecialLayer />
       <HanLayer />
+      <GoodsLayer />
       {!hanAway && <ChibiNpc id="xiaohan" pose="sweep" position={[HAN_SWEEP.x, 0.1, HAN_SWEEP.z]} heading={0.5} outline={quality === 'high'} />}
     </group>
   )

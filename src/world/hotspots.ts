@@ -14,6 +14,11 @@ import { MEMORY_HOTSPOTS } from './memories'
 import { STATION_HOTSPOTS } from './sceneStation'
 import { OLDSTREET_HOTSPOTS } from './sceneOldStreet'
 import { HARBOR_HOTSPOTS } from './sceneHarbor'
+import { DMARKET_HOTSPOTS } from './sceneDuskMarket'
+import { CHENGHUANG_HOTSPOTS } from './sceneChenghuang'
+import { SUGAR_HOTSPOTS } from './sceneSugar'
+import { GHOSTTRAIN_HOTSPOTS } from './sceneGhostTrain'
+import { LIGHTHOUSE_HOTSPOTS } from './sceneLighthouse'
 import { PAST_HOTSPOTS } from './past'
 import { BOND_HOTSPOTS } from './bonds'
 import { DECOR_HOTSPOTS } from './decor'
@@ -241,6 +246,11 @@ export const HOTSPOTS: Hotspot[] = [
   ...STATION_HOTSPOTS,
   ...OLDSTREET_HOTSPOTS,
   ...HARBOR_HOTSPOTS,
+  ...DMARKET_HOTSPOTS,
+  ...CHENGHUANG_HOTSPOTS,
+  ...SUGAR_HOTSPOTS,
+  ...GHOSTTRAIN_HOTSPOTS,
+  ...LIGHTHOUSE_HOTSPOTS,
   ...PAST_HOTSPOTS,
   ...BOND_HOTSPOTS,
   ...DECOR_HOTSPOTS,

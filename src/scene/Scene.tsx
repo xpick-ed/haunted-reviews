@@ -27,6 +27,11 @@ import { HillScene } from './Hill'
 import { StationScene } from './Station'
 import { OldStreetScene } from './OldStreet'
 import { HarborScene } from './Harbor'
+import { DuskMarketScene } from './DuskMarket'
+import { ChenghuangScene } from './Chenghuang'
+import { SugarScene } from './Sugar'
+import { GhostTrainScene } from './GhostTrain'
+import { LighthouseScene } from './Lighthouse'
 import { PastScene } from './Past'
 import { HomeStationPath } from './StationPath'
 import { DecorLayer } from './Decor'
@@ -137,6 +142,11 @@ function SceneContent({ quality }: { quality: 'high' | 'low' }) {
   if (scene === 'station') return <StationScene />
   if (scene === 'oldstreet') return <OldStreetScene />
   if (scene === 'harbor') return <HarborScene />
+  if (scene === 'dmarket') return <DuskMarketScene />
+  if (scene === 'chenghuang') return <ChenghuangScene />
+  if (scene === 'sugar') return <SugarScene />
+  if (scene === 'ghosttrain') return <GhostTrainScene />
+  if (scene === 'lighthouse') return <LighthouseScene />
   if (scene === 'past') return <PastScene />
   return (
     <group>

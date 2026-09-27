@@ -18,6 +18,11 @@ const SCENE_HINT: Record<string, string> = {
   station: '火車站',
   oldstreet: '老街',
   harbor: '海邊',
+  dmarket: '黃昏市場',
+  chenghuang: '城隍廟',
+  sugar: '糖廠',
+  ghosttrain: '鬼火車',
+  lighthouse: '燈塔',
 }
 
 export function AlbumPanel() {

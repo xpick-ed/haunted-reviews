@@ -48,12 +48,36 @@ import { STAGE_CIRCLES, STAGE_RECTS } from './sceneStage'
 import { STATION_SCENE } from './sceneStation'
 import { OLDSTREET_SCENE } from './sceneOldStreet'
 import { HARBOR_SCENE } from './sceneHarbor'
+import { DMARKET_SCENE } from './sceneDuskMarket'
+import { CHENGHUANG_SCENE } from './sceneChenghuang'
+import { SUGAR_SCENE } from './sceneSugar'
+import { GHOSTTRAIN_SCENE } from './sceneGhostTrain'
+import { LIGHTHOUSE_SCENE } from './sceneLighthouse'
 import { PAST_SCENE } from './scenePast'
 
 // 場景定義：碰撞、出生點、出口、建築（淡出與室內鏡頭用）、地板高度。
 // 視覺在 scene/ 底下，這裡只有「規則」需要的資料。
 
-export type SceneId = 'home' | 'temple' | 'village' | 'garden' | 'market' | 'dream' | 'river' | 'school' | 'hill' | 'station' | 'oldstreet' | 'harbor' | 'past'
+export type SceneId =
+  | 'home'
+  | 'temple'
+  | 'village'
+  | 'garden'
+  | 'market'
+  | 'dream'
+  | 'river'
+  | 'school'
+  | 'hill'
+  | 'station'
+  | 'oldstreet'
+  | 'harbor'
+  | 'past'
+  // DESIGN §32
+  | 'dmarket'
+  | 'chenghuang'
+  | 'sugar'
+  | 'ghosttrain'
+  | 'lighthouse'
 
 export interface Building {
   id: string
@@ -343,6 +367,11 @@ export const SCENES: Record<SceneId, SceneDef> = {
   station: STATION_SCENE,
   oldstreet: OLDSTREET_SCENE,
   harbor: HARBOR_SCENE,
+  dmarket: DMARKET_SCENE,
+  chenghuang: CHENGHUANG_SCENE,
+  sugar: SUGAR_SCENE,
+  ghosttrain: GHOSTTRAIN_SCENE,
+  lighthouse: LIGHTHOUSE_SCENE,
   past: PAST_SCENE,
 }
 

@@ -1,0 +1,218 @@
+{
+ "dm.arrive.dusk.1": {
+  "who": "grandma",
+  "text": "哇，黃昏市場！好久沒來了。還是一樣吵、一樣濕濕的，一樣好香。"
+ },
+ "dm.arrive.dusk.2": {
+  "who": "grandma",
+  "text": "今天有什麼好料的？先看看黑板上的特價。"
+ },
+ "dm.arrive.night": {
+  "who": "grandma",
+  "text": "收攤了……傍晚那麼熱鬧，晚上安靜得像另一個地方。"
+ },
+ "dm.broke": {
+  "who": "grandma",
+  "text": "哎喲，錢不夠……小翰的帳要省著花。"
+ },
+ "dm.closed.1": {
+  "who": "grandma",
+  "text": "收攤了，明天傍晚再來。"
+ },
+ "dm.closed.2": {
+  "who": "grandma",
+  "text": "帆布蓋起來了。晚上的市場，只剩貓在逛。"
+ },
+ "dm.bargain.great": {
+  "who": "grandma",
+  "text": "呵呵，殺到這個價錢，阿嬤還是寶刀未老。"
+ },
+ "dm.bargain.ok": {
+  "who": "grandma",
+  "text": "好啦，便宜一點點也是便宜。"
+ },
+ "dm.board.pork": {
+  "who": "grandma",
+  "text": "今日特價：豬肉七折！今晚可以滷一鍋肉。"
+ },
+ "dm.board.milkfish": {
+  "who": "grandma",
+  "text": "今日特價：虱目魚七折。煮虱目魚粥，老人家最愛。"
+ },
+ "dm.board.clam": {
+  "who": "grandma",
+  "text": "今日特價：蛤仔七折。蛤仔湯加薑絲，冷的晚上喝最好。"
+ },
+ "dm.board.cabbage": {
+  "who": "grandma",
+  "text": "今日特價：高麗菜七折。高麗菜飯，小孩子會吃兩碗。"
+ },
+ "dm.board.douhua": {
+  "who": "grandma",
+  "text": "今日特價：豆花七折。燒豆花，半夜吃暖暖的。"
+ },
+ "dm.board.redguo": {
+  "who": "grandma",
+  "text": "今日特價：紅龜粿七折。拜拜、送鄰居都好。"
+ },
+ "dm.board.closing": {
+  "who": "grandma",
+  "text": "快收攤了，全部都八折。晚來也有晚來的好處。"
+ },
+ "dm.board.night": {
+  "who": "grandma",
+  "text": "黑板上的字被擦掉一半了。明天的特價不知道是什麼。"
+ },
+ "dm.wanbo.buy.1": {
+  "who": "wanbo",
+  "text": "薑、麵線自己拿，錢丟那個鐵罐仔。"
+ },
+ "dm.wanbo.buy.2": {
+  "who": "wanbo",
+  "text": "好，多謝喔——咦？人呢？"
+ },
+ "dm.alan.buy.1": {
+  "who": "alan",
+  "text": "錢放著自己拿！三層肉，肥瘦剛好！"
+ },
+ "dm.alan.buy.2": {
+  "who": "alan",
+  "text": "下一位！……咦，錢已經放好了？"
+ },
+ "dm.azhong.buy.1": {
+  "who": "azhong",
+  "text": "虱目魚肚最嫩！錢丟桶子裡，找錢自己拿！"
+ },
+ "dm.azhong.buy.2": {
+  "who": "azhong",
+  "text": "蛤仔都吐過沙了啦，回去煮湯最甜！"
+ },
+ "dm.guoshen.buy.1": {
+  "who": "guoshen",
+  "text": "紅龜粿剛蒸好的，拿去拜拜最好。"
+ },
+ "dm.guoshen.buy.2": {
+  "who": "guoshen",
+  "text": "錢放著就好，粿嬸信任大家啦。"
+ },
+ "dm.caipo.buy.1": {
+  "who": "caipo",
+  "text": "菜自己挑，錢放籃子裡。"
+ },
+ "dm.caipo.buy.2": {
+  "who": "caipo",
+  "text": "……風把錢吹進籃子了。好啦好啦，拿去。"
+ },
+ "dm.douhuabo.buy.1": {
+  "who": "douhuabo",
+  "text": "燒豆花喔——咦，碗怎麼少一個？錢倒是有。"
+ },
+ "dm.douhuabo.buy.2": {
+  "who": "douhuabo",
+  "text": "豆花阿伯的豆花，吃了心情好喔。"
+ },
+ "dm.alan.hi": {
+  "who": "alan",
+  "text": "誰在後面喊價？好啦好啦，要講什麼快講！"
+ },
+ "dm.azhong.hi": {
+  "who": "azhong",
+  "text": "哪個阿桑要殺價？來來來，聽得到聲音就好。"
+ },
+ "dm.caipo.hi": {
+  "who": "caipo",
+  "text": "阿婆耳朵不好喔，要殺價大聲一點。"
+ },
+ "dm.alan.angry": {
+  "who": "alan",
+  "text": "不賣了！後面那個看不到人的，不要再喊了！"
+ },
+ "dm.azhong.angry": {
+  "who": "azhong",
+  "text": "今天不跟看不到的人做生意了啦！"
+ },
+ "dm.caipo.angry": {
+  "who": "caipo",
+  "text": "阿婆要收攤了啦，明天再來。"
+ },
+ "dm.orange.1": {
+  "who": "grandma",
+  "text": "空攤位上一顆橘子、一支香……這個位置是誰的？"
+ },
+ "dm.orange.2": {
+  "who": "grandma",
+  "text": "阿葉仔的橘子。菜阿婆今天也有記得放。"
+ },
+ "dm.aye.first.1": {
+  "who": "aye",
+  "text": "欸——阿春仔？妳也……來了喔？"
+ },
+ "dm.aye.first.2": {
+  "who": "grandma",
+  "text": "阿葉仔！妳還坐在這個位置喔。我以前都跟妳買高麗菜。"
+ },
+ "dm.aye.first.3": {
+  "who": "aye",
+  "text": "那年韋恩颱風，我回來幫菜蓋帆布，就沒再回家了。這個位置，三十幾年都沒人擺。"
+ },
+ "dm.aye.first.4": {
+  "who": "aye",
+  "text": "每天傍晚，菜阿婆都會放一顆橘子、插一支香。講是講「拜好兄弟」，我知道是給我的。"
+ },
+ "dm.aye.first.5": {
+  "who": "aye",
+  "text": "阿春仔，要買菜喔？去年的菜，我這裡還有。用功德換就好。"
+ },
+ "dm.aye.first.c1": {
+  "who": "grandma",
+  "text": "那顆橘子……妳吃得到嗎？"
+ },
+ "dm.aye.first.c2": {
+  "who": "grandma",
+  "text": "妳在這裡賣那麼久，一定知道怎麼殺價。"
+ },
+ "dm.aye.orange.1": {
+  "who": "aye",
+  "text": "吃不到啦。可是聞得到，很香。"
+ },
+ "dm.aye.orange.2": {
+  "who": "aye",
+  "text": "好，換我照顧妳一下。我教妳怎麼跟這些囡仔殺價。"
+ },
+ "dm.aye.tips.1": {
+  "who": "aye",
+  "text": "阿蘭仔最愛人家誇她的豬肉。妳要是說隔壁比較便宜，她會一刀剁下去。"
+ },
+ "dm.aye.tips.2": {
+  "who": "aye",
+  "text": "阿忠仔喜歡聽古、聽笑話。千萬不要說要走——他會真的叫妳走。"
+ },
+ "dm.aye.tips.3": {
+  "who": "aye",
+  "text": "菜阿婆？叫她一聲「阿姐」就好了。說要走？她也會真的讓妳走。"
+ },
+ "dm.aye.first.end": {
+  "who": "grandma",
+  "text": "阿葉仔，多謝。明天我再來看妳。"
+ },
+ "dm.aye.again.1": {
+  "who": "aye",
+  "text": "今天的菜賣完了。明天再來，明天的「去年的菜」比較新鮮。"
+ },
+ "dm.aye.again.2": {
+  "who": "aye",
+  "text": "阿春仔，天快黑了，妳家的客人要來了喔。"
+ },
+ "dm.aye.nomerit": {
+  "who": "grandma",
+  "text": "哎喲，功德不夠……阿葉仔，我明天再來。"
+ },
+ "dm.aye.sell.1": {
+  "who": "aye",
+  "text": "拿去，去年的高麗菜，一點都沒爛。陰間的冰箱冰的。"
+ },
+ "dm.aye.sell.2": {
+  "who": "aye",
+  "text": "這顆最甜，我特別挑給妳的。"
+ }
+}

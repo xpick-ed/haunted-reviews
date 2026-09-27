@@ -1,0 +1,322 @@
+{
+  "ch.arrive.first": {
+    "who": "grandma",
+    "text": "這就是城隍廟喔……原來做鬼了，還是要排隊。"
+  },
+  "ch.arrive.1": {
+    "who": "grandma",
+    "text": "又到月底了。城隍廟的香，還是這麼嗆。"
+  },
+  "ch.exit": {
+    "who": "grandma",
+    "text": "好，回家。孫仔在等。"
+  },
+  "ch.qiye.first.1": {
+    "who": "qiye",
+    "text": "陳春？第一次來報到齁。"
+  },
+  "ch.qiye.first.2": {
+    "who": "qiye",
+    "text": "還沒去投胎的，每個月底都要來延長居留。號碼牌抽一張，坐旁邊等。"
+  },
+  "ch.qiye.first.3": {
+    "who": "grandma",
+    "text": "延長居留……我還以為死了就不用排隊了。"
+  },
+  "ch.qiye.first.4": {
+    "who": "qiye",
+    "text": "阿婆，排隊是永遠的。"
+  },
+  "ch.qiye.take.1": {
+    "who": "qiye",
+    "text": "號碼牌，坐旁邊等。"
+  },
+  "ch.qiye.take.2": {
+    "who": "qiye",
+    "text": "又是妳。四四四號，好號碼。"
+  },
+  "ch.ticket.gm": {
+    "who": "grandma",
+    "text": "四四四……這個號碼，在這裡應該算吉利吧。"
+  },
+  "ch.baye.call": {
+    "who": "baye",
+    "text": "四四四號，陳春——請到判官桌前。"
+  },
+  "ch.lu.1": {
+    "who": "ch_lu",
+    "text": "妳幾號？……四四四？我零八七。"
+  },
+  "ch.lu.2": {
+    "who": "grandma",
+    "text": "零八七？那不是早就叫過了？"
+  },
+  "ch.lu.3": {
+    "who": "ch_lu",
+    "text": "民國七十六年那天，我去上個廁所，回來就過號了。"
+  },
+  "ch.lu.4": {
+    "who": "ch_lu",
+    "text": "機器跳到九九九又會從零開始。我想說，等它再跳一輪就好。"
+  },
+  "ch.lu.5": {
+    "who": "grandma",
+    "text": "你等了……三十幾年？"
+  },
+  "ch.lu.6": {
+    "who": "ch_lu",
+    "text": "快了啦，這輪已經到四百多了。"
+  },
+  "ch.lu.again": {
+    "who": "ch_lu",
+    "text": "快了啦。"
+  },
+  "ch.suit.1": {
+    "who": "ch_suit",
+    "text": "我來申訴的。我孫子燒了一台紙紮的智慧型手機給我。"
+  },
+  "ch.suit.2": {
+    "who": "ch_suit",
+    "text": "很漂亮，最新型的。可是沒有網路，連 LINE 都不能傳。"
+  },
+  "ch.suit.3": {
+    "who": "grandma",
+    "text": "那你要傳給誰？"
+  },
+  "ch.suit.4": {
+    "who": "ch_suit",
+    "text": "傳給他啊。跟他說阿公收到了，很好用，不要再燒了，燒錢。"
+  },
+  "ch.suit.5": {
+    "who": "grandma",
+    "text": "……我孫子也很會燒錢。他都燒在民宿上。"
+  },
+  "ch.suit.again": {
+    "who": "ch_suit",
+    "text": "還是沒有網路。"
+  },
+  "ch.auntie.1": {
+    "who": "ch_auntie",
+    "text": "阿姐，妳識字嗎？這張託夢許可的申請書，我看不懂。"
+  },
+  "ch.auntie.2": {
+    "who": "ch_auntie",
+    "text": "我女兒下禮拜要結婚。我只是想……去夢裡，看她穿白紗一眼就好。"
+  },
+  "ch.auntie.3": {
+    "who": "grandma",
+    "text": "來，我幫妳寫。「申請事由」……就寫：做阿母的，想看一眼。"
+  },
+  "ch.auntie.4": {
+    "who": "ch_auntie",
+    "text": "這樣寫，會准嗎？"
+  },
+  "ch.auntie.5": {
+    "who": "grandma",
+    "text": "會啦。這種的，城隍爺最心軟。"
+  },
+  "ch.auntie.again": {
+    "who": "ch_auntie",
+    "text": "多謝妳，阿姐。我在等號碼。"
+  },
+  "ch.altar.1": {
+    "who": "grandma",
+    "text": "城隍爺，又來打擾了。這個月……我盡量了。"
+  },
+  "ch.altar.2": {
+    "who": "grandma",
+    "text": "城隍爺的臉還是黑黑的。聽說，心很軟就是了。"
+  },
+  "ch.plaque.1": {
+    "who": "grandma",
+    "text": "「爾來了」……是啦，我每個月都來啊。"
+  },
+  "ch.plaque.2": {
+    "who": "grandma",
+    "text": "生前看到這塊匾都會怕。現在看，倒像是在說：妳來了喔，坐。"
+  },
+  "ch.pg.noticket": {
+    "who": "panguan",
+    "text": "先去門口抽號碼牌。"
+  },
+  "ch.pg.wait": {
+    "who": "panguan",
+    "text": "號碼還沒到。去坐。"
+  },
+  "ch.pg.done": {
+    "who": "panguan",
+    "text": "章蓋好了，回去吧。下個月底見。"
+  },
+  "ch.pg.open.first": {
+    "who": "panguan",
+    "text": "陳春，民國二十五年生。嗯……第一次報到。坐。"
+  },
+  "ch.pg.open.n": {
+    "who": "panguan",
+    "text": "陳春，又一個月了。功德簿翻開來看看。"
+  },
+  "ch.pg.merit.2": {
+    "who": "panguan",
+    "text": "照顧客人的功德……不錯，這一頁寫得滿滿的。"
+  },
+  "ch.pg.merit.1": {
+    "who": "panguan",
+    "text": "功德……有，是有。字寫得不太多就是了。"
+  },
+  "ch.pg.merit.0": {
+    "who": "panguan",
+    "text": "功德這一欄……空空的。妳這個月是去哪裡玩了？"
+  },
+  "ch.pg.warm.2": {
+    "who": "panguan",
+    "text": "陽間的評價很好。說你們那間民宿，睡起來像回到外婆家。"
+  },
+  "ch.pg.warm.1": {
+    "who": "panguan",
+    "text": "陽間的評價，普普。有人說半夜好像有人幫他蓋被子，有點怕怕的。"
+  },
+  "ch.pg.warm.0": {
+    "who": "panguan",
+    "text": "陽間的評價……不太好看。好幾個人說睡不好。"
+  },
+  "ch.pg.spooky": {
+    "who": "panguan",
+    "text": "還有幾個少年仔拍影片，說你們那裡很陰。……嚇人也算是一種服務啦。"
+  },
+  "ch.pg.heart.2": {
+    "who": "panguan",
+    "text": "妳那個孫仔，這個月笑的次數比較多。"
+  },
+  "ch.pg.heart.1": {
+    "who": "panguan",
+    "text": "孫仔還撐著。累，但是撐著。"
+  },
+  "ch.pg.heart.0": {
+    "who": "panguan",
+    "text": "孫仔……很累喔。晚上一個人坐在埕裡嘆氣，這邊都有登記。"
+  },
+  "ch.pg.han": {
+    "who": "panguan",
+    "text": "另外，陽間有人在想妳。想得很用力，這邊的紙都皺了。"
+  },
+  "ch.pg.money.2": {
+    "who": "panguan",
+    "text": "厝的錢，夠。不錯，陽間的帳比陰間的還難算。"
+  },
+  "ch.pg.money.1": {
+    "who": "panguan",
+    "text": "錢是勉強打平。陽間就是這樣，一個月一個月過。"
+  },
+  "ch.pg.money.0": {
+    "who": "panguan",
+    "text": "帳是紅字。……我這裡也都是紅字，不過我們的紅字是用硃砂寫的，不一樣。"
+  },
+  "ch.pg.debt": {
+    "who": "panguan",
+    "text": "再這樣下去，那間厝要保不住喔。"
+  },
+  "ch.pg.mem": {
+    "who": "panguan",
+    "text": "妳的回憶撿回來不少了。一片一片的，這邊都有收到。"
+  },
+  "ch.pg.pressure": {
+    "who": "panguan",
+    "text": "還有……土地公那邊有人來檢舉，說有個阿婆半夜在人家家裡走來走去。"
+  },
+  "ch.pg.grade.ap": {
+    "who": "panguan",
+    "text": "總評：甲上。城隍爺交代，多給妳一點本事。"
+  },
+  "ch.pg.grade.a": {
+    "who": "panguan",
+    "text": "總評：甲。這個月，辛苦了。"
+  },
+  "ch.pg.grade.b": {
+    "who": "panguan",
+    "text": "總評：乙。不錯了，還有進步的空間。"
+  },
+  "ch.pg.grade.c": {
+    "who": "panguan",
+    "text": "總評：丙。……居留還是會准啦，不要緊張。"
+  },
+  "ch.pg.grade.d": {
+    "who": "panguan",
+    "text": "總評：丁。再這樣，下個月我要派牛頭馬面去家訪喔。……開玩笑的，他們很忙。"
+  },
+  "ch.pg.end.train.1": {
+    "who": "panguan",
+    "text": "還有一件事。妳的回憶夠了，這張……末班車的車票，開得出來了。"
+  },
+  "ch.pg.end.train.2": {
+    "who": "panguan",
+    "text": "今晚十二點，甘蔗田那頭。坐不坐，是妳自己的事。"
+  },
+  "ch.pg.end.together.1": {
+    "who": "panguan",
+    "text": "還有一件事。末班車的票，我幫妳開好了。"
+  },
+  "ch.pg.end.together.2": {
+    "who": "panguan",
+    "text": "對了，添福那個老憨人，每個月都來這裡問妳的號碼。這次……他說要坐靠窗。"
+  },
+  "ch.pg.end.stay": {
+    "who": "panguan",
+    "text": "末班車的票，妳的回憶還不夠開。也好……孫仔那邊，妳再陪一陣子。"
+  },
+  "ch.pg.end.sold": {
+    "who": "panguan",
+    "text": "……陽間那間厝，要賣掉了喔。居留我照樣蓋給妳，妳要有心理準備。"
+  },
+  "ch.pg.tease": {
+    "who": "panguan",
+    "text": "妳的回憶……已經夠開一張末班車的票了。要不要坐，下個月底再說。"
+  },
+  "ch.pg.stamp": {
+    "who": "panguan",
+    "text": "准！居留延長一個月。"
+  },
+  "ch.gm.after.ap": {
+    "who": "grandma",
+    "text": "多謝判官大人！回去煎菜脯蛋給大家吃。"
+  },
+  "ch.gm.after.a": {
+    "who": "grandma",
+    "text": "多謝。下個月，我會更打拚。"
+  },
+  "ch.gm.after.b": {
+    "who": "grandma",
+    "text": "好啦，乙也不錯啦。我讀書的時候都嘛乙。"
+  },
+  "ch.gm.after.c": {
+    "who": "grandma",
+    "text": "丙……好，我知道了。下個月一定改進。"
+  },
+  "ch.gm.after.d": {
+    "who": "grandma",
+    "text": "……牛頭馬面來的話，我會泡茶給他們喝。"
+  },
+  "ch.night.arrive": {
+    "who": "grandma",
+    "text": "這麼晚了，城隍廟還開著？"
+  },
+  "ch.night.baye.1": {
+    "who": "baye",
+    "text": "下班了。……值夜班的只有我一個。"
+  },
+  "ch.night.baye.2": {
+    "who": "baye",
+    "text": "阿婆，月底再來報到。半夜來的，都是來找人聊天的。"
+  },
+  "ch.night.baye.3": {
+    "who": "grandma",
+    "text": "那我陪你聊一下？"
+  },
+  "ch.night.baye.4": {
+    "who": "baye",
+    "text": "……好。七爺那傢伙，下班就跑去夜市吃香腸了。"
+  },
+  "ch.night.baye.again": {
+    "who": "baye",
+    "text": "月底見。"
+  }
+}

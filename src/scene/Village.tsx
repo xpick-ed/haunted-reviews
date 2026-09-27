@@ -1,5 +1,6 @@
 import { VillageRiverPath } from './RiverPath'
 import { VillageSchoolPath } from './SchoolPath'
+import { VillageMarketPath } from './DuskMarketPath'
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { RoundedBox, Sparkles } from '@react-three/drei'
@@ -31,6 +32,7 @@ export function VillageScene() {
     <group>
       <VillageRiverPath />
       <VillageSchoolPath />
+      <VillageMarketPath />
       <Grounds />
       <Greenery quality={quality} />
       <MergeStatic>

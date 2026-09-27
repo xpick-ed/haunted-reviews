@@ -28,6 +28,7 @@ import { SettingsPanel } from './Settings'
 import { HorrorHud } from './HorrorHud'
 import { FamilyHud } from './FamilyHud'
 import { SpecialHud } from './SpecialHud'
+import { ChenghuangHud } from './ChenghuangHud'
 import { PORTRAIT_IDS } from '../art/portraits'
 import { GOAL, goalShown } from '../world/story'
 import { MEMORIES } from '../world/memories'
@@ -52,6 +53,8 @@ export function Hud() {
   const inDream = useStore((s) => s.scene === 'dream')
   // 回到 1958：有自己的目標（PastHud），現在的目標、住客、陰陽眼都收起來
   const inPast = useStore((s) => s.scene === 'past')
+  // 城隍廟（DESIGN §32.2）：有自己的號碼牌小卡（ChenghuangHud），今晚的目標、住客先收起來
+  const inCh = useStore((s) => s.scene === 'chenghuang')
   const ending = useStore((s) => !!s.ending)
   const modal = !!summary || !!month || intro || !!panel || minigame || ending
   return (
@@ -60,7 +63,7 @@ export function Hud() {
       <HideView />
       <PossessBadge />
       <Watched />
-      {!modal && !inDream && !inPast && (
+      {!modal && !inDream && !inPast && !inCh && (
         <div className="left-col">
           <Objective />
           <TodayList />
@@ -87,6 +90,7 @@ export function Hud() {
       <IncidentHud />
       <FamilyHud />
       <SpecialHud />
+      <ChenghuangHud />
       <EncounterPanel />
       <GiftPanel />
       <EndingScreen />
@@ -153,11 +157,13 @@ function Status() {
   const openPanel = useStore((s) => s.openPanel)
   const modal = useStore((s) => !!s.summary || !!s.month || s.intro || !!s.panel || !!s.dialogue)
   const inPast = useStore((s) => s.scene === 'past')
+  // 城隍廟：陰間沒有時間
+  const underworld = useStore((s) => s.scene === 'chenghuang')
   return (
     <div className="status">
       <div className="clock">
-        <span className="clock-phase">{PHASE_NAME[phase]}</span>
-        <span className="clock-time">{clockText(quarter / 4)}</span>
+        <span className="clock-phase">{underworld ? '陰間' : PHASE_NAME[phase]}</span>
+        <span className="clock-time">{underworld ? '月底' : clockText(quarter / 4)}</span>
       </div>
       <div className="yin">
         <span className="label ghost">陰氣</span>

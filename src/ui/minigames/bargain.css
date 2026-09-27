@@ -1,0 +1,323 @@
+/* 殺價：黃昏市場，燈泡下的攤子（暖黃、有點吵） */
+.bg-panel {
+  width: min(96vw, 440px);
+  max-height: calc(100vh - 16px);
+  max-height: calc(100dvh - 16px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 12px 12px 12px;
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(255, 190, 90, 0.18), transparent 60%), linear-gradient(180deg, rgba(34, 26, 20, 0.97), rgba(18, 14, 12, 0.97));
+  border: 1.5px solid rgba(242, 180, 91, 0.42);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: slideup 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  touch-action: manipulation;
+}
+.bg-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bg-title {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--gold-2);
+}
+.bg-item {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--muted);
+}
+.bg-x {
+  font: inherit;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+  position: relative;
+}
+/* 看起來 34px，手指按得到 44px */
+.bg-x::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+/* 攤販：圓頭像（名字的字＋表情）、對話泡泡 */
+.bg-vendor {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.bg-face {
+  position: relative;
+  flex: 0 0 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #f3d2b0, #c98f64);
+  border: 2px solid rgba(255, 213, 138, 0.5);
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s;
+}
+.bg-face.love,
+.bg-face.ok {
+  transform: scale(1.06);
+}
+.bg-face.hate,
+.bg-face.angry {
+  animation: bg-shake 0.35s;
+}
+.bg-initial {
+  font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #5a2a14;
+}
+.bg-mood {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  font-size: 22px;
+}
+.bg-bubble {
+  flex: 1;
+  position: relative;
+  background: #fbf4e4;
+  color: #3a2616;
+  border-radius: 14px;
+  padding: 8px 11px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  animation: bg-pop 0.25s ease-out;
+}
+.bg-bubble b {
+  display: block;
+  font-size: 12px;
+  color: #a0522d;
+  margin-bottom: 1px;
+}
+.bg-bubble::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 16px;
+  border: 7px solid transparent;
+  border-right-color: #fbf4e4;
+  border-left: 0;
+}
+
+/* 價錢、耐心、回合 */
+.bg-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.bg-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.bg-now {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--gold-2);
+  font-variant-numeric: tabular-nums;
+}
+.bg-saved {
+  font-size: 13px;
+  color: #9fe0a0;
+}
+.bg-meters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.bg-rounds {
+  display: flex;
+  gap: 4px;
+}
+.bg-rounds i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 213, 138, 0.85);
+}
+.bg-rounds i.used {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* 三張牌 */
+.bg-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+.bg-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.bg-card {
+  font: inherit;
+  min-height: 86px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255, 213, 138, 0.35);
+  background: linear-gradient(180deg, rgba(90, 60, 30, 0.55), rgba(50, 34, 20, 0.7));
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.bg-card:active {
+  transform: scale(0.96);
+}
+.bg-card.used {
+  opacity: 0.6;
+}
+.bg-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+.bg-card b {
+  font-size: 16px;
+}
+.bg-card small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* 抓語氣 */
+.bg-mine {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.bg-mine b {
+  color: var(--gold-2);
+  margin-right: 4px;
+}
+.bg-tone {
+  position: relative;
+  height: 34px;
+  border-radius: 17px;
+  background: linear-gradient(90deg, rgba(200, 70, 60, 0.35), rgba(255, 255, 255, 0.08) 30%, rgba(255, 255, 255, 0.08) 70%, rgba(200, 70, 60, 0.35));
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.bg-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(110, 200, 120, 0.55);
+}
+.bg-zone.perfect {
+  background: rgba(255, 213, 110, 0.9);
+}
+.bg-needle {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 4px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+}
+.bg-speak {
+  min-height: 48px;
+}
+.bg-result {
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.bg-result.t0 {
+  color: #f0a090;
+}
+.bg-result.t1 {
+  color: #9fe0a0;
+}
+.bg-result.t2 {
+  color: var(--gold-2);
+}
+
+/* 結束 */
+.bg-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0 2px;
+}
+.bg-final {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--gold-2);
+}
+.bg-small {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+.bg-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bg-foot .btn {
+  min-height: 44px;
+}
+.bg-hint {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+@keyframes bg-pop {
+  from {
+    transform: scale(0.94);
+    opacity: 0.4;
+  }
+}
+@keyframes bg-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-panel,
+  .bg-bubble,
+  .bg-face {
+    animation: none !important;
+  }
+}

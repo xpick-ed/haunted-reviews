@@ -31,6 +31,8 @@ export type MinigameId =
   // 老街的店（DESIGN §30）
   | 'herbs'
   | 'sew'
+  // 新場景（DESIGN §32）
+  | 'bargain'
 
 export interface MinigameProps<P = unknown, R = unknown> {
   params: P

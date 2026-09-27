@@ -34,6 +34,8 @@ interface Ctx {
 const flag = (f: string) => (s: GameState) => !!s.flags[f]
 const gave = (npc: string, item: Ingredient) => flag(`gave_${npc}_${item}_today`)
 const has = (item: Ingredient, n: number) => (s: GameState) => (s.meta.pantry[item] ?? 0) >= n
+/** 黃昏市場買得到、煮得成宵夜的 */
+const MARKET_FOODS: Ingredient[] = ['pork', 'milkfish', 'clam', 'cabbage', 'douhua']
 
 /**
  * 小翰的紙條末尾的附註（DESIGN §31.2）：他越感覺得到阿嬤，紙條越像寫給她的信。
@@ -74,6 +76,18 @@ export const REQUESTS: RequestDef[] = [
     when: (c) => c.night >= 3,
   }),
 
+  // 黃昏市場（DESIGN §32.1）
+  hanNote({
+    id: 'han_market',
+    who: '小翰',
+    note: true,
+    text: '冰箱空空的，有空去黃昏市場買點菜，客人半夜餓了可以煮。',
+    where: '村子南邊過橋 → 黃昏市場',
+    done: (s) => MARKET_FOODS.some((k) => (s.meta.pantry[k] ?? 0) > 0),
+    reward: { heart: 3 },
+    when: (c) => c.night >= 2 && !MARKET_FOODS.some((k) => (c.pantry[k] ?? 0) > 0),
+  }),
+
   // ---------- 鄰居的委託 ----------
   { id: 'ajiao_crab', who: '阿嬌', text: '想吃螃蟹！退潮的時候幫我抓一隻好否？', where: '海邊抓螃蟹 → 送給阿嬌', done: gave('ajiao', 'crab'), reward: { money: 300, bond: ['ajiao', 10] }, when: (c) => c.night >= 3 },
   { id: 'ajiao_egg', who: '阿嬌', text: '店裡的雞蛋賣完了，幫我拿一顆來救急。', where: '後院撿蛋 → 送給阿嬌', done: gave('ajiao', 'egg'), reward: { money: 200, bond: ['ajiao', 8] } },
@@ -87,6 +101,9 @@ export const REQUESTS: RequestDef[] = [
   { id: 'jinyubo_zongzi', who: '金魚伯', text: '我想吃粽子……夜市的鬼都在排隊。', where: '送給鬼夜市的金魚伯', done: gave('jinyubo', 'zongzi'), reward: { merit: 2, bond: ['jinyubo', 10] }, when: (c) => (c.pantry.zongzi ?? 0) > 0 },
   { id: 'banzhu_drum', who: '班主', text: '（對著空氣）今晚的鑼鼓……拜託了。', where: '廟埕野台戲', done: flag('stage_rhythm_today'), reward: { money: 500, bond: ['banzhu', 8] }, when: (c) => festivalOf(c.night) === 'tudigong' || festivalOf(c.night) === 'zhongyuan' },
   { id: 'river_fish', who: '阿嬌', text: '柑仔店想進一點溪哥來賣，幫我釣一條。', where: '溪邊釣魚', done: flag('river_fish_today'), reward: { money: 250 }, when: (c) => c.night >= 2 },
+  // 黃昏市場（DESIGN §32.1）
+  { id: 'ajiao_pork', who: '阿嬌', text: '晚上要滷肉，店裡走不開，幫我去黃昏市場買一斤豬肉好否？', where: '黃昏市場豬肉攤 → 送給阿嬌', done: gave('ajiao', 'pork'), reward: { money: 350, bond: ['ajiao', 8] }, when: (c) => c.night >= 3 },
+  { id: 'dijizhu_redguo', who: '地基主', text: '……紅龜粿……（灶腳傳來很小很小的聲音）', where: '黃昏市場粿攤 → 送給灶腳的地基主', done: gave('dijizhu', 'redguo'), reward: { merit: 2, bond: ['dijizhu', 10] }, when: (c) => c.night >= 4 },
 ]
 
 /** 今天的三件事：一張小翰的紙條＋兩件委託（依第幾晚固定，重玩同一天一樣） */

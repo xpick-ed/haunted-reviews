@@ -8,7 +8,7 @@ import type { GoodId } from '../world/night/items'
 // 阿嬤端著的店裡好東西（DESIGN §31.1）：跟宵夜一樣捧在胸前，客人看得到飄在空中的東西。
 // 掛在阿嬤的 group 裡（Characters.tsx），自己跟著「想走的方向」轉。
 
-const GOODS: GoodId[] = ['herbtea', 'ramune', 'quilt', 'photo', 'floral', 'banquet']
+const GOODS: GoodId[] = ['herbtea', 'ramune', 'quilt', 'photo', 'floral', 'banquet', 'icepop']
 
 export function CarriedGood() {
   const root = useRef<THREE.Group>(null)
@@ -106,6 +106,17 @@ export function CarriedGood() {
           <mesh position={[0, 0.05, 0]}>
             <cylinderGeometry args={[0.17, 0.17, 0.02, 18]} />
             <meshStandardMaterial color="#c9692c" roughness={0.6} emissive="#5a2a10" emissiveIntensity={0.25} />
+          </mesh>
+        </group>
+        {/* 枝仔冰：紅豆色的一塊，插一支竹籤 */}
+        <group ref={set('icepop')}>
+          <mesh position={[0, 0.1, 0]}>
+            <boxGeometry args={[0.07, 0.13, 0.035]} />
+            <meshStandardMaterial color="#8a3a3a" roughness={0.35} />
+          </mesh>
+          <mesh position={[0, 0.0, 0]}>
+            <boxGeometry args={[0.016, 0.1, 0.008]} />
+            <meshStandardMaterial color="#e2c894" roughness={0.8} />
           </mesh>
         </group>
       </group>

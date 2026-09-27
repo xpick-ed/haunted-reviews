@@ -115,8 +115,13 @@ export const MARKET_SCENE: SceneDef = {
   colliders: marketColliders(),
   spawns: {
     gate: [0, 7.6],
+    chenghuang: [10.6, 0],
   },
-  exits: [{ area: rect(-2.5, 9.3, 2.5, 10), to: 'temple', spawn: 'market_gate', label: '↓ 土地公廟', sign: [2.9, 8.0] }],
+  exits: [
+    { area: rect(-2.5, 9.3, 2.5, 10), to: 'temple', spawn: 'market_gate', label: '↓ 土地公廟', sign: [2.9, 8.0] },
+    // 老樹後面的小路：城隍廟（半夜已經下班了，只剩值夜班的八爺；DESIGN §32.2）
+    { area: rect(11.5, -1.6, 12.3, 1.6), to: 'chenghuang', spawn: 'market', label: '城隍廟 →', sign: [11.2, -2.3] },
+  ],
   // 擋在鏡頭前會淡出的東西：牌樓的橫樑、鏡頭那一側（東邊、南邊）的攤子。
   // inside 放在場外：阿嬤永遠不會「在裡面」，鏡頭不會拉近
   buildings: [

@@ -18,6 +18,8 @@ import { requestById, todayRequests } from './world/requests'
 import { encounterState } from './world/night/encounters'
 import { familyState } from './world/night/family'
 import { giftUI } from './world/bonds'
+import { resetCh, useCh, type MonthReview } from './world/sceneChenghuang'
+import type { EndingId } from './world/story'
 
 export type Phase = 'dusk' | 'night' | 'dawn'
 export type Quality = 'high' | 'low'
@@ -130,6 +132,10 @@ export interface GameState extends NightSlice {
   enterPast: (episode: string) => void
   /** 1958 的關卡結束：完成的話記在 meta.pastDone，回到原來的地方 */
   exitPast: (done: boolean) => void
+  /** 月底去城隍廟報到（DESIGN §32.2；director.closeMonth 呼叫） */
+  enterChenghuang: (review: MonthReview, ending: EndingId | null) => void
+  /** 蓋完章走出廟門：有結局就看結局，沒有就開始下一個月的第一晚 */
+  exitChenghuang: () => void
   /** 好感度 +pts（0–100；src/world/bonds.ts） */
   addBond: (npc: string, pts: number) => void
   save: () => void
@@ -676,6 +682,44 @@ export const useStore = create<GameState>()((set, get) => ({
     later(1500, () => set({ blackout: false, transitioning: false }))
   },
 
+  enterChenghuang: (review, ending) => {
+    const s = get()
+    if (s.transitioning) return
+    resetCh(review, ending)
+    set({ transitioning: true, blackout: true, prompt: null, panel: null })
+    audio.whoosh()
+    later(700, () => {
+      const [x, z] = SCENES.chenghuang.spawns.report
+      placePlayer(x, z)
+      // 陰間永遠是半夜（燈光照時間走）；天亮了也不要亮
+      set({ scene: 'chenghuang', room: null, building: null, faded: '', time: 28.6 })
+    })
+    later(1500, () => {
+      set({ blackout: false, transitioning: false })
+      get().bark(get().flags.chenghuang_met ? 'ch.arrive.1' : 'ch.arrive.first')
+    })
+  },
+
+  exitChenghuang: () => {
+    const s = get()
+    if (s.transitioning || s.scene !== 'chenghuang') return
+    const ending = useCh.getState().ending
+    set({ transitioning: true, blackout: true, prompt: null })
+    audio.whoosh()
+    later(700, () => {
+      resetCh()
+      if (ending) {
+        const [x, z] = SCENES.home.spawns.start
+        placePlayer(x, z)
+        set({ scene: 'home', room: null, building: null, faded: '', ending })
+      } else get().resetNight()
+    })
+    later(1500, () => {
+      set({ blackout: false, transitioning: false })
+      get().save()
+    })
+  },
+
   addBond: (npc, pts) =>
     set((s) => ({ meta: { ...s.meta, bonds: { ...s.meta.bonds, [npc]: Math.max(0, Math.min(100, (s.meta.bonds[npc] ?? 0) + pts)) } } })),
 
@@ -713,7 +757,7 @@ function runStep(id: string, i: number) {
 
 // 傍晚做了一件事（DESIGN §28.1）：新的「今天做過了」旗標、或家裡的東西變多（採收、買東西）→ 花 10 分鐘。
 // 系統自己設的旗標（提醒、到訪紀錄）不算；剛玩完小遊戲的也不算（小遊戲已經算過）。
-const FREE_FLAGS = /^(dusk_warned|.*_visit|handream.*|dijizhu_bless|ajiao_joke|ajiao_candy)_today$/
+const FREE_FLAGS = /^(dusk_warned|.*_visit|handream.*|dijizhu_bless|ajiao_joke|ajiao_candy|sugar_photo_seen)_today$/
 useStore.subscribe((s, prev) => {
   if (s.phase !== 'dusk' || !s.started || s.transitioning || performance.now() - lastMinigameEnd < 2500) return
   let chore = false

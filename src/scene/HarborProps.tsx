@@ -85,7 +85,7 @@ export function Breakwater() {
       <WBox mat="yard" size={[0.35, 0.7, d]} position={[bw.x0 + 0.18, bw.y + 0.35, (bw.z0 + bw.z1) / 2]} />
       {/* 燈塔的圓形基座 */}
       <mesh position={[H.lighthouse.x, (bw.y + WALL_BOTTOM) / 2, H.lighthouse.z]} castShadow receiveShadow>
-        <cylinderGeometry args={[2.1, 2.3, bw.y - WALL_BOTTOM, 20]} />
+        <cylinderGeometry args={[H.lighthouse.r + 1.0, H.lighthouse.r + 1.25, bw.y - WALL_BOTTOM, 28]} />
         <meshStandardMaterial color="#9a978e" roughness={0.9} />
       </mesh>
     </group>
@@ -121,10 +121,10 @@ export function Tetrapods() {
         spots.push(new THREE.Matrix4().compose(new THREE.Vector3(x, -0.55 - k * 0.5 + r() * 0.3, z + (r() - 0.5) * 0.4), q.setFromEuler(e.set(r() * 6, r() * 6, r() * 6)).clone(), new THREE.Vector3(1, 1, 1).multiplyScalar(1.1 + r() * 0.3)))
       }
     }
-    for (let a = 0; a < 16; a++) {
-      const ang = Math.PI * 0.15 + (a / 16) * Math.PI * 1.25
-      const x = H.lighthouse.x + Math.cos(ang) * 2.7
-      const z = H.lighthouse.z - Math.abs(Math.sin(ang)) * 2.7
+    for (let a = 0; a < 22; a++) {
+      const ang = Math.PI * 0.12 + (a / 22) * Math.PI * 1.3
+      const x = H.lighthouse.x + Math.cos(ang) * (H.lighthouse.r + 1.55)
+      const z = H.lighthouse.z - Math.abs(Math.sin(ang)) * (H.lighthouse.r + 1.55)
       spots.push(new THREE.Matrix4().compose(new THREE.Vector3(x, -0.7 + r() * 0.3, z), q.setFromEuler(e.set(r() * 6, r() * 6, r() * 6)).clone(), new THREE.Vector3(1.15, 1.15, 1.15)))
     }
     const m = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ color: '#9c998f', roughness: 0.95 }), spots.length)
@@ -161,7 +161,7 @@ const glowTex = canvasTexture(64, 64, (ctx, w, h) => {
 export function Lighthouse() {
   const L = H.lighthouse
   const base = H.breakwater.y
-  const towerH = 6
+  const towerH = L.h
   const top = base + towerH
   const spin = useRef<THREE.Group>(null)
   const beams = useRef<THREE.Group>(null)
@@ -197,7 +197,7 @@ export function Lighthouse() {
     for (const m of seaPools.current) m.opacity = 0.45 * on
     if (glow.current) {
       glow.current.visible = on > 0.02
-      glow.current.scale.setScalar(2.2 + on * 1.4 + Math.sin(clock.elapsedTime * 3) * 0.1)
+      glow.current.scale.setScalar(3.0 + on * 1.8 + Math.sin(clock.elapsedTime * 3) * 0.12)
       ;(glow.current.material as THREE.SpriteMaterial).opacity = on
     }
     if (lampMat.current) lampMat.current.emissiveIntensity = 0.05 + on * 3
@@ -210,13 +210,16 @@ export function Lighthouse() {
     if (doorLamp.current) doorLamp.current.emissiveIntensity = lanternAt(s.time) * 1.5
   })
   const bands = [
-    { y0: 0, y1: 1.4, red: false },
-    { y0: 1.4, y1: 2.3, red: true },
-    { y0: 2.3, y1: 3.8, red: false },
-    { y0: 3.8, y1: 4.7, red: true },
-    { y0: 4.7, y1: towerH, red: false },
+    { y0: 0, y1: 1.9, red: false },
+    { y0: 1.9, y1: 3.1, red: true },
+    { y0: 3.1, y1: 5.1, red: false },
+    { y0: 5.1, y1: 6.3, red: true },
+    { y0: 6.3, y1: towerH, red: false },
   ]
-  const rAt = (y: number) => 1.15 - (y / towerH) * 0.32
+  const rAt = (y: number) => L.r - (y / towerH) * 0.62
+  const A = H.annex
+  const ax = (A.x0 + A.x1) / 2 - L.x
+  const az = (A.z0 + A.z1) / 2 - L.z
   return (
     <group position={[L.x, 0, L.z]} userData={{ noMerge: true }}>
       {bands.map((b, i) => (
@@ -225,42 +228,61 @@ export function Lighthouse() {
           <meshStandardMaterial color={b.red ? '#b8342c' : '#eeeae0'} roughness={0.7} />
         </mesh>
       ))}
-      {/* 門（面向碼頭）與門上的小燈 */}
-      <mesh position={[0, base + 0.75, rAt(0.75) - 0.02]}>
-        <boxGeometry args={[0.7, 1.4, 0.08]} />
+      {/* 塔身上的小窗（一格一格往上，樓梯就在裡面繞） */}
+      {[1.2, 3.8, 6.0].map((y, i) => (
+        <mesh key={y} position={[Math.sin(i * 2.1 + 0.6) * (rAt(y) - 0.02), base + y, Math.cos(i * 2.1 + 0.6) * (rAt(y) - 0.02)]} rotation-y={i * 2.1 + 0.6}>
+          <boxGeometry args={[0.32, 0.55, 0.08]} />
+          <meshStandardMaterial color="#2c3a48" roughness={0.4} />
+        </mesh>
+      ))}
+      {/* 塔腳下守燈人的小屋：白牆、平屋頂、門面向碼頭，門上一盞小燈 */}
+      <mesh position={[ax, base + A.h / 2, az]} castShadow receiveShadow>
+        <boxGeometry args={[A.x1 - A.x0, A.h, A.z1 - A.z0]} />
+        <meshStandardMaterial color="#e6e1d4" roughness={0.85} />
+      </mesh>
+      <mesh position={[ax, base + A.h + 0.06, az]} castShadow>
+        <boxGeometry args={[A.x1 - A.x0 + 0.24, 0.12, A.z1 - A.z0 + 0.24]} />
+        <meshStandardMaterial color="#5a5a5e" roughness={0.8} />
+      </mesh>
+      <mesh position={[H.door.x - L.x, base + 0.95, H.door.z - L.z + 0.02]}>
+        <boxGeometry args={[0.8, 1.8, 0.06]} />
         <meshStandardMaterial color="#2c3a48" roughness={0.6} />
       </mesh>
-      <mesh position={[0, base + 1.65, rAt(1.6) + 0.02]}>
-        <sphereGeometry args={[0.08, 10, 8]} />
+      <mesh position={[H.door.x - L.x + 0.9, base + 1.4, H.door.z - L.z + 0.02]}>
+        <boxGeometry args={[0.5, 0.45, 0.05]} />
+        <meshStandardMaterial color="#1f2a33" roughness={0.3} />
+      </mesh>
+      <mesh position={[H.door.x - L.x, base + 2.1, H.door.z - L.z + 0.08]}>
+        <sphereGeometry args={[0.09, 10, 8]} />
         <meshStandardMaterial ref={doorLamp} color="#ffe7b0" emissive="#ffc870" emissiveIntensity={0} />
       </mesh>
       {/* 陽台與欄杆 */}
       <mesh position={[0, top + 0.05, 0]} castShadow>
-        <cylinderGeometry args={[1.25, 1.25, 0.12, 24]} />
+        <cylinderGeometry args={[rAt(towerH) + 0.45, rAt(towerH) + 0.45, 0.14, 28]} />
         <meshStandardMaterial color="#3a3a3c" roughness={0.6} metalness={0.4} />
       </mesh>
       <mesh position={[0, top + 0.45, 0]}>
-        <torusGeometry args={[1.2, 0.025, 6, 32]} />
+        <torusGeometry args={[rAt(towerH) + 0.4, 0.03, 6, 40]} />
         <meshStandardMaterial color="#2a2a2c" metalness={0.5} roughness={0.5} />
       </mesh>
       {/* 燈籠室（玻璃）與裡面的燈 */}
-      <mesh position={[0, top + 0.6, 0]}>
-        <cylinderGeometry args={[0.72, 0.72, 1.0, 16, 1, true]} />
+      <mesh position={[0, top + 0.75, 0]}>
+        <cylinderGeometry args={[1.05, 1.05, 1.3, 16, 1, true]} />
         <meshStandardMaterial color="#a8c4d0" transparent opacity={0.35} roughness={0.05} metalness={0.2} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
-      <mesh position={[0, top + 0.6, 0]}>
-        <sphereGeometry args={[0.32, 16, 12]} />
+      <mesh position={[0, top + 0.75, 0]}>
+        <sphereGeometry args={[0.45, 16, 12]} />
         <meshStandardMaterial ref={lampMat} color="#fff6d8" emissive="#ffe0a0" emissiveIntensity={0.05} toneMapped={false} />
       </mesh>
-      <mesh position={[0, top + 1.35, 0]} castShadow>
-        <coneGeometry args={[0.85, 0.7, 20]} />
+      <mesh position={[0, top + 1.8, 0]} castShadow>
+        <coneGeometry args={[1.25, 0.85, 20]} />
         <meshStandardMaterial color="#9a2a24" roughness={0.6} />
       </mesh>
-      <sprite ref={glow} position={[0, top + 0.6, 0]} visible={false}>
+      <sprite ref={glow} position={[0, top + 0.75, 0]} visible={false}>
         <spriteMaterial map={glowTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </sprite>
       {/* 光束：兩道，背對背，往下斜一點（從鏡頭看得到掃過港口），跟著燈轉 */}
-      <group ref={spin} position={[0, top + 0.6, 0]}>
+      <group ref={spin} position={[0, top + 0.75, 0]}>
         <group ref={beams} visible={false}>
           {[0, Math.PI].map((a) => (
             <group key={a} rotation-y={a}>
@@ -285,7 +307,7 @@ export function Lighthouse() {
           </group>
         ))}
       </group>
-      <spotLight ref={spot} position={[0, top + 0.6, 0]} target={target} angle={0.22} penumbra={0.7} distance={40} decay={1.2} color="#fff0c8" intensity={0} />
+      <spotLight ref={spot} position={[0, top + 0.75, 0]} target={target} angle={0.22} penumbra={0.7} distance={40} decay={1.2} color="#fff0c8" intensity={0} />
       <primitive object={target} />
     </group>
   )

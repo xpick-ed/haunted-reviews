@@ -5,6 +5,8 @@ import type { GameState } from '../store'
 import type { GuestId } from './night/types'
 import { INGREDIENTS, goodsLovedBy } from './night/items'
 import { GUESTS, NEED_INFO } from './night/guests'
+import { SUGAR_OPEN_NIGHT } from './sceneSugar'
+import { GHOST_RIDE } from './sceneGhostTrain'
 
 // 小火車站＋五分車（DESIGN §27.1）：從阿春民宿門前的路一直往西走到底。
 // 無人小站「後壁厝站」：日治時代的木造站房、月台、一條主線、西邊側線停著糖廠的五分車。
@@ -123,7 +125,8 @@ export const STATION_SCENE: SceneDef = {
   id: 'station',
   name: '後壁厝站',
   colliders: stationColliders(),
-  spawns: { east: [19.2, S.roadZ], oldstreet: [-19.2, S.roadZ] },
+  // sugar：從糖廠坐五分車回來，在側線的火車頭旁邊下車
+  spawns: { east: [19.2, S.roadZ], oldstreet: [-19.2, S.roadZ], sugar: [S.cane.locoX + 1.3, S.siding.z + 1.75] },
   exits: [
     { area: rect(20.8, S.roadZ - 2.2, 22, S.roadZ + 2.2), to: 'home', spawn: 'road_west', label: '阿春民宿 →', sign: [19.4, S.roadZ - 1.9] },
     { area: rect(-22, S.roadZ - 2.2, -20.8, S.roadZ + 2.2), to: 'oldstreet', spawn: 'station', label: '← 老街', sign: [-19.4, S.roadZ - 1.9] },
@@ -265,7 +268,7 @@ export const STATION_HOTSPOTS: Hotspot[] = [
     }),
   ),
 
-  // ---------- 五分車 ----------
+  // ---------- 五分車：第二個月起坐到底就是糖廠（sceneSugar.ts）；之前只在甘蔗田繞一圈 ----------
   {
     id: 'station_canetrain',
     scene: 'station',
@@ -276,23 +279,58 @@ export const STATION_HOTSPOTS: Hotspot[] = [
     iconY: 2.8,
     label: (s) => {
       if (s.phase === 'dawn') return null
+      if (s.meta.night >= SUGAR_OPEN_NIGHT) return s.flags.station_train_today ? '搭五分車去糖廠' : '搭五分車去糖廠（穿過甘蔗田）'
       return s.flags.station_train_today ? '五分車（今天搭過了）' : '搭五分車（穿過甘蔗田）'
     },
     run: (s) => {
+      const toFactory = s.meta.night >= SUGAR_OPEN_NIGHT
       if (s.flags.station_train_today) {
-        s.bark(pick(['station.train.done.1', 'station.train.done.2']))
+        // 今天玩過一趟了：直接坐過去，不用再玩一次
+        if (toFactory) {
+          s.bark('st2.cane.again')
+          window.setTimeout(() => s.goto('sugar', 'train'), 900)
+        } else s.bark(pick(['station.train.done.1', 'station.train.done.2']))
         return
       }
       setFlag('station_train_today')
-      s.bark('station.train.go')
+      s.bark(toFactory ? 'st2.cane.tofactory' : 'station.train.go')
       s.startMinigame('train', {}, (r) => {
         const merit = (r as { merit?: number } | null)?.merit ?? 0
         withStore((st) => {
           const x = st.getState()
           if (merit > 0) st.setState({ meta: { ...x.meta, merit: x.meta.merit + merit } })
           x.bark(merit >= 2 ? 'station.train.win' : merit === 1 ? 'station.train.ok' : 'station.train.lose')
+          // 第二個月起：坐到終點，糖廠到了；之前：糖廠那段還在修
+          if (toFactory) window.setTimeout(() => st.getState().goto('sugar', 'train'), 1400)
+          else window.setTimeout(() => st.getState().bark('st2.cane.repair'), 3200)
         })
       })
+    },
+  },
+
+  // ---------- 末班鬼火車：跟車掌說過話以後，可以上車坐一站（sceneGhostTrain.ts） ----------
+  {
+    id: 'station_board',
+    scene: 'station',
+    x: -1.2,
+    z: 1.0,
+    r: 1.0,
+    icon: { x: 0, z: S.trackZ - 1.25 },
+    iconY: 2.4,
+    label: (s) => {
+      if (!ghostStopped(s) || !s.flags.conductor_met) return null
+      return s.flags.ghosttrain_today ? null : '上車（坐一站）'
+    },
+    run: (s) => {
+      if (s.flags.ghosttrain_today || !ghostStopped(s)) return
+      withStore((st) => {
+        const x = st.getState()
+        st.setState({ flags: { ...x.flags, ghosttrain_today: true, gt_rode: true } })
+      })
+      GHOST_RIDE.boardedAt = s.time
+      GHOST_RIDE.arrived = false
+      s.bark('st2.gt.board')
+      window.setTimeout(() => s.goto('ghosttrain', 'board'), 900)
     },
   },
 

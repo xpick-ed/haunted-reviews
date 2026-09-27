@@ -74,6 +74,17 @@ function RoomGoods({ room }: { room: 'r1' | 'r2' }) {
             <meshStandardMaterial color="#5fae7a" roughness={0.15} transparent opacity={0.85} />
           </mesh>
         </group>
+        {/* 枝仔冰：放在小碟子上 */}
+        <group ref={set('icepop')} position={[-0.12, 0, 0.1]} visible={false}>
+          <mesh position={[0, 0.006, 0]}>
+            <cylinderGeometry args={[0.06, 0.05, 0.012, 14]} />
+            <meshStandardMaterial color="#f4efe4" roughness={0.35} />
+          </mesh>
+          <mesh position={[0, 0.022, 0]} rotation={[-Math.PI / 2, 0, 0.5]}>
+            <boxGeometry args={[0.045, 0.085, 0.022]} />
+            <meshStandardMaterial color="#8a3a3a" roughness={0.35} />
+          </mesh>
+        </group>
       </group>
       {/* 床上鋪的厚棉被 */}
       <group ref={set('quilt')} position={[R.bed.x, bedTop + 0.06, R.bed.z + 0.25]} visible={false}>

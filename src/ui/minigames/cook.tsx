@@ -25,7 +25,7 @@ const LIKE_LABEL: Record<GuestType, string> = {
 }
 
 /** 用煮的（粥、湯、麵線）：沒有「翻面」，改成「起鍋」 */
-const BOIL = new Set<RecipeId>(['porridge', 'sweetporridge', 'gingersoup', 'misua', 'fishsoup', 'zongzi', 'crabporridge'])
+const BOIL = new Set<RecipeId>(['porridge', 'sweetporridge', 'gingersoup', 'misua', 'fishsoup', 'zongzi', 'crabporridge', 'luroufan', 'clamsoup', 'milkfishcongee', 'cabbagerice', 'douhua'])
 
 interface Look {
   /** 鍋裡的湯底（煎的是 null：只有一層油） */
@@ -37,6 +37,62 @@ interface Look {
 }
 
 const LOOK: Record<RecipeId, Look> = {
+  // 黃昏市場的食材（DESIGN §32.1）
+  luroufan: {
+    liquid: '#7a4a26',
+    raw: '#c99a78',
+    gold: '#8a4a1e',
+    burnt: '#2e1608',
+    drops: [
+      { name: '三層肉', color: '#e8b0a0' },
+      { name: '醬油', color: '#3a2010' },
+      { name: '紅蔥頭', color: '#c07a8a' },
+    ],
+  },
+  clamsoup: {
+    liquid: '#eef0e6',
+    raw: '#e4e6da',
+    gold: '#d8d2b0',
+    burnt: '#6a6448',
+    drops: [
+      { name: '薑絲', color: '#e9c46a' },
+      { name: '蛤仔', color: '#cbbfae' },
+      { name: '九層塔', color: '#4f9a3a' },
+    ],
+  },
+  milkfishcongee: {
+    liquid: '#ece6d6',
+    raw: '#f3ede0',
+    gold: '#e6d4ae',
+    burnt: '#7a5a32',
+    drops: [
+      { name: '米', color: '#fbf6ea' },
+      { name: '虱目魚', color: '#dcdcdc' },
+      { name: '芹菜', color: '#6fb04a' },
+    ],
+  },
+  cabbagerice: {
+    liquid: '#d9c08e',
+    raw: '#e8dcb8',
+    gold: '#c79a52',
+    burnt: '#5a3a18',
+    drops: [
+      { name: '米', color: '#fbf6ea' },
+      { name: '高麗菜', color: '#b8d98a' },
+      { name: '肉絲', color: '#c98a6a' },
+    ],
+  },
+  douhua: {
+    liquid: '#c98a3e',
+    raw: '#f6efdc',
+    gold: '#e0b870',
+    burnt: '#6a4218',
+    drops: [
+      { name: '豆花', color: '#fbf7ea' },
+      { name: '黑糖水', color: '#5a3418' },
+      { name: '花生', color: '#d9a066' },
+    ],
+  },
   crabporridge: {
     liquid: '#efe6d2',
     raw: '#f3ead8',

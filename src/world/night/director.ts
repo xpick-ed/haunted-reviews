@@ -11,7 +11,8 @@ import { GUESTS } from './guests'
 import { MONTHLY_COST, NIGHTS_PER_MONTH, SKILLS, UPGRADES, planNight, type NightPlan, type UpgradeDef } from './plan'
 import { NightSim, type DecorBonus, type SimEvent, type SimPlugin } from './sim'
 import { rateGuest } from './rating'
-import { STORY, endingAtDawn, endingAtMonthEnd, hanHeartBonus, type EndingId } from '../story'
+import { STORY, TRAIN_MEMORIES, endingAtDawn, endingAtMonthEnd, hanHeartBonus, type EndingId } from '../story'
+import { reviewMonth, type MonthReview } from '../sceneChenghuang'
 import { createIncidents, incidentState, INCIDENT_EVENTS } from './incidents'
 import { createEncounters, ENCOUNTER_EVENTS } from './encounters'
 import { createCouples, COUPLE_EVENTS } from './couples'
@@ -78,6 +79,8 @@ export interface Meta {
   hanSigns: string[]
   /** 今天用在客人身上的店裡東西（DESIGN §31.1；天亮清掉） */
   specials: string[]
+  /** 這個月照顧客人得到的功德（月底城隍廟考核用，DESIGN §32.2；月底歸零） */
+  monthMerit: number
 }
 
 /** 一件擺好的家具擺飾 */
@@ -153,6 +156,8 @@ export interface MonthReport {
   deadline?: boolean
   /** 連續幾個月負債 */
   debtMonths?: number
+  /** 這個月照顧客人得到的功德（城隍廟考核） */
+  merit?: number
 }
 
 export interface NightStats {
@@ -280,6 +285,7 @@ export const START_META = (): Meta => ({
   hanSense: 0,
   hanSigns: [],
   specials: [],
+  monthMerit: 0,
 })
 
 /** 傍晚先在背景把今晚會用到的語音載好（不然每句第一次講都要等下載，字幕先出來聲音晚一拍） */
@@ -405,6 +411,8 @@ interface HostState {
   save: () => void
   resetNight: () => void
   newGame: () => void
+  /** 月底去城隍廟報到（store.ts） */
+  enterChenghuang: (review: MonthReview, ending: EndingId | null) => void
 }
 
 let lastBark = 0
@@ -1093,6 +1101,7 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
           skillPts: s.meta.skillPts + points,
           sealed: s.stats.mgCatches >= 3,
           merit: s.meta.merit + merit,
+          monthMerit: (s.meta.monthMerit ?? 0) + merit,
           fortune: null,
           specials: [],
           // 辦桌菜尾放不過夜
@@ -1114,8 +1123,8 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
         const story = deadline ? [...s.meta.story, 'deadline'] : s.meta.story
         set({
           summary: null,
-          month: { month, income: s.meta.monthIncome, cost: MONTHLY_COST, money, warm: s.meta.warm, spooky: s.meta.spooky, heart: s.meta.heart, pressure: s.meta.pressure, offers, line: lineId, deadline, debtMonths },
-          meta: { ...s.meta, money, monthIncome: 0, debtMonths, story },
+          month: { month, income: s.meta.monthIncome, cost: MONTHLY_COST, money, warm: s.meta.warm, spooky: s.meta.spooky, heart: s.meta.heart, pressure: s.meta.pressure, offers, line: lineId, deadline, debtMonths, merit: s.meta.monthMerit ?? 0 },
+          meta: { ...s.meta, money, monthIncome: 0, monthMerit: 0, debtMonths, story },
         })
         if (lineId) window.setTimeout(() => get().bark(lineId), 600)
         return
@@ -1140,6 +1149,27 @@ export function createNightSlice(set: Api['setState'], get: Api['getState']): Ni
       }
       // 連兩個月負債、或第 12 晚小翰做決定 → 結局
       const end = endingAtMonthEnd({ ...meta, night: s.meta.night })
+      // 城隍廟報到（DESIGN §32.2）：月底先去報到、判官打分數，回來才看結局或開始下一個月
+      const report = s.month
+      if (report) {
+        set({ month: null, meta })
+        const review = reviewMonth({
+          month: report.month,
+          merit: report.merit ?? 0,
+          warm: meta.warm,
+          spooky: meta.spooky,
+          heart: meta.heart,
+          money: report.money,
+          pressure: meta.pressure,
+          hanSense: meta.hanSense ?? 0,
+          memories: meta.memories.length,
+          debtMonths: meta.debtMonths,
+          ending: end,
+          trainReady: meta.memories.length >= TRAIN_MEMORIES,
+        })
+        get().enterChenghuang(review, end)
+        return
+      }
       if (end) {
         set({ month: null, meta, ending: end } as Partial<NightSlice>)
         return

@@ -1320,5 +1320,437 @@
    "wave": "sine",
    "jitter": 0.08
   }
+ },
+ {
+  "id": "panguan",
+  "name": "判官",
+  "desc": "城隍廟的判官，老公務員，講話乾乾的、冷笑話很多。",
+  "ghost": true,
+  "color": "#c8a060",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunyangNeural",
+   "rate": "-10%",
+   "pitch": "-14Hz",
+   "fx": [
+    "mystic",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 170,
+   "wave": "square",
+   "jitter": 0.06
+  }
+ },
+ {
+  "id": "qiye",
+  "name": "七爺",
+  "desc": "謝必安，高高瘦瘦，上班很無聊，講話拖拖拉拉。",
+  "ghost": true,
+  "color": "#e8e8e8",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiNeural",
+   "rate": "-22%",
+   "pitch": "-6Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 220,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "baye",
+  "name": "八爺",
+  "desc": "范無救，矮矮黑黑，嗓門很大，叫號叫得整間廟都聽得到。",
+  "ghost": true,
+  "color": "#505060",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "+6%",
+   "pitch": "-18Hz",
+   "fx": [
+    "gruff",
+    "loud",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 160,
+   "wave": "sawtooth",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "ch_lu",
+  "name": "呂伯",
+  "desc": "1987 年過號的老鬼，一直在等號碼跑一圈回來。想睡。",
+  "ghost": true,
+  "color": "#a8a898",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-26%",
+   "pitch": "-20Hz",
+   "fx": [
+    "elder",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 170,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "ch_suit",
+  "name": "西裝阿伯",
+  "desc": "剛下來的退休阿伯，紙紮手機一直收不到訊號，很焦慮。",
+  "ghost": true,
+  "color": "#8898b0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "+4%",
+   "pitch": "-10Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 200,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "ch_auntie",
+  "name": "阿姨",
+  "desc": "想申請託夢許可、去女兒婚禮的阿姨，溫柔。",
+  "ghost": true,
+  "color": "#e0b8c0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-6%",
+   "pitch": "-8Hz",
+   "fx": [
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 360,
+   "wave": "sine",
+   "jitter": 0.08
+  }
+ },
+ {
+  "id": "wanbo",
+  "name": "萬伯",
+  "desc": "黃昏市場雜貨攤的老闆，老老的、慢條斯理。",
+  "ghost": false,
+  "color": "#e0c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-18%",
+   "pitch": "-18Hz",
+   "fx": [
+    "elder"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "alan",
+  "name": "阿蘭姐",
+  "desc": "豬肉攤的老闆娘，嗓門大、很兇，其實心很軟。",
+  "ghost": false,
+  "color": "#e0c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "+8%",
+   "pitch": "-10Hz",
+   "fx": [
+    "loud"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "azhong",
+  "name": "阿忠",
+  "desc": "魚販，中年，很愛開玩笑。",
+  "ghost": false,
+  "color": "#e0c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiNeural",
+   "rate": "+6%",
+   "pitch": "-8Hz",
+   "fx": [
+    "hearty"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "guoshen",
+  "name": "粿嬸",
+  "desc": "賣粿的阿姨，溫溫的。",
+  "ghost": false,
+  "color": "#e0c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-6%",
+   "pitch": "-8Hz",
+   "fx": [
+    "warm"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "caipo",
+  "name": "菜阿婆",
+  "desc": "賣菜的阿婆，老老的、講話慢。",
+  "ghost": false,
+  "color": "#e0c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-20%",
+   "pitch": "-22Hz",
+   "fx": [
+    "elder"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "douhuabo",
+  "name": "豆花阿伯",
+  "desc": "推豆花車的阿伯，很開朗。",
+  "ghost": false,
+  "color": "#e0c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "+2%",
+   "pitch": "-12Hz",
+   "fx": [
+    "hearty"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "aye",
+  "name": "阿葉嬸",
+  "desc": "以前在市場賣菜的阿婆鬼，颱風那年走的，溫柔。",
+  "ghost": true,
+  "color": "#e0c8a0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-14%",
+   "pitch": "-18Hz",
+   "fx": [
+    "elder",
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "sugar_foreman",
+  "name": "糖廠工頭",
+  "desc": "廢棄糖廠的鬼工頭，嗓門大、豪爽，還在帶 1960 年代的那一班。",
+  "ghost": true,
+  "color": "#c8d0e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunjianNeural",
+   "rate": "-6%",
+   "pitch": "-20Hz",
+   "fx": [
+    "hearty",
+    "loud",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "sugar_auntie",
+  "name": "福利社阿姨",
+  "desc": "糖廠福利社賣枝仔冰的阿姨，溫溫的。",
+  "ghost": true,
+  "color": "#c8d0e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoYuNeural",
+   "rate": "-4%",
+   "pitch": "-8Hz",
+   "fx": [
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gt_soldier",
+  "name": "回家的阿兵哥",
+  "desc": "離家六十年、終於要回家的年輕阿兵哥。",
+  "ghost": true,
+  "color": "#c8d0e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "+2%",
+   "pitch": "+4Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gt_mother",
+  "name": "抱著背巾的媽媽",
+  "desc": "輕輕搖著空背巾的年輕媽媽，在等孩子過完一輩子再來。",
+  "ghost": true,
+  "color": "#c8d0e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "-10%",
+   "pitch": "-2Hz",
+   "fx": [
+    "warm",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gt_teacher",
+  "name": "林老師",
+  "desc": "一直在改考卷的老老師，嚴肅又溫柔，認得桌上刻的「春」字。",
+  "ghost": true,
+  "color": "#c8d0e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-YunJheNeural",
+   "rate": "-14%",
+   "pitch": "-16Hz",
+   "fx": [
+    "elder",
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gt_groom",
+  "name": "新郎",
+  "desc": "要去日月潭度蜜月的新郎。",
+  "ghost": true,
+  "color": "#c8d0e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-CN-YunxiNeural",
+   "rate": "+4%",
+   "pitch": "+0Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
+ },
+ {
+  "id": "gt_bride",
+  "name": "新娘",
+  "desc": "要去日月潭度蜜月的新娘，很開朗。",
+  "ghost": true,
+  "color": "#c8d0e0",
+  "voice": {
+   "engine": "edge",
+   "voice": "zh-TW-HsiaoChenNeural",
+   "rate": "+6%",
+   "pitch": "+6Hz",
+   "fx": [
+    "ghost"
+   ]
+  },
+  "blip": {
+   "freq": 260,
+   "wave": "triangle",
+   "jitter": 0.1
+  }
  }
 ]

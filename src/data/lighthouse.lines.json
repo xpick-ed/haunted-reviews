@@ -1,0 +1,170 @@
+{
+  "lh.enter": {
+    "who": "grandma",
+    "text": "好窄的小屋……守燈人阿伯一個人在這裡住了四十年喔。"
+  },
+  "lh.enter.night": {
+    "who": "grandma",
+    "text": "燈塔裡面暗暗的，只有月光從窗仔照進來。"
+  },
+  "lh.bed.1": {
+    "who": "grandma",
+    "text": "床鋪得整整齊齊，被子還摺成豆腐乾。當過兵的人就是這樣。"
+  },
+  "lh.bed.2": {
+    "who": "grandma",
+    "text": "枕頭邊放一支手電筒，半夜燈有什麼不對，隨時要起來。"
+  },
+  "lh.radio.1": {
+    "who": "grandma",
+    "text": "收音機還會響：『漁業氣象，澎湖海面，東北風五到六級，陣風七級……』"
+  },
+  "lh.radio.2": {
+    "who": "grandma",
+    "text": "『海上的朋友，晚安。』這個播音員的聲音，我少年的時候聽過。"
+  },
+  "lh.radio.3": {
+    "who": "grandma",
+    "text": "轉到有唱歌的台……唉，雜音比歌還大聲。"
+  },
+  "lh.photo": {
+    "who": "grandma",
+    "text": "牆上的相片：阿伯跟一個查某人站在堤防上，兩個人都笑得很害羞。"
+  },
+  "lh.oil.empty": {
+    "who": "grandma",
+    "text": "一桶一桶，都是空的燈油桶。敲起來咚咚響。"
+  },
+  "lh.oil.have": {
+    "who": "grandma",
+    "text": "燈油我帶來了，爬上去就可以點。"
+  },
+  "lh.stove": {
+    "who": "grandma",
+    "text": "小小的煤油爐，茶壺還放在上面。他一個人，就這樣煮了四十年的飯。"
+  },
+  "lh.log.1": {
+    "who": "grandma",
+    "text": "值班日誌……一天一頁，字寫得好工整。"
+  },
+  "lh.log.2": {
+    "who": "grandma",
+    "text": "『民國五十四年三月七日，晴，東北風三級。今暗又看到堤防尾有一個少年查某仔，拿一條紅手帕，揮到船看不見。』"
+  },
+  "lh.log.3": {
+    "who": "grandma",
+    "text": "……這是我啊。"
+  },
+  "lh.log.4": {
+    "who": "grandma",
+    "text": "那幾年阿公去海口跑船，我每次都跑到堤防尾揮手。原來燈塔上面，有人一直看著。"
+  },
+  "lh.log.5": {
+    "who": "grandma",
+    "text": "最後一頁：『颱風。電燈壞了，燈不亮。明天要去鎮上叫人來修。』……後面，就沒有了。"
+  },
+  "lh.log.again": {
+    "who": "grandma",
+    "text": "日誌翻到紅手帕那一頁……我就看不下去了。"
+  },
+  "lh.window": {
+    "who": "grandma",
+    "text": "從這個窗仔看出去，海暗暗的，月光一條一條浮在上面。"
+  },
+  "lh.window.lit": {
+    "who": "grandma",
+    "text": "光從頭頂掃過去，海面亮一下、暗一下，好像在呼吸。"
+  },
+  "lh.top.first": {
+    "who": "grandma",
+    "text": "哇……整個村子都看得到。那一點一點的燈，就是大家的家。"
+  },
+  "lh.lamp.start": {
+    "who": "grandma",
+    "text": "燈芯……點著了，慢慢來，火要顧好……"
+  },
+  "lh.lamp.cancel": {
+    "who": "grandma",
+    "text": "火苗差一點點就熄了……再來一次。"
+  },
+  "lh.lamp.lit.1": {
+    "who": "grandma",
+    "text": "光一圈一圈轉出去，外海的船都看得到。"
+  },
+  "lh.lamp.lit.2": {
+    "who": "grandma",
+    "text": "透鏡轉得好慢、好穩，像在唸經。"
+  },
+  "lh.lamp.day": {
+    "who": "grandma",
+    "text": "天還沒暗，燈先休息。等一下它就會自己亮起來了。"
+  },
+  "lh.keeper.idle.1": {
+    "who": "keeper",
+    "text": "風大的暗暝，燈更要亮。"
+  },
+  "lh.keeper.idle.2": {
+    "who": "keeper",
+    "text": "妳看那邊，最亮的那幾點，是妳家的燈吧？"
+  },
+  "lh.ks.1": {
+    "who": "keeper",
+    "text": "妳爬上來了。一百二十八階，我以前一暝要走兩三趟。"
+  },
+  "lh.ks.2": {
+    "who": "grandma",
+    "text": "阿伯，我可以問你一件事嗎？"
+  },
+  "lh.ks.ask.why": {
+    "who": "grandma",
+    "text": "你為什麼……走了以後，還在顧這個燈？"
+  },
+  "lh.ks.ask.wife": {
+    "who": "grandma",
+    "text": "照片裡那個查某人，是你的牽手嗎？"
+  },
+  "lh.ks.why.1": {
+    "who": "keeper",
+    "text": "我少年的時候也是討海人。有一暝起大霧，船找不到港口，在海上漂了三天。"
+  },
+  "lh.ks.why.2": {
+    "who": "keeper",
+    "text": "是這座燈塔的光，帶我回來的。那天起我就想：換我來顧燈。"
+  },
+  "lh.ks.wife.1": {
+    "who": "keeper",
+    "text": "阿蘭喔……以前我出海，她每暗都站在堤防尾等我。"
+  },
+  "lh.ks.wife.2": {
+    "who": "keeper",
+    "text": "後來我上岸顧燈，她每暗提便當爬上來。她走了以後，便當換我自己煮，煮到今天。"
+  },
+  "lh.ks.3": {
+    "who": "keeper",
+    "text": "燈亮著，海上的人就知道：有人在等他回家。"
+  },
+  "lh.ks.4": {
+    "who": "keeper",
+    "text": "我等的人，是回不來了。可是別人等的人，要讓他們找得到路。"
+  },
+  "lh.ks.5": {
+    "who": "grandma",
+    "text": "……我以前也在堤防尾揮過手帕。紅色的。"
+  },
+  "lh.ks.6": {
+    "who": "keeper",
+    "text": "紅手帕？……五十四年那個少年查某仔？我有寫在日誌裡！"
+  },
+  "lh.ks.7": {
+    "who": "keeper",
+    "text": "那個跑船的少年，每次回來都站在船頭，一直找紅色的。我在上面看得清清楚楚。"
+  },
+  "lh.ks.8": {
+    "who": "grandma",
+    "text": "……他回來都跟我說，他有看到。"
+  },
+  "lh.ks.9": {
+    "who": "keeper",
+    "text": "有看到啦。燈塔上，看得最清楚。"
+  }
+}

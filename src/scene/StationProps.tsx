@@ -72,7 +72,7 @@ export function StationGrounds() {
 // 鐵軌：枕木用 InstancedMesh，鋼軌是長條
 // ---------------------------------------------------------------------------
 
-function Track({ z, x0, x1 }: { z: number; x0: number; x1: number }) {
+export function Track({ z, x0, x1 }: { z: number; x0: number; x1: number }) {
   const sm = useStationMats()
   const geo = useMemo(() => new THREE.BoxGeometry(0.22, 0.12, 2.0), [])
   const sleepers = useMemo(() => {
@@ -530,10 +530,11 @@ export function WaterTower() {
 // 五分車：小小的橘色柴油火車頭＋四節甘蔗車（鐵架子上堆滿甘蔗）
 // ---------------------------------------------------------------------------
 
-export function CaneTrain() {
+/** 五分車（火車頭＋甘蔗車）；預設停在車站的側線，糖廠（Sugar.tsx）停在終點 */
+export function CaneTrain({ z = S.siding.z, locoX = S.cane.locoX, wagons = S.cane.wagons }: { z?: number; locoX?: number; wagons?: number[] } = {}) {
   const sm = useStationMats()
-  const Z = S.siding.z
-  const loco = S.cane.locoX
+  const Z = z
+  const loco = locoX
   const caneGeo = useMemo(() => {
     // 一堆甘蔗：很多根細長的圓柱，隨機一點
     const r = seeded(4411)
@@ -583,7 +584,7 @@ export function CaneTrain() {
         )}
       </group>
       {/* 甘蔗車 */}
-      {S.cane.wagons.map((x, i) => (
+      {wagons.map((x, i) => (
         <group key={x} position={[x, 0.24, Z]}>
           <mesh material={sm.iron} position={[0, 0.22, 0]} castShadow>
             <boxGeometry args={[2.3, 0.1, 1.0]} />

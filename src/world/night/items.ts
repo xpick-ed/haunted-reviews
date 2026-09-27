@@ -6,10 +6,13 @@ import type { GuestType, NeedKind } from './types'
 // 食材（meta.pantry 裡的數量）
 // ---------------------------------------------------------------------------
 
-export type Ingredient = 'egg' | 'leaf' | 'sweetpotato' | 'radish' | 'noodle' | 'ginger' | 'coil' | 'candle' | 'fish' | 'zongzi' | 'toy' | 'crab' | GoodId
+export type Ingredient = 'egg' | 'leaf' | 'sweetpotato' | 'radish' | 'noodle' | 'ginger' | 'coil' | 'candle' | 'fish' | 'zongzi' | 'toy' | 'crab' | MarketIngredient | GoodId
+
+/** 黃昏市場買的（DESIGN §32.1） */
+export type MarketIngredient = 'pork' | 'milkfish' | 'clam' | 'cabbage' | 'douhua' | 'redguo'
 
 /** 店裡的好東西（DESIGN §31.1）：傍晚在老街、村子的店拿到，半夜放到客人床頭 */
-export type GoodId = 'herbtea' | 'ramune' | 'quilt' | 'photo' | 'floral' | 'banquet'
+export type GoodId = 'herbtea' | 'ramune' | 'quilt' | 'photo' | 'floral' | 'banquet' | 'icepop'
 
 export const INGREDIENTS: Record<Ingredient, { name: string; icon: string; desc: string }> = {
   egg: { name: '雞蛋', icon: '🥚', desc: '後院雞舍撿的' },
@@ -24,12 +27,19 @@ export const INGREDIENTS: Record<Ingredient, { name: string; icon: string; desc:
   zongzi: { name: '粽子', icon: '🍙', desc: '節日包的' },
   toy: { name: '小玩具', icon: '🧸', desc: '柑仔店夾娃娃機夾到的，可以送小宇' },
   crab: { name: '螃蟹', icon: '🦀', desc: '海邊潮間帶抓的' },
+  pork: { name: '豬肉', icon: '🥩', desc: '黃昏市場阿蘭姐切的三層肉' },
+  milkfish: { name: '虱目魚', icon: '🐟', desc: '黃昏市場阿忠的虱目魚肚' },
+  clam: { name: '蛤仔', icon: '🐚', desc: '黃昏市場的蛤仔，吐過沙了' },
+  cabbage: { name: '高麗菜', icon: '🥬', desc: '黃昏市場菜攤的高麗菜' },
+  douhua: { name: '豆花', icon: '🍮', desc: '黃昏市場豆花阿伯的豆花，熱熱的吃' },
+  redguo: { name: '紅龜粿', icon: '🔴', desc: '黃昏市場粿嬸的紅龜粿：拜拜、送人都好' },
   herbtea: { name: '安神茶', icon: '🍵', desc: '和春中藥行的安神茶包：睡不著的人喝了就睡' },
   ramune: { name: '彈珠汽水', icon: '🧃', desc: '冰果室的彈珠汽水：熱、口渴一次解決' },
   quilt: { name: '厚棉被', icon: '🛏️', desc: '布莊的裁縫車縫的：整晚不會冷' },
   photo: { name: '老照片', icon: '🖼️', desc: '照相館洗的村子老照片：想家的人看了安心' },
   floral: { name: '花露水', icon: '🌸', desc: '理髮廳的花露水：蚊子不來、膽小的人聞了安心' },
   banquet: { name: '辦桌菜尾', icon: '🍲', desc: '阿財伯給的辦桌菜尾：半夜肚子餓的大菜（放不過夜）' },
+  icepop: { name: '枝仔冰', icon: '🧊', desc: '糖廠福利社的紅豆、鳳梨枝仔冰：熱得睡不著的人一支就好（放不過夜）' },
 }
 
 // ---------------------------------------------------------------------------
@@ -127,6 +137,17 @@ export const GOODS: Record<GoodId, GoodDef> = {
     where: '村子阿財伯家（陪他看八點檔）',
     note: '半夜床頭有辦桌的菜尾！這是什麼神仙民宿。',
   },
+  icepop: {
+    id: 'icepop',
+    verb: '放一支枝仔冰',
+    fixes: ['hot', 'thirsty'],
+    blocks: ['hot'],
+    comfort: 12,
+    likes: ['child', 'elder', 'wanderer'],
+    likeBonus: 10,
+    where: '糖廠的福利社（坐五分車去）',
+    note: '半夜床頭有一支紅豆枝仔冰！咬一口，好像回到小時候的夏天。',
+  },
 }
 
 export const GOOD_IDS = Object.keys(GOODS) as GoodId[]
@@ -134,7 +155,7 @@ export const GOOD_IDS = Object.keys(GOODS) as GoodId[]
 /** 菜櫥裡每樣最多放幾個（囤太多就沒得選了） */
 export const GOOD_MAX = 3
 /** 放不過夜的（天亮就壞了） */
-export const GOOD_PERISHABLE: GoodId[] = ['banquet']
+export const GOOD_PERISHABLE: GoodId[] = ['banquet', 'icepop']
 export const isGood = (id: string): id is GoodId => id in GOODS
 
 /** 這位客人（類型）特別喜歡哪些好東西 */
@@ -150,7 +171,9 @@ export const START_PANTRY: Partial<Record<Ingredient, number>> = { egg: 2, radis
 // 宵夜食譜（在灶腳煮：選食譜 → 小遊戲 → 端過去）
 // ---------------------------------------------------------------------------
 
-export type RecipeId = 'porridge' | 'omelette' | 'leaves' | 'sweetporridge' | 'misua' | 'gingersoup' | 'fishsoup' | 'zongzi' | 'crabporridge'
+export type RecipeId = 'porridge' | 'omelette' | 'leaves' | 'sweetporridge' | 'misua' | 'gingersoup' | 'fishsoup' | 'zongzi' | 'crabporridge' | MarketRecipeId
+/** 黃昏市場的食材煮的（DESIGN §32.1） */
+export type MarketRecipeId = 'luroufan' | 'clamsoup' | 'milkfishcongee' | 'cabbagerice' | 'douhua'
 
 export interface Recipe {
   id: RecipeId
@@ -174,6 +197,12 @@ export const RECIPES: Recipe[] = [
   { id: 'fishsoup', name: '溪哥湯', icon: '🐟', needs: { fish: 1, ginger: 1 }, comfort: 32, likes: ['elder', 'business', 'parent'], alsoCold: true },
   { id: 'crabporridge', name: '螃蟹粥', icon: '🦀', needs: { crab: 1 }, comfort: 34, likes: ['business', 'thrill', 'backpacker'] },
   { id: 'zongzi', name: '粽子', icon: '🍙', needs: { zongzi: 1 }, comfort: 34, likes: ['backpacker', 'elder', 'child', 'thrill'] },
+  // 黃昏市場的食材（DESIGN §32.1）
+  { id: 'cabbagerice', name: '高麗菜飯', icon: '🍚', needs: { cabbage: 1, pork: 1 }, comfort: 38, likes: ['parent', 'child', 'elder', 'couple'] },
+  { id: 'luroufan', name: '滷肉飯', icon: '🍛', needs: { pork: 1 }, comfort: 34, likes: ['backpacker', 'business', 'thrill'] },
+  { id: 'milkfishcongee', name: '虱目魚粥', icon: '🐟', needs: { milkfish: 1 }, comfort: 33, likes: ['elder', 'business', 'lonely', 'wanderer'] },
+  { id: 'clamsoup', name: '蛤仔湯', icon: '🍲', needs: { clam: 1, ginger: 1 }, comfort: 28, likes: ['elder', 'timid', 'caregiver'], alsoCold: true },
+  { id: 'douhua', name: '燒豆花', icon: '🍮', needs: { douhua: 1 }, comfort: 24, likes: ['child', 'timid', 'couple', 'lonely'] },
   // 什麼都沒有：白粥
   { id: 'porridge', name: '白粥', icon: '🍚', needs: {}, comfort: 12, likes: [] },
 ]

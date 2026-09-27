@@ -21,7 +21,9 @@
     "test:horror": "tsx scripts/sim-horror.ts",
     "test:special": "tsx scripts/sim-special.ts",
     "test:goods": "tsx scripts/sim-goods.ts",
-    "test:han": "tsx scripts/sim-han.ts"
+    "test:han": "tsx scripts/sim-han.ts",
+    "test:chenghuang": "tsx scripts/sim-chenghuang.ts",
+    "test:dmarket": "tsx scripts/sim-dmarket.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

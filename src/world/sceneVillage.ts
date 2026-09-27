@@ -51,6 +51,8 @@ export const VILLAGE = {
   /** 往溪邊的小路（北）、往國小的小橋（南） */
   riverLane: { x: -20 },
   schoolBridge: { x: -6.5 },
+  /** 往黃昏市場的小橋（南，DESIGN §32.1）：過水溝、穿過田埂 */
+  marketBridge: { x: 12 },
   /** 柑仔店裡：店面開口、後門（掛花布門簾，通阿嬌家）、米桶、醬油米酒、糖果玻璃櫃、角落的黑白電視、磅秤、王子麵 */
   shopIn: {
     openHalf: 2.7,
@@ -215,12 +217,15 @@ export const VILLAGE_SCENE: SceneDef = {
     // 從溪邊回來（村子西頭的小路）、從國小回來（水溝上的小橋）
     north: [-20, -7.6],
     south: [-6.5, 0.9],
+    // 從黃昏市場回來（東邊那座小橋）
+    market: [12, 0.9],
   },
   exits: [
     { area: rect(-24, VILLAGE.roadZ - 3, -21.5, VILLAGE.roadZ + 3), to: 'home', spawn: 'road_east', label: '← 阿春民宿', sign: [-20, VILLAGE.roadZ - 2.2] },
     { area: rect(21.5, VILLAGE.roadZ - 3, 24, VILLAGE.roadZ + 3), to: 'temple', spawn: 'road_west', label: '土地公廟 →', sign: [20, VILLAGE.roadZ - 2.2] },
     { area: rect(-21.05, -9.5, -18.95, -8.9), to: 'river', spawn: 'path', label: '溪邊 ↑', sign: [-18.4, -7.9] },
     { area: rect(-7.4, 1.5, -5.6, 1.97), to: 'school', spawn: 'gate', label: '國小 ↓', sign: [-4.9, 1.3] },
+    { area: rect(11.1, 1.5, 12.9, 1.97), to: 'dmarket', spawn: 'village', label: '黃昏市場 ↓', sign: [13.6, 1.3] },
   ],
   buildings: [
     // 外殼（正面、東牆、屋頂、招牌、亭仔腳的浪板）淡出；後牆、西牆留著當背景

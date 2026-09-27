@@ -22,10 +22,11 @@ export const HARBOR = {
   landY: 0.02,
   /** 堤防（往北伸進海裡，盡頭是燈塔） */
   breakwater: { x0: -15.6, x1: -12.4, z0: -12.4, z1: -1.5, y: 0.75 },
-  /** 燈塔：塔身、門、守燈人站的地方 */
-  lighthouse: { x: -14, z: -13.2, r: 1.15, h: 7.4 },
-  door: { x: -14, z: -11.9 },
-  keeper: { x: -12.95, z: -11.2 },
+  /** 燈塔：塔身（底下的半徑）、塔腳下守燈人的小屋（門在南面，走進去是燈塔裡面：sceneLighthouse.ts）、守燈人站的地方 */
+  lighthouse: { x: -14, z: -13.2, r: 2.2, h: 8.2 },
+  annex: { x0: -15.3, x1: -12.7, z0: -11.5, z1: -9.8, h: 2.5 },
+  door: { x: -14, z: -9.8 },
+  keeper: { x: -12.95, z: -9.05 },
   /** 魚市的棚子（西南邊） */
   shed: { x0: -20.5, x1: -11.5, z0: 3.4, z1: 8.6, h: 3.6 },
   /** 停在港裡的漁船：船身中心、長度、朝向（x 軸方向的小偏角） */
@@ -89,6 +90,8 @@ function baseColliders(): Colliders {
     rect(f.x1, f.z0, 22, H.quayZ - 0.4),
     // 燈塔再往北
     rect(bw.x0, -14, bw.x1, bw.z0),
+    // 燈塔腳下守燈人的小屋（裡面是另一個場景）
+    rect(H.annex.x0, H.annex.z0, H.annex.x1, H.annex.z1),
     // 魚市棚子的後牆與兩側（前面開放，可以走進去）
     rect(H.shed.x0, H.shed.z1 - 0.25, H.shed.x1, H.shed.z1 + 0.1),
     rect(H.shed.x0 - 0.1, H.shed.z0, H.shed.x0 + 0.25, H.shed.z1),
@@ -119,7 +122,7 @@ export const HARBOR_SCENE: SceneDef = {
   id: 'harbor',
   name: '海邊漁港',
   colliders: { rects: [...BASE.rects, ...tideRects('high')], circles: BASE.circles, bounds: BASE.bounds },
-  spawns: { oldstreet: [18, 0] },
+  spawns: { oldstreet: [18, 0], lighthouse: [H.door.x, H.door.z + 0.85] },
   exits: [{ area: rect(20.5, -1.2, 22, 3), to: 'oldstreet', spawn: 'harbor', label: '老街 →', sign: [18.8, -0.9] }],
   buildings: [
     {
@@ -199,7 +202,7 @@ export const HARBOR_HOTSPOTS: Hotspot[] = [
     },
   },
   {
-    // 燈塔的門：晚上才能點燈（要燈油，或拿一根蠟燭）
+    // 燈塔的門：見過守燈人以後可以走進去（點燈改在最上面的燈籠室：sceneLighthouse.ts）
     id: 'harbor_door',
     scene: 'harbor',
     x: H.door.x,
@@ -209,39 +212,15 @@ export const HARBOR_HOTSPOTS: Hotspot[] = [
     iconY: 2.4,
     label: (s) => {
       if (!s.flags.keeper_met) return '燈塔'
-      if (lighthouseLit(s)) return '燈塔（燈亮著）'
-      if (s.phase !== 'night') return '燈塔（晚上再來點燈）'
-      return '點亮燈塔'
+      if (lighthouseLit(s)) return '走進燈塔（燈亮著）'
+      return s.phase === 'night' ? '走進燈塔（上去點燈）' : '走進燈塔'
     },
     run: (s) => {
       if (!s.flags.keeper_met) {
         s.bark('harbor.lighthouse')
         return
       }
-      if (lighthouseLit(s)) {
-        s.bark(pick(['harbor.lighthouse.lit.1', 'harbor.lighthouse.lit.2']))
-        return
-      }
-      if (s.phase !== 'night') {
-        s.bark('keeper.wait.night')
-        return
-      }
-      const hasOil = !!s.flags.harbor_oil
-      const candles = s.meta.pantry.candle ?? 0
-      if (!hasOil && candles <= 0) {
-        s.bark('harbor.door.nooil')
-        return
-      }
-      s.bark('harbor.door.light')
-      withStore((st) => {
-        const x = st.getState()
-        const pantry = { ...x.meta.pantry }
-        // 有燈油就用燈油；沒有才用蠟燭
-        if (!hasOil) pantry.candle = Math.max(0, (pantry.candle ?? 0) - 1)
-        st.setState({ flags: { ...x.flags, lighthouse_lit: true }, meta: { ...x.meta, pantry, merit: x.meta.merit + 3 } })
-      })
-      window.setTimeout(() => void import('../store').then(({ useStore }) => useStore.getState().bark('keeper.lit.1')), 3200)
-      window.setTimeout(() => void import('../store').then(({ useStore }) => useStore.getState().bark('keeper.lit.2')), 7800)
+      s.goto('lighthouse', 'harbor')
     },
   },
   {

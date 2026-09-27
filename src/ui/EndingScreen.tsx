@@ -80,6 +80,14 @@ export function EndingScreen() {
 }
 
 /** 小翰感覺到阿嬤在了（hanSense ≥ 80）：多一張卡片，插在 before 那張插畫前面（DESIGN §31.2） */
+/** 坐過鬼火車（DESIGN §32.4）：上車那張卡片，車掌多說一句「上次坐一站，這次坐到底」 */
+function withRide(id: EndingId, cards: Card[], rode: boolean): Card[] {
+  if (!rode || (id !== 'train' && id !== 'together')) return cards
+  const at = cards.findIndex((c) => c.art === (id === 'train' ? 'window' : 'window2'))
+  if (at < 0) return cards
+  return cards.map((c, i) => (i === at ? { ...c, lines: [...c.lines, 'st2.end.ride'] } : c))
+}
+
 function withEpilogue(id: EndingId, hanSense: number): Card[] {
   const base = ENDINGS[id]
   const ep = hanEpilogue(id, hanSense)
@@ -91,7 +99,7 @@ function withEpilogue(id: EndingId, hanSense: number): Card[] {
 
 function EndingPlayer({ id }: { id: EndingId }) {
   // 結局開始時的值就好（播的途中不會變）
-  const cards = useMemo(() => withEpilogue(id, useStore.getState().meta.hanSense), [id])
+  const cards = useMemo(() => withRide(id, withEpilogue(id, useStore.getState().meta.hanSense), !!useStore.getState().flags.gt_rode), [id])
   const finish = useStore((s) => s.finishEnding)
   // -1：標題卡；0..n-1：插畫卡片；n：製作名單
   const [i, setI] = useState(-1)

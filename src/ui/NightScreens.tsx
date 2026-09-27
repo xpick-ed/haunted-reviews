@@ -352,6 +352,7 @@ export function MonthSummary() {
         <button className="btn big" onClick={() => close(null)}>
           先不買，存起來
         </button>
+        <p className="muted">選好以後，阿嬤要去城隍廟報到、延長居留。</p>
       </div>
     </div>
   )

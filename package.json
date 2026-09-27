@@ -23,7 +23,8 @@
     "test:goods": "tsx scripts/sim-goods.ts",
     "test:han": "tsx scripts/sim-han.ts",
     "test:chenghuang": "tsx scripts/sim-chenghuang.ts",
-    "test:dmarket": "tsx scripts/sim-dmarket.ts"
+    "test:dmarket": "tsx scripts/sim-dmarket.ts",
+    "test:hints": "tsx scripts/sim-hints.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

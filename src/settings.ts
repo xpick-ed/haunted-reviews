@@ -10,10 +10,12 @@ export interface Settings {
   adultConfirmed: boolean
   /** 恐怖程度 */
   horror: 'normal' | 'strong'
+  /** 「現在該做什麼」的提示條和箭頭（DESIGN §33） */
+  hints: boolean
 }
 
 const KEY = 'haunted-reviews.settings'
-const DEFAULTS: Settings = { adult: false, adultConfirmed: false, horror: 'normal' }
+const DEFAULTS: Settings = { adult: false, adultConfirmed: false, horror: 'normal', hints: true }
 
 function load(): Settings {
   try {
@@ -30,8 +32,8 @@ export const useSettings = create<Settings & { update: (p: Partial<Settings>) =>
   update: (p) => {
     set(p)
     try {
-      const { adult, adultConfirmed, horror } = get()
-      localStorage.setItem(KEY, JSON.stringify({ adult, adultConfirmed, horror }))
+      const { adult, adultConfirmed, horror, hints } = get()
+      localStorage.setItem(KEY, JSON.stringify({ adult, adultConfirmed, horror, hints }))
     } catch {
       // 無痕模式：存不了就算了
     }
@@ -42,3 +44,5 @@ export const useSettings = create<Settings & { update: (p: Partial<Settings>) =>
 export const adultOn = () => useSettings.getState().adult
 /** 恐怖加強 */
 export const horrorStrong = () => useSettings.getState().horror === 'strong'
+/** 提示開著嗎 */
+export const hintsOn = () => useSettings.getState().hints

@@ -35,6 +35,7 @@ import { festivalOf } from './night/plan'
 import { requestById } from './requests'
 import { night, yinMax } from './night/director'
 import { typhoonNow } from './night/special'
+import { hintsOn } from '../settings'
 import { NEED_INFO } from './night/guests'
 
 /** 22.5 → 22:30、25.25 → 01:15 */
@@ -306,8 +307,12 @@ export function objectives(s: GameState): { main: string | null; extra: string |
   }
   if (s.phase === 'dusk') {
     const p = s.meta.pantry
+    // 右上角的提示開著（DESIGN §33）：下一步交給它講，這裡只留大方向，才不會兩邊講的不一樣
+    const hinted = hintsOn()
     const extra = fest
       ? { tudigong: '今天土地公生：土地公廟前有野台戲，班主好像需要幫忙', qingming: '今天清明：小翰去山上掃墓了', zhongyuan: '今天中元普渡：廟埕有戲、溪邊可以放水燈' }[fest]
+      : hinted
+      ? null
       : !s.flags.ayi_met
       ? '可選：出大門沿著路往東，經過村子到土地公廟看看'
       : (p.coil ?? 0) === 0
@@ -319,7 +324,7 @@ export function objectives(s: GameState): { main: string | null; extra: string |
             : null
     if (!s.flags.incense_today) return { main: '到神明廳上香（正身中間）', extra }
     if (!s.flags.han_talk && n === 1) return { main: '去埕裡看看小翰', extra }
-    return { main: '坐在埕裡的竹椅上，等客人入住', extra }
+    return { main: hinted ? '天黑（22:00）以前，把今晚準備好' : '坐在埕裡的竹椅上，等客人入住', extra }
   }
   if (s.scene === 'hill' && !s.vision) return { main: s.phase === 'night' ? '照顧好今晚的客人，一直到天亮' : '山上墓仔埔', extra: '這裡住了很多鄰居：開陰陽眼（V）看看' }
   if (s.scene === 'market') return { main: '逛鬼夜市', extra: '紅姨的法器（用功德買）、金魚伯撈金魚、射氣球。客人沒人顧，別待太久' }

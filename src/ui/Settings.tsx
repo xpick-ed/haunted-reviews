@@ -26,6 +26,7 @@ export function SettingsPanel() {
         <h2 className="sheet-title">設定</h2>
         <Row label="語音" desc="角色說話的聲音" on={voice} onClick={toggleVoice} />
         <Row label="高畫質" desc="手機太卡可以關掉" on={quality === 'high'} onClick={() => setQuality(quality === 'high' ? 'low' : 'high')} />
+        <Row label="提示" desc="右上角告訴妳現在可以做什麼，場景裡有小箭頭指路" on={set.hints} onClick={() => set.update({ hints: !set.hints })} />
         <Row
           label="成人內容（18+）"
           desc="冥婚、凶宅、情侶客人、酒拳與麻將、大人的笑話和心事。性只用暗示，不會有露骨內容。改了之後，下一晚開始的客人與劇情才會換。"

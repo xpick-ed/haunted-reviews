@@ -1,0 +1,121 @@
+/* 現在該做什麼（DESIGN §33）：狀態列下面、靠右的小膠囊；點開是一張小卡 */
+.hint-hud {
+  position: absolute;
+  right: 12px;
+  width: min(46vw, 250px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+.hint-hud.in {
+  opacity: 1;
+  transform: none;
+}
+.hint-hud.in .hint-pill,
+.hint-hud.in .hint-more {
+  pointer-events: auto;
+}
+.hint-pill {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  max-width: 100%;
+  min-height: 34px;
+  padding: 7px 12px 7px 9px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 213, 138, 0.45);
+  background: linear-gradient(180deg, rgba(38, 30, 22, 0.86), rgba(24, 18, 12, 0.86));
+  color: #fff3dc;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+.hint-pill:focus-visible {
+  outline: 2px solid #ffd58a;
+  outline-offset: 2px;
+}
+.hint-dot {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.5px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: #2a1d0e;
+  background: #ffd58a;
+}
+.hint-hud.in .hint-dot {
+  animation: hint-breathe 2.4s ease-in-out infinite;
+}
+.hint-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.hint-more {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(20, 15, 10, 0.9);
+  border: 1px solid rgba(255, 213, 138, 0.3);
+  color: rgba(255, 243, 220, 0.9);
+  font-size: 12.5px;
+  line-height: 1.55;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.hint-more p {
+  margin: 0 0 8px;
+  white-space: pre-line;
+}
+.hint-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.hint-actions button {
+  min-height: 32px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 213, 138, 0.4);
+  background: transparent;
+  color: #ffe3b0;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.hint-actions .hint-ok {
+  background: #ffd58a;
+  color: #2a1d0e;
+  border-color: #ffd58a;
+}
+@keyframes hint-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 213, 138, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 213, 138, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hint-hud {
+    transition: opacity 0.2s linear;
+    transform: none;
+  }
+  .hint-hud.in .hint-dot {
+    animation: none;
+  }
+}

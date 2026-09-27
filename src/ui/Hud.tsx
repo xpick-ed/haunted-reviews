@@ -28,6 +28,7 @@ import { SettingsPanel } from './Settings'
 import { HorrorHud } from './HorrorHud'
 import { FamilyHud } from './FamilyHud'
 import { SpecialHud } from './SpecialHud'
+import { HintHud } from './HintHud'
 import { ChenghuangHud } from './ChenghuangHud'
 import { PORTRAIT_IDS } from '../art/portraits'
 import { GOAL, goalShown } from '../world/story'
@@ -90,6 +91,7 @@ export function Hud() {
       <IncidentHud />
       <FamilyHud />
       <SpecialHud />
+      <HintHud />
       <ChenghuangHud />
       <EncounterPanel />
       <GiftPanel />

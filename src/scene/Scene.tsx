@@ -45,6 +45,7 @@ import { SpecialLayer } from './SpecialLayer'
 import { HanLayer } from './HanLayer'
 import { GoodsLayer } from './GoodsLayer'
 import { Snapshot } from './Snapshot'
+import { HintArrow } from './HintArrow'
 import { hanAtHome } from '../world/storyBeats'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
 import { VisionLayer } from './Vision'
@@ -90,6 +91,7 @@ export function Scene() {
         <CameraRig />
         <Ticker />
         <Snapshot />
+        <HintArrow />
         <ReadyGate />
         {import.meta.env.DEV && <DevHooks />}
         {!NO_FX && <Effects quality={quality} />}

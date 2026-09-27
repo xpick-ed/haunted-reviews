@@ -19,6 +19,7 @@ import { encounterState } from './world/night/encounters'
 import { familyState } from './world/night/family'
 import { giftUI } from './world/bonds'
 import { resetCh, useCh, type MonthReview } from './world/sceneChenghuang'
+import { preloadScene } from './scene/lazyScenes'
 import type { EndingId } from './world/story'
 
 export type Phase = 'dusk' | 'night' | 'dawn'
@@ -414,6 +415,8 @@ export const useStore = create<GameState>()((set, get) => ({
   goto: (to, spawn) => {
     const s = get()
     if (s.transitioning) return
+    // 場景的程式用到才載入：黑幕一拉下就開始抓（src/scene/lazyScenes.ts）
+    void preloadScene(to)
     // 傍晚走到別的地方要花時間
     if (s.phase === 'dusk') later(1000, () => get().spendTime(DUSK_COST.travel))
     set({ transitioning: true, blackout: true, prompt: null })
@@ -625,6 +628,7 @@ export const useStore = create<GameState>()((set, get) => ({
   },
 
   enterDream: (guest) => {
+    void preloadScene('dream')
     const s = get()
     if (s.transitioning || s.dream) return
     const from: [number, number] = [player.x, player.z]
@@ -653,6 +657,7 @@ export const useStore = create<GameState>()((set, get) => ({
   },
 
   enterPast: (episode) => {
+    void preloadScene('past')
     const s = get()
     if (s.transitioning || s.past || s.dream) return
     const from = { scene: s.scene, x: player.x, z: player.z }
@@ -683,6 +688,7 @@ export const useStore = create<GameState>()((set, get) => ({
   },
 
   enterChenghuang: (review, ending) => {
+    void preloadScene('chenghuang')
     const s = get()
     if (s.transitioning) return
     resetCh(review, ending)

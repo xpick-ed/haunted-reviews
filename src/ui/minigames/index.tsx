@@ -1,32 +1,33 @@
-import type { ComponentType } from 'react'
+import { Suspense, lazy, type ComponentType } from 'react'
 import { useStore } from '../../store'
 import type { MinigameId, MinigameProps } from './types'
-import Cook from './cook'
-import Swat from './swat'
-import Jiaobei from './jiaobei'
-import Goldfish from './goldfish'
-import Balloon from './balloon'
-import Fishing from './fishing'
-import Lantern from './lantern'
-import Rhythm from './rhythm'
-import Claw from './claw'
-import Pachinko from './pachinko'
-import Zongzi from './zongzi'
-import Hopscotch from './hopscotch'
-import Ouija from './ouija'
-import Train from './train'
-import Shaveice from './shaveice'
-import Cinema from './cinema'
-import Photo from './photo'
-import Crab from './crab'
-import Fuse from './fuse'
-import Drinking from './drinking'
-import Mahjong from './mahjong'
-import Herbs from './herbs'
-import Sew from './sew'
-import Bargain from './bargain'
 
 // 小遊戲登記表：id → 元件。新增小遊戲：在這裡加一行、在 types.ts 加 id。
+// 用到才載入（DESIGN §33.1）：第一次打開遊戲不用下載全部小遊戲
+const Cook = lazy(() => import('./cook'))
+const Swat = lazy(() => import('./swat'))
+const Jiaobei = lazy(() => import('./jiaobei'))
+const Goldfish = lazy(() => import('./goldfish'))
+const Balloon = lazy(() => import('./balloon'))
+const Fishing = lazy(() => import('./fishing'))
+const Lantern = lazy(() => import('./lantern'))
+const Rhythm = lazy(() => import('./rhythm'))
+const Claw = lazy(() => import('./claw'))
+const Pachinko = lazy(() => import('./pachinko'))
+const Zongzi = lazy(() => import('./zongzi'))
+const Hopscotch = lazy(() => import('./hopscotch'))
+const Ouija = lazy(() => import('./ouija'))
+const Train = lazy(() => import('./train'))
+const Shaveice = lazy(() => import('./shaveice'))
+const Cinema = lazy(() => import('./cinema'))
+const Photo = lazy(() => import('./photo'))
+const Crab = lazy(() => import('./crab'))
+const Fuse = lazy(() => import('./fuse'))
+const Drinking = lazy(() => import('./drinking'))
+const Mahjong = lazy(() => import('./mahjong'))
+const Herbs = lazy(() => import('./herbs'))
+const Sew = lazy(() => import('./sew'))
+const Bargain = lazy(() => import('./bargain'))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MINIGAMES: Record<MinigameId, ComponentType<MinigameProps<any, any>>> = {
@@ -64,7 +65,9 @@ export function MinigameHost() {
   const Game = MINIGAMES[mg.id]
   return (
     <div className="mg-backdrop">
-      <Game key={mg.key} params={mg.params} done={finish} />
+      <Suspense fallback={<div style={{ color: '#f4e6c8', fontSize: 16, padding: 24 }}>準備中……</div>}>
+        <Game key={mg.key} params={mg.params} done={finish} />
+      </Suspense>
     </div>
   )
 }

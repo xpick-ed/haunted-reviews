@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import { useStore } from '../store'
+import { useSceneLoading } from '../scene/lazyScenes'
 import { readSave } from '../world/save'
 
 // 標題畫面：木門。按「開始」或「繼續」時門打開，同時啟動音訊（手機瀏覽器要點一下才能出聲）。
@@ -48,7 +49,9 @@ export function Title() {
 
 /** 轉場黑幕：換場景、天黑、打盹 */
 export function Blackout() {
-  const on = useStore((s) => s.blackout)
+  // 換場景時場景的程式還沒下載完，黑幕也先不要掀開
+  const loading = useSceneLoading((s) => s.loading)
+  const on = useStore((s) => s.blackout) || loading
   const scene = useStore((s) => s.scene)
   const phase = useStore((s) => s.phase)
   const [label, setLabel] = useState<string | null>(null)

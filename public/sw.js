@@ -76,15 +76,39 @@ async function networkFirst(req, name, timeoutMs, after) {
   return Promise.race([net.catch(() => hit), timeout])
 }
 
-/** 新的 index.html 用到哪些 assets/，其他舊版的檔案就刪掉（不然每次更新都多存一份） */
+/**
+ * 新版的 index.html 進來以後：
+ *   1. 拿 asset-list.json（這一版全部的 js／css，包含用到才載入的場景、小遊戲），不在表上的舊檔刪掉
+ *   2. 表上還沒存的檔案在背景一個一個抓下來：換場景不用等網路，也能離線玩
+ * 表拿不到（舊版、斷線）：退回只看 index.html，但不刪東西（寧可多存，不要刪掉用得到的）
+ */
 async function trimAssets(res) {
   const html = await res.text()
-  const used = new Set((html.match(/assets\/[^"'?#\s)]+/g) || []).map((p) => p.split('/').pop()))
-  if (!used.size) return
+  const scope = self.registration.scope
+  let list = null
+  try {
+    const r = await fetch(new URL('asset-list.json', scope), { cache: 'no-store' })
+    if (r.ok) list = await r.json()
+  } catch {
+    list = null
+  }
+  if (!Array.isArray(list) || !list.length) return
+  const used = new Set([...(html.match(/assets\/[^"'?#\s)]+/g) || []), ...list].map((p) => p.split('/').pop()))
   const cache = await caches.open(ASSETS)
+  const have = new Set()
   for (const req of await cache.keys()) {
     const file = new URL(req.url).pathname.split('/').pop()
     // CSS 裡引用的字型、圖片也在 assets/，只刪 js／css
     if (/\.(js|css)$/.test(file) && !used.has(file)) await cache.delete(req)
+    else have.add(file)
+  }
+  for (const path of list) {
+    if (have.has(path.split('/').pop())) continue
+    try {
+      const r = await fetch(new URL(path, scope))
+      if (r.ok) await cache.put(new URL(path, scope).href, r)
+    } catch {
+      // 斷線：下次再抓
+    }
   }
 }

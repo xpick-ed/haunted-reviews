@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { Component, Suspense, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Environment, Lightformer, PerformanceMonitor } from '@react-three/drei'
 import * as THREE from 'three'
@@ -16,23 +16,6 @@ import { TelekinesisLayer } from './Telekinesis'
 import { Effects } from './Effects'
 import { CameraRig } from './CameraRig'
 import { WorldController } from './World'
-import { TempleScene } from './Temple'
-import { VillageScene } from './Village'
-import { GardenScene } from './Garden'
-import { MarketScene } from './Market'
-import { DreamScene } from './Dream'
-import { RiverScene } from './River'
-import { SchoolScene } from './School'
-import { HillScene } from './Hill'
-import { StationScene } from './Station'
-import { OldStreetScene } from './OldStreet'
-import { HarborScene } from './Harbor'
-import { DuskMarketScene } from './DuskMarket'
-import { ChenghuangScene } from './Chenghuang'
-import { SugarScene } from './Sugar'
-import { GhostTrainScene } from './GhostTrain'
-import { LighthouseScene } from './Lighthouse'
-import { PastScene } from './Past'
 import { HomeStationPath } from './StationPath'
 import { DecorLayer } from './Decor'
 import { IncidentsLayer } from './Incidents'
@@ -45,6 +28,8 @@ import { SpecialLayer } from './SpecialLayer'
 import { HanLayer } from './HanLayer'
 import { GoodsLayer } from './GoodsLayer'
 import { Snapshot } from './Snapshot'
+import { LAZY_SCENES, prefetchNeighbours, resetScene, useSceneLoading } from './lazyScenes'
+import { SCENES, type SceneId } from '../world/scenes'
 import { HintArrow } from './HintArrow'
 import { hanAtHome } from '../world/storyBeats'
 import { ExitSigns, HotspotMarkers, NightMarkers } from './Markers'
@@ -128,28 +113,55 @@ function ReadyGate() {
   return null
 }
 
+/** 場景的程式抓不到（斷線、還沒存到手機裡）：先回家，下次再試 */
+class SceneLoadFailed extends Component<{ scene: SceneId; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+  componentDidCatch() {
+    const id = this.props.scene
+    resetScene(id)
+    useSceneLoading.setState({ loading: false })
+    // 轉場還沒結束時 goto 會被擋掉：等轉場結束再回家
+    const goHome = () => {
+      const st = useStore.getState()
+      if (st.transitioning) return void window.setTimeout(goHome, 200)
+      st.say('網路不太穩，那邊還去不了，阿嬤先回家。')
+      st.goto('home', Object.keys(SCENES.home.spawns)[0])
+    }
+    window.setTimeout(goHome, 300)
+  }
+  render() {
+    return this.state.failed ? null : this.props.children
+  }
+}
+
+/** 場景的程式還在下載：黑幕先不要掀開 */
+function SceneLoading() {
+  useEffect(() => {
+    useSceneLoading.setState({ loading: true })
+    return () => useSceneLoading.setState({ loading: false })
+  }, [])
+  return null
+}
+
 /** 依目前場景換掉整組內容（換場景時由黑幕遮住） */
 function SceneContent({ quality }: { quality: 'high' | 'low' }) {
   const scene = useStore((s) => s.scene)
   // 小翰不在埕裡掃地：清明去山上掃墓、陳董來的那天在大門口
   const hanAway = useStore((s) => !hanAtHome(s))
-  if (scene === 'temple') return <TempleScene />
-  if (scene === 'village') return <VillageScene />
-  if (scene === 'garden') return <GardenScene />
-  if (scene === 'market') return <MarketScene />
-  if (scene === 'dream') return <DreamScene />
-  if (scene === 'river') return <RiverScene />
-  if (scene === 'school') return <SchoolScene />
-  if (scene === 'hill') return <HillScene />
-  if (scene === 'station') return <StationScene />
-  if (scene === 'oldstreet') return <OldStreetScene />
-  if (scene === 'harbor') return <HarborScene />
-  if (scene === 'dmarket') return <DuskMarketScene />
-  if (scene === 'chenghuang') return <ChenghuangScene />
-  if (scene === 'sugar') return <SugarScene />
-  if (scene === 'ghosttrain') return <GhostTrainScene />
-  if (scene === 'lighthouse') return <LighthouseScene />
-  if (scene === 'past') return <PastScene />
+  // 閒下來時先抓隔壁場景的程式，換場景時就不用等
+  useEffect(() => prefetchNeighbours(scene), [scene])
+  const Lazy = LAZY_SCENES[scene]
+  if (Lazy)
+    return (
+      <SceneLoadFailed key={scene} scene={scene}>
+        <Suspense fallback={<SceneLoading />}>
+          <Lazy />
+        </Suspense>
+      </SceneLoadFailed>
+    )
   return (
     <group>
       <Landscape quality={quality} />
